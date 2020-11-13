@@ -7,9 +7,7 @@ use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
 
-    
 pub mod render_gl;
-
 
 fn main() 
 {
@@ -146,8 +144,3 @@ fn main()
 		_window.gl_swap_window();
 	}
 }
-
-
-
-
-
