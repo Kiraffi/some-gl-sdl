@@ -5,19 +5,14 @@ extern crate gl;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
-use std::ffi::CString;
+use std::time::Duration;
 
-<<<<<<< HEAD
+use std::ffi::CString;
+use std::ffi::CStr;
 
 pub mod render_gl;
-
 
 fn main()
-=======
-pub mod render_gl;
-
-fn main() 
->>>>>>> 304ee63e119e3bd0e68bca638549a2479561730f
 {
 	println!("Hello, world!");
 
@@ -39,6 +34,16 @@ fn main()
 
 	let _gl_context = _window.gl_create_context().unwrap();
 	let _gl = gl::load_with(|s| _video.gl_get_proc_address(s) as *const std::os::raw::c_void);
+
+
+	let version = unsafe {
+		let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _)
+			.to_bytes()
+			.to_vec();
+		String::from_utf8(data).unwrap()
+	};
+
+	println!("OpenGL version {}", version);
 
 	unsafe
 	{
@@ -129,9 +134,38 @@ fn main()
 			match event
 			{
 				Event::Quit {..} |
-				Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
+				{
 					break 'running
 				},
+				Event::KeyDown { keycode: Some(Keycode::Q), .. } =>
+				{
+					println!("Q pressed\n");
+				},
+				Event::KeyUp { keycode: Some(Keycode::Q), .. } =>
+				{
+					println!("Q released\n");
+				},
+				Event::Window {win_event, ..  } =>
+				{
+					match win_event
+					{
+						sdl2::event::WindowEvent::Resized( width, height ) =>
+						{
+							println!("Resized: {}: {}", width, height);
+							unsafe
+							{
+								gl::Viewport(0, 0, width, height); // set viewport
+								gl::ClearColor(0.3, 0.3, 0.5, 1.0);
+							}
+
+						},
+
+						_ => {}
+					}
+				},
+
+
 				_ => {}
 			}
 		}
@@ -149,6 +183,7 @@ fn main()
 				3 // number of indices to be rendered
 			);
 		}
+		::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
 		_window.gl_swap_window();
 	}
 }
