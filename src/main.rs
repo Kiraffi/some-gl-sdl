@@ -7,14 +7,14 @@ use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
 
-    
+
 pub mod render_gl;
 
 
-fn main() 
+fn main()
 {
 	println!("Hello, world!");
-	
+
 	let _sdl = sdl2::init().unwrap();
 	let _video = _sdl.video().unwrap();
 	let _window = _video.window("Game", 800, 600)
@@ -34,22 +34,22 @@ fn main()
 	let _gl_context = _window.gl_create_context().unwrap();
 	let _gl = gl::load_with(|s| _video.gl_get_proc_address(s) as *const std::os::raw::c_void);
 
-	unsafe 
+	unsafe
 	{
 		gl::Viewport(0, 0, 800, 600); // set viewport
 		gl::ClearColor(0.3, 0.3, 0.5, 1.0);
 	}
 
- 
- 
+
+
 	let vert_shader = render_gl::Shader::from_vert_source(
 		&CString::new(include_str!("triangle.vert")).unwrap()
 	).unwrap();
-	
+
 	let frag_shader = render_gl::Shader::from_frag_source(
 		&CString::new(include_str!("triangle.frag")).unwrap()
 	).unwrap();
-	
+
 
 	let shader_program = render_gl::Program::from_shaders(
 		&[vert_shader, frag_shader]
@@ -58,10 +58,10 @@ fn main()
 	shader_program.set_used();
 
 	let vertices: Vec<f32> = vec![
-		// positions      // colors
+		// positions	  // colors
 		0.5, -0.5, 0.0,   1.0, 0.0, 0.0,   // bottom right
 		-0.5, -0.5, 0.0,  0.0, 1.0, 0.0,   // bottom left
-		0.0,  0.5, 0.0,   0.0, 0.0, 1.0    // top
+		0.0,  0.5, 0.0,   0.0, 0.0, 1.0	// top
 	];
 
 
@@ -81,12 +81,12 @@ fn main()
 		gl::BindBuffer(gl::ARRAY_BUFFER, 0); // unbind the buffer
 	}
 
-	
+
 	let mut vao: gl::types::GLuint = 0;
 	unsafe {
-    	gl::GenVertexArrays(1, &mut vao);
+		gl::GenVertexArrays(1, &mut vao);
 	}
- 
+
 	unsafe {
 		gl::BindVertexArray(vao);
 		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
@@ -116,24 +116,24 @@ fn main()
 
 
 
-	'running: loop 
+	'running: loop
 	{
 		for event in _event_pump.poll_iter()
 		{
-			match event 
+			match event
 			{
 				Event::Quit {..} |
-                Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
-                    break 'running
-                },
-                _ => {}
+				Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+					break 'running
+				},
+				_ => {}
 			}
 		}
-		unsafe 
+		unsafe
 		{
 			gl::Clear(gl::COLOR_BUFFER_BIT);
 		}
-	
+
 		shader_program.set_used();
 		unsafe {
 			gl::BindVertexArray(vao);
@@ -142,7 +142,7 @@ fn main()
 				0, // starting index in the enabled arrays
 				3 // number of indices to be rendered
 			);
-		}	
+		}
 		_window.gl_swap_window();
 	}
 }
