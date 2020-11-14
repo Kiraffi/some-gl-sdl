@@ -15,10 +15,13 @@ pub mod render_gl;
 fn main()
 {
 	println!("Hello, world!");
+	let mut window_width: i32 = 800;
+	let mut window_height: i32 = 600;
+
 
 	let _sdl = sdl2::init().unwrap();
 	let _video = _sdl.video().unwrap();
-	let _window = _video.window("Game", 800, 600)
+	let _window = _video.window("Game", window_width as u32, window_height as u32)
 		.resizable()
 		.opengl()
 		.build()
@@ -36,7 +39,8 @@ fn main()
 	let _gl = gl::load_with(|s| _video.gl_get_proc_address(s) as *const std::os::raw::c_void);
 
 
-	let version = unsafe {
+	let version = unsafe
+	{
 		let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _)
 			.to_bytes()
 			.to_vec();
@@ -47,7 +51,7 @@ fn main()
 
 	unsafe
 	{
-		gl::Viewport(0, 0, 800, 600); // set viewport
+		gl::Viewport(0, 0, window_width, window_height); // set viewport
 		gl::ClearColor(0.3, 0.3, 0.5, 1.0);
 	}
 
@@ -78,10 +82,12 @@ fn main()
 
 
 	let mut vbo: gl::types::GLuint = 0;
-	unsafe {
+	unsafe
+	{
 		gl::GenBuffers(1, &mut vbo);
 	}
-	unsafe {
+	unsafe
+	{
 		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
 		gl::BufferData(
 			gl::ARRAY_BUFFER, // target
@@ -94,11 +100,13 @@ fn main()
 
 
 	let mut vao: gl::types::GLuint = 0;
-	unsafe {
+	unsafe 
+	{
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	unsafe {
+	unsafe 
+	{
 		gl::BindVertexArray(vao);
 		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
 		gl::EnableVertexAttribArray(0); // this is "layout (location = 0)" in vertex shader
@@ -124,8 +132,9 @@ fn main()
 		gl::BindVertexArray(0);
 	}
 
-
-
+	let mut pos: f32 = 0.0f32;
+	let mut dir: f32 = 1.0f32;
+	let mut spd: f32 = 1.0f32;
 
 	'running: loop
 	{
@@ -152,6 +161,8 @@ fn main()
 					{
 						sdl2::event::WindowEvent::Resized( width, height ) =>
 						{
+							window_width = width;
+							window_height = height;
 							println!("Resized: {}: {}", width, height);
 							unsafe
 							{
@@ -175,7 +186,12 @@ fn main()
 		}
 
 		shader_program.set_used();
-		unsafe {
+		unsafe
+		{
+			let tmp_pos: f32 = pos / (window_width as f32);
+			gl::Uniform4f(0, tmp_pos, 0.0f32, 0.0f32, 0.0f32);
+			
+
 			gl::BindVertexArray(vao);
 			gl::DrawArrays(
 				gl::TRIANGLES, // mode
@@ -185,5 +201,17 @@ fn main()
 		}
 		::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
 		_window.gl_swap_window();
+
+		pos += dir * spd;
+		if pos > 100.0f32
+		{
+			dir = -1.0f32;
+
+		}	
+		else if pos < -100.0f32
+		{
+			dir = 1.0f32;
+		}
+		spd = 20.0f32;
 	}
 }
