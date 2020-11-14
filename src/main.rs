@@ -5,8 +5,6 @@ extern crate gl;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
-use std::time::Duration;
-
 use std::ffi::CString;
 use std::ffi::CStr;
 
@@ -17,16 +15,16 @@ fn main()
 	println!("Hello, world!");
 	let mut window_width: i32 = 800;
 	let mut window_height: i32 = 600;
+	let enable_vsync: bool = true;
 
-
-	let _sdl = sdl2::init().unwrap();
-	let _video = _sdl.video().unwrap();
+	let _sdl: sdl2::Sdl  = sdl2::init().unwrap();
+	let _video: sdl2::VideoSubsystem = _sdl.video().unwrap();
+	let _sdl_timer: sdl2::TimerSubsystem = _sdl.timer().unwrap();
 	let _window = _video.window("Game", window_width as u32, window_height as u32)
 		.resizable()
 		.opengl()
 		.build()
 		.unwrap();
-
 
 	let _gl_attr = _video.gl_attr();
 
@@ -49,13 +47,22 @@ fn main()
 
 	println!("OpenGL version {}", version);
 
+
 	unsafe
 	{
 		gl::Viewport(0, 0, window_width, window_height); // set viewport
-		gl::ClearColor(0.3, 0.3, 0.5, 1.0);
+		gl::ClearColor(0.0, 0.0, 0.0, 1.0);
+		gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
 	}
 
-
+	if enable_vsync
+	{
+		_video.gl_set_swap_interval(sdl2::video::SwapInterval::VSync).unwrap();
+	}
+	else
+	{
+		_video.gl_set_swap_interval(sdl2::video::SwapInterval::Immediate).unwrap();
+	}
 
 	let vert_shader = render_gl::Shader::from_vert_source(
 		&CString::new(include_str!("triangle.vert")).unwrap()
@@ -74,9 +81,9 @@ fn main()
 
 	let vertices: Vec<f32> = vec![
 		// positions	  // colors
-		0.5, -0.5, 0.0,   1.0, 0.0, 0.0,   // bottom right
-		-0.5, -0.5, 0.0,  0.0, 1.0, 0.0,   // bottom left
-		0.0,  0.5, 0.0,   0.0, 0.0, 1.0	// top
+		0.5, -0.5, 1.0,   1.0, 0.0, 0.0,   // bottom right
+		-0.5, -0.5, 1.0,  0.0, 1.0, 0.0,   // bottom left
+		0.0,  0.5, 1.0,   0.0, 0.0, 1.0	// top
 	];
 
 
@@ -100,12 +107,12 @@ fn main()
 
 
 	let mut vao: gl::types::GLuint = 0;
-	unsafe 
+	unsafe
 	{
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	unsafe 
+	unsafe
 	{
 		gl::BindVertexArray(vao);
 		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
@@ -136,8 +143,16 @@ fn main()
 	let mut dir: f32 = 1.0f32;
 	let mut spd: f32 = 1.0f32;
 
+	let mut now_stamp: u64 = _sdl_timer.performance_counter();
+	let mut last_stamp: u64;
+	let perf_freq: f64 = _sdl_timer.performance_frequency() as f64;
+	let mut dt: f32;
 	'running: loop
 	{
+		last_stamp = now_stamp;
+		now_stamp = _sdl_timer.performance_counter();
+		dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
+
 		for event in _event_pump.poll_iter()
 		{
 			match event
@@ -163,11 +178,10 @@ fn main()
 						{
 							window_width = width;
 							window_height = height;
-							println!("Resized: {}: {}", width, height);
+							println!("Resized: {}: {}", window_width, window_height);
 							unsafe
 							{
-								gl::Viewport(0, 0, width, height); // set viewport
-								gl::ClearColor(0.3, 0.3, 0.5, 1.0);
+								gl::Viewport(0, 0, window_width, window_height); // set viewport
 							}
 
 						},
@@ -182,7 +196,10 @@ fn main()
 		}
 		unsafe
 		{
-			gl::Clear(gl::COLOR_BUFFER_BIT);
+			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
+			gl::DepthFunc(gl::LESS);
+			gl::Enable(gl::DEPTH_TEST);
+			gl::DepthFunc(gl::ALWAYS);
 		}
 
 		shader_program.set_used();
@@ -190,7 +207,7 @@ fn main()
 		{
 			let tmp_pos: f32 = pos / (window_width as f32);
 			gl::Uniform4f(0, tmp_pos, 0.0f32, 0.0f32, 0.0f32);
-			
+
 
 			gl::BindVertexArray(vao);
 			gl::DrawArrays(
@@ -199,7 +216,7 @@ fn main()
 				3 // number of indices to be rendered
 			);
 		}
-		::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+		::std::thread::sleep(std::time::Duration::from_millis(1));
 		_window.gl_swap_window();
 
 		pos += dir * spd;
@@ -207,11 +224,13 @@ fn main()
 		{
 			dir = -1.0f32;
 
-		}	
+		}
 		else if pos < -100.0f32
 		{
 			dir = 1.0f32;
 		}
 		spd = 20.0f32;
+
+		println!("Frame duration: {}", dt);
 	}
 }
