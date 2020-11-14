@@ -7,11 +7,17 @@ use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
 
+<<<<<<< HEAD
 
 pub mod render_gl;
 
 
 fn main()
+=======
+pub mod render_gl;
+
+fn main() 
+>>>>>>> 304ee63e119e3bd0e68bca638549a2479561730f
 {
 	println!("Hello, world!");
 
@@ -146,8 +152,3 @@ fn main()
 		_window.gl_swap_window();
 	}
 }
-
-
-
-
-
