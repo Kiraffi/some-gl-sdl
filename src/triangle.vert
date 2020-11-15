@@ -6,12 +6,26 @@ layout (location = 1) in vec3 color;
 
 layout (location = 0) uniform vec4 screenSizes;
 
-layout (std430, binding=2) buffer shader_data
+/*
+layout (std430, binding=2) uniform shader_data
 {
 	vec4 values[];
 } vData;
+*/
 
-layout (location = 0) out vec3 vColor;
+struct DataValue
+{
+	vec2 pos;
+	uint col;
+	float sz;
+};
+
+layout (std140, binding=2) uniform shader_data
+{
+	uvec4 values[1024];
+} vData;
+
+layout (location = 0) out vec4 vColor;
 
 void main()
 {
@@ -26,11 +40,12 @@ void main()
 	{
 		pp.x = -0.5f;
 	}
-	vec3 c = vec3(pp.xy + 0.5f, 0.0f);
 
 	pp *= screenSizes.y;
-	pp.xy += vData.values[vertId].xy;
+	pp.xy += uintBitsToFloat(vData.values[vertId].xy);
 	pp.xy /= screenSizes.zw;
 	gl_Position = vec4(vec3(pp.xy, 1.0f) , 1.0);
-	vColor = c;
+	uint col = vData.values[vertId].z;
+	uvec4 cu = uvec4((col & 255u), (col >> 8) & 255, (col >> 16) & 255, (col >> 24) & 255);
+	vColor = vec4(cu) / 255.0f;
 }

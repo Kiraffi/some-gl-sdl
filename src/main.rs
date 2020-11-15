@@ -10,19 +10,101 @@ use std::ffi::CStr;
 
 pub mod render_gl;
 
+pub struct Block
+{
+	col: u32
+}
+
 pub struct ShaderData
 {
-	_pos1: f32,
-	_pos2: f32,
-	_col: f32,
+	_pos_x: f32,
+	_pos_y: f32,
+	_col: u32,
 	_size: f32
 }
 
 impl ShaderData
 {
-	pub fn new(_pos1: f32, _pos2: f32, _col: f32, _size: f32) -> Self { Self { _pos1, _pos2, _col, _size } }
+	pub fn new(_pos_x: f32, _pos_y: f32, _col: u32, _size: f32) -> Self { Self { _pos_x, _pos_y, _col, _size } }
 }
 
+pub struct ShaderBuffer
+{
+	handle: gl::types::GLuint,
+	buffer_type: gl::types::GLenum,
+	size: usize
+}
+
+impl ShaderBuffer
+{
+	pub fn new_with_data(buffer_type: gl::types::GLenum, size: usize, data_ptr: *const gl::types::GLvoid) -> Self
+	{
+		let mut tmp_handle: gl::types::GLuint = 0;
+		unsafe
+		{
+			gl::GenBuffers(1, &mut tmp_handle);
+			gl::BindBuffer(buffer_type, tmp_handle);
+			gl::BufferData(
+				buffer_type,
+				size as gl::types::GLsizeiptr,
+				data_ptr,
+				gl::DYNAMIC_COPY, // usage
+			);
+
+			gl::BindBuffer(buffer_type, 0);
+		}
+
+		Self
+		{
+			handle: tmp_handle, buffer_type, size
+		}
+	}
+
+	pub fn new(buffer_type: gl::types::GLenum, size: usize) -> Self
+	{
+		Self::new_with_data(buffer_type, size, 0 as *const gl::types::GLvoid)
+	}
+	pub fn bind(&self, slot :u32)
+	{
+		unsafe
+		{
+			gl::BindBufferBase(self.buffer_type, slot, self.handle);
+		}
+	}
+
+	pub fn write_data(&self, offset_in_bytes: usize, size: usize, ptr: *const gl::types::GLvoid)
+	{
+		unsafe
+		{
+			gl::NamedBufferSubData(self.handle, offset_in_bytes as gl::types::GLintptr, size as gl::types::GLintptr, ptr);
+		}
+	}
+}
+
+
+
+fn clamp(value: f32, min: f32, max: f32) ->f32
+{
+	let mut v = value.max(min);
+	v = v.min(max);
+	return v;
+}
+
+fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
+{
+	let r = clamp(r, 0.0f32, 1.0f32);
+	let g = clamp(g, 0.0f32, 1.0f32);
+	let b = clamp(b, 0.0f32, 1.0f32);
+	let a = clamp(a, 0.0f32, 1.0f32);
+
+	let mut v = 0u32;
+	v += (r * 255.0f32) as u32;
+	v += ((g * 255.0f32) as u32) << 8u32;
+	v += ((b * 255.0f32) as u32) << 16u32;
+	v += ((a * 255.0f32) as u32) << 24u32;
+
+	return v;
+}
 
 fn main()
 {
@@ -31,8 +113,12 @@ fn main()
 	let mut window_height: i32 = 600;
 	let enable_vsync: bool = true;
 
-	let box_size = 20;
+	let box_size = 40;
+	let board_size_x = 10;
+	let board_size_y = 22;
 
+	let board_back_ground_color = get_u32_agbr_color(0.0f32, 0.0f32, 0.0f32, 1.0f32);
+	let block_color = get_u32_agbr_color(1.0f32, 1.0f32, 1.0f32, 1.0f32);
 
 	let _sdl: sdl2::Sdl  = sdl2::init().unwrap();
 	let _video: sdl2::VideoSubsystem = _sdl.video().unwrap();
@@ -68,7 +154,8 @@ fn main()
 	unsafe
 	{
 		gl::Viewport(0, 0, window_width, window_height); // set viewport
-		gl::ClearColor(0.0, 0.0, 0.0, 1.0);
+		gl::ClearColor(0.2, 0.3, 0.5, 1.0);
+		gl::ClearDepth(1.0);
 		// Swapping up and down just messes things up like in renderdoc....
 		//gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
 		gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
@@ -97,122 +184,42 @@ fn main()
 	).unwrap();
 
 	shader_program.set_used();
-/*
-	let vertices: Vec<f32> = vec![
-		// positions	  // colors
-		-0.5, -0.5, 1.0,  1.0, 0.0, 0.0, // bottom right
-		 0.5, -0.5, 1.0,  0.0, 1.0, 0.0, // bottom left
-		 0.5,  0.5, 1.0,  0.0, 0.0, 1.0, // top
-		-0.5,  0.5, 1.0,  0.0, 0.0, 1.0  // top
-	];
 
-	let indices: Vec<gl::types::GLuint> = vec![
-		0, 1, 2,
-		2, 3, 0
-	];
-*/
 	let mut shader_data: Vec<ShaderData> = Vec::new();
-
-	for y in 0..25
+	// Fill board
 	{
-		for x in 0..35
+		let col = board_back_ground_color;
+		for y in 0..board_size_y
 		{
-			shader_data.push(ShaderData::new((x * box_size) as f32, (y * box_size) as f32, 0.0f32, box_size as f32 ));
+			for x in 0..board_size_x
+			{
+				let x_pos = (x as f32 - (board_size_x) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
+				let y_pos = (y as f32 - (board_size_y) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
+				shader_data.push(ShaderData::new(x_pos, y_pos, col, box_size as f32 ));
+			}
 		}
 	}
-/*
-	let mut vbo: gl::types::GLuint = 0;
-	unsafe
-	{
-		gl::GenBuffers(1, &mut vbo);
-	}
-	unsafe
-	{
-		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-		gl::BufferData(
-			gl::ARRAY_BUFFER, // target
-			(vertices.len() * std::mem::size_of::<f32>()) as gl::types::GLsizeiptr, // size of data in bytes
-			vertices.as_ptr() as *const gl::types::GLvoid, // pointer to data
-			gl::STATIC_DRAW, // usage
-		);
-		gl::BindBuffer(gl::ARRAY_BUFFER, 0); // unbind the buffer
-	}
-	let mut indexbo: gl::types::GLuint = 0;
-	unsafe
-	{
-		gl::GenBuffers(1, &mut indexbo);
-	}
-	unsafe
-	{
-		gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, indexbo);
-		gl::BufferData(
-			gl::ELEMENT_ARRAY_BUFFER, // target
-			(indices.len() * std::mem::size_of::<gl::types::GLuint>()) as gl::types::GLsizeiptr, // size of data in bytes
-			indices.as_ptr() as *const gl::types::GLvoid, // pointer to data
-			gl::STATIC_DRAW, // usage
-		);
-		gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, 0); // unbind the buffer
-	}
-*/
-	let mut ssbo: gl::types::GLuint = 0;
 
-	unsafe
-	{
-		gl::GenBuffers(1, &mut ssbo);
-		//let memsize = std::mem::size_of::<ShaderData>() * shader_data.len();
-		gl::BindBuffer(gl::SHADER_STORAGE_BUFFER, ssbo);
-		gl::BufferData(
-			gl::SHADER_STORAGE_BUFFER, // target
-			(shader_data.len() * std::mem::size_of::<ShaderData>()) as gl::types::GLsizeiptr, // size of data in bytes
-			shader_data.as_ptr() as *const gl::types::GLvoid, // pointer to data
-			gl::DYNAMIC_COPY, // usage
-		);
-
-		//gl::BufferData(gl::SHADER_STORAGE_BUFFER, memsize as gl::types::GLsizeiptr, shader_data.as_ptr() as *const gl::types::GLvoid, gl::DYNAMIC_COPY);
-		gl::BindBuffer(gl::SHADER_STORAGE_BUFFER, 0);
-	}
+	let ssbo: ShaderBuffer = ShaderBuffer::new_with_data(gl::UNIFORM_BUFFER, // SHADER_STORAGE_BUFFER,
+		shader_data.len() * std::mem::size_of::<ShaderData>(),
+		shader_data.as_ptr() as *const gl::types::GLvoid
+	);
 
 	let mut vao: gl::types::GLuint = 0;
 	unsafe
 	{
 		gl::GenVertexArrays(1, &mut vao);
 	}
-/*
-	unsafe
-	{
-		gl::BindVertexArray(vao);
-		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-		gl::EnableVertexAttribArray(0); // this is "layout (location = 0)" in vertex shader
-		gl::VertexAttribPointer(
-			0, // index of the generic vertex attribute ("layout (location = 0)")
-			3, // the number of components per generic vertex attribute
-			gl::FLOAT, // data type
-			gl::FALSE, // normalized (int-to-float conversion)
-			(6 * std::mem::size_of::<f32>()) as gl::types::GLint, // stride (byte offset between consecutive attributes)
-			std::ptr::null() // offset of the first component
-		);
-		gl::EnableVertexAttribArray(1); // this is "layout (location = 0)" in vertex shader
-		gl::VertexAttribPointer(
-			1, // index of the generic vertex attribute ("layout (location = 0)")
-			3, // the number of components per generic vertex attribute
-			gl::FLOAT, // data type
-			gl::FALSE, // normalized (int-to-float conversion)
-			(6 * std::mem::size_of::<f32>()) as gl::types::GLint, // stride (byte offset between consecutive attributes)
-			(3 * std::mem::size_of::<f32>()) as *const gl::types::GLvoid // offset of the first component
-		);
-
-		gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-		gl::BindVertexArray(0);
-	}
-*/
-	let mut pos: f32 = 0.0f32;
-	let mut dir: f32 = 1.0f32;
-	let mut spd: f32 = 1.0f32;
 
 	let mut now_stamp: u64 = _sdl_timer.performance_counter();
 	let mut last_stamp: u64;
 	let perf_freq: f64 = _sdl_timer.performance_frequency() as f64;
 	let mut dt: f32;
+
+
+	let mut pos_x = 0u32;
+	let mut pos_y = 0u32;
+
 	'running: loop
 	{
 		last_stamp = now_stamp;
@@ -228,13 +235,54 @@ fn main()
 				{
 					break 'running
 				},
-				Event::KeyDown { keycode: Some(Keycode::Q), .. } =>
+				Event::KeyDown { keycode: Some(Keycode::A), .. } |
+				Event::KeyDown { keycode: Some(Keycode::Left), .. } =>
 				{
-					println!("Q pressed\n");
+					if pos_x > 0
+					{
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
+						pos_x -= 1;
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
+
+						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
+					}
 				},
-				Event::KeyUp { keycode: Some(Keycode::Q), .. } =>
+				Event::KeyDown { keycode: Some(Keycode::D), .. } |
+				Event::KeyDown { keycode: Some(Keycode::Right), .. } =>
 				{
-					println!("Q released\n");
+					if pos_x < board_size_x - 1
+					{
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
+						pos_x += 1;
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
+
+						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
+					}
+				},
+				Event::KeyDown { keycode: Some(Keycode::W), .. } |
+				Event::KeyDown { keycode: Some(Keycode::Up), .. } =>
+				{
+					if pos_y < board_size_y - 1
+					{
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
+						pos_y += 1;
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
+
+						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
+					}
+				},
+
+				Event::KeyDown { keycode: Some(Keycode::S), .. } |
+				Event::KeyDown { keycode: Some(Keycode::Down), .. } =>
+				{
+					if pos_y > 0
+					{
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
+						pos_y -= 1;
+						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
+
+						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
+					}
 				},
 				Event::Window {win_event, ..  } =>
 				{
@@ -271,15 +319,14 @@ fn main()
 		shader_program.set_used();
 		unsafe
 		{
-			let tmp_pos: f32 = pos / (window_width as f32);
-			gl::Uniform4f(0, tmp_pos, box_size as f32, window_width as f32, window_height as f32);
+			gl::Uniform4f(0, 0.0f32, box_size as f32, window_width as f32, window_height as f32);
 
 			gl::BindVertexArray(vao);
 			//gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, indexbo);
 
 
 			//gl::BindBufferBase(gl::SHADER_STORAGE_BUFFER, block_index, ssbo);
-			gl::BindBufferBase(gl::SHADER_STORAGE_BUFFER, 2, ssbo);
+			ssbo.bind(2);
 			/*
 			gl::BindBufferRange(gl::SHADER_STORAGE_BUFFER,
 				2,
@@ -300,19 +347,7 @@ fn main()
 		}
 		::std::thread::sleep(std::time::Duration::from_millis(1));
 		_window.gl_swap_window();
-
-		pos += dir * spd;
-		if pos > 100.0f32
-		{
-			dir = -1.0f32;
-
-		}
-		else if pos < -100.0f32
-		{
-			dir = 1.0f32;
-		}
-		spd = 20.0f32;
-
-		println!("Frame duration: {}", dt);
+		//println!("x: {}, y: {}", pos_x, pos_y);
+		//println!("Frame duration: {}", dt);
 	}
 }
