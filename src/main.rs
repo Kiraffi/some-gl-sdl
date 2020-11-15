@@ -12,6 +12,7 @@ pub mod render_gl;
 
 pub struct Block
 {
+	blocks: Vec<i32>,
 	col: u32
 }
 
@@ -220,11 +221,35 @@ fn main()
 	let mut pos_x = 0u32;
 	let mut pos_y = 0u32;
 
+	let blocks = vec![
+		Block{ blocks: vec![1,1,1,1, 0,0,0,0], col: get_u32_agbr_color(1.0, 0.0, 0.0, 1.0)},
+		Block{ blocks: vec![0,1,1,1, 0,0,0,1], col: get_u32_agbr_color(0.0, 1.0, 0.0, 1.0)},
+		Block{ blocks: vec![0,1,1,1, 0,1,0,0], col: get_u32_agbr_color(0.0, 0.0, 1.0, 1.0)},
+
+		Block{ blocks: vec![0,1,1,1, 0,0,1,0], col: get_u32_agbr_color(1.0, 0.0, 1.0, 1.0)},
+		Block{ blocks: vec![0,1,1,0, 0,1,1,0], col: get_u32_agbr_color(0.0, 1.0, 1.0, 1.0)},
+		Block{ blocks: vec![0,1,1,0, 0,0,1,1], col: get_u32_agbr_color(1.0, 1.0, 0.0, 1.0)},
+		Block{ blocks: vec![0,0,1,1, 0,1,1,0], col: get_u32_agbr_color(1.0, 0.6, 1.0, 1.0)}
+	];
+
+	let mut block_type = 0;
+
 	'running: loop
 	{
 		last_stamp = now_stamp;
 		now_stamp = _sdl_timer.performance_counter();
 		dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
+
+		for y in 0..2
+		{
+			for x in 0..4
+			{
+				if x + pos_x < board_size_x && y + pos_y < board_size_y
+				{
+					shader_data[((pos_y + y) * board_size_x + (pos_x + x)) as usize]._col = board_back_ground_color;
+				}
+			}
+		}
 
 		for event in _event_pump.poll_iter()
 		{
@@ -240,23 +265,21 @@ fn main()
 				{
 					if pos_x > 0
 					{
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
 						pos_x -= 1;
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
-
-						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
 					}
 				},
+				Event::KeyDown { keycode: Some(Keycode::F), .. } =>
+				{
+					block_type = (block_type + 1) % 7;
+				},
+
+
 				Event::KeyDown { keycode: Some(Keycode::D), .. } |
 				Event::KeyDown { keycode: Some(Keycode::Right), .. } =>
 				{
 					if pos_x < board_size_x - 1
 					{
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
 						pos_x += 1;
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
-
-						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
 					}
 				},
 				Event::KeyDown { keycode: Some(Keycode::W), .. } |
@@ -264,11 +287,7 @@ fn main()
 				{
 					if pos_y < board_size_y - 1
 					{
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
 						pos_y += 1;
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
-
-						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
 					}
 				},
 
@@ -277,11 +296,7 @@ fn main()
 				{
 					if pos_y > 0
 					{
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = board_back_ground_color;
 						pos_y -= 1;
-						shader_data[(pos_y * board_size_x + pos_x) as usize]._col = block_color;
-
-						ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
 					}
 				},
 				Event::Window {win_event, ..  } =>
@@ -315,6 +330,21 @@ fn main()
 			gl::Enable(gl::DEPTH_TEST);
 			gl::DepthFunc(gl::ALWAYS);
 		}
+
+		for y in 0u32..2u32
+		{
+			for x in 0u32..4u32
+			{
+				if blocks[block_type as usize].blocks[(x + y * 4) as usize] == 1
+				{
+					if x + pos_x < board_size_x && y + pos_y < board_size_y
+					{
+						shader_data[((pos_y + y) * board_size_x + (pos_x + x)) as usize]._col = block_color;
+					}
+				}
+			}
+		}
+		ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
 
 		shader_program.set_used();
 		unsafe
