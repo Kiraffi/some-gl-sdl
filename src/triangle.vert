@@ -7,9 +7,9 @@ layout (location = 1) in vec3 color;
 layout (location = 0) uniform vec4 screenSizes;
 
 /*
-layout (std430, binding=2) uniform shader_data
+layout (std430, binding=2) buffer shader_data
 {
-	vec4 values[];
+	uvec4 values[];
 } vData;
 */
 
@@ -24,6 +24,7 @@ layout (std140, binding=2) uniform shader_data
 {
 	uvec4 values[1024];
 } vData;
+
 
 layout (location = 0) out vec4 vColor;
 
