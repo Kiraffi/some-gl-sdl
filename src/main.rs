@@ -70,8 +70,9 @@ impl Board
 			{
 				if BLOCKS[piece.block_type as usize].blocks[(x + y * 4) as usize] == 1
 				{
-					let x_pos = x + piece.pos_x;
-					let y_pos = y + piece.pos_y;
+					let (mut x_pos, mut y_pos) = get_rotated(x, y, piece.rotation);
+					x_pos += piece.pos_x;
+					y_pos += piece.pos_y;
 					if x_pos >= self.size_x || y_pos >= self.size_y + 4 || x_pos < 0 || y_pos < 0
 					{
 						return true;
@@ -94,14 +95,92 @@ impl Board
 			{
 				if BLOCKS[piece.block_type as usize].blocks[(x + y * 4) as usize] == 1
 				{
-					let x_pos = x + piece.pos_x;
-					let y_pos = y + piece.pos_y;
+					let (mut x_pos, mut y_pos) = get_rotated(x, y, piece.rotation);
+					x_pos += piece.pos_x;
+					y_pos += piece.pos_y;
 					if x_pos < self.size_x && y_pos < self.size_y + 4 && x_pos >= 0 && y_pos >= 0
 					{
 						self.board[(x_pos + y_pos * self.size_x) as usize] = piece.block_type + 1;
 					}
 				}
 			}
+		}
+	}
+
+	pub fn check_left_border(&mut self, piece: &BlockPiece) -> bool
+	{
+		for y in 0..2i32
+		{
+			for x in 0..4i32
+			{
+				if BLOCKS[piece.block_type as usize].blocks[(x + y * 4) as usize] == 1
+				{
+					let (mut x_pos, _) = get_rotated(x, y, piece.rotation);
+					x_pos += piece.pos_x;
+					if x_pos < 0
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	pub fn check_right_border(&mut self, piece: &BlockPiece) -> bool
+	{
+		for y in 0..2i32
+		{
+			for x in 0..4i32
+			{
+				if BLOCKS[piece.block_type as usize].blocks[(x + y * 4) as usize] == 1
+				{
+					let (mut x_pos, _) = get_rotated(x, y, piece.rotation);
+					x_pos += piece.pos_x;
+					if x_pos >= self.size_x
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	pub fn check_row(&self, row_number: i32) -> bool
+	{
+		if row_number < 0 || row_number >= self.size_y
+		{
+			return false;
+		}
+
+		for x in 0.. self.size_x
+		{
+			if self.board[(x + row_number * self.size_x) as usize] == 0
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	pub fn remove_row(&mut self, row_number: i32)
+	{
+		if row_number < 0 || row_number >= self.size_y
+		{
+			return;
+		}
+
+		for y in row_number..self.size_y - 1
+		{
+			for x in 0.. self.size_x
+			{
+				self.board[(x + y * self.size_x) as usize] = self.board[(x + (y + 1) * self.size_x) as usize];
+			}
+		}
+		for x in 0.. self.size_x
+		{
+			self.board[(x + (self.size_y - 1) * self.size_x) as usize] = 0;
 		}
 	}
 }
@@ -175,7 +254,28 @@ impl ShaderBuffer
 	}
 }
 
-
+fn get_rotated(x: i32, y: i32, rotation: u8) -> (i32, i32)
+{
+	let mut pos_x = x;
+	let mut pos_y = y;
+	if rotation == 1
+	{
+		pos_x = 1 - y;
+		pos_y = x;
+	}
+	if rotation == 2
+	{
+		pos_x = 3 - x;
+		pos_y = 1 - y;
+	}
+	if rotation == 3
+	{
+		pos_x = y;
+		pos_y = 3 - x;
+	}
+	// Case 0 no changes.
+	return (pos_x, pos_y);
+}
 
 fn clamp(value: f32, min: f32, max: f32) ->f32
 {
@@ -211,6 +311,33 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 		state.player.pos_x = 3;
 		state.player.pos_y = 20;
 		state.player.block_type = (state.player.block_type + 1) % 7;
+
+		let mut rows = 0;
+		for y in 0..board.size_y
+		{
+			while board.check_row(y)
+			{
+				rows += 1;
+				board.remove_row(y);
+			}
+		}
+		if rows == 1
+		{
+			state.score += 1;
+		}
+		if rows == 2
+		{
+			state.score += 3;
+		}
+		if rows == 3
+		{
+			state.score += 6;
+		}
+		if rows == 4
+		{
+			state.score += 10;
+		}
+		println!("Score: {}", state.score);
 		return false;
 	}
 	else
@@ -393,8 +520,19 @@ fn main()
 				Event::KeyDown { keycode: Some(Keycode::W), .. } |
 				Event::KeyDown { keycode: Some(Keycode::Up), .. } =>
 				{
-					state.player.pos_y += 1;
-					state.player.pos_y = state.player.pos_y.min(board.size_y - 1);
+					state.player.rotation = (state.player.rotation + 1) % 4;
+					while board.check_left_border(&state.player)
+					{
+						state.player.pos_x += 1;
+					}
+					while board.check_right_border(&state.player)
+					{
+						state.player.pos_x -= 1;
+					}
+					while board.check_hit(&state.player)
+					{
+						state.player.pos_y += 1;
+					}
 				},
 
 				Event::KeyDown { keycode: Some(Keycode::S), .. } |
@@ -449,9 +587,10 @@ fn main()
 			{
 				if BLOCKS[state.player.block_type as usize].blocks[(x + y * 4) as usize] == 1
 				{
-					if x + state.player.pos_x < board.size_x && y + state.player.pos_y < board.size_y
+					let (pos_x, pos_y) = get_rotated(x, y, state.player.rotation);
+					if pos_x + state.player.pos_x < board.size_x && pos_y + state.player.pos_y < board.size_y
 					{
-						shader_data[((state.player.pos_y + y) * board.size_x + (state.player.pos_x + x)) as usize]._col = colors[(state.player.block_type + 1) as usize];
+						shader_data[(state.player.pos_x + pos_x + (state.player.pos_y + pos_y) * board.size_x) as usize]._col = colors[(state.player.block_type + 1) as usize];
 					}
 				}
 			}
