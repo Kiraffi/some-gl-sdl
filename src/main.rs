@@ -12,15 +12,15 @@ pub mod render_gl;
 
 pub struct ShaderData
 {
-	pos1: f32,
-	pos2: f32,
-	col: f32,
-	size: f32
+	_pos1: f32,
+	_pos2: f32,
+	_col: f32,
+	_size: f32
 }
 
 impl ShaderData
 {
-	pub fn new(pos1: f32, pos2: f32, col: f32, size: f32) -> Self { Self { pos1, pos2, col, size } }
+	pub fn new(_pos1: f32, _pos2: f32, _col: f32, _size: f32) -> Self { Self { _pos1, _pos2, _col, _size } }
 }
 
 
@@ -43,10 +43,10 @@ fn main()
 		.build()
 		.unwrap();
 
-	let _gl_attr = _video.gl_attr();
+	let gl_attr = _video.gl_attr();
 
-	_gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
-	_gl_attr.set_context_version(4, 5);
+	gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
+	gl_attr.set_context_version(4, 5);
 
 	let mut _event_pump = _sdl.event_pump().unwrap();
 
@@ -273,7 +273,6 @@ fn main()
 		{
 			let tmp_pos: f32 = pos / (window_width as f32);
 			gl::Uniform4f(0, tmp_pos, box_size as f32, window_width as f32, window_height as f32);
-			let c_to_print = CString::new("shader_data").expect("CString::new failed");
 
 			gl::BindVertexArray(vao);
 			//gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, indexbo);
