@@ -1,11 +1,15 @@
-[package]
-name = "game"
-version = "0.1.0"
-authors = ["Kiraffi <10407365+Kiraffi@users.noreply.github.com>"]
-edition = "2018"
+[workspace]
+members = [
+    "rustris",
+    "paint"
+]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.dev]
+codegen-units = 32
+incremental = true
+overflow-checks = true
+debug-assertions = true
+lto = false
+debug = true
+opt-level = 0
 
-[dependencies]
-gl = "0.14.0"
-sdl2 = {version = "0.34.3", default-features = false}
