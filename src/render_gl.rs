@@ -98,14 +98,36 @@ impl Shader
 		Ok(Shader { id })
 	}
 
-	pub fn from_vert_source(source: &CStr) -> Result<Shader, String>
+	pub fn from_vert_source(source: &CStr, name: &String) -> Result<Shader, String>
 	{
-		Shader::from_source(source, gl::VERTEX_SHADER)
+		match Shader::from_source(source, gl::VERTEX_SHADER)
+		{
+			Ok(k) =>
+			{
+				return Ok(k);
+			}
+			Err(e) =>
+			{
+				println!("Failed to compile vertex shader: {}", name);
+				return Err(e);
+			}
+		}
 	}
 
-	pub fn from_frag_source(source: &CStr) -> Result<Shader, String>
+	pub fn from_frag_source(source: &CStr, name: &String) -> Result<Shader, String>
 	{
-		Shader::from_source(source, gl::FRAGMENT_SHADER)
+		match Shader::from_source(source, gl::FRAGMENT_SHADER)
+		{
+			Ok(k) =>
+			{
+				return Ok(k);
+			}
+			Err(e) =>
+			{
+				println!("Failed to compile fragment shader: {}", name);
+				return Err(e);
+			}
+		}
 	}
 	pub fn id(&self) -> gl::types::GLuint
 	{

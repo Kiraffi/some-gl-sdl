@@ -196,12 +196,6 @@ pub struct ShaderData
 	_size: f32
 }
 
-impl ShaderData
-{
-	pub fn new(_pos_x: f32, _pos_y: f32, _col: u32, _size: f32) -> Self { Self { _pos_x, _pos_y, _col, _size } }
-}
-
-
 fn get_rotated(x: i32, y: i32, rotation: u8) -> (i32, i32)
 {
 	let mut pos_x = x;
@@ -295,284 +289,386 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 	}
 }
 
-fn main()
+
+struct App 
 {
-	println!("Hello, world!");
-	let mut window_width: i32 = 800;
-	let mut window_height: i32 = 600;
-	let enable_vsync: bool = true;
+	
+	window_width: u32,
+	window_height: u32,
+	vsync: bool,
 
-	let box_size = 40;
+	sdl: sdl2::Sdl,
+	video: sdl2::VideoSubsystem,
+	sdl_timer: sdl2::TimerSubsystem,
+	window: sdl2::video::Window,
+	event_pump: sdl2::EventPump,
 
-	let mut board: Board = Board::new(10, 20);
+	//gl: *const std::os::raw::c_void,
+	gl_context: sdl2::video::GLContext
+}
 
-	let board_back_ground_color = get_u32_agbr_color(0.0f32, 0.0f32, 0.0f32, 1.0f32);
-
-	let _sdl: sdl2::Sdl  = sdl2::init().unwrap();
-	let _video: sdl2::VideoSubsystem = _sdl.video().unwrap();
-	let _sdl_timer: sdl2::TimerSubsystem = _sdl.timer().unwrap();
-	let _window = _video.window("Rustris", window_width as u32, window_height as u32)
+impl App
+{
+	pub fn init(window_width: u32, window_height: u32, window_name: &str, vsync: bool) -> Result<Self, String>
+	{
+		/*
+		if width == 1
+		{
+			return Err("failed to initialize".to_string());
+		}
+*/
+		let sdl: sdl2::Sdl  = sdl2::init().unwrap();
+		let video: sdl2::VideoSubsystem = sdl.video().unwrap();
+		let sdl_timer: sdl2::TimerSubsystem = sdl.timer().unwrap();
+		let window;
+		match video.window(window_name, window_width, window_height)
 		.resizable()
 		.opengl()
 		.build()
-		.unwrap();
-
-	let gl_attr = _video.gl_attr();
-
-	gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
-	gl_attr.set_context_version(4, 5);
-
-	let mut _event_pump = _sdl.event_pump().unwrap();
-
-	let _gl_context = _window.gl_create_context().unwrap();
-	let _gl = gl::load_with(|s| _video.gl_get_proc_address(s) as *const std::os::raw::c_void);
-
-
-	let version = unsafe
-	{
-		let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _)
-			.to_bytes()
-			.to_vec();
-		String::from_utf8(data).unwrap()
-	};
-
-	println!("OpenGL version {}", version);
-
-
-	unsafe
-	{
-		gl::Viewport(0, 0, window_width, window_height); // set viewport
-		gl::ClearColor(0.2, 0.3, 0.5, 1.0);
-		gl::ClearDepth(1.0);
-		// Swapping up and down just messes things up like in renderdoc....
-		//gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
-		gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
-	}
-
-	if enable_vsync
-	{
-		_video.gl_set_swap_interval(sdl2::video::SwapInterval::VSync).unwrap();
-	}
-	else
-	{
-		_video.gl_set_swap_interval(sdl2::video::SwapInterval::Immediate).unwrap();
-	}
-
-	let vert_shader = render_gl::Shader::from_vert_source(
-		&CString::new(include_str!("triangle.vert")).unwrap()
-	).unwrap();
-
-	let frag_shader = render_gl::Shader::from_frag_source(
-		&CString::new(include_str!("triangle.frag")).unwrap()
-	).unwrap();
-
-
-	let shader_program = render_gl::Program::from_shaders(
-		&[vert_shader, frag_shader]
-	).unwrap();
-
-	shader_program.set_used();
-
-	// Fill board for shader
-	let mut shader_data: Vec<ShaderData> = Vec::new();
-	{
-		let col = board_back_ground_color;
-		for y in 0..board.size_y
 		{
-			for x in 0..board.size_x
+			Ok(v) => 
 			{
-				let x_pos = (x as f32 - (board.size_x) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
-				let y_pos = (y as f32 - (board.size_y) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
-				shader_data.push(ShaderData::new(x_pos, y_pos, col, box_size as f32 ));
+				window = v; 
+			} 
+			Err(e) => 
+			{ 
+				println!("Error: {}", e); 
+				return Err("Failed to build window!".to_string()); 
 			}
 		}
-	}
-
-	let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
-		//gl::SHADER_STORAGE_BUFFER,
-		gl::UNIFORM_BUFFER,
-		shader_data.len() * std::mem::size_of::<ShaderData>(),
-		shader_data.as_ptr() as *const gl::types::GLvoid
-	);
-
-	let mut vao: gl::types::GLuint = 0;
-	unsafe
-	{
-		gl::GenVertexArrays(1, &mut vao);
-	}
-
-	let mut now_stamp: u64 = _sdl_timer.performance_counter();
-	let mut last_stamp: u64;
-	let perf_freq: f64 = _sdl_timer.performance_frequency() as f64;
-	let mut _dt: f32;
-
-
-	let colors: Vec<u32> = vec![
-		board_back_ground_color,
-		get_u32_agbr_color(1.0, 0.0, 0.0, 1.0),
-		get_u32_agbr_color(0.0, 1.0, 0.0, 1.0),
-		get_u32_agbr_color(0.0, 0.0, 1.0, 1.0),
-		get_u32_agbr_color(1.0, 0.0, 1.0, 1.0),
-		get_u32_agbr_color(0.0, 1.0, 1.0, 1.0),
-		get_u32_agbr_color(1.0, 1.0, 0.0, 1.0),
-		get_u32_agbr_color(1.0, 0.6, 1.0, 1.0),
-	];
-
-
-
-
-	let mut state = GameState{ player: BlockPiece{pos_x: 3, pos_y: 20, block_type: 0, rotation: 0}, score: 0, last_row_down: now_stamp };
-
-	'running: loop
-	{
-
-		last_stamp = now_stamp;
-		now_stamp = _sdl_timer.performance_counter();
-		_dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
-
-		for event in _event_pump.poll_iter()
+	
+		let gl_attr = video.gl_attr();
+	
+		gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
+		gl_attr.set_context_version(4, 5);
+	
+		gl_attr.set_context_flags().debug().set();
+		
+	
+		let gl_context = window.gl_create_context()?;
+		let gl = gl::load_with(|s| video.gl_get_proc_address(s) as *const std::os::raw::c_void);
+	
+		
+	
+		let version;
+		match unsafe
 		{
-			match event
+			let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _)
+				.to_bytes()
+				.to_vec();
+			String::from_utf8(data)
+		}
+		{
+			Ok(v) => 
 			{
-				Event::Quit {..} |
-				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
-				{
-					break 'running
-				},
-				Event::KeyDown { keycode: Some(Keycode::A), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Left), .. } =>
-				{
-					let mut tmp = state.player.clone();
-					tmp.pos_x -= 1;
-					if !board.check_hit(&tmp)
-					{
-						state.player.pos_x -= 1;
-					}
-				},
-				Event::KeyDown { keycode: Some(Keycode::F), .. } =>
-				{
-					state.player.block_type = (state.player.block_type + 1) % 7;
-				},
-
-
-				Event::KeyDown { keycode: Some(Keycode::D), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Right), .. } =>
-				{
-					let mut tmp = state.player.clone();
-					tmp.pos_x += 1;
-					if !board.check_hit(&tmp)
-					{
-						state.player.pos_x += 1;
-					}
-				},
-				Event::KeyDown { keycode: Some(Keycode::W), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Up), .. } =>
-				{
-					state.player.rotation = (state.player.rotation + 1) % 4;
-					while board.check_left_border(&state.player)
-					{
-						state.player.pos_x += 1;
-					}
-					while board.check_right_border(&state.player)
-					{
-						state.player.pos_x -= 1;
-					}
-					while board.check_hit(&state.player)
-					{
-						state.player.pos_y += 1;
-					}
-				},
-
-				Event::KeyDown { keycode: Some(Keycode::S), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Down), .. } =>
-				{
-					while row_down(&mut state, &mut board, now_stamp) {}
-				},
-				Event::Window {win_event, ..  } =>
-				{
-					match win_event
-					{
-						sdl2::event::WindowEvent::Resized( width, height ) =>
-						{
-							window_width = width;
-							window_height = height;
-							println!("Resized: {}: {}", window_width, window_height);
-							unsafe
-							{
-								gl::Viewport(0, 0, window_width, window_height); // set viewport
-							}
-
-						},
-
-						_ => {}
-					}
-				},
-				_ => {}
+				version = v; 
+			} 
+			Err(e) => 
+			{ 
+				println!("Error: {}", e); 
+				return Err("Failed to read version data from gl!".to_string()); 
 			}
 		}
-
-
-		// Write all the tiles into color from background.
-		for y in 0..board.size_y
+	
+		println!("OpenGL version {}", version);
+	
+	
+		unsafe
 		{
-			for x in 0..board.size_x
-			{
-				let index = (y * board.size_x + x) as usize;
-				shader_data[index]._col = colors[board.board[index] as usize];
-			}
+			gl::Viewport(0, 0, window_width as i32, window_height as i32); // set viewport
+			gl::ClearColor(0.2, 0.3, 0.5, 1.0);
+			gl::ClearDepth(1.0);
+			// Swapping up and down just messes things up like in renderdoc....
+			//gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
+			gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
+		}
+	
+
+		let mut event_pump = sdl.event_pump()?;
+
+	
+		return Ok(Self{ window_width, window_height, vsync: vsync, 
+			sdl, video, sdl_timer, window, event_pump, gl_context });
+	}
+
+	pub fn enable_vsync(&mut self, enable_vsync: bool) -> Result<(), String>
+	{
+		if enable_vsync
+		{
+			self.video.gl_set_swap_interval(sdl2::video::SwapInterval::VSync)?;
+		}
+		else
+		{
+			self.video.gl_set_swap_interval(sdl2::video::SwapInterval::Immediate)?;
 		}
 
-		if (now_stamp - state.last_row_down) as f64 * 1000.0f64 / perf_freq > 500.0f64
-		{
-			row_down(&mut state, &mut board, now_stamp);
-		}
+		self.vsync = enable_vsync;
+		//return Err("Test fail?".to_string());
+		return Ok(());
+	}
+
+	pub fn run(&mut self) -> Result<(), String>
+	{
+		self.enable_vsync(self.vsync) ?;
+
+		let box_size = 40;
+		let board_back_ground_color = get_u32_agbr_color(0.0f32, 0.0f32, 0.0f32, 1.0f32);
+
+		let vert_shader = render_gl::Shader::from_vert_source(
+			&CString::new(include_str!("triangle.vert")).unwrap(), &"triangle.vert".to_string()
+		)?;
+
+		let frag_shader = render_gl::Shader::from_frag_source(
+			&CString::new(include_str!("triangle.frag")).unwrap(), &"triangle.frag".to_string()
+		)?;
 
 
-		// Draw moving piece.
-		for y in 0i32..2i32
+		let shader_program = render_gl::Program::from_shaders(
+			&[vert_shader, frag_shader]
+		).unwrap();
+
+		shader_program.set_used();
+
+
+		let mut board: Board = Board::new(10, 20);
+
+
+		// Fill board for shader
+		let mut shader_data: Vec<ShaderData> = Vec::new();
 		{
-			for x in 0i32..4i32
+			let col = board_back_ground_color;
+			for y in 0..board.size_y
 			{
-				if BLOCKS[state.player.block_type as usize].blocks[(x + y * 4) as usize] == 1
+				for x in 0..board.size_x
 				{
-					let (pos_x, pos_y) = get_rotated(x, y, state.player.rotation);
-					if pos_x + state.player.pos_x < board.size_x && pos_y + state.player.pos_y < board.size_y
-					{
-						shader_data[(state.player.pos_x + pos_x + (state.player.pos_y + pos_y) * board.size_x) as usize]._col = colors[(state.player.block_type + 1) as usize];
-					}
+					let pos_x = (x as f32 - (board.size_x) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
+					let pos_y = (y as f32 - (board.size_y) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
+				
+					shader_data.push(ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32});
 				}
 			}
 		}
-		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
 
 
 
+		let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
+			//gl::SHADER_STORAGE_BUFFER,
+			gl::UNIFORM_BUFFER,
+			shader_data.len() * std::mem::size_of::<ShaderData>(),
+			shader_data.as_ptr() as *const gl::types::GLvoid
+		);
 
-		shader_program.set_used();
+		let mut vao: gl::types::GLuint = 0;
 		unsafe
 		{
-			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
-			gl::DepthFunc(gl::LESS);
-			gl::Enable(gl::DEPTH_TEST);
-			gl::DepthFunc(gl::ALWAYS);
-
-			gl::Uniform4f(0, 0.0f32, box_size as f32, window_width as f32, window_height as f32);
-
-			gl::BindVertexArray(vao);
-
-			ssbo.bind(2);
-
-			gl::DrawArrays(
-				gl::TRIANGLES, // mode
-				0, // starting index in the enabled arrays
-				6 * shader_data.len() as i32 // number of indices to be rendered
-			);
-
-			//gl::DrawElements(gl::TRIANGLES, 3, gl::UNSIGNED_INT, std::ptr::null());
+			gl::GenVertexArrays(1, &mut vao);
 		}
-		::std::thread::sleep(std::time::Duration::from_millis(1));
-		_window.gl_swap_window();
-		//println!("x: {}, y: {}", pos_x, pos_y);
-		//println!("Frame duration: {}", _dt);
+
+		let mut now_stamp: u64 = self.sdl_timer.performance_counter();
+		let mut last_stamp: u64;
+		let perf_freq: f64 = self.sdl_timer.performance_frequency() as f64;
+		let mut _dt: f32;
+
+
+		let colors: Vec<u32> = vec![
+			board_back_ground_color,
+			get_u32_agbr_color(1.0, 0.0, 0.0, 1.0),
+			get_u32_agbr_color(0.0, 1.0, 0.0, 1.0),
+			get_u32_agbr_color(0.0, 0.0, 1.0, 1.0),
+			get_u32_agbr_color(1.0, 0.0, 1.0, 1.0),
+			get_u32_agbr_color(0.0, 1.0, 1.0, 1.0),
+			get_u32_agbr_color(1.0, 1.0, 0.0, 1.0),
+			get_u32_agbr_color(1.0, 0.6, 1.0, 1.0),
+		];
+
+
+
+		let mut state = GameState{ player: BlockPiece{pos_x: 3, pos_y: 20, block_type: 0, rotation: 0}, score: 0, last_row_down: now_stamp };
+
+		loop
+		{
+
+			last_stamp = now_stamp;
+			now_stamp = self.sdl_timer.performance_counter();
+			_dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
+
+			for event in self.event_pump.poll_iter()
+			{
+				match event
+				{
+					Event::Quit {..} |
+					Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
+					{
+						return Ok(());
+					},
+					Event::KeyDown { keycode: Some(Keycode::A), .. } |
+					Event::KeyDown { keycode: Some(Keycode::Left), .. } =>
+					{
+						let mut tmp = state.player.clone();
+						tmp.pos_x -= 1;
+						if !board.check_hit(&tmp)
+						{
+							state.player.pos_x -= 1;
+						}
+					},
+					Event::KeyDown { keycode: Some(Keycode::F), .. } =>
+					{
+						state.player.block_type = (state.player.block_type + 1) % 7;
+					},
+
+
+					Event::KeyDown { keycode: Some(Keycode::D), .. } |
+					Event::KeyDown { keycode: Some(Keycode::Right), .. } =>
+					{
+						let mut tmp = state.player.clone();
+						tmp.pos_x += 1;
+						if !board.check_hit(&tmp)
+						{
+							state.player.pos_x += 1;
+						}
+					},
+					Event::KeyDown { keycode: Some(Keycode::W), .. } |
+					Event::KeyDown { keycode: Some(Keycode::Up), .. } =>
+					{
+						state.player.rotation = (state.player.rotation + 1) % 4;
+						while board.check_left_border(&state.player)
+						{
+							state.player.pos_x += 1;
+						}
+						while board.check_right_border(&state.player)
+						{
+							state.player.pos_x -= 1;
+						}
+						while board.check_hit(&state.player)
+						{
+							state.player.pos_y += 1;
+						}
+					},
+
+					Event::KeyDown { keycode: Some(Keycode::S), .. } |
+					Event::KeyDown { keycode: Some(Keycode::Down), .. } =>
+					{
+						while row_down(&mut state, &mut board, now_stamp) {}
+					},
+					Event::Window {win_event, ..  } =>
+					{
+						match win_event
+						{
+							sdl2::event::WindowEvent::Resized( width, height ) =>
+							{
+								self.window_width = width as u32;
+								self.window_height = height as u32;
+								println!("Resized: {}: {}", self.window_width, self.window_height);
+								unsafe
+								{
+									gl::Viewport(0, 0, self.window_width as i32, self.window_height as i32); // set viewport
+								}
+
+							},
+
+							_ => {}
+						}
+					},
+					_ => {}
+				}
+			}
+
+
+			// Write all the tiles into color from background.
+			for y in 0..board.size_y
+			{
+				for x in 0..board.size_x
+				{
+					let index = (y * board.size_x + x) as usize;
+					shader_data[index]._col = colors[board.board[index] as usize];
+				}
+			}
+
+			if (now_stamp - state.last_row_down) as f64 * 1000.0f64 / perf_freq > 500.0f64
+			{
+				row_down(&mut state, &mut board, now_stamp);
+			}
+
+
+			// Draw moving piece.
+			for y in 0i32..2i32
+			{
+				for x in 0i32..4i32
+				{
+					if BLOCKS[state.player.block_type as usize].blocks[(x + y * 4) as usize] == 1
+					{
+						let (pos_x, pos_y) = get_rotated(x, y, state.player.rotation);
+						if pos_x + state.player.pos_x < board.size_x && pos_y + state.player.pos_y < board.size_y
+						{
+							shader_data[(state.player.pos_x + pos_x + (state.player.pos_y + pos_y) * board.size_x) as usize]._col = colors[(state.player.block_type + 1) as usize];
+						}
+					}
+				}
+			}
+			ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
+
+
+
+
+			shader_program.set_used();
+			unsafe
+			{
+				gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
+				gl::DepthFunc(gl::LESS);
+				gl::Enable(gl::DEPTH_TEST);
+				gl::DepthFunc(gl::ALWAYS);
+
+				gl::Uniform4f(0, 0.0f32, box_size as f32, self.window_width as f32, self.window_height as f32);
+
+				gl::BindVertexArray(vao);
+
+				ssbo.bind(2);
+
+				gl::DrawArrays(
+					gl::TRIANGLES, // mode
+					0, // starting index in the enabled arrays
+					6 * shader_data.len() as i32 // number of indices to be rendered
+				);
+
+				//gl::DrawElements(gl::TRIANGLES, 3, gl::UNSIGNED_INT, std::ptr::null());
+			}
+			::std::thread::sleep(std::time::Duration::from_millis(1));
+			self.window.gl_swap_window();
+			//println!("x: {}, y: {}", pos_x, pos_y);
+			//println!("Frame duration: {}", _dt);
+		}
+	}
+
+	//return Ok(());
+}
+
+fn main()
+{
+	println!("Hello, world!");
+
+	let mut app;
+	match App::init(800, 600, "Rustris", true)
+	{
+		Ok(v) => 
+		{
+			app = v;
+			match app.run()
+			{
+				Ok(w) =>
+				{
+
+				}
+				Err(f) =>
+				{
+					println!("Runtime error: {}", f);
+					//panic!(f);
+				}
+			} 
+		} 
+		Err(e) => 
+		{ 
+			println!("Error: {}", e);
+			//panic!(e);
+		} 
 	}
 }
