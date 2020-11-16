@@ -201,58 +201,6 @@ impl ShaderData
 	pub fn new(_pos_x: f32, _pos_y: f32, _col: u32, _size: f32) -> Self { Self { _pos_x, _pos_y, _col, _size } }
 }
 
-pub struct ShaderBuffer
-{
-	handle: gl::types::GLuint,
-	buffer_type: gl::types::GLenum,
-	size: usize
-}
-
-impl ShaderBuffer
-{
-	pub fn new_with_data(buffer_type: gl::types::GLenum, size: usize, data_ptr: *const gl::types::GLvoid) -> Self
-	{
-		let mut tmp_handle: gl::types::GLuint = 0;
-		unsafe
-		{
-			gl::GenBuffers(1, &mut tmp_handle);
-			gl::BindBuffer(buffer_type, tmp_handle);
-			gl::BufferData(
-				buffer_type,
-				size as gl::types::GLsizeiptr,
-				data_ptr,
-				gl::DYNAMIC_COPY, // usage
-			);
-
-			gl::BindBuffer(buffer_type, 0);
-		}
-
-		Self
-		{
-			handle: tmp_handle, buffer_type, size
-		}
-	}
-
-	pub fn new(buffer_type: gl::types::GLenum, size: usize) -> Self
-	{
-		Self::new_with_data(buffer_type, size, 0 as *const gl::types::GLvoid)
-	}
-	pub fn bind(&self, slot :u32)
-	{
-		unsafe
-		{
-			gl::BindBufferBase(self.buffer_type, slot, self.handle);
-		}
-	}
-
-	pub fn write_data(&self, offset_in_bytes: usize, size: usize, ptr: *const gl::types::GLvoid)
-	{
-		unsafe
-		{
-			gl::NamedBufferSubData(self.handle, offset_in_bytes as gl::types::GLintptr, size as gl::types::GLintptr, ptr);
-		}
-	}
-}
 
 fn get_rotated(x: i32, y: i32, rotation: u8) -> (i32, i32)
 {
@@ -440,7 +388,7 @@ fn main()
 		}
 	}
 
-	let ssbo: ShaderBuffer = ShaderBuffer::new_with_data(
+	let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
 		//gl::SHADER_STORAGE_BUFFER,
 		gl::UNIFORM_BUFFER,
 		shader_data.len() * std::mem::size_of::<ShaderData>(),
@@ -595,7 +543,7 @@ fn main()
 				}
 			}
 		}
-		ssbo.write_data(0, ssbo.size, shader_data.as_ptr() as *const gl::types::GLvoid);
+		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
 
 
 

@@ -143,7 +143,8 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum )
 	if success == 0
 	{
 		let mut len: gl::types::GLint = 0;
-		unsafe {
+		unsafe 
+		{
 			gl::GetShaderiv(id, gl::INFO_LOG_LENGTH, &mut len);
 		}
 
@@ -174,4 +175,78 @@ fn create_whitespace_cstring_with_len(len: usize)
 	buffer.extend([b' '].iter().cycle().take(len));
 	// convert buffer to CString
 	unsafe { CString::from_vec_unchecked(buffer) }
+}
+
+
+pub struct ShaderBuffer
+{
+	handle: gl::types::GLuint,
+	buffer_type: gl::types::GLenum,
+	size: usize
+}
+
+impl ShaderBuffer
+{
+	pub fn new_with_data(buffer_type: gl::types::GLenum, size: usize, data_ptr: *const gl::types::GLvoid) -> Self
+	{
+		let mut tmp_handle: gl::types::GLuint = 0;
+		unsafe
+		{
+			gl::GenBuffers(1, &mut tmp_handle);
+			gl::BindBuffer(buffer_type, tmp_handle);
+			gl::BufferData(
+				buffer_type,
+				size as gl::types::GLsizeiptr,
+				data_ptr,
+				gl::DYNAMIC_COPY, // usage
+			);
+
+			gl::BindBuffer(buffer_type, 0);
+		}
+
+		Self
+		{
+			handle: tmp_handle, buffer_type, size
+		}
+	}
+
+	pub fn new(buffer_type: gl::types::GLenum, size: usize) -> Self
+	{
+		Self::new_with_data(buffer_type, size, 0 as *const gl::types::GLvoid)
+	}
+	pub fn bind(&self, slot :u32)
+	{
+		unsafe
+		{
+			gl::BindBufferBase(self.buffer_type, slot, self.handle);
+		}
+	}
+
+	pub fn write_data(&self, offset_in_bytes: usize, size: usize, ptr: *const gl::types::GLvoid)
+	{
+		unsafe
+		{
+			gl::NamedBufferSubData(self.handle, offset_in_bytes as gl::types::GLintptr, size as gl::types::GLintptr, ptr);
+		}
+	}
+
+	pub fn get_size(&self) -> usize
+	{
+		return self.size;
+	}
+}
+
+impl Drop for ShaderBuffer
+{
+	fn drop(&mut self)
+	{
+		if self.handle != 0
+		{
+			unsafe
+			{
+				gl::DeleteBuffers(1, &self.handle);
+			}
+			self.handle = 0;
+		}
+	}
 }
