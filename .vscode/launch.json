@@ -22,11 +22,11 @@
 			"cargo": {
 				"args": [
 					"build",
-					"--bin=game",
-					"--package=game"
+					"--bin=paint",
+					"--package=paint"
 				],
 				"filter": {
-					"name": "game",
+					"name": "paint",
 					"kind": "bin"
 				}
 			},
