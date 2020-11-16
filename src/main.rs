@@ -297,14 +297,14 @@ struct App
 	window_height: u32,
 	vsync: bool,
 
-	sdl: sdl2::Sdl,
+	_sdl: sdl2::Sdl,
 	video: sdl2::VideoSubsystem,
 	sdl_timer: sdl2::TimerSubsystem,
 	window: sdl2::video::Window,
 	event_pump: sdl2::EventPump,
 
 	//gl: *const std::os::raw::c_void,
-	gl_context: sdl2::video::GLContext
+	_gl_context: sdl2::video::GLContext
 }
 
 impl App
@@ -345,8 +345,8 @@ impl App
 		gl_attr.set_context_flags().debug().set();
 		
 	
-		let gl_context = window.gl_create_context()?;
-		let gl = gl::load_with(|s| video.gl_get_proc_address(s) as *const std::os::raw::c_void);
+		let _gl_context = window.gl_create_context()?;
+		let _gl = gl::load_with(|s| video.gl_get_proc_address(s) as *const std::os::raw::c_void);
 	
 		
 	
@@ -375,7 +375,7 @@ impl App
 	
 		unsafe
 		{
-			gl::Viewport(0, 0, window_width as i32, window_height as i32); // set viewport
+			gl::Viewport(0, 0, window_width as i32, window_height as i32);
 			gl::ClearColor(0.2, 0.3, 0.5, 1.0);
 			gl::ClearDepth(1.0);
 			// Swapping up and down just messes things up like in renderdoc....
@@ -384,11 +384,11 @@ impl App
 		}
 	
 
-		let mut event_pump = sdl.event_pump()?;
+		let event_pump = sdl.event_pump()?;
 
 	
 		return Ok(Self{ window_width, window_height, vsync: vsync, 
-			sdl, video, sdl_timer, window, event_pump, gl_context });
+			_sdl: sdl, video, sdl_timer, window, event_pump, _gl_context });
 	}
 
 	pub fn enable_vsync(&mut self, enable_vsync: bool) -> Result<(), String>
@@ -403,7 +403,6 @@ impl App
 		}
 
 		self.vsync = enable_vsync;
-		//return Err("Test fail?".to_string());
 		return Ok(());
 	}
 
@@ -561,7 +560,7 @@ impl App
 								println!("Resized: {}: {}", self.window_width, self.window_height);
 								unsafe
 								{
-									gl::Viewport(0, 0, self.window_width as i32, self.window_height as i32); // set viewport
+									gl::Viewport(0, 0, self.window_width as i32, self.window_height as i32);
 								}
 
 							},
@@ -647,14 +646,14 @@ fn main()
 	println!("Hello, world!");
 
 	let mut app;
-	match App::init(800, 600, "Rustris", true)
+	match App::init(800, 900, "Rustris", true)
 	{
 		Ok(v) => 
 		{
 			app = v;
 			match app.run()
 			{
-				Ok(w) =>
+				Ok(_) =>
 				{
 
 				}
