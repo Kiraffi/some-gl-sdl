@@ -11,4 +11,4 @@ Cargo.lock
 
 /msvc/
 
-SDL2.dll
+*.dll

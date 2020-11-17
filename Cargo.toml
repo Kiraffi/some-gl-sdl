@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "rustris",
-    "paint"
+	"rustris",
+	"paint"
 ]
 
 [profile.dev]
