@@ -167,7 +167,7 @@ impl App
 
 	pub fn run(&mut self) -> Result<(), String>
 	{
-		let box_size = 40;
+		let box_size = 30;
 
 		let vert_shader = render_gl::Shader::from_vert_source(
 			&CString::new(include_str!("triangle.vert")).unwrap(), &"triangle.vert".to_string()
@@ -192,12 +192,13 @@ impl App
 		let board_size_x = 8;
 		let board_size_y = 12;
 
+		/*
 		let mut board: Vec<u8> = Vec::new();
 		for _ in 0.. (board_size_x * board_size_y)
 		{
 			board.push(0);
 		}
-
+		*/
 		let start_x: f32 = (-(board_size_x as f32) / 2.0f32 + 0.5f32) * box_size as f32;
 		let start_y: f32 = (-(board_size_y as f32) / 2.0f32 + 0.5f32) * box_size as f32;
 
@@ -206,8 +207,21 @@ impl App
 		let end_x_px = start_x_px + (board_size_x * box_size) as i32;
 		let end_y_px = start_y_px + (board_size_y * box_size) as i32;
 
+		let mut letters: Vec<u8> = Vec::new();
+		{
+			for __letter_count in 32..128
+			{
+				for _letter_height in 0..board_size_y
+				{
+					letters.push(0);
+				}
+			}
+		}
+		let mut letter_index = ('a' as u8) - 32;
+
 		let mut shader_data: Vec<ShaderData> = Vec::new();
 		{
+
 			let col = colors[0];
 			for y in 0..board_size_y
 			{
@@ -219,13 +233,35 @@ impl App
 					shader_data.push(ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32});
 				}
 			}
+
+			let mut letter_row = 0;
+			let mut letter_col = 0;
+			for _ in 0.. 128
+			{
+				if letter_col == 16
+				{
+					letter_row += 1;
+					letter_col = 0;
+				}
+				for y in 0..board_size_y
+				{
+					for x in 0..board_size_x
+					{
+						let pos_x = -(self.window_width / 2) + 10 + letter_col * (board_size_x + 1) + x;
+						let pos_y = -(self.window_height / 2) + 10 + letter_row * (board_size_y + 1) + y;
+
+						shader_data.push(ShaderData{_pos_x: pos_x as f32, _pos_y: pos_y as f32, _col: col, _size: 1.0f32});
+					}
+				}
+				letter_col += 1;
+			}
 		}
 
 
 
 		let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
-			//gl::SHADER_STORAGE_BUFFER,
-			gl::UNIFORM_BUFFER,
+			gl::SHADER_STORAGE_BUFFER,
+//			gl::UNIFORM_BUFFER,
 			shader_data.len() * std::mem::size_of::<ShaderData>(),
 			shader_data.as_ptr() as *const gl::types::GLvoid
 		);
@@ -267,26 +303,35 @@ impl App
 						return Ok(());
 					},
 
-					Event::KeyDown { keycode: Some(Keycode::S), keymod, .. } =>
+					Event::KeyDown { keycode, keymod, .. } =>
 					{
-						if (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
+						match keycode
 						{
-							let mut file = std::fs::File::create("data.txt").expect("create failed");
-							file.write_all(&board).expect("Failed to write file");
+							Some(keyocde_value) =>
+							{
+								if keyocde_value == Keycode::S && (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
+								{
+									let mut file = std::fs::File::create("data.txt").expect("create failed");
+									file.write_all(&letters).expect("Failed to write file");
+								}
+								else if keyocde_value == Keycode::L && (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
+								{
+									let mut file = std::fs::File::open("data.txt").unwrap();
+									let mut contents: Vec<u8> = Vec::new();
+									file.read_to_end(&mut contents).unwrap();
+									letters = contents;
+								}
+								else
+								{
+									if (keyocde_value as i32) < 128 && (keyocde_value as i32) >= 32
+									{
+										letter_index = (keyocde_value as u8) - 32;
+									}
+								}
+							},
+							None => {}
 						}
 					},
-
-					Event::KeyDown { keycode: Some(Keycode::L), keymod, .. } =>
-					{
-						if (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
-						{
-							let mut file = std::fs::File::open("data.txt").unwrap();
-							let mut contents: Vec<u8> = Vec::new();
-							file.read_to_end(&mut contents).unwrap();
-							board = contents;
-						}
-					},
-
 
 					Event::MouseButtonDown { mouse_btn, x, y, .. } =>
 					{
@@ -355,13 +400,15 @@ impl App
 					let y_b = p_y / (box_size as i32);
 
 					let index = x_b + y_b * (board_size_x as i32);
+					let byte_index: u8 = 1 << x_b as u8;
+					let letters_index: usize = (y_b + (letter_index as i32) * board_size_y) as usize;
 					if mouse_b == 1 && index >= 0 && index < (board_size_x * board_size_y) as i32
 					{
-						board[index as usize] = 1;
+						letters[letters_index] |= byte_index;
 					}
 					else if mouse_b == 2 && index >= 0 && index < (board_size_x * board_size_y) as i32
 					{
-						board[index as usize] = 0;
+						letters[letters_index] &= !byte_index;
 					}
 				}
 			}
@@ -371,11 +418,26 @@ impl App
 			{
 				for x in 0..board_size_x
 				{
-					let index = (y * board_size_x + x) as usize;
-					shader_data[index]._col = colors[board[index] as usize];
+					let index = (y + (letter_index as i32) * board_size_y) as usize;
+					let shader_index = (x + y * board_size_x) as usize;
+
+					shader_data[shader_index]._col = colors[((letters[index] >> x) & 1) as usize];
 				}
 			}
 
+			for letter_c in 0..128 - 32
+			{
+				for y in 0..board_size_y
+				{
+					for x in 0..board_size_x
+					{
+						let shader_index = (x + y * board_size_x + (letter_c + 1) * board_size_x * board_size_y) as usize;
+						let index = (y + letter_c * board_size_y) as usize;
+
+						shader_data[shader_index]._col = colors[((letters[index] >> x) & 1) as usize];
+					}
+				}
+			}
 
 			ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
 

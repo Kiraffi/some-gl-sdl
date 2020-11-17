@@ -5,13 +5,13 @@ layout (location = 1) in vec3 color;
 
 layout (location = 0) uniform vec4 screenSizes;
 
-/*
+
 layout (std430, binding=2) buffer shader_data
 {
 	uvec4 values[];
 } vData;
-*/
 
+/*
 struct DataValue
 {
 	vec2 pos;
@@ -23,7 +23,7 @@ layout (std140, binding=2) uniform shader_data
 {
 	uvec4 values[1024];
 } vData;
-
+*/
 
 layout (location = 0) out vec4 vColor;
 
@@ -41,7 +41,9 @@ void main()
 		pp.x = -0.5f;
 	}
 
-	pp *= screenSizes.y;
+	//pp *= screenSizes.y;
+
+	pp *= uintBitsToFloat(vData.values[vertId].w);
 	pp.xy += uintBitsToFloat(vData.values[vertId].xy);
 	pp.xy /= screenSizes.zw * 0.5;
 	gl_Position = vec4(vec3(pp.xy, 1.0f) , 1.0);
