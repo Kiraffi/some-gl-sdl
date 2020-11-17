@@ -45,7 +45,59 @@ fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
 	return v;
 }
 
+pub fn load_file(name: &String) -> Result<Vec<u8>, String>
+{
+	let mut file;
+	match std::fs::File::open(name)
+	{
+		Ok(x) =>
+		{
+			file = x;
+		},
+		Err(e) =>
+		{
+			println!("Failed to open file: {}, error: {}", name, e);
+			return Err("Failed to open file!".to_string());
+		}
+	}
 
+	let mut contents: Vec<u8> = Vec::new();
+	match file.read_to_end(&mut contents)
+	{
+		Ok(_s) => { println!("read: {}", _s);},
+		Err(e) =>
+		{
+			println!("Failed to read file: {}, error: {}", name, e);
+			return Err("Failed to read file!".to_string());
+		}
+	}
+	return Ok(contents);
+}
+
+
+pub fn save_file(name: &String, letters: &Vec<u8>) -> Result<(), String>
+{
+	let mut file;
+	match std::fs::File::create(name)
+	{
+		Ok(x) => { file = x; }
+		Err(e) =>
+		{
+			println!("Failed to create file: {}, error: {}", name, e);
+			return Err("Failed to create file".to_string());
+		}
+	}
+	match file.write_all(&letters)
+	{
+		Ok(()) => {}
+		Err(e) =>
+		{
+			println!("Failed to write to file: {}, error: {}", name, e);
+			return Err("Failed to write to file".to_string());
+		}
+	}
+	return Ok(());
+}
 
 struct App
 {
@@ -165,8 +217,9 @@ impl App
 		return Ok(());
 	}
 
-	pub fn run(&mut self) -> Result<(), String>
+	pub fn run(&mut self, file_name: &String) -> Result<(), String>
 	{
+
 		let box_size = 30;
 
 		let vert_shader = render_gl::Shader::from_vert_source(
@@ -257,6 +310,17 @@ impl App
 			}
 		}
 
+		match load_file(file_name)
+		{
+			Ok(x)=>
+			{
+				letters = x;
+			},
+			// should this be handled some way differently than just saying error happened?
+			Err(_e) =>
+			{
+			}
+		}
 
 
 		let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
@@ -311,15 +375,21 @@ impl App
 							{
 								if keyocde_value == Keycode::S && (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
 								{
-									let mut file = std::fs::File::create("data.txt").expect("create failed");
-									file.write_all(&letters).expect("Failed to write file");
+									save_file(file_name, &letters)?;
 								}
 								else if keyocde_value == Keycode::L && (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
 								{
-									let mut file = std::fs::File::open("data.txt").unwrap();
-									let mut contents: Vec<u8> = Vec::new();
-									file.read_to_end(&mut contents).unwrap();
-									letters = contents;
+									match load_file(file_name)
+									{
+										Ok(x)=>
+										{
+											letters = x;
+										},
+										// should this be handled some way differently than just saying error happened?
+										Err(_e) =>
+										{
+										}
+									}
 								}
 								else
 								{
@@ -478,31 +548,47 @@ impl App
 
 fn main()
 {
+	use std::env;
+
 	println!("Hello, world!");
-
-	let mut app;
-	match App::init(800, 600, "Paint", true)
+	let args: Vec<_> = env::args().collect();
+	for i in 1 .. args.len()
 	{
-		Ok(v) =>
-		{
-			app = v;
-			match app.run()
-			{
-				Ok(_) =>
-				{
+		println!("{}: {}", i, args[i as usize]);
+	}
+	if args.len() < 1
+	{
+		println!("Give file name as parameters");
+	}
 
-				}
-				Err(f) =>
+	else
+
+	{
+		let mut app;
+		match App::init(800, 600, "Paint", true)
+		{
+			Ok(v) =>
+			{
+				app = v;
+				//match app.run(&"new_font.dat".to_string())
+				match app.run(&args[1])
 				{
-					println!("Runtime error: {}", f);
-					//panic!(f);
+					Ok(_) =>
+					{
+
+					}
+					Err(f) =>
+					{
+						println!("Runtime error: {}", f);
+						//panic!(f);
+					}
 				}
 			}
-		}
-		Err(e) =>
-		{
-			println!("Error: {}", e);
-			//panic!(e);
+			Err(e) =>
+			{
+				println!("Error: {}", e);
+				//panic!(e);
+			}
 		}
 	}
 }
