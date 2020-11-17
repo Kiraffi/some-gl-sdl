@@ -10,6 +10,9 @@ use sdl2::mouse::MouseButton;
 use std::ffi::CString;
 use std::ffi::CStr;
 
+use std::io::Write;
+use std::io::Read;
+
 pub struct ShaderData
 {
 	_pos_x: f32,
@@ -44,9 +47,9 @@ fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
 
 
 
-struct App 
+struct App
 {
-	
+
 	window_width: i32,
 	window_height: i32,
 	vsync: bool,
@@ -80,30 +83,30 @@ impl App
 		.opengl()
 		.build()
 		{
-			Ok(v) => 
+			Ok(v) =>
 			{
-				window = v; 
-			} 
-			Err(e) => 
-			{ 
-				println!("Error: {}", e); 
-				return Err("Failed to build window!".to_string()); 
+				window = v;
+			}
+			Err(e) =>
+			{
+				println!("Error: {}", e);
+				return Err("Failed to build window!".to_string());
 			}
 		}
-	
+
 		let gl_attr = video.gl_attr();
-	
+
 		gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
 		gl_attr.set_context_version(4, 5);
-	
+
 		gl_attr.set_context_flags().debug().set();
-		
-	
+
+
 		let _gl_context = window.gl_create_context()?;
 		let _gl = gl::load_with(|s| video.gl_get_proc_address(s) as *const std::os::raw::c_void);
-	
-		
-	
+
+
+
 		let version;
 		match unsafe
 		{
@@ -113,20 +116,20 @@ impl App
 			String::from_utf8(data)
 		}
 		{
-			Ok(v) => 
+			Ok(v) =>
 			{
-				version = v; 
-			} 
-			Err(e) => 
-			{ 
-				println!("Error: {}", e); 
-				return Err("Failed to read version data from gl!".to_string()); 
+				version = v;
+			}
+			Err(e) =>
+			{
+				println!("Error: {}", e);
+				return Err("Failed to read version data from gl!".to_string());
 			}
 		}
-	
+
 		println!("OpenGL version {}", version);
-	
-	
+
+
 		unsafe
 		{
 			gl::Viewport(0, 0, window_width, window_height);
@@ -136,14 +139,14 @@ impl App
 			//gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
 			gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
 		}
-	
+
 
 		let event_pump = sdl.event_pump()?;
-		let mut t = Self{ window_width, window_height, vsync: vsync, 
+		let mut t = Self{ window_width, window_height, vsync: vsync,
 			_sdl: sdl, video, sdl_timer, window, event_pump, _gl_context };
-		
+
 		t.enable_vsync(vsync)?;
-	
+
 		return Ok(t);
 	}
 
@@ -181,16 +184,18 @@ impl App
 
 		shader_program.set_used();
 
-		let on_color = get_u32_agbr_color(1.0, 1.0, 1.0, 1.0);
-		let off_color = get_u32_agbr_color(0.0, 0.0, 0.0, 1.0);
+		let colors: [u32;2] = [
+			get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
+			get_u32_agbr_color(1.0, 1.0, 1.0, 1.0),
+		];
 
 		let board_size_x = 8;
 		let board_size_y = 12;
 
-		let mut board: Vec<u32> = Vec::new();
+		let mut board: Vec<u8> = Vec::new();
 		for _ in 0.. (board_size_x * board_size_y)
 		{
-			board.push(off_color);
+			board.push(0);
 		}
 
 		let start_x: f32 = (-(board_size_x as f32) / 2.0f32 + 0.5f32) * box_size as f32;
@@ -203,13 +208,13 @@ impl App
 
 		let mut shader_data: Vec<ShaderData> = Vec::new();
 		{
-			let col = off_color;
+			let col = colors[0];
 			for y in 0..board_size_y
 			{
 				for x in 0..board_size_x
 				{
 					let pos_x = start_x + (x * box_size) as f32;
-					let pos_y = start_y + (y * box_size) as f32; 
+					let pos_y = start_y + (y * box_size) as f32;
 
 					shader_data.push(ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32});
 				}
@@ -261,6 +266,27 @@ impl App
 					{
 						return Ok(());
 					},
+
+					Event::KeyDown { keycode: Some(Keycode::S), keymod, .. } =>
+					{
+						if (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
+						{
+							let mut file = std::fs::File::create("data.txt").expect("create failed");
+							file.write_all(&board).expect("Failed to write file");
+						}
+					},
+
+					Event::KeyDown { keycode: Some(Keycode::L), keymod, .. } =>
+					{
+						if (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
+						{
+							let mut file = std::fs::File::open("data.txt").unwrap();
+							let mut contents: Vec<u8> = Vec::new();
+							file.read_to_end(&mut contents).unwrap();
+							board = contents;
+						}
+					},
+
 
 					Event::MouseButtonDown { mouse_btn, x, y, .. } =>
 					{
@@ -331,13 +357,13 @@ impl App
 					let index = x_b + y_b * (board_size_x as i32);
 					if mouse_b == 1 && index >= 0 && index < (board_size_x * board_size_y) as i32
 					{
-						board[index as usize] = on_color;
+						board[index as usize] = 1;
 					}
 					else if mouse_b == 2 && index >= 0 && index < (board_size_x * board_size_y) as i32
 					{
-						board[index as usize] = off_color;
+						board[index as usize] = 0;
 					}
-				} 
+				}
 			}
 
 			// Write all the tiles into color from background.
@@ -346,7 +372,7 @@ impl App
 				for x in 0..board_size_x
 				{
 					let index = (y * board_size_x + x) as usize;
-					shader_data[index]._col = board[index];
+					shader_data[index]._col = colors[board[index] as usize];
 				}
 			}
 
@@ -395,7 +421,7 @@ fn main()
 	let mut app;
 	match App::init(800, 600, "Paint", true)
 	{
-		Ok(v) => 
+		Ok(v) =>
 		{
 			app = v;
 			match app.run()
@@ -409,12 +435,12 @@ fn main()
 					println!("Runtime error: {}", f);
 					//panic!(f);
 				}
-			} 
-		} 
-		Err(e) => 
-		{ 
+			}
+		}
+		Err(e) =>
+		{
 			println!("Error: {}", e);
 			//panic!(e);
-		} 
+		}
 	}
 }
