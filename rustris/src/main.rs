@@ -13,18 +13,8 @@ use std::ffi::CStr;
 
 struct Randomm
 {
-	rng_seed: u128
-}
-
-impl Randomm
-{
-	pub fn get_next(&mut self) -> u32
-	{
-		let bot: u128 = (self.rng_seed) & 0xffffffffffffffffu128;
-		self.rng_seed = bot * 20934289087u128;
-		self.rng_seed += 8386028496306831u128;
-		return self.rng_seed as u32;
-	}
+	rng_seed: u64,
+	rng_inc: u64
 }
 
 pub struct Block
@@ -45,6 +35,8 @@ pub struct GameState
 {
 	player: BlockPiece,
 	score: u32,
+	high_score: u32,
+	lines: u32,
 	last_row_down: u64,
 	rng: Randomm
 }
@@ -52,8 +44,63 @@ pub struct Board
 {
 	size_x: i32,
 	size_y: i32,
+	extra_top: i32,
 	board: Vec<u8>
 }
+
+
+pub struct ShaderData
+{
+	_pos_x: f32,
+	_pos_y: f32,
+	_col: u32,
+	_size: f32
+}
+
+
+pub struct LetterData
+{
+	_pos_x: f32,
+	_pos_y: f32,
+	_col: u32,
+	_size: f32,
+
+	_uv_x: f32,
+	_uv_y: f32,
+	_tmp1: f32,
+	_tmp2: f32
+}
+
+struct App
+{
+
+	window_width: i32,
+	window_height: i32,
+	vsync: bool,
+
+	_sdl: sdl2::Sdl,
+	video: sdl2::VideoSubsystem,
+	sdl_timer: sdl2::TimerSubsystem,
+	window: sdl2::video::Window,
+	event_pump: sdl2::EventPump,
+
+	//gl: *const std::os::raw::c_void,
+	_gl_context: sdl2::video::GLContext
+}
+
+
+
+const BLOCKS: [Block; 7] = [
+	Block{ blocks: [1,1,1,1, 0,0,0,0]},
+	Block{ blocks: [0,1,1,1, 0,0,0,1]},
+	Block{ blocks: [0,1,1,1, 0,1,0,0]},
+
+	Block{ blocks: [0,1,1,1, 0,0,1,0]},
+	Block{ blocks: [0,1,1,0, 0,1,1,0]},
+	Block{ blocks: [0,1,1,0, 0,0,1,1]},
+	Block{ blocks: [0,0,1,1, 0,1,1,0]}
+];
+
 
 fn clamp(value: f32, min: f32, max: f32) ->f32
 {
@@ -79,28 +126,34 @@ fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
 }
 
 
-const BLOCKS: [Block; 7] = [
-	Block{ blocks: [1,1,1,1, 0,0,0,0]},
-	Block{ blocks: [0,1,1,1, 0,0,0,1]},
-	Block{ blocks: [0,1,1,1, 0,1,0,0]},
+impl Randomm
+{
+	// From https://www.pcg-random.org/download.html
+	pub fn get_next(&mut self) -> u32
+	{
+		let old: u64 = self.rng_seed;
+		self.rng_seed = self.rng_seed.wrapping_mul(636413622384679005u64);
+		self.rng_seed = self.rng_seed.wrapping_add(self.rng_inc | 1u64);
+		let xor_shifted: u32  = (((old >> 18u64) ^ old) >> 27u64) as u32;
+		let rot: u32 = (old >> 59u64) as u32;
+		let result: u32 = (xor_shifted >> rot) | (xor_shifted << ((!rot) & 31));
+		return result;
+	}
+}
 
-	Block{ blocks: [0,1,1,1, 0,0,1,0]},
-	Block{ blocks: [0,1,1,0, 0,1,1,0]},
-	Block{ blocks: [0,1,1,0, 0,0,1,1]},
-	Block{ blocks: [0,0,1,1, 0,1,1,0]}
-];
+
 
 impl Board
 {
-	pub fn new(size_x: i32, size_y: i32) -> Self
+	pub fn new(size_x: i32, size_y: i32, extra: i32) -> Self
 	{
 		let mut b: Vec<u8> = Vec::new();
-		for _x in 0..size_x * (size_y + 4)
+		for _x in 0..size_x * (size_y + extra)
 		{
 			b.push(0);
 		}
 
-		Self { size_x, size_y, board: b }
+		Self { size_x, size_y, extra_top: extra, board: b }
 	}
 
 	pub fn check_hit(&self, piece: &BlockPiece) -> bool
@@ -114,7 +167,7 @@ impl Board
 					let (mut x_pos, mut y_pos) = get_rotated(x, y, piece.rotation);
 					x_pos += piece.pos_x;
 					y_pos += piece.pos_y;
-					if x_pos >= self.size_x || y_pos >= self.size_y + 4 || x_pos < 0 || y_pos < 0
+					if x_pos >= self.size_x || y_pos >= self.size_y + self.extra_top || x_pos < 0 || y_pos < 0
 					{
 						return true;
 					}
@@ -128,8 +181,9 @@ impl Board
 		return false;
 	}
 
-	pub fn add_piece(&mut self, piece: &BlockPiece)
+	pub fn add_piece(&mut self, piece: &BlockPiece) -> bool
 	{
+		let mut game_over = false;
 		for y in 0..2i32
 		{
 			for x in 0..4i32
@@ -139,13 +193,18 @@ impl Board
 					let (mut x_pos, mut y_pos) = get_rotated(x, y, piece.rotation);
 					x_pos += piece.pos_x;
 					y_pos += piece.pos_y;
-					if x_pos < self.size_x && y_pos < self.size_y + 4 && x_pos >= 0 && y_pos >= 0
+					if x_pos < self.size_x && y_pos < self.size_y + self.extra_top && x_pos >= 0 && y_pos >= 0
 					{
 						self.board[(x_pos + y_pos * self.size_x) as usize] = piece.block_type + 1;
+					}
+					if y_pos >= self.size_y 
+					{
+						game_over = true;
 					}
 				}
 			}
 		}
+		return game_over;
 	}
 
 	pub fn check_left_border(&mut self, piece: &BlockPiece) -> bool
@@ -205,6 +264,14 @@ impl Board
 		return true;
 	}
 
+	pub fn clear_board(&mut self)
+	{
+		for i in 0..self.size_x * (self.size_y + self.extra_top) 
+		{
+			self.board[i as usize] = 0;
+		}
+	}
+
 	pub fn remove_row(&mut self, row_number: i32)
 	{
 		if row_number < 0 || row_number >= self.size_y
@@ -226,30 +293,68 @@ impl Board
 	}
 }
 
-
-
-
-pub struct ShaderData
+impl BlockPiece
 {
-	_pos_x: f32,
-	_pos_y: f32,
-	_col: u32,
-	_size: f32
+	pub fn set_rotation(&mut self, rotation: u8)
+	{
+		let rotation = rotation % 4;
+		let mut min_x = 4;
+		let mut max_x = 0;
+		let mut curr_min_x = 4;
+		let mut curr_max_x = 0;
+		let mut min_y = 4;
+		let mut curr_min_y = 4;
+		for y in 0..2i32
+		{
+			for x in 0..4i32
+			{
+				if BLOCKS[self.block_type as usize].blocks[(x + y * 4) as usize] == 1
+				{
+					let (xx, yy) = get_rotated(x, y, rotation);
+					if yy == min_y
+					{
+						min_x = min_x.min(xx);
+						max_x = max_x.max(xx);
+						min_y = min_y.min(yy);
+					}
+					
+					else if yy < min_y
+					{
+						min_x = xx;
+						max_x = xx;
+						min_y = yy;
+					}
+					
+					let (xx2, yy2) = get_rotated(x, y, self.rotation);
+
+					if yy2 == curr_min_y
+					{
+						curr_min_x = curr_min_x.min(xx2);
+						curr_max_x = curr_max_x.max(xx2);
+						curr_min_y = curr_min_y.min(yy2);
+					}
+					
+					else if yy2 < curr_min_y
+					{
+						curr_min_x = xx2;
+						curr_max_x = xx2;
+						curr_min_y = yy2;
+					}
+					
+				}
+			}
+		}
+
+		let diff = (max_x - min_x) / 2 - (curr_max_x - curr_min_x) / 2;
+		let diff_y = min_y - curr_min_y;
+		self.pos_x -= diff + min_x - curr_min_x;
+		self.pos_y -= diff_y;
+
+		self.rotation = rotation;
+	}
 }
 
 
-pub struct LetterData
-{
-	_pos_x: f32,
-	_pos_y: f32,
-	_col: u32,
-	_size: f32,
-
-	_uv_x: f32,
-	_uv_y: f32,
-	_tmp1: f32,
-	_tmp2: f32
-}
 
 fn get_rotated(x: i32, y: i32, rotation: u8) -> (i32, i32)
 {
@@ -280,11 +385,14 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 	let mut tmp = state.player.clone();
 	tmp.pos_y -= 1;
 	state.last_row_down = now_stamp;
+
 	if board.check_hit(&tmp)
 	{
-		board.add_piece(&state.player);
+		let game_over = board.add_piece(&state.player);
+
 		state.player.pos_x = 3;
 		state.player.pos_y = 20;
+
 		state.player.block_type = (state.rng.get_next() % 7) as u8;
 
 		let mut rows = 0;
@@ -296,6 +404,7 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 				board.remove_row(y);
 			}
 		}
+		state.lines += rows;
 		if rows == 1
 		{
 			state.score += 1;
@@ -313,6 +422,13 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 			state.score += 10;
 		}
 
+		if game_over
+		{
+			board.clear_board();
+			state.high_score = state.high_score.max(state.score);
+			state.score = 0;
+			state.lines = 0;
+		}
 		return false;
 	}
 	else
@@ -322,23 +438,6 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 	}
 }
 
-
-struct App
-{
-
-	window_width: i32,
-	window_height: i32,
-	vsync: bool,
-
-	_sdl: sdl2::Sdl,
-	video: sdl2::VideoSubsystem,
-	sdl_timer: sdl2::TimerSubsystem,
-	window: sdl2::video::Window,
-	event_pump: sdl2::EventPump,
-
-	//gl: *const std::os::raw::c_void,
-	_gl_context: sdl2::video::GLContext
-}
 
 
 impl App
@@ -545,9 +644,7 @@ impl App
 			get_u32_agbr_color(1.0, 1.6, 1.0, 1.0),
 		];
 
-
-		let mut board: Board = Board::new(10, 20);
-
+		let mut board: Board = Board::new(10, 20, 4);
 
 		// Fill board for shader
 		let mut shader_data: Vec<ShaderData> = Vec::new();
@@ -573,19 +670,6 @@ impl App
 		{
 			letter_datas.push(LetterData{_pos_x: 0.0f32, _pos_y: 0.032, _col: 0, _size: 0.032,
 				_uv_x: 0.032, _uv_y: 0.0f32, _tmp1: 0.0f32, _tmp2: 0.0f32});
-		
-
-
-/*
-			for l_index in 0..max_letters
-			{
-				let pos_x = (-(self.window_width / 2) + 30 + l_index * (letter_size + 1) ) as f32;
-				let pos_y = (-self.window_height / 2 + 30) as f32;
-				let tmp_pos_x = (l_index as f32); // / (128.0f32 - 32.0f32);
-				letter_datas.push(LetterData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: letter_size as f32,
-					_uv_x: tmp_pos_x, _uv_y: 0.5f32, _tmp1: 0.0f32, _tmp2: 0.0f32});
-			}
-			*/
 		}
 
 
@@ -616,10 +700,10 @@ impl App
 		let mut _dt: f32;
 
 
-		let mut rng_: Randomm = Randomm{ rng_seed: now_stamp as u128 };
+		let mut rng_: Randomm = Randomm{ rng_seed: now_stamp, rng_inc: 0xa5dfa5dfu64 };
 		let mut state = GameState{ player: BlockPiece 
 				{ pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
-			 score: 0, last_row_down: now_stamp, rng: Randomm{ rng_seed: rng_.rng_seed } };
+			 score: 0, high_score: 0, lines: 0, last_row_down: now_stamp, rng: rng_ };
 
 		loop
 		{
@@ -629,6 +713,14 @@ impl App
 			let mut s: String = "score: ".to_string();
 			s += &state.score.to_string();
 			self.add_to_array(&s, 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
+
+			let mut s: String = "lines: ".to_string();
+			s += &state.lines.to_string();
+			self.add_to_array(&s, 30.0f32, 60.0f32, letter_size as f32, colors[8], &mut letter_datas);
+
+			let mut s: String = "high score: ".to_string();
+			s += &state.high_score.to_string();
+			self.add_to_array(&s, 330.0f32, 50.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
 			last_stamp = now_stamp;
 			now_stamp = self.sdl_timer.performance_counter();
@@ -672,7 +764,8 @@ impl App
 					Event::KeyDown { keycode: Some(Keycode::W), .. } |
 					Event::KeyDown { keycode: Some(Keycode::Up), .. } =>
 					{
-						state.player.rotation = (state.player.rotation + 1) % 4;
+						state.player.set_rotation(state.player.rotation + 1);
+
 						while board.check_left_border(&state.player)
 						{
 							state.player.pos_x += 1;
@@ -726,7 +819,7 @@ impl App
 				}
 			}
 
-			if (now_stamp - state.last_row_down) as f64 * 1000.0f64 / perf_freq > 500.0f64
+			if (now_stamp - state.last_row_down) as f64 * 1000.0f64 / perf_freq > 100.0f64
 			{
 				row_down(&mut state, &mut board, now_stamp);
 			}
