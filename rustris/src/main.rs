@@ -295,6 +295,7 @@ impl Board
 
 impl BlockPiece
 {
+	// Try to make the rotation of block good?
 	pub fn set_rotation(&mut self, rotation: u8)
 	{
 		let rotation = rotation % 4;
