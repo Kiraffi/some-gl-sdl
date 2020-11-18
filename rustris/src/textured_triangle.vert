@@ -43,14 +43,13 @@ void main()
 	}
 
 	vTexCoord = pp + 0.5f;
-
-	vTexCoord.x += float(vData.values[(vertId * 2 + 1)].z);
-	vTexCoord.x /= float(128 - 32);
-
-
+	vTexCoord.x += uintBitsToFloat(vData.values[(vertId * 2 + 1)].x);;
+	vTexCoord.x /= (128.0f-32.0f);
+	
 	pp *= uintBitsToFloat(vData.values[vertId * 2].w);
 	pp.xy += uintBitsToFloat(vData.values[vertId * 2].xy);
-	pp.xy += 0.5f;
+	//pp.xy += 0.5f;
+	
 	pp.xy /= screenSizes.zw * 0.5f;
 	gl_Position = vec4(vec3(pp.xy, 1.0f) , 1.0);
 	uint col = vData.values[vertId * 2].z;

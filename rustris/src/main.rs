@@ -11,6 +11,22 @@ use std::ffi::CStr;
 
 //pub mod render_gl;
 
+struct Randomm
+{
+	rng_seed: u128
+}
+
+impl Randomm
+{
+	pub fn get_next(&mut self) -> u32
+	{
+		let bot: u128 = (self.rng_seed) & 0xffffffffffffffffu128;
+		self.rng_seed = bot * 20934289087u128;
+		self.rng_seed += 8386028496306831u128;
+		return self.rng_seed as u32;
+	}
+}
+
 pub struct Block
 {
 	blocks: [u8; 8],
@@ -30,6 +46,7 @@ pub struct GameState
 	player: BlockPiece,
 	score: u32,
 	last_row_down: u64,
+	rng: Randomm
 }
 pub struct Board
 {
@@ -59,36 +76,6 @@ fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
 	v += ((a * 255.0f32) as u32) << 24u32;
 
 	return v;
-}
-
-pub fn load_file(name: &String) -> Result<Vec<u8>, String>
-{
-	use std::io::Read;
-	let mut file;
-	match std::fs::File::open(name)
-	{
-		Ok(x) =>
-		{
-			file = x;
-		},
-		Err(e) =>
-		{
-			println!("Failed to open file: {}, error: {}", name, e);
-			return Err("Failed to open file!".to_string());
-		}
-	}
-
-	let mut contents: Vec<u8> = Vec::new();
-	match file.read_to_end(&mut contents)
-	{
-		Ok(_s) => { println!("read: {}", _s);},
-		Err(e) =>
-		{
-			println!("Failed to read file: {}, error: {}", name, e);
-			return Err("Failed to read file!".to_string());
-		}
-	}
-	return Ok(contents);
 }
 
 
@@ -260,7 +247,7 @@ pub struct LetterData
 
 	_uv_x: f32,
 	_uv_y: f32,
-	_letter_index: u32,
+	_tmp1: f32,
 	_tmp2: f32
 }
 
@@ -298,7 +285,7 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 		board.add_piece(&state.player);
 		state.player.pos_x = 3;
 		state.player.pos_y = 20;
-		state.player.block_type = (state.player.block_type + 1) % 7;
+		state.player.block_type = (state.rng.get_next() % 7) as u8;
 
 		let mut rows = 0;
 		for y in 0..board.size_y
@@ -325,7 +312,7 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 		{
 			state.score += 10;
 		}
-		println!("Score: {}", state.score);
+
 		return false;
 	}
 	else
@@ -353,9 +340,24 @@ struct App
 	_gl_context: sdl2::video::GLContext
 }
 
+
 impl App
 {
-	pub fn init(window_width: i32, window_height: i32, window_name: &str, vsync: bool) -> Result<Self, String>
+	pub fn add_to_array(&mut self, s: &String, pos_x: f32, pos_y: f32, sz: f32, col: u32, letters: &mut Vec<LetterData>)
+	{
+		let mut px = pos_x - self.window_width as f32 / 2.0f32;
+		let py = (self.window_height / 2) as f32 - pos_y;
+		for x in 0..s.len()
+		{
+			let l: u8 = s.as_bytes()[x] - 32;
+			let tmp_pos_x = l as f32;// / (128.0f32 - 32.0f32);
+			letters.push(LetterData{_pos_x: px, _pos_y: py, _col: col, _size: sz,
+				_uv_x: tmp_pos_x, _uv_y: 0.5f32, _tmp1: 0.0f32, _tmp2: 0.0f32});
+	
+			px += sz + 1.0f32;
+		}
+	}
+		pub fn init(window_width: i32, window_height: i32, window_name: &str, vsync: bool) -> Result<Self, String>
 	{
 		/*
 		if width == 1
@@ -489,12 +491,12 @@ impl App
 		}
 
 
-		let tex = load_file(&"new_font.dat".to_string()).unwrap();
+		let tex: Vec<u8> = include_bytes!("../../new_font.dat").to_vec();
 
 		let mut tex_handle: gl::types::GLuint = 0;
 		{
 			let mut font_tex: Vec<u8> = Vec::new();
-			println!("tex size: {}", tex.len());
+
 			for y in 0..12
 			{
 				for l in 0 .. (128-32)
@@ -564,19 +566,26 @@ impl App
 		}
 
 		let letter_size = 20;
-		let max_letters = 64;
+		let max_letters = 512;
 		// Fill board for shader
 		let mut letter_datas: Vec<LetterData> = Vec::new();
+		for _x in 0..max_letters
 		{
-			let col = colors[8];
+			letter_datas.push(LetterData{_pos_x: 0.0f32, _pos_y: 0.032, _col: 0, _size: 0.032,
+				_uv_x: 0.032, _uv_y: 0.0f32, _tmp1: 0.0f32, _tmp2: 0.0f32});
+		
+
+
+/*
 			for l_index in 0..max_letters
 			{
 				let pos_x = (-(self.window_width / 2) + 30 + l_index * (letter_size + 1) ) as f32;
 				let pos_y = (-self.window_height / 2 + 30) as f32;
-
+				let tmp_pos_x = (l_index as f32); // / (128.0f32 - 32.0f32);
 				letter_datas.push(LetterData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: letter_size as f32,
-					_uv_x: 0.0f32, _uv_y: 0.0f32, _letter_index:l_index as u32, _tmp2: 0.0f32});
+					_uv_x: tmp_pos_x, _uv_y: 0.5f32, _tmp1: 0.0f32, _tmp2: 0.0f32});
 			}
+			*/
 		}
 
 
@@ -591,7 +600,7 @@ impl App
 		let ssbo2: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
 			gl::SHADER_STORAGE_BUFFER,
 			//gl::UNIFORM_BUFFER,
-			letter_datas.len() * std::mem::size_of::<ShaderData>(),
+			letter_datas.len() * std::mem::size_of::<LetterData>(),
 			letter_datas.as_ptr() as *const gl::types::GLvoid
 		);
 
@@ -607,13 +616,19 @@ impl App
 		let mut _dt: f32;
 
 
-
-
-
-		let mut state = GameState{ player: BlockPiece{pos_x: 3, pos_y: 20, block_type: 0, rotation: 0}, score: 0, last_row_down: now_stamp };
+		let mut rng_: Randomm = Randomm{ rng_seed: now_stamp as u128 };
+		let mut state = GameState{ player: BlockPiece 
+				{ pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
+			 score: 0, last_row_down: now_stamp, rng: Randomm{ rng_seed: rng_.rng_seed } };
 
 		loop
 		{
+			letter_datas.clear();
+			self.add_to_array(&"Tetris".to_string(), 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
+
+			let mut s: String = "score: ".to_string();
+			s += &state.score.to_string();
+			self.add_to_array(&s, 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
 			last_stamp = now_stamp;
 			now_stamp = self.sdl_timer.performance_counter();
@@ -768,7 +783,7 @@ impl App
 				gl::DrawArrays(
 					gl::TRIANGLES, // mode
 					0, // starting index in the enabled arrays
-					6 * 64// number of indices to be rendered
+					6 * letter_datas.len() as i32// number of indices to be rendered
 				);
 				//gl::DrawElements(gl::TRIANGLES, 3, gl::UNSIGNED_INT, std::ptr::null());
 			}

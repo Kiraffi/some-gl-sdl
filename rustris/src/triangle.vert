@@ -43,7 +43,8 @@ void main()
 
 	pp *= uintBitsToFloat(vData.values[vertId].w);
 	pp.xy += uintBitsToFloat(vData.values[vertId].xy);
-	pp.xy += 0.5f;
+	//pp.xy += 0.5f;
+	
 	pp.xy /= screenSizes.zw * 0.5f;
 	gl_Position = vec4(vec3(pp.xy, 1.0f) , 1.0);
 	uint col = vData.values[vertId].z;

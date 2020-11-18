@@ -556,7 +556,7 @@ fn main()
 	{
 		println!("{}: {}", i, args[i as usize]);
 	}
-	if args.len() < 1
+	if args.len() < 2
 	{
 		println!("Give file name as parameters");
 	}
