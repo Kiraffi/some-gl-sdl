@@ -22,11 +22,11 @@
 			"cargo": {
 				"args": [
 					"build",
-					"--bin=paint",
-					"--package=paint"
+					"--bin=rustris",
+					"--package=rustris"
 				],
 				"filter": {
-					"name": "paint",
+					"name": "rustris",
 					"kind": "bin"
 				}
 			},

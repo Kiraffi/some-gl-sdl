@@ -440,6 +440,62 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 }
 
 
+extern "system" fn callback_wrapper(msg_source: gl::types::GLenum, msg_type: gl::types::GLenum,
+	_id: gl::types::GLuint, severity: gl::types::GLenum, _length: gl::types::GLsizei,
+	message: *const gl::types::GLchar, _user_param: *mut std::os::raw::c_void)
+{
+
+	let message = unsafe 
+	{
+		String::from_utf8(CStr::from_ptr(message).to_bytes().to_vec()).unwrap()
+	};
+
+	
+	match severity 
+	{
+		gl::DEBUG_SEVERITY_NOTIFICATION => 
+		{
+			println!("Info: {}", message);
+		},
+		
+		gl::DEBUG_SEVERITY_LOW |
+			gl::DEBUG_SEVERITY_MEDIUM |
+			gl::DEBUG_SEVERITY_HIGH => 
+		{
+			println!("Message: {}", message);
+		}
+		_=> 
+		{
+			return;
+		}
+	};
+
+	match msg_source 
+	{
+		gl::DEBUG_SOURCE_API => {},
+		gl::DEBUG_SOURCE_WINDOW_SYSTEM => {},
+		gl::DEBUG_SOURCE_SHADER_COMPILER => {},
+		gl::DEBUG_SOURCE_THIRD_PARTY => {},
+		gl::DEBUG_SOURCE_APPLICATION => {},
+		gl::DEBUG_SOURCE_OTHER => {},
+		_ => return
+	};
+
+	match msg_type 
+	{
+		gl::DEBUG_TYPE_ERROR => {},
+		gl::DEBUG_TYPE_DEPRECATED_BEHAVIOR => {},
+		gl::DEBUG_TYPE_UNDEFINED_BEHAVIOR => {},
+		gl::DEBUG_TYPE_PORTABILITY => {},
+		gl::DEBUG_TYPE_PERFORMANCE => {},
+		gl::DEBUG_TYPE_MARKER => {},
+		gl::DEBUG_TYPE_PUSH_GROUP => {},
+		gl::DEBUG_TYPE_POP_GROUP => {},
+		gl::DEBUG_TYPE_OTHER => {},
+		_ => return
+	};
+
+}
 
 impl App
 {
@@ -496,6 +552,17 @@ impl App
 		let _gl_context = window.gl_create_context()?;
 		let _gl = gl::load_with(|s| video.gl_get_proc_address(s) as *const std::os::raw::c_void);
 
+
+
+		unsafe
+		{
+			//gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
+			gl::DebugMessageCallback(Some(callback_wrapper), std::ptr::null());
+			gl::DebugMessageControl(gl::DONT_CARE, gl::DONT_CARE, gl::DONT_CARE, 0,
+										std::ptr::null(), gl::TRUE);
+
+			gl::Enable(gl::DEBUG_OUTPUT);
+		}
 
 
 		let version;
