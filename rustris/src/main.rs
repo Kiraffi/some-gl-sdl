@@ -455,7 +455,7 @@ extern "system" fn callback_wrapper(msg_source: gl::types::GLenum, msg_type: gl:
 	{
 		gl::DEBUG_SEVERITY_NOTIFICATION => 
 		{
-			println!("Info: {}", message);
+	//		println!("Info: {}", message);
 		},
 		
 		gl::DEBUG_SEVERITY_LOW |
@@ -675,19 +675,30 @@ impl App
 						font_tex.push(v);
 						font_tex.push(v);
 						font_tex.push(v);
+						font_tex.push(v);
 					}
 				}
 			}
 
 			unsafe
 			{
+				let texture_width = 8*(128-32);
+				let texture_height = 12;
 
 				gl::GenTextures(1, &mut tex_handle);
-
 				gl::BindTexture(gl::TEXTURE_2D, tex_handle);
-				gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
-				gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
-				gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGB as i32, 8*(128-32), 12, 0, gl::RGB, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+				gl::TexStorage2D(gl::TEXTURE_2D, 1, gl::RGBA8, texture_width, texture_height);
+				gl::TexSubImage2D(gl::TEXTURE_2D, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+
+				//gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_BASE_LEVEL, 0);
+				//gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAX_LEVEL, 0);
+				//gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA8 as i32, texture_width, texture_height, 0, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+
+				//gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
+				//gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
+				//gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA8, texture_width, texture_height, 0, gl::RGBA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+				// 0 mips, 0 baselevel
+				
 				//gl::GenerateMipmap(gl::TEXTURE_2D);
 
 			}
@@ -776,7 +787,7 @@ impl App
 		loop
 		{
 			letter_datas.clear();
-			self.add_to_array(&"Tetris".to_string(), 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
+			//self.add_to_array(&"Tetris".to_string(), 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
 			let mut s: String = "score: ".to_string();
 			s += &state.score.to_string();
@@ -924,7 +935,8 @@ impl App
 				gl::DepthFunc(gl::ALWAYS);
 
 				gl::Uniform4f(0, 0.0f32, box_size as f32, self.window_width as f32, self.window_height as f32);
-
+				gl::Disable(gl::BLEND);
+				
 				gl::BindVertexArray(vao);
 
 				ssbo.bind(2);
@@ -940,6 +952,9 @@ impl App
 				gl::Uniform4f(0, 0.0f32, box_size as f32, self.window_width as f32, self.window_height as f32);
 
 				gl::BindTexture(gl::TEXTURE_2D, tex_handle);
+				gl::Enable(gl::BLEND);
+				gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA); 
+				
 
 				gl::DrawArrays(
 					gl::TRIANGLES, // mode
