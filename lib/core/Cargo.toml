@@ -1,5 +1,5 @@
 [package]
-name = "paint"
+name = "core"
 version = "0.1.0"
 authors = ["Kiraffi <10407365+Kiraffi@users.noreply.github.com>"]
 edition = "2018"
@@ -9,5 +9,4 @@ edition = "2018"
 [dependencies]
 gl = "0.14.0"
 sdl2 = { version = "0.34.3", default-features = false }
-render_gl = { path = "../lib/render_gl" }
-core = { path = "../lib/core" }
+
