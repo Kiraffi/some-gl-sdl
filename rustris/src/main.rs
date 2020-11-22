@@ -493,6 +493,15 @@ fn run(app: &mut core::App) -> Result<(), String>
 
 	shader_program.set_used();
 
+	let mut queries1: gl::types::GLuint = 0;
+	let mut queries2: gl::types::GLuint = 0;
+	unsafe 
+	{
+		gl::GenQueries(1, &mut queries1);
+		gl::GenQueries(1, &mut queries2);
+	}
+
+
 	let colors: [u32; 9] = [
 		// Background color
 		core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
@@ -724,6 +733,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 			gl::Uniform4f(0, 0.0f32, box_size as f32, app.window_width as f32, app.window_height as f32);
 			gl::Disable(gl::BLEND);
 
+			gl::QueryCounter(queries1, gl::TIMESTAMP);
 			gl::BindVertexArray(vao);
 
 			ssbo.bind(2);
@@ -749,11 +759,38 @@ fn run(app: &mut core::App) -> Result<(), String>
 				6 * letter_datas.len() as i32// number of indices to be rendered
 			);
 			//gl::DrawElements(gl::TRIANGLES, 3, gl::UNSIGNED_INT, std::ptr::null());
+			gl::QueryCounter(queries2, gl::TIMESTAMP);
+
 		}
 		::std::thread::sleep(std::time::Duration::from_millis(1));
 		app.window.gl_swap_window();
+
+		let duration: f32;
+		unsafe
+		{
+			let mut done = 0;
+			let mut done2 = 0;
+			while done == 0
+			{
+				gl::GetQueryObjectiv(queries1, gl::QUERY_RESULT_AVAILABLE, &mut done);
+			}
+
+			while done2 == 0
+			{
+				gl::GetQueryObjectiv(queries2, gl::QUERY_RESULT_AVAILABLE, &mut done2);
+			}
+
+			let mut start_time: gl::types::GLuint64 = 0;
+			let mut end_time: gl::types::GLuint64 = 0;
+				gl::GetQueryObjectui64v(queries1, gl::QUERY_RESULT, &mut start_time);
+			gl::GetQueryObjectui64v(queries2, gl::QUERY_RESULT, &mut end_time);
+			
+			duration = ((end_time - start_time) as f64 / 1000000.0) as f32;
+		}
 		//println!("x: {}, y: {}", pos_x, pos_y);
 		//println!("Frame duration: {}", _dt);
+		let title: String = format!("Gpu duration: {}", duration);
+		app.window.set_title(&title).unwrap();
 	}
 	//return Ok(());
 }
