@@ -21,30 +21,6 @@ pub struct ShaderData
 	_size: f32
 }
 
-
-fn clamp(value: f32, min: f32, max: f32) ->f32
-{
-	let mut v = if value > min { value } else { min };
-	v = if v < max { v } else { max };
-	return v;
-}
-
-fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
-{
-	let r = clamp(r, 0.0f32, 1.0f32);
-	let g = clamp(g, 0.0f32, 1.0f32);
-	let b = clamp(b, 0.0f32, 1.0f32);
-	let a = clamp(a, 0.0f32, 1.0f32);
-
-	let mut v = 0u32;
-	v += (r * 255.0f32) as u32;
-	v += ((g * 255.0f32) as u32) << 8u32;
-	v += ((b * 255.0f32) as u32) << 16u32;
-	v += ((a * 255.0f32) as u32) << 24u32;
-
-	return v;
-}
-
 fn load_file(name: &String) -> Result<Vec<u8>, String>
 {
 	let mut file;
@@ -120,8 +96,8 @@ fn run(app: &mut core::App, file_name: &String) -> Result<(), String>
 	shader_program.set_used();
 
 	let colors: [u32;2] = [
-		get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
-		get_u32_agbr_color(1.0, 1.0, 1.0, 1.0),
+		core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
+		core::get_u32_agbr_color(1.0, 1.0, 1.0, 1.0),
 	];
 
 	let board_size_x = 8;

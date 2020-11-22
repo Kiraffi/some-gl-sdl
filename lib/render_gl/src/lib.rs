@@ -129,6 +129,24 @@ impl Shader
 			}
 		}
 	}
+
+	pub fn from_comp_source(source: &CStr, name: &String) -> Result<Shader, String>
+	{
+		match Shader::from_source(source, gl::COMPUTE_SHADER)
+		{
+			Ok(k) =>
+			{
+				return Ok(k);
+			}
+			Err(e) =>
+			{
+				println!("Failed to compile compute shader: {}", name);
+				return Err(e);
+			}
+		}
+	}
+
+
 	pub fn id(&self) -> gl::types::GLuint
 	{
 		self.id
@@ -165,7 +183,7 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum )
 	if success == 0
 	{
 		let mut len: gl::types::GLint = 0;
-		unsafe 
+		unsafe
 		{
 			gl::GetShaderiv(id, gl::INFO_LOG_LENGTH, &mut len);
 		}
@@ -197,6 +215,75 @@ fn create_whitespace_cstring_with_len(len: usize)
 	buffer.extend([b' '].iter().cycle().take(len));
 	// convert buffer to CString
 	unsafe { CString::from_vec_unchecked(buffer) }
+}
+
+
+pub struct Texture
+{
+	handle: gl::types::GLuint,
+	width: i32,
+	height: i32,
+	texture_type: gl::types::GLenum,
+	pixel_type: gl::types::GLenum
+}
+
+impl Texture
+{
+	fn generate_handle(width: i32, height: i32, texture_type: gl::types::GLenum, pixel_type: gl::types::GLenum) -> gl::types::GLuint
+	{
+		let mut handle: gl::types::GLuint = 0;
+		unsafe
+		{
+			gl::GenTextures(1, &mut handle);
+			gl::BindTexture(texture_type, handle);
+			gl::TexStorage2D(texture_type, 1, pixel_type, width, height);
+			//gl::TexSubImage2D(gl::TEXTURE_2D, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+		}
+		return handle;
+	}
+	// texture width, height, and type such as GL_TEXTURE_2D (gl::TEXTURE2D), pixel_type such as gl::RGBA8
+	pub fn new_texture(width: i32, height: i32, texture_type: gl::types::GLenum, pixel_type: gl::types::GLenum) -> Self
+	{
+		let handle = Texture::generate_handle(width, height, texture_type, pixel_type);
+		return Self { handle, width, height, texture_type, pixel_type };
+	}
+
+	pub fn resize(&mut self, width: i32, height: i32)
+	{
+		self.delete_texture();
+		self.handle = Texture::generate_handle(width, height, self.texture_type, self.pixel_type);
+		self.width = width;
+		self.height = height;
+	}
+
+	pub fn delete_texture(&mut self)
+	{
+		if self.handle != 0
+		{
+			unsafe
+			{
+				gl::DeleteTextures(1, &self.handle);
+			}
+			self.handle = 0;
+		}
+	}
+	pub fn get_handle(&self) -> gl::types::GLuint
+	{
+		return self.handle;
+	}
+
+	pub fn get_pixel_type(&self) -> gl::types::GLenum
+	{
+		return self.pixel_type;
+	}
+}
+
+impl Drop for Texture
+{
+	fn drop(&mut self)
+	{
+		self.delete_texture();
+	}
 }
 
 

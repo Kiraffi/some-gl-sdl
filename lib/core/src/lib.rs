@@ -185,3 +185,27 @@ impl App
 		return Ok(());
 	}
 }
+
+
+pub fn clamp(value: f32, min: f32, max: f32) ->f32
+{
+	let mut v = if value > min { value } else { min };
+	v = if v < max { v } else { max };
+	return v;
+}
+
+pub fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
+{
+	let r = clamp(r, 0.0f32, 1.0f32);
+	let g = clamp(g, 0.0f32, 1.0f32);
+	let b = clamp(b, 0.0f32, 1.0f32);
+	let a = clamp(a, 0.0f32, 1.0f32);
+
+	let mut v = 0u32;
+	v += (r * 255.0f32) as u32;
+	v += ((g * 255.0f32) as u32) << 8u32;
+	v += ((b * 255.0f32) as u32) << 16u32;
+	v += ((a * 255.0f32) as u32) << 24u32;
+
+	return v;
+}

@@ -1,0 +1,24 @@
+#version 450 core
+
+
+layout (std140, binding = 0) uniform SomeValues
+{
+	vec2 rolls;
+	ivec2 screenSizes;
+};
+
+layout (rgba8, binding = 0) uniform image2D destTex;
+
+layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+void main()
+{
+	ivec2 storePos = ivec2( gl_GlobalInvocationID.xy );
+
+	if(storePos.x < screenSizes.x && storePos.y < screenSizes.y)
+	{
+		vec2 p = abs(storePos - screenSizes / 2);
+		float d = length(vec2(p));
+		float c = 1.0f - clamp(d / 40.0f, 0.0f, 1.0f);
+		imageStore(destTex, storePos, vec4( c, 0.0, 0.0, 0.0));
+	}
+}
