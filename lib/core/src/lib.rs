@@ -1,13 +1,34 @@
 use gl;
-use std;
 use std::ffi::CStr;
 
+use sdl2::event::Event;
+use sdl2::keyboard::Keycode;
+
+pub fn get_usize_from_keycode(keycode: Keycode) -> usize
+{
+	let val:u32 = unsafe 
+	{ 
+		std::mem::transmute::<Keycode, u32>(keycode)
+	};
+
+	return val as usize;
+}
+
+pub struct MyTimer
+{
+	pub now_stamp: u64,
+	pub last_stamp: u64,
+	pub perf_freq: f64,
+	pub dt: f64,
+}
 pub struct App
 {
 
 	pub window_width: i32,
 	pub window_height: i32,
-	vsync: bool,
+	pub vsync: bool,
+
+	pub timer: MyTimer,
 
 	pub _sdl: sdl2::Sdl,
 	pub video: sdl2::VideoSubsystem,
@@ -16,7 +37,14 @@ pub struct App
 	pub event_pump: sdl2::EventPump,
 
 	//gl: *const std::os::raw::c_void,
-	pub _gl_context: sdl2::video::GLContext
+	pub _gl_context: sdl2::video::GLContext,
+
+
+	pub key_downs: [u8; 512],
+	pub key_downs_previous: [u8; 512],
+	pub key_half_count: [u8; 512],
+
+	pub quit: bool,
 }
 
 extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::types::GLenum,
@@ -80,6 +108,7 @@ impl App
 {
 	pub fn init(window_width: i32, window_height: i32, window_name: &str, vsync: bool) -> Result<Self, String>
 	{
+		
 		/*
 		if width == 1
 		{
@@ -160,10 +189,16 @@ impl App
 			gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
 		}
 
-
 		let event_pump = sdl.event_pump()?;
 		let mut t = Self{ window_width, window_height, vsync: vsync,
-			_sdl: sdl, video, sdl_timer, window, event_pump, _gl_context };
+			timer: MyTimer{ now_stamp: sdl_timer.performance_counter(),
+				 last_stamp: sdl_timer.performance_counter(), 
+				 perf_freq: sdl_timer.performance_frequency() as f64, 
+				 dt: 0.0f64 
+			},
+			_sdl: sdl, video, sdl_timer, window, event_pump, _gl_context, 
+			key_downs: [0; 512], key_downs_previous: [0; 512], key_half_count: [0; 512],
+			quit: false };
 
 		t.enable_vsync(vsync)?;
 
@@ -183,6 +218,101 @@ impl App
 
 		self.vsync = enable_vsync;
 		return Ok(());
+	}
+
+	pub fn was_pressed(&self, key_code: Keycode) -> bool
+	{
+		let index = get_usize_from_keycode(key_code);
+		return index < 512 && ((self.key_downs[index] == 1u8 && self.key_downs_previous[index] == 0u8 ) || self.key_half_count[index] >= 2u8);
+	}
+
+	pub fn was_released(&self, key_code: Keycode) -> bool
+	{
+		let index = get_usize_from_keycode(key_code);
+		return index < 512 && ((self.key_downs[index] == 0u8 && self.key_downs_previous[index] == 1u8 ) || self.key_half_count[index] >= 2u8);
+	}
+
+	pub fn is_down(&self, key_code: Keycode)  -> bool
+	{
+		let index = get_usize_from_keycode(key_code);
+		return index < 512 && self.key_downs[index] == 1u8;
+	}
+
+	pub fn update(&mut self)
+	{
+		self.timer.last_stamp = self.timer.now_stamp;
+		self.timer.now_stamp = self.sdl_timer.performance_counter();
+		self.timer.dt = (self.timer.now_stamp - self.timer.last_stamp) as f64 * 1000.0f64 / self.timer.perf_freq;
+
+		self.key_half_count = [0; 512];
+		self.key_downs_previous = self.key_downs;
+
+		for event in self.event_pump.poll_iter()
+		{
+			match event
+			{
+				Event::Quit {..} |
+				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
+				{
+					self.quit = true;
+				},
+				Event::KeyDown { keycode, .. } =>
+				{
+					match keycode
+					{
+						Some(x) =>
+						{
+							let index = get_usize_from_keycode(x);
+							if index < 512
+							{
+								self.key_half_count[ index ] += 1u8;
+								self.key_downs[ index ] = 1u8;
+							}
+							println!("index pressed: {}", index);
+						},
+						_ => {}
+					}
+				},
+				Event::KeyUp { keycode, .. } =>
+				{
+					match keycode
+					{
+						Some(x) =>
+						{
+							let index = get_usize_from_keycode(x);
+							if index < 512
+							{
+								self.key_half_count[ index ] += 1u8;
+								self.key_downs[ index ] = 0u8;
+							}
+							println!("index relased: {}", index);
+						},
+						_ => {}
+					}
+				},
+
+				Event::Window {win_event, ..  } =>
+				{
+					match win_event
+					{
+						sdl2::event::WindowEvent::Resized( width, height ) =>
+						{
+							self.window_width = width;
+							self.window_height = height;
+							println!("Resized: {}: {}", self.window_width, self.window_height);
+							unsafe
+							{
+								gl::Viewport(0, 0, self.window_width, self.window_height);
+							}
+
+						},
+
+						_ => {}
+					}
+				},
+				_ => {}
+			}
+		}
 	}
 }
 

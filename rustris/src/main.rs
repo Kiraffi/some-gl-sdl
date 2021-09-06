@@ -4,10 +4,10 @@ extern crate gl;
 extern crate render_gl;
 extern crate core;
 
-use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
+
 
 //pub mod render_gl;
 
@@ -455,7 +455,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 		{
 			for l in 0 .. (128-32)
 			{
-				let val = tex[y + l * 12];
+				let val = tex[(11 - y) + l * 12];
 				for x in 0..8
 				{
 					let v = ((val >> x) & 1) * 255;
@@ -537,7 +537,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 		}
 	}
 
-	let letter_size = 20;
+	let letter_size = 16;
 	let max_letters = 512;
 	// Fill board for shader
 	let mut letter_datas: Vec<LetterData> = Vec::new();
@@ -569,118 +569,72 @@ fn run(app: &mut core::App) -> Result<(), String>
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	let mut now_stamp: u64 = app.sdl_timer.performance_counter();
-	let mut last_stamp: u64;
-	let perf_freq: f64 = app.sdl_timer.performance_frequency() as f64;
-	let mut _dt: f32;
-
-
-	let mut rng_: Randomm = Randomm{ rng_seed: now_stamp, rng_inc: 0xa5dfa5dfu64 };
+	let mut rng_: Randomm = Randomm{ rng_seed: app.timer.now_stamp, rng_inc: 0xa5dfa5dfu64 };
 	let mut state = GameState{ player: BlockPiece
 			{ pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
-			score: 0, high_score: 0, lines: 0, last_row_down: now_stamp, rng: rng_ };
+			score: 0, high_score: 0, lines: 0, last_row_down: app.timer.now_stamp, rng: rng_ };
 
-	loop
+	while !app.quit
 	{
 		letter_datas.clear();
 		//app.add_to_array(&"Tetris".to_string(), 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
-		let mut s: String = "score: ".to_string();
+		let mut s: String = "Score: ".to_string();
 		s += &state.score.to_string();
 		add_to_array(&app, &s, 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
-		let mut s: String = "lines: ".to_string();
+		let mut s: String = "Lines: ".to_string();
 		s += &state.lines.to_string();
 		add_to_array(&app, &s, 30.0f32, 60.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
-		let mut s: String = "high score: ".to_string();
+		let mut s: String = "High Score: ".to_string();
 		s += &state.high_score.to_string();
 		add_to_array(&app, &s, 330.0f32, 50.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
-		last_stamp = now_stamp;
-		now_stamp = app.sdl_timer.performance_counter();
-		_dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
+		app.update();
 
-		for event in app.event_pump.poll_iter()
+
+		if app.was_pressed(Keycode::A) || app.was_pressed(Keycode::Left)
 		{
-			match event
+			let mut tmp = state.player.clone();
+			tmp.pos_x -= 1;
+			if !board.check_hit(&tmp)
 			{
-				Event::Quit {..} |
-				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
-				{
-					return Ok(());
-				},
-				Event::KeyDown { keycode: Some(Keycode::A), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Left), .. } =>
-				{
-					let mut tmp = state.player.clone();
-					tmp.pos_x -= 1;
-					if !board.check_hit(&tmp)
-					{
-						state.player.pos_x -= 1;
-					}
-				},
-				Event::KeyDown { keycode: Some(Keycode::F), .. } =>
-				{
-					state.player.block_type = (state.player.block_type + 1) % 7;
-				},
-
-
-				Event::KeyDown { keycode: Some(Keycode::D), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Right), .. } =>
-				{
-					let mut tmp = state.player.clone();
-					tmp.pos_x += 1;
-					if !board.check_hit(&tmp)
-					{
-						state.player.pos_x += 1;
-					}
-				},
-				Event::KeyDown { keycode: Some(Keycode::W), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Up), .. } =>
-				{
-					state.player.set_rotation(state.player.rotation + 1);
-
-					while board.check_left_border(&state.player)
-					{
-						state.player.pos_x += 1;
-					}
-					while board.check_right_border(&state.player)
-					{
-						state.player.pos_x -= 1;
-					}
-					while board.check_hit(&state.player)
-					{
-						state.player.pos_y += 1;
-					}
-				},
-
-				Event::KeyDown { keycode: Some(Keycode::S), .. } |
-				Event::KeyDown { keycode: Some(Keycode::Down), .. } =>
-				{
-					while row_down(&mut state, &mut board, now_stamp) {}
-				},
-				Event::Window {win_event, ..  } =>
-				{
-					match win_event
-					{
-						sdl2::event::WindowEvent::Resized( width, height ) =>
-						{
-							app.window_width = width;
-							app.window_height = height;
-							println!("Resized: {}: {}", app.window_width, app.window_height);
-							unsafe
-							{
-								gl::Viewport(0, 0, app.window_width, app.window_height);
-							}
-
-						},
-
-						_ => {}
-					}
-				},
-				_ => {}
+				state.player.pos_x -= 1;
 			}
+		}
+
+		if app.was_pressed(Keycode::D) || app.was_pressed(Keycode::Right)
+		{
+			let mut tmp = state.player.clone();
+			tmp.pos_x += 1;
+			if !board.check_hit(&tmp)
+			{
+				state.player.pos_x += 1;
+			}
+		}
+		
+		if app.was_pressed(Keycode::W) || app.was_pressed(Keycode::Up)
+		{
+			state.player.set_rotation(state.player.rotation + 1);
+
+			while board.check_left_border(&state.player)
+			{
+				state.player.pos_x += 1;
+			}
+			while board.check_right_border(&state.player)
+			{
+				state.player.pos_x -= 1;
+			}
+			while board.check_hit(&state.player)
+			{
+				state.player.pos_y += 1;
+			}
+		}
+
+		if app.was_pressed(Keycode::S) || app.was_pressed(Keycode::Down)
+		{
+			while row_down(&mut state, &mut board, app.timer.now_stamp) {}
 		}
 
 
@@ -694,9 +648,9 @@ fn run(app: &mut core::App) -> Result<(), String>
 			}
 		}
 
-		if (now_stamp - state.last_row_down) as f64 * 1000.0f64 / perf_freq > 100.0f64
+		if (app.timer.now_stamp - state.last_row_down) as f64 * 1000.0f64 / app.timer.perf_freq > 100.0f64
 		{
-			row_down(&mut state, &mut board, now_stamp);
+			row_down(&mut state, &mut board, app.timer.now_stamp);
 		}
 
 
@@ -792,7 +746,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 		let title: String = format!("Gpu duration: {}", duration);
 		app.window.set_title(&title).unwrap();
 	}
-	//return Ok(());
+	return Ok(());
 }
 
 

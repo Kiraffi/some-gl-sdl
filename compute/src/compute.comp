@@ -19,6 +19,15 @@ void main()
 		vec2 p = abs(storePos - screenSizes / 2);
 		float d = length(vec2(p));
 		float c = 1.0f - clamp(d / 40.0f, 0.0f, 1.0f);
-		imageStore(destTex, storePos, vec4( c, 0.0, 0.0, 0.0));
+		vec4 col = vec4( c, 0.0, 0.0, 1.0);
+		if(storePos.y < screenSizes.y / 2)
+		{
+			col.y = 1.0;
+		}
+		if(storePos.x > screenSizes.x / 2)
+		{
+			col.z = 1.0;
+		}
+		imageStore(destTex, storePos, col);
 	}
 }
