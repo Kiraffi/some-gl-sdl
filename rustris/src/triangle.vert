@@ -45,7 +45,7 @@ void main()
 	pp.xy += uintBitsToFloat(vData.values[vertId].xy);
 	//pp.xy += 0.5f;
 	
-	pp.xy /= screenSizes.zw * 0.5f;
+	pp.xy = (pp.xy + 0.5f) / (screenSizes.zw * 0.5f) - 1.0f;
 	gl_Position = vec4(vec3(pp.xy, 1.0f) , 1.0);
 	uint col = vData.values[vertId].z;
 	uvec4 cu = uvec4((col & 255u), (col >> 8) & 255, (col >> 16) & 255, (col >> 24) & 255);

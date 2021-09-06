@@ -398,8 +398,8 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 
 fn add_to_array(app: &core::App, s: &String, pos_x: f32, pos_y: f32, sz: f32, col: u32, letters: &mut Vec<LetterData>)
 {
-	let mut px = pos_x - app.window_width as f32 / 2.0f32;
-	let py = (app.window_height / 2) as f32 - pos_y;
+	let mut px = pos_x as f32;
+	let py = app.window_height as f32 - pos_y;
 	for x in 0..s.len()
 	{
 		let l: u8 = s.as_bytes()[x] - 32;
@@ -413,6 +413,7 @@ fn add_to_array(app: &core::App, s: &String, pos_x: f32, pos_y: f32, sz: f32, co
 
 fn run(app: &mut core::App) -> Result<(), String>
 {
+	// use paired number
 	let box_size = 40;
 
 
@@ -525,12 +526,22 @@ fn run(app: &mut core::App) -> Result<(), String>
 	let mut shader_data: Vec<ShaderData> = Vec::new();
 	{
 		let col = colors[0];
+
+		let mut start_x: f32 =  (app.window_width - (board.size_x * box_size) ) as f32 / 2.0f32;
+		let mut start_y: f32 =  (app.window_height - (board.size_y * box_size) ) as f32 / 2.0f32;
+
+		start_x = start_x + box_size as f32 / 2.0f32;
+		start_y = start_y + box_size as f32 / 2.0f32;
+
+		if ((start_x * 2.0f32) as i32) % 2i32 == 0i32 { start_x += 0.5f32; }
+		if ((start_y * 2.0f32) as i32) % 2i32 == 0i32 { start_y += 0.5f32; }
+
 		for y in 0..board.size_y
 		{
 			for x in 0..board.size_x
 			{
-				let pos_x = (x as f32 - (board.size_x) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
-				let pos_y = (y as f32 - (board.size_y) as f32 / 2.0f32 - 0.5f32) * box_size as f32;
+				let pos_x = start_x + (x * box_size) as f32;
+				let pos_y = start_y + (y * box_size) as f32;
 
 				shader_data.push(ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32});
 			}
@@ -543,7 +554,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 	let mut letter_datas: Vec<LetterData> = Vec::new();
 	for _x in 0..max_letters
 	{
-		letter_datas.push(LetterData{_pos_x: 0.0f32, _pos_y: 0.032, _col: 0, _size: 0.032,
+		letter_datas.push(LetterData{_pos_x: 0.0f32, _pos_y: 0.0f32, _col: 0, _size: 0.0f32,
 			_uv_x: 0.032, _uv_y: 0.0f32, _tmp1: 0.0f32, _tmp2: 0.0f32});
 	}
 

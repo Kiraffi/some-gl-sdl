@@ -45,6 +45,7 @@ pub struct App
 	pub key_half_count: [u8; 512],
 
 	pub quit: bool,
+	pub resized: bool,
 }
 
 extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::types::GLenum,
@@ -198,7 +199,7 @@ impl App
 			},
 			_sdl: sdl, video, sdl_timer, window, event_pump, _gl_context, 
 			key_downs: [0; 512], key_downs_previous: [0; 512], key_half_count: [0; 512],
-			quit: false };
+			quit: false, resized: false };
 
 		t.enable_vsync(vsync)?;
 
@@ -240,6 +241,7 @@ impl App
 
 	pub fn update(&mut self)
 	{
+		self.resized = false;
 		self.timer.last_stamp = self.timer.now_stamp;
 		self.timer.now_stamp = self.sdl_timer.performance_counter();
 		self.timer.dt = (self.timer.now_stamp - self.timer.last_stamp) as f64 * 1000.0f64 / self.timer.perf_freq;
@@ -304,7 +306,7 @@ impl App
 							{
 								gl::Viewport(0, 0, self.window_width, self.window_height);
 							}
-
+							self.resized = true;
 						},
 
 						_ => {}
