@@ -3,31 +3,26 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 color;
 
-layout (location = 0) uniform vec4 screenSizes;
+layout (location = 0) uniform vec2 screenSizes;
 
-
-layout (std430, binding=3) buffer shader_data
-{
-	uvec4 values[];
-} vData;
-
-
-struct DataValue
+struct VertexData
 {
 	vec2 pos;
+	vec2 size;
+	vec2 uv;
 	uint col;
-	float sz;
+	float tmp;
 };
 
-/*
-layout (std140, binding=3) uniform shader_data
+layout (std430, binding=0) buffer shader_data
 {
-	uvec4 values[1024];
+	VertexData values[];
 } vData;
-*/
+
 
 layout (location = 0) out vec4 vColor;
 layout (location = 1) out vec2 vTexCoord;
+
 void main()
 {
 	int vertId = gl_VertexID / 6;
@@ -43,16 +38,16 @@ void main()
 	}
 
 	vTexCoord = pp + 0.5f;
-	vTexCoord.x += uintBitsToFloat(vData.values[(vertId * 2 + 1)].x);;
+	vTexCoord.x += vData.values[(vertId)].uv.x;
 	vTexCoord.x /= (128.0f-32.0f);
 	
-	pp *= uintBitsToFloat(vData.values[vertId * 2].w);
-	pp.xy += uintBitsToFloat(vData.values[vertId * 2].xy);
+	pp.xy *= vData.values[vertId].size;
+	pp.xy += vData.values[vertId].pos;
 	//pp.xy += 0.5f;
 	
-	pp.xy = (pp.xy + 0.5f) / (screenSizes.zw * 0.5f) - 1.0f;
+	pp.xy = (pp.xy + 0.5f) / (screenSizes.xy * 0.5f) - 1.0f;
 	gl_Position = vec4(vec3(pp.xy, 1.0f) , 1.0);
-	uint col = vData.values[vertId * 2].z;
+	uint col = vData.values[vertId].col;
 	uvec4 cu = uvec4((col & 255u), (col >> 8) & 255, (col >> 16) & 255, (col >> 24) & 255);
 	vColor = vec4(cu) / 255.0f;
 }

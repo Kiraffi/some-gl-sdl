@@ -4,7 +4,7 @@ use std::ffi::CStr;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
-pub fn get_usize_from_keycode(keycode: Keycode) -> usize
+fn get_usize_from_keycode(keycode: Keycode) -> usize
 {
 	let mut val:u32 = unsafe 
 	{ 
