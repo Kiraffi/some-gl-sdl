@@ -5,12 +5,12 @@ members = [
 	"compute"
 ]
 
-[profile.dev]
-codegen-units = 32
-incremental = true
-overflow-checks = true
-debug-assertions = true
-lto = false
-debug = true
-opt-level = 0
+#[profile.dev]
+#codegen-units = 32
+#incremental = true
+#overflow-checks = true
+#debug-assertions = true
+#lto = false
+#debug = true
+#opt-level = 0
 

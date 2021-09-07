@@ -7,7 +7,7 @@ extern crate core;
 use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
-
+ 
 
 //pub mod render_gl;
 
@@ -494,12 +494,12 @@ fn run(app: &mut core::App) -> Result<(), String>
 
 	shader_program.set_used();
 
-	let mut queries1: gl::types::GLuint = 0;
-	let mut queries2: gl::types::GLuint = 0;
+	let mut queries1: [gl::types::GLuint; 4] = [0; 4];
+	let mut queries2: [gl::types::GLuint; 4] = [0; 4];
 	unsafe 
 	{
-		gl::GenQueries(1, &mut queries1);
-		gl::GenQueries(1, &mut queries2);
+		gl::GenQueries(4, &mut queries1[0]);
+		gl::GenQueries(4, &mut queries2[0]);
 	}
 
 
@@ -585,8 +585,12 @@ fn run(app: &mut core::App) -> Result<(), String>
 			{ pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
 			score: 0, high_score: 0, lines: 0, last_row_down: app.timer.now_stamp, rng: rng_ };
 
+	let mut frame_count :u64 = 0u64;
 	while !app.quit
 	{
+		let current_frame_index : usize = (frame_count % 4) as usize;
+		let previous_frame_index : usize = ((frame_count + 1) % 4) as usize;
+
 		letter_datas.clear();
 		//app.add_to_array(&"Tetris".to_string(), 30.0f32, 30.0f32, letter_size as f32, colors[8], &mut letter_datas);
 
@@ -698,7 +702,8 @@ fn run(app: &mut core::App) -> Result<(), String>
 			gl::Uniform4f(0, 0.0f32, box_size as f32, app.window_width as f32, app.window_height as f32);
 			gl::Disable(gl::BLEND);
 
-			gl::QueryCounter(queries1, gl::TIMESTAMP);
+
+			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
 			gl::BindVertexArray(vao);
 
 			ssbo.bind(2);
@@ -724,38 +729,44 @@ fn run(app: &mut core::App) -> Result<(), String>
 				6 * letter_datas.len() as i32// number of indices to be rendered
 			);
 			//gl::DrawElements(gl::TRIANGLES, 3, gl::UNSIGNED_INT, std::ptr::null());
-			gl::QueryCounter(queries2, gl::TIMESTAMP);
+			gl::QueryCounter(queries2[current_frame_index], gl::TIMESTAMP);
 
 		}
 		::std::thread::sleep(std::time::Duration::from_millis(1));
 		app.window.gl_swap_window();
 
-		let duration: f32;
-		unsafe
+		let mut duration: f32 = 0.0f32;
+		if frame_count >= 4
 		{
-			let mut done = 0;
-			let mut done2 = 0;
-			while done == 0
+			unsafe
 			{
-				gl::GetQueryObjectiv(queries1, gl::QUERY_RESULT_AVAILABLE, &mut done);
+				let mut done = 0;
+				let mut done2 = 0;
+				while done == 0 && done2 == 0
+				{
+					if done == 0
+					{
+						gl::GetQueryObjectiv(queries1[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done);
+					}
+					if done2 == 0
+					{
+						gl::GetQueryObjectiv(queries2[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done2);
+					}
+				}
+				
+				let mut start_time: gl::types::GLuint64 = 0;
+				let mut end_time: gl::types::GLuint64 = 0;
+				gl::GetQueryObjectui64v(queries1[previous_frame_index], gl::QUERY_RESULT, &mut start_time);
+				gl::GetQueryObjectui64v(queries2[previous_frame_index], gl::QUERY_RESULT, &mut end_time);
+				
+				duration = ((end_time - start_time) as f64 / 1000000.0) as f32;
 			}
-
-			while done2 == 0
-			{
-				gl::GetQueryObjectiv(queries2, gl::QUERY_RESULT_AVAILABLE, &mut done2);
-			}
-
-			let mut start_time: gl::types::GLuint64 = 0;
-			let mut end_time: gl::types::GLuint64 = 0;
-				gl::GetQueryObjectui64v(queries1, gl::QUERY_RESULT, &mut start_time);
-			gl::GetQueryObjectui64v(queries2, gl::QUERY_RESULT, &mut end_time);
-			
-			duration = ((end_time - start_time) as f64 / 1000000.0) as f32;
 		}
 		//println!("x: {}, y: {}", pos_x, pos_y);
 		//println!("Frame duration: {}", _dt);
 		let title: String = format!("Gpu duration: {}", duration);
 		app.window.set_title(&title).unwrap();
+		frame_count = frame_count + 1u64;
 	}
 	return Ok(());
 }

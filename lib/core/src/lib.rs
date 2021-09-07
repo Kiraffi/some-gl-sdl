@@ -6,11 +6,15 @@ use sdl2::keyboard::Keycode;
 
 pub fn get_usize_from_keycode(keycode: Keycode) -> usize
 {
-	let val:u32 = unsafe 
+	let mut val:u32 = unsafe 
 	{ 
 		std::mem::transmute::<Keycode, u32>(keycode)
 	};
-
+	if (val & 0x40000000) == 0x40000000 
+	{
+		val =  (val & 0xffffu32) + 128u32;
+	}
+	
 	return val as usize;
 }
 
