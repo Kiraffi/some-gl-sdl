@@ -4,6 +4,32 @@ use std::ffi::CStr;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
+pub struct RandomPCG
+{
+	rng_seed: u64,
+	rng_inc: u64
+}
+
+impl RandomPCG
+{
+	pub fn new(rng_seed: u64) -> RandomPCG
+	{
+		RandomPCG{ rng_seed, rng_inc: 0xa5dfa5dfu64 }
+	}
+	// From https://www.pcg-random.org/download.html
+	pub fn get_next(&mut self) -> u32
+	{
+		let old: u64 = self.rng_seed;
+		self.rng_seed = self.rng_seed.wrapping_mul(636413622384679005u64);
+		self.rng_seed = self.rng_seed.wrapping_add(self.rng_inc | 1u64);
+		let xor_shifted: u32  = (((old >> 18u64) ^ old) >> 27u64) as u32;
+		let rot: u32 = (old >> 59u64) as u32;
+		let result: u32 = (xor_shifted >> rot) | (xor_shifted << ((!rot) & 31));
+		return result;
+	}
+}
+
+
 fn get_usize_from_keycode(keycode: Keycode) -> usize
 {
 	let mut val:u32 = unsafe 

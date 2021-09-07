@@ -8,13 +8,8 @@ extern crate render_systems;
 use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
-use render_systems::fontsystem::{FontSystem};
-
-struct Randomm
-{
-	rng_seed: u64,
-	rng_inc: u64
-}
+use render_systems::fontsystem::FontSystem;
+use core::RandomPCG;
 
 pub struct Block
 {
@@ -37,7 +32,7 @@ pub struct GameState
 	high_score: u32,
 	lines: u32,
 	last_row_down: u64,
-	rng: Randomm
+	rng: RandomPCG
 }
 pub struct Board
 {
@@ -56,20 +51,6 @@ pub struct ShaderData
 	_size: f32
 }
 
-
-pub struct LetterData
-{
-	_pos_x: f32,
-	_pos_y: f32,
-	_col: u32,
-	_size: f32,
-
-	_uv_x: f32,
-	_uv_y: f32,
-	_tmp1: f32,
-	_tmp2: f32
-}
-
 const BLOCKS: [Block; 7] = [
 	Block{ blocks: [1,1,1,1, 0,0,0,0]},
 	Block{ blocks: [0,1,1,1, 0,0,0,1]},
@@ -81,20 +62,6 @@ const BLOCKS: [Block; 7] = [
 	Block{ blocks: [0,0,1,1, 0,1,1,0]}
 ];
 
-impl Randomm
-{
-	// From https://www.pcg-random.org/download.html
-	pub fn get_next(&mut self) -> u32
-	{
-		let old: u64 = self.rng_seed;
-		self.rng_seed = self.rng_seed.wrapping_mul(636413622384679005u64);
-		self.rng_seed = self.rng_seed.wrapping_add(self.rng_inc | 1u64);
-		let xor_shifted: u32  = (((old >> 18u64) ^ old) >> 27u64) as u32;
-		let rot: u32 = (old >> 59u64) as u32;
-		let result: u32 = (xor_shifted >> rot) | (xor_shifted << ((!rot) & 31));
-		return result;
-	}
-}
 
 
 
@@ -485,7 +452,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	let mut rng_: Randomm = Randomm{ rng_seed: app.timer.now_stamp, rng_inc: 0xa5dfa5dfu64 };
+	let mut rng_: RandomPCG = RandomPCG::new(app.timer.now_stamp);
 	let mut state = GameState{ player: BlockPiece
 			{ pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
 			score: 0, high_score: 0, lines: 0, last_row_down: app.timer.now_stamp, rng: rng_ };
