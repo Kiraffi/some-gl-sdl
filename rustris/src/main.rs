@@ -385,10 +385,12 @@ fn run(app: &mut core::App) -> Result<(), String>
 
 	let mut queries1: [gl::types::GLuint; 4] = [0; 4];
 	let mut queries2: [gl::types::GLuint; 4] = [0; 4];
+	let mut queries3: [gl::types::GLuint; 4] = [0; 4];
 	unsafe 
 	{
 		gl::GenQueries(4, &mut queries1[0]);
 		gl::GenQueries(4, &mut queries2[0]);
+		gl::GenQueries(4, &mut queries3[0]);
 	}
 
 
@@ -460,7 +462,8 @@ fn run(app: &mut core::App) -> Result<(), String>
 	let mut frame_count :u64 = 0u64;
 	let letter_size = 16;
 
-	let mut durations = [0.0f64 ; 20];
+	let mut durations1 = [0.0f64 ; 20];
+	let mut durations2 = [0.0f64 ; 20];
 
 	while !app.quit
 	{
@@ -559,15 +562,12 @@ fn run(app: &mut core::App) -> Result<(), String>
 				}
 			}
 		}
-		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
-
-
-
-
-		shader_program.set_used();
 		unsafe
 		{
 			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
+
+			ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
+			shader_program.set_used();
 			
 			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
 			gl::DepthFunc(gl::LESS);
@@ -588,14 +588,16 @@ fn run(app: &mut core::App) -> Result<(), String>
 				0, // starting index in the enabled arrays
 				6 * shader_data.len() as i32 // number of indices to be rendered
 			);
-
-			font_system.draw();
+			for _ in 0..1
+			{
+				font_system.draw();
+			}
 
 			gl::QueryCounter(queries2[current_frame_index], gl::TIMESTAMP);
-
+			app.window.gl_swap_window();
+			gl::QueryCounter(queries3[current_frame_index], gl::TIMESTAMP);
 		}
 		::std::thread::sleep(std::time::Duration::from_micros(1000));
-		app.window.gl_swap_window();
 
 		if frame_count >= 4
 		{
@@ -603,6 +605,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 			{
 				let mut done = 0;
 				let mut done2 = 0;
+				let mut done3 = 0;
 				while done == 0 && done2 == 0
 				{
 					if done == 0
@@ -613,28 +616,44 @@ fn run(app: &mut core::App) -> Result<(), String>
 					{
 						gl::GetQueryObjectiv(queries2[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done2);
 					}
+					if done3 == 0
+					{
+						gl::GetQueryObjectiv(queries3[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done3);
+					}
 				}
 				
 				let mut start_time: gl::types::GLuint64 = 0;
-				let mut end_time: gl::types::GLuint64 = 0;
+				let mut end_time1: gl::types::GLuint64 = 0;
+				let mut end_time2: gl::types::GLuint64 = 0;
 				gl::GetQueryObjectui64v(queries1[previous_frame_index], gl::QUERY_RESULT, &mut start_time);
-				gl::GetQueryObjectui64v(queries2[previous_frame_index], gl::QUERY_RESULT, &mut end_time);
+				gl::GetQueryObjectui64v(queries2[previous_frame_index], gl::QUERY_RESULT, &mut end_time1);
+				gl::GetQueryObjectui64v(queries3[previous_frame_index], gl::QUERY_RESULT, &mut end_time2);
 				
-				let duration: f64 = ((end_time - start_time) as f64 / 10000000.0) as f64;
+				let duration1: f64 = ((end_time1 - start_time) as f64 / 1000000000.0) as f64;
+				let duration2: f64 = ((end_time2 - start_time) as f64 / 1000000000.0) as f64;
 
-				durations[ (frame_count % durations.len() as u64) as usize ] = duration;
+				durations1[ (frame_count % durations1.len() as u64) as usize ] = duration1;
+				durations2[ (frame_count % durations2.len() as u64) as usize ] = duration2;
 			}
 		}
 
-		let mut duration = 0.0f64;
-		for dur in durations
+		let mut duration1 = 0.0f64;
+		let mut duration2 = 0.0f64;
+		for dur in durations1
 		{
-			duration += dur;
+			duration1 += dur;
 		}
-		duration /= durations.len() as f64;
+		for dur in durations2
+		{
+			duration2 += dur;
+		}
+		duration1 /= durations1.len() as f64;
+		duration2 /= durations2.len() as f64;
 		//println!("x: {}, y: {}", pos_x, pos_y);
 		//println!("Frame duration: {}", _dt);
-		let title: String = format!("Gpu duration: {:.3}ms, fps: {:.3}", duration * 1000.0f64, 1.0f64 / duration);
+		let title: String = format!("Gpu duration: {:.3}ms, fps: {:.3} vs whole {:.3}, fps: {:.3}", 
+			duration1 * 1000.0f64, 1.0f64 / duration1,
+			duration2 * 1000.0f64, 1.0f64 / duration2);
 		app.window.set_title(&title).unwrap();
 		frame_count = frame_count + 1u64;
 	}
@@ -647,7 +666,7 @@ fn main()
 	println!("Hello, world!");
 
 	let mut app;
-	match core::App::init(800, 900, "Rustris", true)
+	match core::App::init(800, 900, "Rustris", false)
 	{
 		Ok(v) =>
 		{
