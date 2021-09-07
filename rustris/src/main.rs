@@ -416,6 +416,12 @@ fn run(app: &mut core::App) -> Result<(), String>
 	// Fill board for shader
 	let mut shader_data: Vec<ShaderData> = Vec::new();
 	{
+		for _ in 0..1024
+		{
+			shader_data.push(ShaderData{_pos_x: 0.0f32, _pos_y: 0.0f32, _col: 0u32, _size: 0.0f32});
+		}
+
+
 		let col = colors[0];
 
 		let mut start_x: f32 =  (app.window_width - (board.size_x * box_size) ) as f32 / 2.0f32;
@@ -426,6 +432,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 
 		if ((start_x * 2.0f32) as i32) % 2i32 == 0i32 { start_x += 0.5f32; }
 		if ((start_y * 2.0f32) as i32) % 2i32 == 0i32 { start_y += 0.5f32; }
+		let mut index = 0usize;
 
 		for y in 0..board.size_y
 		{
@@ -434,7 +441,8 @@ fn run(app: &mut core::App) -> Result<(), String>
 				let pos_x = start_x + (x * box_size) as f32;
 				let pos_y = start_y + (y * box_size) as f32;
 
-				shader_data.push(ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32});
+				shader_data[index] = ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32};
+				index += 1usize;
 			}
 		}
 	}
@@ -470,9 +478,6 @@ fn run(app: &mut core::App) -> Result<(), String>
 		let current_frame_index : usize = (frame_count % 4) as usize;
 		let previous_frame_index : usize = ((frame_count + 1) % 4) as usize;
 
-		app.update();
-		font_system.update(app.window_width as f32, app.window_height as f32);
-
 		let mut s: String = "Score: ".to_string();
 		s += &state.score.to_string();
 		font_system.draw_string(&s, 5.0f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
@@ -485,7 +490,8 @@ fn run(app: &mut core::App) -> Result<(), String>
 		s += &state.high_score.to_string();
 		font_system.draw_string(&s, (app.window_width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
 		
-
+		app.update();
+	
 		if app.was_pressed(Keycode::A) || app.was_pressed(Keycode::Left)
 		{
 			let mut tmp = state.player.clone();
@@ -562,11 +568,14 @@ fn run(app: &mut core::App) -> Result<(), String>
 				}
 			}
 		}
+
+
 		unsafe
 		{
 			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
+			font_system.update(app.window_width as f32, app.window_height as f32);
 
-			ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
+			ssbo.write_data(0, shader_data.len() * std::mem::size_of::<ShaderData>(), shader_data.as_ptr() as *const gl::types::GLvoid);
 			shader_program.set_used();
 			
 			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
@@ -663,7 +672,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 
 fn main()
 {
-	println!("Hello, world!");
+	//println!("Hello, world!");
 
 	let mut app;
 	match core::App::init(800, 900, "Rustris", false)

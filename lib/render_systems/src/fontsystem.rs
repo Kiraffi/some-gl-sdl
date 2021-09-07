@@ -1,5 +1,9 @@
 extern crate render_gl;
 use std::ffi::CString;
+
+
+const MAX_LETTERS: usize = 65536usize;
+
 pub struct LetterData
 {
 	_pos_x: f32,
@@ -97,10 +101,10 @@ impl FontSystem
         }
         
 
-        let max_letters = 65536;
+        
         // Fill board for shader
         let mut letter_datas: Vec<LetterData> = Vec::new();
-        for _x in 0..max_letters
+        for _x in 0..MAX_LETTERS
         {
             letter_datas.push(LetterData{_pos_x: 0.0f32, _pos_y: 0.0f32, _size_x: 0.0f32, _size_y: 0.0f32,
                 _uv_x: 0.032, _uv_y: 0.0f32, _col: 0, _tmp: 0.0f32});
@@ -112,6 +116,7 @@ impl FontSystem
             letter_datas.len() * std::mem::size_of::<LetterData>(),
             letter_datas.as_ptr() as *const gl::types::GLvoid
         );
+        letter_datas.clear();
     
         let mut vao: gl::types::GLuint = 0;
         unsafe
@@ -131,9 +136,12 @@ impl FontSystem
         {
             let l: u8 = s.as_bytes()[x] - 32u8;
             let tmp_pos_x: f32 = l as f32;
-            self.letter_datas.push(LetterData{_pos_x: px, _pos_y: py,  _size_x: letter_size_x, _size_y: letter_size_y,
-                _uv_x: tmp_pos_x, _uv_y: 0.5f32, _col: col, _tmp: 0.0f32});
-    
+            
+            if self.letter_datas.len() < MAX_LETTERS
+            {
+                self.letter_datas.push(LetterData{_pos_x: px, _pos_y: py,  _size_x: letter_size_x, _size_y: letter_size_y,
+                    _uv_x: tmp_pos_x, _uv_y: 0.5f32, _col: col, _tmp: 0.0f32});
+            }
             px += letter_size_x + 1.0f32;
         }
     }
@@ -141,9 +149,14 @@ impl FontSystem
 
     pub fn update(&mut self, canvas_width: f32, canvas_height: f32)
     {
-        self.letter_datas.clear();
         self.canvas_width = canvas_width;
         self.canvas_height = canvas_height;
+        
+        if self.letter_datas.len() > 0
+        {
+            self.letter_buffer.write_data(0, self.letter_datas.len() * std::mem::size_of::<LetterData>(),
+                self.letter_datas.as_ptr() as *const gl::types::GLvoid);
+        }
     }
 
     pub fn draw(&mut self)
@@ -156,7 +169,6 @@ impl FontSystem
 
                 self.shader_textured_program.set_used();
                 self.letter_buffer.bind(0);
-                self.letter_buffer.write_data(0, self.letter_buffer.get_size(), self.letter_datas.as_ptr() as *const gl::types::GLvoid);
                 
                 gl::Uniform2f(0, self.canvas_width as f32, self.canvas_height as f32);
 
@@ -172,5 +184,6 @@ impl FontSystem
                 );
             }
         }
+        self.letter_datas.clear();
     }
 }
