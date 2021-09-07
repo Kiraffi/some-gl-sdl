@@ -172,7 +172,7 @@ impl App
 		gl_attr.set_context_version(4, 5);
 
 		gl_attr.set_context_flags().debug().set();
-
+		gl_attr.set_framebuffer_srgb_compatible(true);
 
 		let _gl_context = window.gl_create_context()?;
 		let _gl = gl::load_with(|s| video.gl_get_proc_address(s) as *const std::os::raw::c_void);
