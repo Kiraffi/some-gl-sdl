@@ -630,7 +630,6 @@ fn run(app: &mut core::App) -> Result<(), String>
 		::std::thread::sleep(std::time::Duration::from_micros(1000));
 		app.window.gl_swap_window();
 
-		 0.0f32;
 		if frame_count >= 4
 		{
 			unsafe
