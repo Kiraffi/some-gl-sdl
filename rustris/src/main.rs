@@ -493,6 +493,8 @@ fn run(app: &mut core::App) -> Result<(), String>
 	let mut frame_count :u64 = 0u64;
 	let letter_size = 16;
 
+	let mut durations = [0.0f64 ; 20];
+
 	while !app.quit
 	{
 		let current_frame_index : usize = (frame_count % 4) as usize;
@@ -621,14 +623,14 @@ fn run(app: &mut core::App) -> Result<(), String>
 			);
 
 			font_system.draw();
-	
+
 			gl::QueryCounter(queries2[current_frame_index], gl::TIMESTAMP);
 
 		}
-		::std::thread::sleep(std::time::Duration::from_micros(100));
+		::std::thread::sleep(std::time::Duration::from_micros(1000));
 		app.window.gl_swap_window();
 
-		let mut duration: f32 = 0.0f32;
+		 0.0f32;
 		if frame_count >= 4
 		{
 			unsafe
@@ -652,12 +654,21 @@ fn run(app: &mut core::App) -> Result<(), String>
 				gl::GetQueryObjectui64v(queries1[previous_frame_index], gl::QUERY_RESULT, &mut start_time);
 				gl::GetQueryObjectui64v(queries2[previous_frame_index], gl::QUERY_RESULT, &mut end_time);
 				
-				duration = ((end_time - start_time) as f64 / 1000000.0) as f32;
+				let duration: f64 = ((end_time - start_time) as f64 / 10000000.0) as f64;
+
+				durations[ (frame_count % durations.len() as u64) as usize ] = duration;
 			}
 		}
+
+		let mut duration = 0.0f64;
+		for dur in durations
+		{
+			duration += dur;
+		}
+		duration /= durations.len() as f64;
 		//println!("x: {}, y: {}", pos_x, pos_y);
 		//println!("Frame duration: {}", _dt);
-		let title: String = format!("Gpu duration: {}", duration);
+		let title: String = format!("Gpu duration: {:.3}ms, fps: {:.3}", duration * 1000.0f64, 1.0f64 / duration);
 		app.window.set_title(&title).unwrap();
 		frame_count = frame_count + 1u64;
 	}
