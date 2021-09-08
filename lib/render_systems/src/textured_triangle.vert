@@ -3,8 +3,6 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 color;
 
-layout (location = 0) uniform vec2 screenSizes;
-
 struct VertexData
 {
 	vec2 pos;
@@ -14,7 +12,13 @@ struct VertexData
 	float tmp;
 };
 
-layout (std430, binding=0) buffer shader_data
+layout (std140, binding=0) uniform frame_data
+{
+	vec2 screenSizes;
+	vec2 padding;
+};
+
+layout (std430, binding=1) buffer shader_data
 {
 	VertexData values[];
 } vData;

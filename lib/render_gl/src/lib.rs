@@ -2,6 +2,22 @@ use gl;
 use std;
 use std::ffi::{CString, CStr};
 
+pub struct CommonShaderFrameDate
+{
+	pub screen_size_x: f32,
+	pub screen_size_y: f32,
+	pub padding_1: f32,
+	pub padding_2: f32,
+}
+
+impl CommonShaderFrameDate
+{
+	pub fn new(width: i32, height: i32) -> CommonShaderFrameDate
+	{
+		CommonShaderFrameDate{ screen_size_x: width as f32, screen_size_y: height as f32, padding_1: 0.0f32, padding_2: 0.0f32 }
+	}
+}
+
 pub struct Program
 {
 	id: gl::types::GLuint,
@@ -220,11 +236,11 @@ fn create_whitespace_cstring_with_len(len: usize)
 
 pub struct Texture
 {
-	handle: gl::types::GLuint,
-	width: i32,
-	height: i32,
-	texture_type: gl::types::GLenum,
-	pixel_type: gl::types::GLenum
+	pub handle: gl::types::GLuint,
+	pub width: i32,
+	pub height: i32,
+	pub texture_type: gl::types::GLenum,
+	pub pixel_type: gl::types::GLenum
 }
 
 impl Texture
@@ -234,9 +250,14 @@ impl Texture
 		let mut handle: gl::types::GLuint = 0;
 		unsafe
 		{
-			gl::GenTextures(1, &mut handle);
-			gl::BindTexture(texture_type, handle);
-			gl::TexStorage2D(texture_type, 1, pixel_type, width, height);
+			gl::CreateTextures(texture_type, 1, &mut handle);
+			gl::TextureStorage2D(handle, 1, pixel_type, width, height);
+			//gl::TextureSubImage2D(handle, 0, 0, 0, width, height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+
+			//gl::GenTextures(1, &mut handle);
+			//gl::BindTexture(texture_type, handle);
+			//gl::TexStorage2D(texture_type, 1, pixel_type, width, height);
+			
 			//gl::TexSubImage2D(gl::TEXTURE_2D, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
 		}
 		return handle;
@@ -301,16 +322,19 @@ impl ShaderBuffer
 		let mut tmp_handle: gl::types::GLuint = 0;
 		unsafe
 		{
-			gl::GenBuffers(1, &mut tmp_handle);
-			gl::BindBuffer(buffer_type, tmp_handle);
-			gl::BufferData(
-				buffer_type,
-				size as gl::types::GLsizeiptr,
-				data_ptr,
-				gl::DYNAMIC_COPY, // usage
-			);
+			gl::CreateBuffers(1, &mut tmp_handle);
+			gl::NamedBufferData(tmp_handle, size as gl::types::GLsizeiptr, data_ptr, gl::DYNAMIC_COPY);
 
-			gl::BindBuffer(buffer_type, 0);
+			//gl::GenBuffers(1, &mut tmp_handle);
+			//gl::BindBuffer(buffer_type, tmp_handle);
+			//gl::BufferData(
+			//	buffer_type,
+			//	size as gl::types::GLsizeiptr,
+			//	data_ptr,
+			//	gl::DYNAMIC_COPY, // usage
+			//);
+			//gl::BindBuffer(buffer_type, 0);
+
 		}
 
 		Self

@@ -9,7 +9,14 @@ use sdl2::keyboard::Keycode;
 
 use std::ffi::CString;
 use render_systems::fontsystem::FontSystem;
+use render_gl::CommonShaderFrameDate;
 use core::RandomPCG;
+
+pub struct FrameShaderData
+{
+	pub screen_size_x: f32,
+	pub screen_size_y: f32
+}
 
 pub struct Block
 {
@@ -456,6 +463,11 @@ fn run(app: &mut core::App) -> Result<(), String>
 		shader_data.as_ptr() as *const gl::types::GLvoid
 	);
 
+	let frame_data_buffer: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new(
+		gl::UNIFORM_BUFFER,
+		65536
+	);
+
 	let mut vao: gl::types::GLuint = 0;
 	unsafe
 	{
@@ -575,6 +587,9 @@ fn run(app: &mut core::App) -> Result<(), String>
 			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
 			font_system.update(app.window_width as f32, app.window_height as f32);
 
+			let tmp = CommonShaderFrameDate::new(app.window_width, app.window_height);
+
+			frame_data_buffer.write_data(0, std::mem::size_of::<CommonShaderFrameDate>(), &tmp as *const _ as *const gl::types::GLvoid);
 			ssbo.write_data(0, shader_data.len() * std::mem::size_of::<ShaderData>(), shader_data.as_ptr() as *const gl::types::GLvoid);
 			shader_program.set_used();
 			
@@ -582,14 +597,12 @@ fn run(app: &mut core::App) -> Result<(), String>
 			gl::DepthFunc(gl::LESS);
 			gl::Enable(gl::DEPTH_TEST);
 			gl::DepthFunc(gl::ALWAYS);
-
-			gl::Uniform4f(0, 0.0f32, box_size as f32, app.window_width as f32, app.window_height as f32);
 			gl::Disable(gl::BLEND);
-
 
 			
 			gl::BindVertexArray(vao);
 
+			frame_data_buffer.bind(0);
 			ssbo.bind(2);
 
 			gl::DrawArrays(

@@ -2,6 +2,7 @@ extern crate render_gl;
 use std::ffi::CString;
 
 
+
 const MAX_LETTERS: usize = 65536usize;
 
 pub struct LetterData
@@ -25,7 +26,7 @@ pub struct FontSystem
 
 
     letter_datas: Vec<LetterData>,
-    tex_handle: gl::types::GLuint,
+    font_texture: render_gl::Texture,
 	shader_textured_program: render_gl::Program,
     vao: gl::types::GLuint,
     canvas_width: f32,
@@ -56,7 +57,7 @@ impl FontSystem
     
         let tex: Vec<u8> = include_bytes!("../../../new_font.dat").to_vec();
 
-        let mut tex_handle: gl::types::GLuint = 0;
+        let mut font_texture: render_gl::Texture;
         {
             let mut font_tex: Vec<u8> = Vec::new();
 
@@ -81,22 +82,9 @@ impl FontSystem
                 let texture_width = 8*(128-32);
                 let texture_height = 12;
 
-                gl::GenTextures(1, &mut tex_handle);
-                gl::BindTexture(gl::TEXTURE_2D, tex_handle);
-                gl::TexStorage2D(gl::TEXTURE_2D, 1, gl::RGBA8, texture_width, texture_height);
-                gl::TexSubImage2D(gl::TEXTURE_2D, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
 
-                //gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_BASE_LEVEL, 0);
-                //gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAX_LEVEL, 0);
-                //gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA8 as i32, texture_width, texture_height, 0, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
-
-                //gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as i32);
-                //gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as i32);
-                //gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA8, texture_width, texture_height, 0, gl::RGBA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
-                // 0 mips, 0 baselevel
-
-                //gl::GenerateMipmap(gl::TEXTURE_2D);
-
+                font_texture = render_gl::Texture::new_texture(texture_width, texture_height, gl::TEXTURE_2D, gl::RGBA8);
+                gl::TextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
             }
         }
         
@@ -124,7 +112,7 @@ impl FontSystem
             gl::GenVertexArrays(1, &mut vao);
         }
 
-       Ok(Self{ letter_buffer, letter_datas, tex_handle, shader_textured_program, vao, canvas_width: 0.0f32, canvas_height: 0.0f32 })
+       Ok(Self{ letter_buffer, letter_datas, font_texture, shader_textured_program, vao, canvas_width: 0.0f32, canvas_height: 0.0f32 })
     }
 
 
@@ -168,11 +156,9 @@ impl FontSystem
                 gl::BindVertexArray(self.vao);
 
                 self.shader_textured_program.set_used();
-                self.letter_buffer.bind(0);
+                self.letter_buffer.bind(1);
                 
-                gl::Uniform2f(0, self.canvas_width as f32, self.canvas_height as f32);
-
-                gl::BindTexture(gl::TEXTURE_2D, self.tex_handle);
+                gl::BindTexture(gl::TEXTURE_2D, self.font_texture.handle);
                 gl::Enable(gl::BLEND);
                 gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 
