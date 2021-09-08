@@ -57,9 +57,9 @@ impl FontSystem
     
         let tex: Vec<u8> = include_bytes!("../../../new_font.dat").to_vec();
 
-        let mut font_texture: render_gl::Texture;
+        let font_texture: render_gl::Texture;
         {
-            let mut font_tex: Vec<u8> = Vec::new();
+            let mut font_tex_data: Vec<u8> = Vec::new();
 
             for y in 0..12
             {
@@ -69,10 +69,10 @@ impl FontSystem
                     for x in 0..8
                     {
                         let v = ((val >> x) & 1) * 255;
-                        font_tex.push(v);
-                        font_tex.push(v);
-                        font_tex.push(v);
-                        font_tex.push(v);
+                        font_tex_data.push(v);
+                        font_tex_data.push(v);
+                        font_tex_data.push(v);
+                        font_tex_data.push(v);
                     }
                 }
             }
@@ -84,7 +84,8 @@ impl FontSystem
 
 
                 font_texture = render_gl::Texture::new_texture(texture_width, texture_height, gl::TEXTURE_2D, gl::RGBA8);
-                gl::TextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+                gl::TextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::BGRA, 
+                    gl::UNSIGNED_BYTE, font_tex_data.as_ptr() as *const gl::types::GLvoid);
             }
         }
         
