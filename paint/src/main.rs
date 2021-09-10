@@ -204,13 +204,13 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 			render_gl::resize(app.window_width, app.window_height);
 			app.resized = false;
 		}
-
-		if app.was_pressed(MyKey::S) && (app.is_down(MyKey::LCtrl) || app.is_down(MyKey::RCtrl))
+		let ctrl_down = app.is_down(MyKey::LCtrl) || app.is_down(MyKey::RCtrl);
+		if app.was_pressed(MyKey::S) && ctrl_down
 		{
 			save_file(file_name, &letters)?;
 		}
 
-		if app.was_pressed(MyKey::L) && (app.is_down(MyKey::LCtrl) || app.is_down(MyKey::RCtrl))
+		else if app.was_pressed(MyKey::L) && ctrl_down
 		{
 			match load_file(file_name)
 			{
@@ -224,16 +224,17 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 				}
 			}
 		}
-
-		for x in 32i32..128i32 
+		else 
 		{
-			let key: MyKey = unsafe { transmute(x) };
-			if app.was_pressed(key)
+			for x in 32i32..128i32 
 			{
-				letter_index = (x - 32) as u8;
+				let key: MyKey = unsafe { transmute(x) };
+				if app.was_pressed(key)
+				{
+					letter_index = (x - 32) as u8;
+				}
 			}
 		}
-
 		if app.mouse_b != 0
 		{
 			if app.mouse_x >= start_x_px && app.mouse_y >= start_y_px
