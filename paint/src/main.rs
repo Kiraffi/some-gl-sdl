@@ -3,13 +3,13 @@ extern crate gl;
 
 extern crate render_gl;
 extern crate core;
+extern crate sdl_window;
 
-use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
-use sdl2::mouse::MouseButton;
+use sdl_window::*;
 
 use std::ffi::CString;
 
+use std::intrinsics::transmute;
 use std::io::Write;
 use std::io::Read;
 
@@ -75,8 +75,9 @@ fn save_file(name: &String, letters: &Vec<u8>) -> Result<(), String>
 	return Ok(());
 }
 
-fn run(app: &mut core::App, file_name: &String) -> Result<(), String>
+fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 {
+	render_gl::init_gl(app.window_width, app.window_height)?;
 
 	let box_size = 30;
 
@@ -194,135 +195,52 @@ fn run(app: &mut core::App, file_name: &String) -> Result<(), String>
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	let mut now_stamp: u64 = app.sdl_timer.performance_counter();
-	let mut last_stamp: u64;
-	let perf_freq: f64 = app.sdl_timer.performance_frequency() as f64;
-	let mut _dt: f32;
-
-
-
-
-	let mut mouse_x: i32 = 0;
-	let mut mouse_y: i32 = 0;
-	let mut mouse_b: i32 = 0;
-
-
-	loop
+	while !app.quit
 	{
 
-		last_stamp = now_stamp;
-		now_stamp = app.sdl_timer.performance_counter();
-		_dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
-
-
-		for event in app.event_pump.poll_iter()
+		app.update();
+		if app.resized
 		{
-			match event
+			render_gl::resize(app.window_width, app.window_height);
+			app.resized = false;
+		}
+
+		if app.was_pressed(MyKey::S) && (app.is_down(MyKey::LCtrl) || app.is_down(MyKey::RCtrl))
+		{
+			save_file(file_name, &letters)?;
+		}
+
+		if app.was_pressed(MyKey::L) && (app.is_down(MyKey::LCtrl) || app.is_down(MyKey::RCtrl))
+		{
+			match load_file(file_name)
 			{
-				Event::Quit {..} |
-				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
+				Ok(x)=>
 				{
-					return Ok(());
+					letters = x;
 				},
-
-				Event::KeyDown { keycode, keymod, .. } =>
+				// should this be handled some way differently than just saying error happened?
+				Err(_e) =>
 				{
-					match keycode
-					{
-						Some(keyocde_value) =>
-						{
-							if keyocde_value == Keycode::S && (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
-							{
-								save_file(file_name, &letters)?;
-							}
-							else if keyocde_value == Keycode::L && (keymod & (sdl2::keyboard::Mod::LCTRLMOD | sdl2::keyboard::Mod::RCTRLMOD)) != sdl2::keyboard::Mod::NOMOD
-							{
-								match load_file(file_name)
-								{
-									Ok(x)=>
-									{
-										letters = x;
-									},
-									// should this be handled some way differently than just saying error happened?
-									Err(_e) =>
-									{
-									}
-								}
-							}
-							else
-							{
-								if (keyocde_value as i32) < 128 && (keyocde_value as i32) >= 32
-								{
-									letter_index = (keyocde_value as u8) - 32;
-								}
-							}
-						},
-						None => {}
-					}
-				},
-
-				Event::MouseButtonDown { mouse_btn, x, y, .. } =>
-				{
-					mouse_x = x;
-					mouse_y = app.window_height as i32 - y;
-					if mouse_btn == MouseButton::Left
-					{
-						mouse_b |= 1;
-					}
-					else if mouse_btn == MouseButton::Right
-					{
-						mouse_b |= 2;
-					}
-				},
-				Event::MouseButtonUp { mouse_btn, x, y, .. } =>
-				{
-					mouse_x = x;
-					mouse_y = app.window_height as i32 - y;
-					if mouse_btn == MouseButton::Left
-					{
-						mouse_b &= !1;
-					}
-					else if mouse_btn == MouseButton::Right
-					{
-						mouse_b &= !2;
-					}
-				},
-				Event::MouseMotion { x, y, .. } =>
-				{
-					mouse_x = x;
-					mouse_y = app.window_height - y;
-				},
-
-				Event::Window {win_event, ..  } =>
-				{
-					match win_event
-					{
-						sdl2::event::WindowEvent::Resized( width, height ) =>
-						{
-							app.window_width = width;
-							app.window_height = height;
-							println!("Resized: {}: {}", app.window_width, app.window_height);
-							unsafe
-							{
-								gl::Viewport(0, 0, app.window_width, app.window_height);
-							}
-
-						},
-
-						_ => {}
-					}
-				},
-				_ => {}
+				}
 			}
 		}
 
-		if mouse_b != 0
+		for x in 32i32..128i32 
 		{
-			if mouse_x >= start_x_px && mouse_y >= start_y_px
-				&& mouse_x < end_x_px && mouse_y < end_y_px
+			let key: MyKey = unsafe { transmute(x) };
+			if app.was_pressed(key)
 			{
-				let p_x = mouse_x - start_x_px;
-				let p_y = mouse_y - start_y_px;
+				letter_index = (x - 32) as u8;
+			}
+		}
+
+		if app.mouse_b != 0
+		{
+			if app.mouse_x >= start_x_px && app.mouse_y >= start_y_px
+				&& app.mouse_x < end_x_px && app.mouse_y < end_y_px
+			{
+				let p_x = app.mouse_x - start_x_px;
+				let p_y = app.mouse_y - start_y_px;
 
 				let x_b = p_x / (box_size as i32);
 				let y_b = p_y / (box_size as i32);
@@ -330,11 +248,11 @@ fn run(app: &mut core::App, file_name: &String) -> Result<(), String>
 				let index = x_b + y_b * (board_size_x as i32);
 				let byte_index: u8 = 1 << x_b as u8;
 				let letters_index: usize = (y_b + (letter_index as i32) * board_size_y) as usize;
-				if mouse_b == 1 && index >= 0 && index < (board_size_x * board_size_y) as i32
+				if app.mouse_b == 1 && index >= 0 && index < (board_size_x * board_size_y) as i32
 				{
 					letters[letters_index] |= byte_index;
 				}
-				else if mouse_b == 2 && index >= 0 && index < (board_size_x * board_size_y) as i32
+				else if app.mouse_b == 2 && index >= 0 && index < (board_size_x * board_size_y) as i32
 				{
 					letters[letters_index] &= !byte_index;
 				}
@@ -394,12 +312,12 @@ fn run(app: &mut core::App, file_name: &String) -> Result<(), String>
 
 			//gl::DrawElements(gl::TRIANGLES, 3, gl::UNSIGNED_INT, std::ptr::null());
 		}
+		app.swap_buffer();
 		::std::thread::sleep(std::time::Duration::from_millis(1));
-		app.window.gl_swap_window();
 		//println!("x: {}, y: {}", pos_x, pos_y);
 		//println!("Frame duration: {}", _dt);
 	}
-	//return Ok(());
+	return Ok(());
 }
 
 
@@ -408,27 +326,35 @@ fn main()
 	use std::env;
 
 	println!("Hello, world!");
+	let filename: String;
 	let args: Vec<_> = env::args().collect();
+	
 	for i in 1 .. args.len()
 	{
 		println!("{}: {}", i, args[i as usize]);
+		
 	}
 	if args.len() < 2
 	{
-		println!("Give file name as parameters");
-	}
 
+		println!("Using default filename, new_font.dat!");
+		filename = "new_font.dat".to_string();
+	}
 	else
+	{
+		filename = args[1].clone();
+	}
+	
 
 	{
 		let mut app;
-		match core::App::init(800, 600, "Paint", true)
+		match sdl_window::App::init(800, 600, "Paint", true)
 		{
 			Ok(v) =>
 			{
 				app = v;
 				//match app.run(&"new_font.dat".to_string())
-				match run(&mut app, &args[1])
+				match run(&mut app, &filename)
 				{
 					Ok(_) =>
 					{

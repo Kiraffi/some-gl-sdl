@@ -1,12 +1,8 @@
-extern crate sdl2;
-extern crate gl;
 
-extern crate render_gl;
+extern crate gl;
 extern crate core;
 
-use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
-//use sdl2::mouse::MouseButton;
+//use render_gl::*;
 
 use std::ffi::CString;
 
@@ -20,18 +16,9 @@ pub struct ShaderData
 
 
 
-fn resize_window(width:i32, height:i32, tex: &mut render_gl::Texture)
+fn run(app: &mut sdl_window::App) -> Result<(), String>
 {
-	println!("Resized: {}: {}", width, height);
-	unsafe
-	{
-		gl::Viewport(0, 0, width, height);
-	}
-	tex.resize(width, height);
-}
-
-fn run(app: &mut core::App) -> Result<(), String>
-{
+	render_gl::init_gl(app.window_width, app.window_height)?;
 
 	let vert_shader = render_gl::Shader::from_vert_source(
 		&CString::new(include_str!("fullscreen_quad.vert")).unwrap(), &"fullscreen_quad.vert".to_string()
@@ -60,7 +47,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 	shader_program.set_used();
 
 
-	let mut tex = render_gl::Texture::new_texture(app.window_width, app.window_height, gl::TEXTURE_2D, gl::RGBA8);
+	let tex = render_gl::Texture::new_texture(app.window_width, app.window_height, gl::TEXTURE_2D, gl::RGBA8);
 
 	let mut shader_data: Vec<ShaderData> = vec![ShaderData{	_roll_x: 0.0f32,
 		_roll_y: 0.0f32,
@@ -81,75 +68,18 @@ fn run(app: &mut core::App) -> Result<(), String>
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	let mut now_stamp: u64 = app.sdl_timer.performance_counter();
-	let mut last_stamp: u64;
-	let perf_freq: f64 = app.sdl_timer.performance_frequency() as f64;
-	let mut _dt: f32;
-
 	let mut roll = 0.0f32;
 
-	loop
+	while !app.quit
 	{
-
-		last_stamp = now_stamp;
-		now_stamp = app.sdl_timer.performance_counter();
-		_dt = ((now_stamp - last_stamp) as f64 * 1000.0f64 / perf_freq ) as f32;
-		roll += _dt;
-
-		for event in app.event_pump.poll_iter()
+		app.update();
+		if app.resized
 		{
-			match event
-			{
-				Event::Quit {..} |
-				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
-				{
-					return Ok(());
-				},
-/*
-				Event::KeyDown { keycode, keymod, .. } =>
-				{
-					match keycode
-					{
-						Some(keyocde_value) =>
-						{
-
-						},
-						None => {}
-					}
-
-
-				},
-
-				Event::MouseButtonDown { mouse_btn, x, y, .. } =>
-				{
-
-				},
-				Event::MouseButtonUp { mouse_btn, x, y, .. } =>
-				{
-
-				},
-				Event::MouseMotion { x, y, .. } =>
-				{
-
-				},
-*/
-				Event::Window {win_event, ..  } =>
-				{
-					match win_event
-					{
-						sdl2::event::WindowEvent::Resized( width, height ) =>
-						{
-							app.window_width = width;
-							app.window_height = height;
-							resize_window(width, height, &mut tex);
-						},
-
-						_ => {}
-					}
-				},
-				_ => {}
-			}
+			render_gl::resize(app.window_width, app.window_height);
+			app.resized = false;
 		}
+
+		roll += app.timer.dt as f32;
 
 		shader_data[0]._roll_x = roll;
 		shader_data[0]._screen_size_x = app.window_width;
@@ -187,10 +117,10 @@ fn run(app: &mut core::App) -> Result<(), String>
 			);
 
 		}
+		app.swap_buffer();
 		::std::thread::sleep(std::time::Duration::from_millis(1));
-		app.window.gl_swap_window();
 	}
-	//return Ok(());
+	return Ok(());
 }
 
 
@@ -198,7 +128,7 @@ fn main()
 {
 	{
 		let mut app;
-		match core::App::init(800, 600, "Compute test", true)
+		match sdl_window::App::init(800, 600, "Compute test", true)
 		{
 			Ok(v) =>
 			{

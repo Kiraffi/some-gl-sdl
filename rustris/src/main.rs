@@ -1,11 +1,11 @@
-extern crate sdl2;
 extern crate gl;
 
 extern crate render_gl;
 extern crate core;
 extern crate render_systems;
+//extern crate sdl_window;
 
-use sdl2::keyboard::Keycode;
+use sdl_window::MyKey;
 
 use std::ffi::CString;
 use render_systems::fontsystem::FontSystem;
@@ -368,8 +368,14 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 	}
 }
 
-fn run(app: &mut core::App) -> Result<(), String>
+
+
+fn run(app: &mut sdl_window::App) -> Result<(), String>
 {
+
+	//let _gl = gl::load_with(&|s| app.video.gl_get_proc_address(s) as *const std::os::raw::c_void);
+	render_gl::init_gl(app.window_width, app.window_height)?;
+
 	let mut font_system: FontSystem = FontSystem::init()?;
 
 	// use paired number
@@ -503,8 +509,14 @@ fn run(app: &mut core::App) -> Result<(), String>
 		font_system.draw_string(&s, (app.window_width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
 		
 		app.update();
-	
-		if app.was_pressed(Keycode::A) || app.was_pressed(Keycode::Left)
+		if app.resized
+		{
+			app.resized = false;
+			render_gl::resize(app.window_width, app.window_height);
+
+		}
+
+		if app.was_pressed(MyKey::A) || app.was_pressed(MyKey::Left)
 		{
 			let mut tmp = state.player.clone();
 			tmp.pos_x -= 1;
@@ -514,7 +526,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 			}
 		}
 
-		if app.was_pressed(Keycode::D) || app.was_pressed(Keycode::Right)
+		if app.was_pressed(MyKey::D) || app.was_pressed(MyKey::Right)
 		{
 			let mut tmp = state.player.clone();
 			tmp.pos_x += 1;
@@ -524,7 +536,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 			}
 		}
 		
-		if app.was_pressed(Keycode::W) || app.was_pressed(Keycode::Up)
+		if app.was_pressed(MyKey::W) || app.was_pressed(MyKey::Up)
 		{
 			state.player.set_rotation(state.player.rotation + 1);
 
@@ -542,7 +554,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 			}
 		}
 
-		if app.was_pressed(Keycode::S) || app.was_pressed(Keycode::Down)
+		if app.was_pressed(MyKey::S) || app.was_pressed(MyKey::Down)
 		{
 			while row_down(&mut state, &mut board, app.timer.now_stamp) {}
 		}
@@ -583,7 +595,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 
 
 		unsafe
-		{
+		{ 
 			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
 			font_system.update(app.window_width as f32, app.window_height as f32);
 
@@ -616,7 +628,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 			}
 
 			gl::QueryCounter(queries2[current_frame_index], gl::TIMESTAMP);
-			app.window.gl_swap_window();
+			app.swap_buffer();
 			gl::QueryCounter(queries3[current_frame_index], gl::TIMESTAMP);
 		}
 		::std::thread::sleep(std::time::Duration::from_micros(1000));
@@ -676,7 +688,7 @@ fn run(app: &mut core::App) -> Result<(), String>
 		let title: String = format!("Gpu duration: {:.3}ms, fps: {:.3} vs whole {:.3}, fps: {:.3}", 
 			duration1 * 1000.0f64, 1.0f64 / duration1,
 			duration2 * 1000.0f64, 1.0f64 / duration2);
-		app.window.set_title(&title).unwrap();
+		app.set_window_title(&title);
 		frame_count = frame_count + 1u64;
 	}
 	return Ok(());
@@ -688,7 +700,7 @@ fn main()
 	//println!("Hello, world!");
 
 	let mut app;
-	match core::App::init(800, 900, "Rustris", false)
+	match sdl_window::App::init(800, 900, "Rustris", false)
 	{
 		Ok(v) =>
 		{

@@ -1,6 +1,137 @@
-use gl;
-use std;
 use std::ffi::{CString, CStr};
+
+
+extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::types::GLenum,
+	_id: gl::types::GLuint, severity: gl::types::GLenum, _length: gl::types::GLsizei,
+	message: *const gl::types::GLchar, _user_param: *mut std::os::raw::c_void)
+{
+	let message = unsafe
+	{
+		String::from_utf8(CStr::from_ptr(message).to_bytes().to_vec()).unwrap()
+	};
+
+
+	match severity
+	{
+		gl::DEBUG_SEVERITY_NOTIFICATION =>
+		{
+	//		println!("Info: {}", message);
+		},
+
+		gl::DEBUG_SEVERITY_LOW |
+			gl::DEBUG_SEVERITY_MEDIUM |
+			gl::DEBUG_SEVERITY_HIGH =>
+		{
+			println!("Message: {}", message);
+		}
+		_=>
+		{
+			return;
+		}
+	};
+
+	match msg_source
+	{
+		gl::DEBUG_SOURCE_API => {},
+		gl::DEBUG_SOURCE_WINDOW_SYSTEM => {},
+		gl::DEBUG_SOURCE_SHADER_COMPILER => {},
+		gl::DEBUG_SOURCE_THIRD_PARTY => {},
+		gl::DEBUG_SOURCE_APPLICATION => {},
+		gl::DEBUG_SOURCE_OTHER => {},
+		_ => return
+	};
+
+	match msg_type
+	{
+		gl::DEBUG_TYPE_ERROR => {},
+		gl::DEBUG_TYPE_DEPRECATED_BEHAVIOR => {},
+		gl::DEBUG_TYPE_UNDEFINED_BEHAVIOR => {},
+		gl::DEBUG_TYPE_PORTABILITY => {},
+		gl::DEBUG_TYPE_PERFORMANCE => {},
+		gl::DEBUG_TYPE_MARKER => {},
+		gl::DEBUG_TYPE_PUSH_GROUP => {},
+		gl::DEBUG_TYPE_POP_GROUP => {},
+		gl::DEBUG_TYPE_OTHER => {},
+		_ => return
+	};
+
+}
+extern "C" {
+    #[doc = "  \\brief Get the address of an OpenGL function."]
+    fn SDL_GL_GetProcAddress(proc_: *const libc::c_char) -> *mut libc::c_void;
+}
+
+#[doc(alias = "SDL_GL_GetProcAddress")]
+pub fn gl_get_proc_address2(procname: &str) -> *const () {
+	match CString::new(procname) {
+		Ok(procname) => unsafe {
+			SDL_GL_GetProcAddress(procname.as_ptr() as *const libc::c_char) as *const ()
+		},
+		// string contains a nul byte - it won't match anything.
+		Err(_) => std::ptr::null(),
+	}
+}
+
+
+
+pub fn init_gl(window_width: i32, window_height: i32) -> Result<(), String>
+{
+
+
+	unsafe
+	{
+		let _gl = gl::load_with(&|s| gl_get_proc_address2(s) as *const std::os::raw::c_void);
+
+		//gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
+		gl::DebugMessageCallback(Some(gl_callback), std::ptr::null());
+		gl::DebugMessageControl(gl::DONT_CARE, gl::DONT_CARE, gl::DONT_CARE, 0,
+									std::ptr::null(), gl::TRUE);
+		gl::Enable(gl::DEBUG_OUTPUT);
+	}
+
+	let version;
+	match unsafe
+	{
+		let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _)
+			.to_bytes()
+			.to_vec();
+		String::from_utf8(data)
+	}
+	{
+		Ok(v) =>
+		{
+			version = v;
+		}
+		Err(e) =>
+		{
+			println!("Error: {}", e);
+			return Err("Failed to read version data from gl!".to_string());
+		}
+	}
+
+	println!("OpenGL version {}", version);
+
+
+	unsafe
+	{
+		gl::Viewport(0, 0, window_width, window_height);
+		gl::ClearColor(0.2, 0.3, 0.5, 1.0);
+		gl::ClearDepth(1.0);
+		// Swapping up and down just messes things up like in renderdoc....
+		//gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
+		gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
+	}
+	return Ok(());
+}
+
+pub fn resize(window_width : i32, window_height: i32)
+{
+	unsafe
+	{
+		gl::Viewport(0, 0, window_width, window_height);
+	}
+}
+
 
 pub struct CommonShaderFrameDate
 {

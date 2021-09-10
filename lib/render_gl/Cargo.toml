@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 gl = { path = "../gl" } 
+libc = "0.2.101"
