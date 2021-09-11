@@ -5,7 +5,7 @@ extern crate render_gl;
 extern crate core;
 extern crate sdl_window;
 
-use sdl_window::*;
+use sdl_window_state::MyKey;
 
 use std::ffi::CString;
 

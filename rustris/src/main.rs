@@ -5,7 +5,7 @@ extern crate core;
 extern crate render_systems;
 //extern crate sdl_window;
 
-use sdl_window::MyKey;
+use sdl_window_state::MyKey;
 
 use std::ffi::CString;
 use render_systems::fontsystem::FontSystem;
