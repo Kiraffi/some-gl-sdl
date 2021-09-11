@@ -12,3 +12,4 @@ gl = { path = "../lib/gl" }
 render_gl = { path = "../lib/render_gl" }
 core = { path = "../lib/core" }
 sdl_window = { path = "../lib/sdl_window" }
+sdl_window_state = { path = "../lib/sdl_window_state" }

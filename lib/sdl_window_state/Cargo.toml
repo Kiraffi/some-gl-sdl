@@ -1,5 +1,5 @@
 [package]
-name = "render_gl"
+name = "sdl_window_state"
 version = "0.1.0"
 authors = ["Kiraffi <10407365+Kiraffi@users.noreply.github.com>"]
 edition = "2018"
@@ -7,6 +7,4 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gl = { path = "../gl" } 
-sdl_window_state = {path = "../sdl_window_state" }
-libc = "0.2.101"
+core = { path = "../core" }

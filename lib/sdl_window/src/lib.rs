@@ -1,15 +1,6 @@
-//use gl;
-//use std::ffi::CStr;
-
-use core::MyTimer;
-
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::mouse::MouseButton;
-//use sdl2::sys::Keycode;
-
-
-
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 #[repr(i32)]
@@ -251,8 +242,6 @@ pub enum MyKey {
     Sleep = Keycode::Sleep as i32,
 }
 
-
-
 fn get_usize_from_mykey(keycode: MyKey) -> usize
 {
 	let mut val:u32 = unsafe 
@@ -284,34 +273,16 @@ fn get_usize_from_keycode(keycode: Keycode) -> usize
 
 pub struct App
 {
-	pub window_width: i32,
-	pub window_height: i32,
-	pub vsync: bool,
+	pub window_state: sdl_window_state::SdlWindowState,
 
-	pub timer: MyTimer,
-
-
-
-	pub key_downs: [u8; 512],
-	pub key_downs_previous: [u8; 512],
-	pub key_half_count: [u8; 512],
-
-	pub mouse_x: i32,
-	pub mouse_y: i32,
-	pub mouse_b: i32,
-
-	pub quit: bool,
-	pub resized: bool,
-
-
-	pub _sdl: sdl2::Sdl,
-	pub video: sdl2::VideoSubsystem,
+	_sdl: sdl2::Sdl,
+	video: sdl2::VideoSubsystem,
 	sdl_timer: sdl2::TimerSubsystem,
-	_window: sdl2::video::Window,
+	window: sdl2::video::Window,
 	event_pump: sdl2::EventPump,
 
 	//gl: *const std::os::raw::c_void,
-	pub _gl_context: sdl2::video::GLContext,
+	_gl_context: sdl2::video::GLContext,
 
 }
 
@@ -405,17 +376,18 @@ impl App
 		}
 */
 		let event_pump = sdl.event_pump()?;
-		let mut t = Self{ window_width, window_height, vsync: vsync,
-			timer: MyTimer{ now_stamp: sdl_timer.performance_counter(),
+		let mut t = Self{ window_state: sdl_window_state::SdlWindowState { window_width, window_height, vsync: vsync,
+			timer: core::MyTimer{ now_stamp: sdl_timer.performance_counter(),
 				 last_stamp: sdl_timer.performance_counter(), 
 				 perf_freq: sdl_timer.performance_frequency() as f64, 
 				 dt: 0.0f64 
 			},
-			_sdl: sdl, video, sdl_timer, _window : window, event_pump, _gl_context, 
 			key_downs: [0; 512], key_downs_previous: [0; 512], key_half_count: [0; 512],
 			mouse_x: 0, mouse_y: 0, mouse_b: 0,
-			quit: false, resized: false };
+			quit: false, resized: false, },
 
+			_sdl: sdl, video, sdl_timer, window, event_pump, _gl_context, 
+		};
 		t.enable_vsync(vsync)?;
 
 		return Ok(t);
@@ -432,47 +404,49 @@ impl App
 			self.video.gl_set_swap_interval(sdl2::video::SwapInterval::Immediate)?;
 		}
 
-		self.vsync = enable_vsync;
+		self.window_state.vsync = enable_vsync;
 		return Ok(());
 	}
 
 	pub fn was_pressed(&self, key_code: MyKey) -> bool
 	{
 		let index = get_usize_from_mykey(key_code);
-		return index < 512 && ((self.key_downs[index] == 1u8 && self.key_downs_previous[index] == 0u8 ) || self.key_half_count[index] >= 2u8);
+		return index < 512 && ((self.window_state.key_downs[index] == 1u8 && self.window_state.key_downs_previous[index] == 0u8 ) ||
+			self.window_state.key_half_count[index] >= 2u8);
 	}
 
 	pub fn was_released(&self, key_code: MyKey) -> bool
 	{
 		let index = get_usize_from_mykey(key_code);
-		return index < 512 && ((self.key_downs[index] == 0u8 && self.key_downs_previous[index] == 1u8 ) || self.key_half_count[index] >= 2u8);
+		return index < 512 && ((self.window_state.key_downs[index] == 0u8 && self.window_state.key_downs_previous[index] == 1u8 ) ||
+			self.window_state.key_half_count[index] >= 2u8);
 	}
 
 	pub fn is_down(&self, key_code: MyKey)  -> bool
 	{
 		let index = get_usize_from_mykey(key_code);
-		return index < 512 && self.key_downs[index] == 1u8;
+		return index < 512 && self.window_state.key_downs[index] == 1u8;
 	}
 
 	pub fn swap_buffer(&mut self)
 	{
-		self._window.gl_swap_window();
+		self.window.gl_swap_window();
 	}
 
 	pub fn set_window_title(&mut self, title:&String )
 	{
-		self._window.set_title(&title).unwrap();
+		self.window.set_title(&title).unwrap();
 	}
 
 	pub fn update(&mut self)
 	{
-		self.resized = false;
-		self.timer.last_stamp = self.timer.now_stamp;
-		self.timer.now_stamp = self.sdl_timer.performance_counter();
-		self.timer.dt = (self.timer.now_stamp - self.timer.last_stamp) as f64 * 1000.0f64 / self.timer.perf_freq;
+		let ref mut timer = self.window_state.timer;
+		timer.last_stamp = timer.now_stamp;
+		timer.now_stamp = self.sdl_timer.performance_counter();
+		timer.dt = (timer.now_stamp - timer.last_stamp) as f64 * 1000.0f64 / timer.perf_freq;
 
-		self.key_half_count = [0; 512];
-		self.key_downs_previous = self.key_downs;
+		self.window_state.key_half_count = [0; 512];
+		self.window_state.key_downs_previous = self.window_state.key_downs;
 
 		for event in self.event_pump.poll_iter()
 		{
@@ -481,7 +455,7 @@ impl App
 				Event::Quit {..} |
 				Event::KeyDown { keycode: Some(Keycode::Escape), .. } =>
 				{
-					self.quit = true;
+					self.window_state.quit = true;
 				},
 				Event::KeyDown { keycode, .. } =>
 				{
@@ -492,8 +466,8 @@ impl App
 							let index = get_usize_from_keycode(x);
 							if index < 512
 							{
-								self.key_half_count[ index ] += 1u8;
-								self.key_downs[ index ] = 1u8;
+								self.window_state.key_half_count[ index ] += 1u8;
+								self.window_state.key_downs[ index ] = 1u8;
 							}
 							println!("index pressed: {}", index);
 						},
@@ -509,8 +483,8 @@ impl App
 							let index = get_usize_from_keycode(x);
 							if index < 512
 							{
-								self.key_half_count[ index ] += 1u8;
-								self.key_downs[ index ] = 0u8;
+								self.window_state.key_half_count[ index ] += 1u8;
+								self.window_state.key_downs[ index ] = 0u8;
 							}
 							//println!("index relased: {}", index);
 						},
@@ -524,9 +498,9 @@ impl App
 					{
 						sdl2::event::WindowEvent::Resized( width, height ) =>
 						{
-							self.resized = self.window_width != width || self.window_height != height;
-							self.window_width = width;
-							self.window_height = height;
+							self.window_state.resized = self.window_state.window_width != width || self.window_state.window_height != height;
+							self.window_state.window_width = width;
+							self.window_state.window_height = height;
 						},
 
 						_ => {}
@@ -536,34 +510,34 @@ impl App
 
 				Event::MouseButtonDown { mouse_btn, x, y, .. } =>
 				{
-					self.mouse_x = x;
-					self.mouse_y = self.window_height as i32 - y;
+					self.window_state.mouse_x = x;
+					self.window_state.mouse_y = self.window_state.window_height as i32 - y;
 					if mouse_btn == MouseButton::Left
 					{
-						self.mouse_b |= 1;
+						self.window_state.mouse_b |= 1;
 					}
 					else if mouse_btn == MouseButton::Right
 					{
-						self.mouse_b |= 2;
+						self.window_state.mouse_b |= 2;
 					}
 				},
 				Event::MouseButtonUp { mouse_btn, x, y, .. } =>
 				{
-					self.mouse_x = x;
-					self.mouse_y = self.window_height as i32 - y;
+					self.window_state.mouse_x = x;
+					self.window_state.mouse_y = self.window_state.window_height as i32 - y;
 					if mouse_btn == MouseButton::Left
 					{
-						self.mouse_b &= !1;
+						self.window_state.mouse_b &= !1;
 					}
 					else if mouse_btn == MouseButton::Right
 					{
-						self.mouse_b &= !2;
+						self.window_state.mouse_b &= !2;
 					}
 				},
 				Event::MouseMotion { x, y, .. } =>
 				{
-					self.mouse_x = x;
-					self.mouse_y = self.window_height - y;
+					self.window_state.mouse_x = x;
+					self.window_state.mouse_y = self.window_state.window_height - y;
 				},
 
 				_ => {}

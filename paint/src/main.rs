@@ -77,7 +77,7 @@ fn save_file(name: &String, letters: &Vec<u8>) -> Result<(), String>
 
 fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 {
-	render_gl::init_gl(app.window_width, app.window_height)?;
+	render_gl::init_gl(&app.window_state)?;
 
 	let box_size = 30;
 
@@ -114,8 +114,8 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 	let start_x: f32 = (-(board_size_x as f32) / 2.0f32 + 0.5f32) * box_size as f32;
 	let start_y: f32 = (-(board_size_y as f32) / 2.0f32 + 0.5f32) * box_size as f32;
 
-	let start_x_px = ((app.window_width - board_size_x * box_size) / 2) as i32;
-	let start_y_px = ((app.window_height - board_size_y * box_size) / 2) as i32;
+	let start_x_px = ((app.window_state.window_width - board_size_x * box_size) / 2) as i32;
+	let start_y_px = ((app.window_state.window_height - board_size_y * box_size) / 2) as i32;
 	let end_x_px = start_x_px + (board_size_x * box_size) as i32;
 	let end_y_px = start_y_px + (board_size_y * box_size) as i32;
 
@@ -159,8 +159,8 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 			{
 				for x in 0..board_size_x
 				{
-					let pos_x = -(app.window_width / 2) + 10 + letter_col * (board_size_x + 1) + x;
-					let pos_y = -(app.window_height / 2) + 10 + letter_row * (board_size_y + 1) + y;
+					let pos_x = -(app.window_state.window_width / 2) + 10 + letter_col * (board_size_x + 1) + x;
+					let pos_y = -(app.window_state.window_height / 2) + 10 + letter_row * (board_size_y + 1) + y;
 
 					shader_data.push(ShaderData{_pos_x: pos_x as f32, _pos_y: pos_y as f32, _col: col, _size: 1.0f32});
 				}
@@ -195,15 +195,12 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	while !app.quit
+	while !app.window_state.quit
 	{
 
 		app.update();
-		if app.resized
-		{
-			render_gl::resize(app.window_width, app.window_height);
-			app.resized = false;
-		}
+		render_gl::update(&mut app.window_state);
+
 		let ctrl_down = app.is_down(MyKey::LCtrl) || app.is_down(MyKey::RCtrl);
 		if app.was_pressed(MyKey::S) && ctrl_down
 		{
@@ -235,13 +232,13 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 				}
 			}
 		}
-		if app.mouse_b != 0
+		if app.window_state.mouse_b != 0
 		{
-			if app.mouse_x >= start_x_px && app.mouse_y >= start_y_px
-				&& app.mouse_x < end_x_px && app.mouse_y < end_y_px
+			if app.window_state.mouse_x >= start_x_px && app.window_state.mouse_y >= start_y_px
+				&& app.window_state.mouse_x < end_x_px && app.window_state.mouse_y < end_y_px
 			{
-				let p_x = app.mouse_x - start_x_px;
-				let p_y = app.mouse_y - start_y_px;
+				let p_x = app.window_state.mouse_x - start_x_px;
+				let p_y = app.window_state.mouse_y - start_y_px;
 
 				let x_b = p_x / (box_size as i32);
 				let y_b = p_y / (box_size as i32);
@@ -249,11 +246,11 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 				let index = x_b + y_b * (board_size_x as i32);
 				let byte_index: u8 = 1 << x_b as u8;
 				let letters_index: usize = (y_b + (letter_index as i32) * board_size_y) as usize;
-				if app.mouse_b == 1 && index >= 0 && index < (board_size_x * board_size_y) as i32
+				if app.window_state.mouse_b == 1 && index >= 0 && index < (board_size_x * board_size_y) as i32
 				{
 					letters[letters_index] |= byte_index;
 				}
-				else if app.mouse_b == 2 && index >= 0 && index < (board_size_x * board_size_y) as i32
+				else if app.window_state.mouse_b == 2 && index >= 0 && index < (board_size_x * board_size_y) as i32
 				{
 					letters[letters_index] &= !byte_index;
 				}
@@ -299,7 +296,7 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 			gl::Enable(gl::DEPTH_TEST);
 			gl::DepthFunc(gl::ALWAYS);
 
-			gl::Uniform4f(0, 0.0f32, box_size as f32, app.window_width as f32, app.window_height as f32);
+			gl::Uniform4f(0, 0.0f32, box_size as f32, app.window_state.window_width as f32, app.window_state.window_height as f32);
 
 			gl::BindVertexArray(vao);
 

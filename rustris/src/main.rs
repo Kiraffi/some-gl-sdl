@@ -368,7 +368,7 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 {
 
 	//let _gl = gl::load_with(&|s| app.video.gl_get_proc_address(s) as *const std::os::raw::c_void);
-	render_gl::init_gl(app.window_width, app.window_height)?;
+	render_gl::init_gl(&app.window_state)?;
 
 	let mut font_system: FontSystem = FontSystem::init()?;
 
@@ -431,8 +431,8 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 
 		let col = colors[0];
 
-		let mut start_x: f32 =  (app.window_width - (board.size_x * box_size) ) as f32 / 2.0f32;
-		let mut start_y: f32 =  (app.window_height - (board.size_y * box_size) ) as f32 / 2.0f32;
+		let mut start_x: f32 =  (app.window_state.window_width - (board.size_x * box_size) ) as f32 / 2.0f32;
+		let mut start_y: f32 =  (app.window_state.window_height - (board.size_y * box_size) ) as f32 / 2.0f32;
 
 		start_x = start_x + box_size as f32 / 2.0f32;
 		start_y = start_y + box_size as f32 / 2.0f32;
@@ -474,10 +474,10 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 		gl::GenVertexArrays(1, &mut vao);
 	}
 
-	let mut rng_: RandomPCG = RandomPCG::new(app.timer.now_stamp);
+	let mut rng_: RandomPCG = RandomPCG::new(app.window_state.timer.now_stamp);
 	let mut state = GameState{ player: BlockPiece
 			{ pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
-			score: 0, high_score: 0, lines: 0, last_row_down: app.timer.now_stamp, rng: rng_ };
+			score: 0, high_score: 0, lines: 0, last_row_down: app.window_state.timer.now_stamp, rng: rng_ };
 
 	let mut frame_count :u64 = 0u64;
 	let letter_size = 16;
@@ -485,7 +485,7 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 	let mut durations1 = [0.0f64 ; 20];
 	let mut durations2 = [0.0f64 ; 20];
 
-	while !app.quit
+	while !app.window_state.quit
 	{
 		let current_frame_index : usize = (frame_count % 4) as usize;
 		let previous_frame_index : usize = ((frame_count + 1) % 4) as usize;
@@ -500,15 +500,10 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 
 		let mut s: String = "High Score: ".to_string();
 		s += &state.high_score.to_string();
-		font_system.draw_string(&s, (app.window_width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
+		font_system.draw_string(&s, (app.window_state.window_width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
 		
 		app.update();
-		if app.resized
-		{
-			app.resized = false;
-			render_gl::resize(app.window_width, app.window_height);
-
-		}
+		render_gl::update(&mut app.window_state);
 
 		if app.was_pressed(MyKey::A) || app.was_pressed(MyKey::Left)
 		{
@@ -550,7 +545,7 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 
 		if app.was_pressed(MyKey::S) || app.was_pressed(MyKey::Down)
 		{
-			while row_down(&mut state, &mut board, app.timer.now_stamp) {}
+			while row_down(&mut state, &mut board, app.window_state.timer.now_stamp) {}
 		}
 
 
@@ -564,9 +559,9 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 			}
 		}
 
-		if (app.timer.now_stamp - state.last_row_down) as f64 * 1000.0f64 / app.timer.perf_freq > 100.0f64
+		if (app.window_state.timer.now_stamp - state.last_row_down) as f64 * 1000.0f64 / app.window_state.timer.perf_freq > 100.0f64
 		{
-			row_down(&mut state, &mut board, app.timer.now_stamp);
+			row_down(&mut state, &mut board, app.window_state.timer.now_stamp);
 		}
 
 
@@ -591,9 +586,9 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 		unsafe
 		{ 
 			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
-			font_system.update(app.window_width as f32, app.window_height as f32);
+			font_system.update(app.window_state.window_width as f32, app.window_state.window_height as f32);
 
-			let tmp = CommonShaderFrameDate::new(app.window_width, app.window_height);
+			let tmp = CommonShaderFrameDate::new(app.window_state.window_width, app.window_state.window_height);
 
 			frame_data_buffer.write_data(0, std::mem::size_of::<CommonShaderFrameDate>(), &tmp as *const _ as *const gl::types::GLvoid);
 			ssbo.write_data(0, shader_data.len() * std::mem::size_of::<ShaderData>(), shader_data.as_ptr() as *const gl::types::GLvoid);

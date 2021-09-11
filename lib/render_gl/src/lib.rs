@@ -74,7 +74,7 @@ pub fn gl_get_proc_address2(procname: &str) -> *const () {
 
 
 
-pub fn init_gl(window_width: i32, window_height: i32) -> Result<(), String>
+pub fn init_gl(window_state: &sdl_window_state::SdlWindowState) -> Result<(), String>
 {
 
 
@@ -114,7 +114,7 @@ pub fn init_gl(window_width: i32, window_height: i32) -> Result<(), String>
 
 	unsafe
 	{
-		gl::Viewport(0, 0, window_width, window_height);
+		resize(window_state.window_width, window_state.window_height);
 		gl::ClearColor(0.2, 0.3, 0.5, 1.0);
 		gl::ClearDepth(1.0);
 		// Swapping up and down just messes things up like in renderdoc....
@@ -129,6 +129,15 @@ pub fn resize(window_width : i32, window_height: i32)
 	unsafe
 	{
 		gl::Viewport(0, 0, window_width, window_height);
+	}
+}
+
+pub fn update(window_state: &mut sdl_window_state::SdlWindowState)
+{
+	if window_state.resized
+	{
+		resize(window_state.window_width, window_state.window_height);
+		window_state.resized = false;
 	}
 }
 
