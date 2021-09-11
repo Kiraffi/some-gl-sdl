@@ -12,12 +12,6 @@ use render_systems::fontsystem::FontSystem;
 use render_gl::CommonShaderFrameDate;
 use core::RandomPCG;
 
-pub struct FrameShaderData
-{
-	pub screen_size_x: f32,
-	pub screen_size_y: f32
-}
-
 pub struct Block
 {
 	blocks: [u8; 8],
