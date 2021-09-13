@@ -1,5 +1,5 @@
 use std::ffi::{CString, CStr};
-
+use std::os::raw::{c_void, c_char};
 
 extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::types::GLenum,
 	_id: gl::types::GLuint, severity: gl::types::GLenum, _length: gl::types::GLsizei,
@@ -58,14 +58,14 @@ extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::type
 }
 extern "C" {
     #[doc = "  \\brief Get the address of an OpenGL function."]
-    fn SDL_GL_GetProcAddress(proc_: *const libc::c_char) -> *mut libc::c_void;
+    fn SDL_GL_GetProcAddress(proc_: *const c_char) -> *mut c_void;
 }
 
 #[doc(alias = "SDL_GL_GetProcAddress")]
 pub fn gl_get_proc_address2(procname: &str) -> *const () {
 	match CString::new(procname) {
 		Ok(procname) => unsafe {
-			SDL_GL_GetProcAddress(procname.as_ptr() as *const libc::c_char) as *const ()
+			SDL_GL_GetProcAddress(procname.as_ptr() as *const c_char) as *const ()
 		},
 		// string contains a nul byte - it won't match anything.
 		Err(_) => std::ptr::null(),
@@ -80,7 +80,7 @@ pub fn init_gl(window_state: &sdl_window_state::SdlWindowState) -> Result<(), St
 
 	unsafe
 	{
-		let _gl = gl::load_with(&|s| gl_get_proc_address2(s) as *const std::os::raw::c_void);
+		let _gl = gl::load_with(&|s| gl_get_proc_address2(s) as *const _);
 
 		//gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
 		gl::DebugMessageCallback(Some(gl_callback), std::ptr::null());

@@ -1,5 +1,5 @@
 [package]
-name = "sdl_window"
+name = "caller_lib"
 version = "0.1.0"
 authors = ["Kiraffi <10407365+Kiraffi@users.noreply.github.com>"]
 edition = "2018"
@@ -7,7 +7,4 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-#gl = { path = "../gl" } 
-sdl2 = { version = "0.34.5", default-features = false }
-core = { path = "../core" }
-sdl_window_state = { path = "../sdl_window_state" }
+base_lib = {path = "../base_lib" }

@@ -363,24 +363,40 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 }
 
 
+const TRIANGLE_VERT: &'static str = include_str!("triangle.vert");
+const TRIANGLE_FRAG: &'static str = include_str!("triangle.frag");
 
-fn run(app: &mut sdl_window::App) -> Result<(), String>
+
+fn include_file(s: &'static str, name: &'static str) -> Result<CString, String>
 {
+	let res = match CString::new(s)
+	{
+		Ok(v) => v,
+		Err(_) => return Err(format!("Failed to include file: {}", name).to_string())
+	};
+	return Ok(res);
+}
+
+fn run() -> Result<(), String>
+{
+	let mut app = sdl_window::App::init(800, 900, "Rustris", false)?;
 
 	//let _gl = gl::load_with(&|s| app.video.gl_get_proc_address(s) as *const std::os::raw::c_void);
 	render_gl::init_gl(&app.window_state)?;
 
 	let mut font_system: FontSystem = FontSystem::init()?;
+//	let frag_shader = render_gl::Shader::from_frag_source(
+//		&CString::new(include_str!("triangle.frag")).unwrap(), &"triangle.frag".to_string()
 
 	// use paired number
 	let box_size = 40;
 	let shader_program;
 	{
 		let vert_shader = render_gl::Shader::from_vert_source(
-			&CString::new(include_str!("triangle.vert")).unwrap(), &"triangle.vert".to_string()
+			&include_file(TRIANGLE_VERT, &"trangle.vert")?, &"triangle.vert".to_string()
 		)?;
 		let frag_shader = render_gl::Shader::from_frag_source(
-			&CString::new(include_str!("triangle.frag")).unwrap(), &"triangle.frag".to_string()
+			&include_file(TRIANGLE_FRAG,"triangle.frag")?, &"triangle.frag".to_string()
 		)?;
 
 		shader_program = render_gl::Program::from_shaders(
@@ -683,29 +699,12 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 	return Ok(());
 }
 
-
 fn main()
 {
-	//println!("Hello, world!");
-
-	let mut app;
-	match sdl_window::App::init(800, 900, "Rustris", false)
+	match run()
 	{
-		Ok(v) =>
+		Ok(_) =>
 		{
-			app = v;
-			match run(&mut app)
-			{
-				Ok(_) =>
-				{
-
-				}
-				Err(f) =>
-				{
-					println!("Runtime error: {}", f);
-					//panic!(f);
-				}
-			}
 		}
 		Err(e) =>
 		{

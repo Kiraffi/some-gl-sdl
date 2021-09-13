@@ -9,4 +9,4 @@ edition = "2018"
 [dependencies]
 gl = { path = "../gl" } 
 sdl_window_state = {path = "../sdl_window_state" }
-libc = "0.2.101"
+#libc = "0.2.101"
