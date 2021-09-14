@@ -119,8 +119,8 @@ impl FontSystem
 
     pub fn draw_string(&mut self, s: &String, pos_x: f32, pos_y: f32, letter_size_x: f32, letter_size_y: f32, col: u32)
     {
-        let mut px = pos_x + letter_size_y * 0.5f32;
-        let py = self.canvas_height - pos_y - letter_size_y * 0.5f32;
+        let mut px = pos_x + letter_size_x * 0.5f32;
+        let py = pos_y + letter_size_y * 0.5f32;
         for x in 0..s.len()
         {
             let l: u8 = s.as_bytes()[x] - 32u8;

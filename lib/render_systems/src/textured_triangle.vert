@@ -42,6 +42,7 @@ void main()
 	}
 
 	vTexCoord = pp + 0.5f;
+	vTexCoord.y = 1.0f - vTexCoord.y;
 	vTexCoord.x += vData.values[(vertId)].uv.x;
 	vTexCoord.x /= (128.0f-32.0f);
 	

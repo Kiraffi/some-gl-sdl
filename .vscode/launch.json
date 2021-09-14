@@ -22,11 +22,11 @@
 			"cargo": {
 				"args": [
 					"build",
-					"--bin=rustris",
-					"--package=rustris"
+					"--bin=vulkan",
+					"--package=vulkan"
 				],
 				"filter": {
-					"name": "rustris",
+					"name": "vulkan",
 					"kind": "bin"
 				}
 			},

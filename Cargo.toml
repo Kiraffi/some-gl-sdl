@@ -4,6 +4,8 @@ members = [
 	"paint",
 	"compute",
 	"dyn_link_test",
+
+	"vulkan"
 ]
 
 [profile.dev]

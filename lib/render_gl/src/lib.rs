@@ -118,8 +118,8 @@ pub fn init_gl(window_state: &sdl_window_state::SdlWindowState) -> Result<(), St
 		gl::ClearColor(0.2, 0.3, 0.5, 1.0);
 		gl::ClearDepth(1.0);
 		// Swapping up and down just messes things up like in renderdoc....
-		//gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
-		gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
+		gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
+		//gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
 	}
 	return Ok(());
 }
