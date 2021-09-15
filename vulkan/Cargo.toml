@@ -17,3 +17,4 @@ core = { path = "../lib/core" }
 ash = {version = "0.33.3", features = ["libloading"] }
 ash-window = { version = "0.7.0" }
 raw-window-handle = "0.3"
+vk-shader-macros = "0.2.2"
