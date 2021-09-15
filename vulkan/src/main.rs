@@ -5,7 +5,7 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
 
-use ash::vk::{self, DeviceQueueCreateInfo};
+use ash::{util::read_spv, vk::{self, DeviceQueueCreateInfo}};
 
 fn main() 
 {
@@ -542,13 +542,18 @@ impl Pipeline
 
     fn init(logical_device: &ash::Device,renderpass: &vk::RenderPass, extent: vk::Extent2D ) -> Result<Pipeline, vk::Result>
 	{
-        let vertexshader_createinfo = vk::ShaderModuleCreateInfo::builder().code(
-            vk_shader_macros::include_glsl!("src/triangle.vert", kind: vert),
-        );
+		let mut vertex_spv_file = std::io::Cursor::new(&include_bytes!("triangle_vert.spv")[..]);
+        let mut frag_spv_file = std::io::Cursor::new(&include_bytes!("triangle_frag.spv")[..]);
+
+        let vertex_code =
+            read_spv(&mut vertex_spv_file).expect("Failed to read vertex shader spv file");
+		let frag_code =
+            read_spv(&mut frag_spv_file).expect("Failed to read vertex shader spv file");
+
+        let vertexshader_createinfo = vk::ShaderModuleCreateInfo::builder().code(&vertex_code);
         let vertexshader_module =
             unsafe { logical_device.create_shader_module(&vertexshader_createinfo, None)? };
-        let fragmentshader_createinfo = vk::ShaderModuleCreateInfo::builder()
-            .code(vk_shader_macros::include_glsl!("src/triangle.frag"));
+        let fragmentshader_createinfo = vk::ShaderModuleCreateInfo::builder().code(&frag_code);
         let fragmentshader_module =
             unsafe { logical_device.create_shader_module(&fragmentshader_createinfo, None)? };
         let mainfunctionname = std::ffi::CString::new("main").unwrap();
