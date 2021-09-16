@@ -14,9 +14,6 @@ sdl_window = { path = "../lib/sdl_window" }
 sdl_window_state = { path = "../lib/sdl_window_state" }
 render_systems = { path = "../lib/render_systems" }
 
-render_layer = { path = "../lib/render_layer" }
-
-
 #glam = { version = "0.18.0", default-features = false, features = ["std"] }
 #cgmath = { version = "0.18.0", default-features = false }
 
