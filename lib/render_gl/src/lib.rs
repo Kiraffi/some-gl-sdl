@@ -1,9 +1,9 @@
 use std::ffi::{CString, CStr};
-use std::os::raw::{c_void, c_char};
 
-extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::types::GLenum,
-	_id: gl::types::GLuint, severity: gl::types::GLenum, _length: gl::types::GLsizei,
-	message: *const gl::types::GLchar, _user_param: *mut std::os::raw::c_void)
+
+extern "system" fn gl_callback(msg_source: gl::GLenum, msg_type: gl::GLenum,
+	_id: gl::GLuint, severity: gl::GLenum, _length: gl::GLsizei,
+	message: *const gl::GLchar, _user_param: *mut std::os::raw::c_void)
 {
 	let message = unsafe
 	{
@@ -13,14 +13,14 @@ extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::type
 
 	match severity
 	{
-		gl::DEBUG_SEVERITY_NOTIFICATION =>
+		gl::GL_DEBUG_SEVERITY_NOTIFICATION =>
 		{
 	//		println!("Info: {}", message);
 		},
 
-		gl::DEBUG_SEVERITY_LOW |
-			gl::DEBUG_SEVERITY_MEDIUM |
-			gl::DEBUG_SEVERITY_HIGH =>
+		gl::GL_DEBUG_SEVERITY_LOW |
+			gl::GL_DEBUG_SEVERITY_MEDIUM |
+			gl::GL_DEBUG_SEVERITY_HIGH =>
 		{
 			println!("Message: {}", message);
 		}
@@ -32,67 +32,66 @@ extern "system" fn gl_callback(msg_source: gl::types::GLenum, msg_type: gl::type
 
 	match msg_source
 	{
-		gl::DEBUG_SOURCE_API => {},
-		gl::DEBUG_SOURCE_WINDOW_SYSTEM => {},
-		gl::DEBUG_SOURCE_SHADER_COMPILER => {},
-		gl::DEBUG_SOURCE_THIRD_PARTY => {},
-		gl::DEBUG_SOURCE_APPLICATION => {},
-		gl::DEBUG_SOURCE_OTHER => {},
+		gl::GL_DEBUG_SOURCE_API => {},
+		gl::GL_DEBUG_SOURCE_WINDOW_SYSTEM => {},
+		gl::GL_DEBUG_SOURCE_SHADER_COMPILER => {},
+		gl::GL_DEBUG_SOURCE_THIRD_PARTY => {},
+		gl::GL_DEBUG_SOURCE_APPLICATION => {},
+		gl::GL_DEBUG_SOURCE_OTHER => {},
 		_ => return
 	};
 
 	match msg_type
 	{
-		gl::DEBUG_TYPE_ERROR => {},
-		gl::DEBUG_TYPE_DEPRECATED_BEHAVIOR => {},
-		gl::DEBUG_TYPE_UNDEFINED_BEHAVIOR => {},
-		gl::DEBUG_TYPE_PORTABILITY => {},
-		gl::DEBUG_TYPE_PERFORMANCE => {},
-		gl::DEBUG_TYPE_MARKER => {},
-		gl::DEBUG_TYPE_PUSH_GROUP => {},
-		gl::DEBUG_TYPE_POP_GROUP => {},
-		gl::DEBUG_TYPE_OTHER => {},
+		gl::GL_DEBUG_TYPE_ERROR => {},
+		gl::GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR => {},
+		gl::GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR => {},
+		gl::GL_DEBUG_TYPE_PORTABILITY => {},
+		gl::GL_DEBUG_TYPE_PERFORMANCE => {},
+		gl::GL_DEBUG_TYPE_MARKER => {},
+		gl::GL_DEBUG_TYPE_PUSH_GROUP => {},
+		gl::GL_DEBUG_TYPE_POP_GROUP => {},
+		gl::GL_DEBUG_TYPE_OTHER => {},
 		_ => return
 	};
 
 }
+
 extern "C" {
     #[doc = "  \\brief Get the address of an OpenGL function."]
-    fn SDL_GL_GetProcAddress(proc_: *const c_char) -> *mut c_void;
+    fn SDL_GL_GetProcAddress(proc_: *const std::os::raw::c_char) -> *mut std::os::raw::c_void;
 }
 
 #[doc(alias = "SDL_GL_GetProcAddress")]
 pub fn gl_get_proc_address2(procname: &str) -> *const () {
 	match CString::new(procname) {
 		Ok(procname) => unsafe {
-			SDL_GL_GetProcAddress(procname.as_ptr() as *const c_char) as *const ()
+			SDL_GL_GetProcAddress(procname.as_ptr() as *const std::os::raw::c_char) as *const ()
 		},
 		// string contains a nul byte - it won't match anything.
 		Err(_) => std::ptr::null(),
 	}
 }
-
-
-
 pub fn init_gl(window_state: &sdl_window_state::SdlWindowState) -> Result<(), String>
 {
-
-
 	unsafe
 	{
+		
+		
 		let _gl = gl::load_with(&|s| gl_get_proc_address2(s) as *const _);
-
+		//gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
+		//gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
 		//gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
-		gl::DebugMessageCallback(Some(gl_callback), std::ptr::null());
-		gl::DebugMessageControl(gl::DONT_CARE, gl::DONT_CARE, gl::DONT_CARE, 0,
-									std::ptr::null(), gl::TRUE);
-		gl::Enable(gl::DEBUG_OUTPUT);
+		gl::glDebugMessageCallback(Some(gl_callback), std::ptr::null());
+		gl::glDebugMessageControl(gl::GL_DONT_CARE, gl::GL_DONT_CARE, gl::GL_DONT_CARE, 0,
+									std::ptr::null(), gl::GL_TRUE as u8);
+		gl::glEnable(gl::GL_DEBUG_OUTPUT);
 	}
 
 	let version;
 	match unsafe
 	{
-		let data = CStr::from_ptr(gl::GetString(gl::VERSION) as *const _)
+		let data = CStr::from_ptr(gl::glGetString(gl::GL_VERSION) as *const _)
 			.to_bytes()
 			.to_vec();
 		String::from_utf8(data)
@@ -115,10 +114,10 @@ pub fn init_gl(window_state: &sdl_window_state::SdlWindowState) -> Result<(), St
 	unsafe
 	{
 		resize(window_state.window_width, window_state.window_height);
-		gl::ClearColor(0.2, 0.3, 0.5, 1.0);
-		gl::ClearDepth(1.0);
+		gl::glClearColor(0.2, 0.3, 0.5, 1.0);
+		gl::glClearDepth(1.0);
 		// Swapping up and down just messes things up like in renderdoc....
-		gl::ClipControl(gl::UPPER_LEFT, gl::ZERO_TO_ONE);
+		gl::glClipControl(gl::GL_UPPER_LEFT, gl::GL_ZERO_TO_ONE);
 		//gl::ClipControl(gl::LOWER_LEFT, gl::ZERO_TO_ONE);
 	}
 	return Ok(());
@@ -128,7 +127,7 @@ pub fn resize(window_width : i32, window_height: i32)
 {
 	unsafe
 	{
-		gl::Viewport(0, 0, window_width, window_height);
+		gl::glViewport(0, 0, window_width, window_height);
 	}
 }
 
@@ -160,45 +159,45 @@ impl CommonShaderFrameDate
 
 pub struct Program
 {
-	id: gl::types::GLuint,
+	id: gl::GLuint,
 }
 
 impl Program
 {
 	pub fn from_shaders(shaders: &[Shader]) -> Result<Program, String>
 	{
-		let program_id = unsafe { gl::CreateProgram() };
+		let program_id = unsafe { gl::glCreateProgram() };
 
 		for shader in shaders
 		{
-			unsafe { gl::AttachShader(program_id, shader.id()); }
+			unsafe { gl::glAttachShader(program_id, shader.id()); }
 		}
 
-		unsafe { gl::LinkProgram(program_id); }
+		unsafe { gl::glLinkProgram(program_id); }
 
-		let mut success: gl::types::GLint = 1;
+		let mut success: gl::GLint = 1;
 		unsafe
 		{
-			gl::GetProgramiv(program_id, gl::LINK_STATUS, &mut success);
+			gl::glGetProgramiv(program_id, gl::GL_LINK_STATUS, &mut success);
 		}
 
 		if success == 0
 		{
-			let mut len: gl::types::GLint = 0;
+			let mut len: gl::GLint = 0;
 			unsafe
 			{
-				gl::GetProgramiv(program_id, gl::INFO_LOG_LENGTH, &mut len);
+				gl::glGetProgramiv(program_id, gl::GL_INFO_LOG_LENGTH, &mut len);
 			}
 
 			let error = create_whitespace_cstring_with_len(len as usize);
 
 			unsafe
 			{
-				gl::GetProgramInfoLog(
+				gl::glGetProgramInfoLog(
 					program_id,
 					len,
 					std::ptr::null_mut(),
-					error.as_ptr() as *mut gl::types::GLchar
+					error.as_ptr() as *mut gl::GLchar
 				);
 			}
 
@@ -207,13 +206,13 @@ impl Program
 
 		for shader in shaders
 		{
-			unsafe { gl::DetachShader(program_id, shader.id()); }
+			unsafe { gl::glDetachShader(program_id, shader.id()); }
 		}
 
 		Ok(Program { id: program_id })
 	}
 
-	pub fn id(&self) -> gl::types::GLuint
+	pub fn id(&self) -> gl::GLuint
 	{
 		self.id
 	}
@@ -222,7 +221,7 @@ impl Program
 	{
 		unsafe
 		{
-			gl::UseProgram(self.id);
+			gl::glUseProgram(self.id);
 		}
 	}
 
@@ -236,19 +235,19 @@ impl Drop for Program
 	{
 		unsafe
 		{
-			gl::DeleteProgram(self.id);
+			gl::glDeleteProgram(self.id);
 		}
 	}
 }
 
 pub struct Shader
 {
-	id: gl::types::GLuint,
+	id: gl::GLuint,
 }
 
 impl Shader
 {
-	pub fn from_source(source: &CStr, kind: gl::types::GLenum ) -> Result<Shader, String>
+	pub fn from_source(source: &CStr, kind: gl::GLenum ) -> Result<Shader, String>
 	{
 		let id = shader_from_source(source, kind)?;
 		Ok(Shader { id })
@@ -256,7 +255,7 @@ impl Shader
 
 	pub fn from_vert_source(source: &CStr, name: &String) -> Result<Shader, String>
 	{
-		match Shader::from_source(source, gl::VERTEX_SHADER)
+		match Shader::from_source(source, gl::GL_VERTEX_SHADER)
 		{
 			Ok(k) =>
 			{
@@ -272,7 +271,7 @@ impl Shader
 
 	pub fn from_frag_source(source: &CStr, name: &String) -> Result<Shader, String>
 	{
-		match Shader::from_source(source, gl::FRAGMENT_SHADER)
+		match Shader::from_source(source, gl::GL_FRAGMENT_SHADER)
 		{
 			Ok(k) =>
 			{
@@ -288,7 +287,7 @@ impl Shader
 
 	pub fn from_comp_source(source: &CStr, name: &String) -> Result<Shader, String>
 	{
-		match Shader::from_source(source, gl::COMPUTE_SHADER)
+		match Shader::from_source(source, gl::GL_COMPUTE_SHADER)
 		{
 			Ok(k) =>
 			{
@@ -303,7 +302,7 @@ impl Shader
 	}
 
 
-	pub fn id(&self) -> gl::types::GLuint
+	pub fn id(&self) -> gl::GLuint
 	{
 		self.id
 	}
@@ -315,44 +314,44 @@ impl Drop for Shader
 	{
 		unsafe
 		{
-			gl::DeleteShader(self.id);
+			gl::glDeleteShader(self.id);
 		}
 	}
 }
 
-fn shader_from_source(source: &CStr, kind: gl::types::GLenum )
-	-> Result<gl::types::GLuint, String>
+fn shader_from_source(source: &CStr, kind: gl::GLenum )
+	-> Result<gl::GLuint, String>
 {
-	let id = unsafe { gl::CreateShader(kind) };
+	let id = unsafe { gl::glCreateShader(kind) };
 	unsafe
 	{
-		gl::ShaderSource(id, 1, &source.as_ptr(), std::ptr::null());
-		gl::CompileShader(id);
+		gl::glShaderSource(id, 1, &source.as_ptr(), std::ptr::null());
+		gl::glCompileShader(id);
 	}
 
-	let mut success: gl::types::GLint = 1;
+	let mut success: gl::GLint = 1;
 	unsafe
 	{
-		gl::GetShaderiv(id, gl::COMPILE_STATUS, &mut success);
+		gl::glGetShaderiv(id, gl::GL_COMPILE_STATUS, &mut success);
 	}
 
 	if success == 0
 	{
-		let mut len: gl::types::GLint = 0;
+		let mut len: gl::GLint = 0;
 		unsafe
 		{
-			gl::GetShaderiv(id, gl::INFO_LOG_LENGTH, &mut len);
+			gl::glGetShaderiv(id, gl::GL_INFO_LOG_LENGTH, &mut len);
 		}
 
 		let error = create_whitespace_cstring_with_len(len as usize);
 
 		unsafe
 		{
-			gl::GetShaderInfoLog(
+			gl::glGetShaderInfoLog(
 				id,
 				len,
 				std::ptr::null_mut(),
-				error.as_ptr() as *mut gl::types::GLchar
+				error.as_ptr() as *mut gl::GLchar
 			);
 		}
 
@@ -376,34 +375,34 @@ fn create_whitespace_cstring_with_len(len: usize)
 
 pub struct Texture
 {
-	pub handle: gl::types::GLuint,
+	pub handle: gl::GLuint,
 	pub width: i32,
 	pub height: i32,
-	pub texture_type: gl::types::GLenum,
-	pub pixel_type: gl::types::GLenum
+	pub texture_type: gl::GLenum,
+	pub pixel_type: gl::GLenum
 }
 
 impl Texture
 {
-	fn generate_handle(width: i32, height: i32, texture_type: gl::types::GLenum, pixel_type: gl::types::GLenum) -> gl::types::GLuint
+	fn generate_handle(width: i32, height: i32, texture_type: gl::GLenum, pixel_type: gl::GLenum) -> gl::GLuint
 	{
-		let mut handle: gl::types::GLuint = 0;
+		let mut handle: gl::GLuint = 0;
 		unsafe
 		{
-			gl::CreateTextures(texture_type, 1, &mut handle);
-			gl::TextureStorage2D(handle, 1, pixel_type, width, height);
-			//gl::TextureSubImage2D(handle, 0, 0, 0, width, height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+			gl::glCreateTextures(texture_type, 1, &mut handle);
+			gl::glTextureStorage2D(handle, 1, pixel_type, width, height);
+			//gl::TextureSubImage2D(handle, 0, 0, 0, width, height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::GLvoid);
 
 			//gl::GenTextures(1, &mut handle);
 			//gl::BindTexture(texture_type, handle);
 			//gl::TexStorage2D(texture_type, 1, pixel_type, width, height);
 			
-			//gl::TexSubImage2D(gl::TEXTURE_2D, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::types::GLvoid);
+			//gl::TexSubImage2D(gl::TEXTURE_2D, 0, 0, 0, texture_width, texture_height, gl::BGRA, gl::UNSIGNED_BYTE, font_tex.as_ptr() as *const gl::GLvoid);
 		}
 		return handle;
 	}
 	// texture width, height, and type such as GL_TEXTURE_2D (gl::TEXTURE2D), pixel_type such as gl::RGBA8
-	pub fn new_texture(width: i32, height: i32, texture_type: gl::types::GLenum, pixel_type: gl::types::GLenum) -> Self
+	pub fn new_texture(width: i32, height: i32, texture_type: gl::GLenum, pixel_type: gl::GLenum) -> Self
 	{
 		let handle = Texture::generate_handle(width, height, texture_type, pixel_type);
 		return Self { handle, width, height, texture_type, pixel_type };
@@ -423,17 +422,17 @@ impl Texture
 		{
 			unsafe
 			{
-				gl::DeleteTextures(1, &self.handle);
+				gl::glDeleteTextures(1, &self.handle);
 			}
 			self.handle = 0;
 		}
 	}
-	pub fn get_handle(&self) -> gl::types::GLuint
+	pub fn get_handle(&self) -> gl::GLuint
 	{
 		return self.handle;
 	}
 
-	pub fn get_pixel_type(&self) -> gl::types::GLenum
+	pub fn get_pixel_type(&self) -> gl::GLenum
 	{
 		return self.pixel_type;
 	}
@@ -450,26 +449,26 @@ impl Drop for Texture
 
 pub struct ShaderBuffer
 {
-	handle: gl::types::GLuint,
-	buffer_type: gl::types::GLenum,
+	handle: gl::GLuint,
+	buffer_type: gl::GLenum,
 	size: usize
 }
 
 impl ShaderBuffer
 {
-	pub fn new_with_data(buffer_type: gl::types::GLenum, size: usize, data_ptr: *const gl::types::GLvoid) -> Self
+	pub fn new_with_data(buffer_type: gl::GLenum, size: usize, data_ptr: *const gl::GLvoid) -> Self
 	{
-		let mut tmp_handle: gl::types::GLuint = 0;
+		let mut tmp_handle: gl::GLuint = 0;
 		unsafe
 		{
-			gl::CreateBuffers(1, &mut tmp_handle);
-			gl::NamedBufferData(tmp_handle, size as gl::types::GLsizeiptr, data_ptr, gl::DYNAMIC_COPY);
+			gl::glCreateBuffers(1, &mut tmp_handle);
+			gl::glNamedBufferData(tmp_handle, size as gl::GLsizeiptr, data_ptr, gl::GL_DYNAMIC_COPY);
 
 			//gl::GenBuffers(1, &mut tmp_handle);
 			//gl::BindBuffer(buffer_type, tmp_handle);
 			//gl::BufferData(
 			//	buffer_type,
-			//	size as gl::types::GLsizeiptr,
+			//	size as gl::GLsizeiptr,
 			//	data_ptr,
 			//	gl::DYNAMIC_COPY, // usage
 			//);
@@ -483,23 +482,23 @@ impl ShaderBuffer
 		}
 	}
 
-	pub fn new(buffer_type: gl::types::GLenum, size: usize) -> Self
+	pub fn new(buffer_type: gl::GLenum, size: usize) -> Self
 	{
-		Self::new_with_data(buffer_type, size, 0 as *const gl::types::GLvoid)
+		Self::new_with_data(buffer_type, size, 0 as *const gl::GLvoid)
 	}
 	pub fn bind(&self, slot :u32)
 	{
 		unsafe
 		{
-			gl::BindBufferBase(self.buffer_type, slot, self.handle);
+			gl::glBindBufferBase(self.buffer_type, slot, self.handle);
 		}
 	}
 
-	pub fn write_data(&self, offset_in_bytes: usize, size: usize, ptr: *const gl::types::GLvoid)
+	pub fn write_data(&self, offset_in_bytes: usize, size: usize, ptr: *const gl::GLvoid)
 	{
 		unsafe
 		{
-			gl::NamedBufferSubData(self.handle, offset_in_bytes as gl::types::GLintptr, size as gl::types::GLintptr, ptr);
+			gl::glNamedBufferSubData(self.handle, offset_in_bytes as gl::GLintptr, size as gl::GLintptr, ptr);
 		}
 	}
 
@@ -517,7 +516,7 @@ impl Drop for ShaderBuffer
 		{
 			unsafe
 			{
-				gl::DeleteBuffers(1, &self.handle);
+				gl::glDeleteBuffers(1, &self.handle);
 			}
 			self.handle = 0;
 		}

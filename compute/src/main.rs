@@ -47,7 +47,7 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 	shader_program.set_used();
 
 
-	let tex = render_gl::Texture::new_texture(app.window_state.window_width, app.window_state.window_height, gl::TEXTURE_2D, gl::RGBA8);
+	let tex = render_gl::Texture::new_texture(app.window_state.window_width, app.window_state.window_height, gl::GL_TEXTURE_2D, gl::GL_RGBA8);
 
 	let mut shader_data: Vec<ShaderData> = vec![ShaderData{	_roll_x: 0.0f32,
 		_roll_y: 0.0f32,
@@ -57,15 +57,15 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 
 	let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
 //		gl::SHADER_STORAGE_BUFFER,
-		gl::UNIFORM_BUFFER,
+		gl::GL_UNIFORM_BUFFER,
 		std::mem::size_of::<ShaderData>(),
-		shader_data.as_ptr() as *const gl::types::GLvoid
+		shader_data.as_ptr() as *const gl::GLvoid
 	);
 
-	let mut vao: gl::types::GLuint = 0;
+	let mut vao: gl::GLuint = 0;
 	unsafe
 	{
-		gl::GenVertexArrays(1, &mut vao);
+		gl::glGenVertexArrays(1, &mut vao);
 	}
 
 	let mut roll = 0.0f32;
@@ -81,33 +81,33 @@ fn run(app: &mut sdl_window::App) -> Result<(), String>
 		shader_data[0]._screen_size_x = app.window_state.window_width;
 		shader_data[0]._screen_size_y = app.window_state.window_height;
 
-		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
+		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::GLvoid);
 
 
 		shader_program.set_used();
 		unsafe
 		{
-			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
-			gl::DepthFunc(gl::LESS);
-			gl::Enable(gl::DEPTH_TEST);
-			gl::DepthFunc(gl::ALWAYS);
+			gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT );
+			gl::glDepthFunc(gl::GL_LESS);
+			gl::glEnable(gl::GL_DEPTH_TEST);
+			gl::glDepthFunc(gl::GL_ALWAYS);
 
 			compute_shader_program.set_used();
 			ssbo.bind(0);
 
-			gl::BindImageTexture(0, tex.get_handle(), 0, gl::FALSE, 0, gl::WRITE_ONLY, tex.get_pixel_type());
-			gl::DispatchCompute(((app.window_state.window_width + 7) / 8) as u32, ((app.window_state.window_height + 7) / 8) as u32, 1);
+			gl::glBindImageTexture(0, tex.get_handle(), 0, gl::GL_FALSE, 0, gl::GL_WRITE_ONLY, tex.get_pixel_type());
+			gl::glDispatchCompute(((app.window_state.window_width + 7) / 8) as u32, ((app.window_state.window_height + 7) / 8) as u32, 1);
 			//gl::MemoryBarrier(gl::TEXTURE_FETCH_BARRIER_BIT);
 			// prevent sampling before all writing to image are done
-			gl::MemoryBarrier(gl::SHADER_IMAGE_ACCESS_BARRIER_BIT);
+			gl::glMemoryBarrier(gl::GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			shader_program.set_used();
 
-			gl::BindVertexArray(vao);
+			gl::glBindVertexArray(vao);
 
 
-			gl::BindTexture(gl::TEXTURE_2D, tex.get_handle());
-			gl::DrawArrays(
-				gl::TRIANGLES, // mode
+			gl::glBindTexture(gl::GL_TEXTURE_2D, tex.get_handle());
+			gl::glDrawArrays(
+				gl::GL_TRIANGLES, // mode
 				0, // starting index in the enabled arrays
 				6 // number of indices to be rendered
 			);

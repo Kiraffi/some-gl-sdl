@@ -406,14 +406,14 @@ fn run() -> Result<(), String>
 
 	shader_program.set_used();
 
-	let mut queries1: [gl::types::GLuint; 4] = [0; 4];
-	let mut queries2: [gl::types::GLuint; 4] = [0; 4];
-	let mut queries3: [gl::types::GLuint; 4] = [0; 4];
+	let mut queries1: [gl::GLuint; 4] = [0; 4];
+	let mut queries2: [gl::GLuint; 4] = [0; 4];
+	let mut queries3: [gl::GLuint; 4] = [0; 4];
 	unsafe 
 	{
-		gl::GenQueries(4, &mut queries1[0]);
-		gl::GenQueries(4, &mut queries2[0]);
-		gl::GenQueries(4, &mut queries3[0]);
+		gl::glGenQueries(4, &mut queries1[0]);
+		gl::glGenQueries(4, &mut queries2[0]);
+		gl::glGenQueries(4, &mut queries3[0]);
 	}
 
 
@@ -473,21 +473,21 @@ fn run() -> Result<(), String>
 	
  
 	let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
-		//gl::SHADER_STORAGE_BUFFER,
-		gl::UNIFORM_BUFFER,
+		//gl::GL_SHADER_STORAGE_BUFFER,
+		gl::GL_UNIFORM_BUFFER,
 		shader_data.len() * std::mem::size_of::<ShaderData>(),
-		shader_data.as_ptr() as *const gl::types::GLvoid
+		shader_data.as_ptr() as *const gl::GLvoid
 	);
 
 	let frame_data_buffer: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new(
-		gl::UNIFORM_BUFFER,
+		gl::GL_UNIFORM_BUFFER,
 		65536
 	);
 
-	let mut vao: gl::types::GLuint = 0;
+	let mut vao: gl::GLuint = 0;
 	unsafe
 	{
-		gl::GenVertexArrays(1, &mut vao);
+		gl::glGenVertexArrays(1, &mut vao);
 	}
 
 	let mut rng_: RandomPCG = RandomPCG::new(app.window_state.timer.now_stamp);
@@ -601,29 +601,29 @@ fn run() -> Result<(), String>
 
 		unsafe
 		{ 
-			gl::QueryCounter(queries1[current_frame_index], gl::TIMESTAMP);
+			gl::glQueryCounter(queries1[current_frame_index], gl::GL_TIMESTAMP);
 			font_system.update(app.window_state.window_width as f32, app.window_state.window_height as f32);
 
 			let tmp = CommonShaderFrameDate::new(app.window_state.window_width, app.window_state.window_height);
 
-			frame_data_buffer.write_data(0, std::mem::size_of::<CommonShaderFrameDate>(), &tmp as *const _ as *const gl::types::GLvoid);
-			ssbo.write_data(0, shader_data.len() * std::mem::size_of::<ShaderData>(), shader_data.as_ptr() as *const gl::types::GLvoid);
+			frame_data_buffer.write_data(0, std::mem::size_of::<CommonShaderFrameDate>(), &tmp as *const _ as *const gl::GLvoid);
+			ssbo.write_data(0, shader_data.len() * std::mem::size_of::<ShaderData>(), shader_data.as_ptr() as *const gl::GLvoid);
 			shader_program.set_used();
 			
-			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
-			gl::DepthFunc(gl::LESS);
-			gl::Enable(gl::DEPTH_TEST);
-			gl::DepthFunc(gl::ALWAYS);
-			gl::Disable(gl::BLEND);
+			gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT );
+			gl::glDepthFunc(gl::GL_LESS);
+			gl::glEnable(gl::GL_DEPTH_TEST);
+			gl::glDepthFunc(gl::GL_ALWAYS);
+			gl::glDisable(gl::GL_BLEND);
 
 			
-			gl::BindVertexArray(vao);
+			gl::glBindVertexArray(vao);
 
 			frame_data_buffer.bind(0);
 			ssbo.bind(2);
 
-			gl::DrawArrays(
-				gl::TRIANGLES, // mode
+			gl::glDrawArrays(
+				gl::GL_TRIANGLES, // mode
 				0, // starting index in the enabled arrays
 				6 * shader_data.len() as i32 // number of indices to be rendered
 			);
@@ -632,9 +632,9 @@ fn run() -> Result<(), String>
 				font_system.draw();
 			}
 
-			gl::QueryCounter(queries2[current_frame_index], gl::TIMESTAMP);
+			gl::glQueryCounter(queries2[current_frame_index], gl::GL_TIMESTAMP);
 			app.swap_buffer();
-			gl::QueryCounter(queries3[current_frame_index], gl::TIMESTAMP);
+			gl::glQueryCounter(queries3[current_frame_index], gl::GL_TIMESTAMP);
 		}
 		::std::thread::sleep(std::time::Duration::from_micros(1000));
 
@@ -649,24 +649,24 @@ fn run() -> Result<(), String>
 				{
 					if done == 0
 					{
-						gl::GetQueryObjectiv(queries1[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done);
+						gl::glGetQueryObjectiv(queries1[previous_frame_index], gl::GL_QUERY_RESULT_AVAILABLE, &mut done);
 					}
 					if done2 == 0
 					{
-						gl::GetQueryObjectiv(queries2[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done2);
+						gl::glGetQueryObjectiv(queries2[previous_frame_index], gl::GL_QUERY_RESULT_AVAILABLE, &mut done2);
 					}
 					if done3 == 0
 					{
-						gl::GetQueryObjectiv(queries3[previous_frame_index], gl::QUERY_RESULT_AVAILABLE, &mut done3);
+						gl::glGetQueryObjectiv(queries3[previous_frame_index], gl::GL_QUERY_RESULT_AVAILABLE, &mut done3);
 					}
 				}
 				
-				let mut start_time: gl::types::GLuint64 = 0;
-				let mut end_time1: gl::types::GLuint64 = 0;
-				let mut end_time2: gl::types::GLuint64 = 0;
-				gl::GetQueryObjectui64v(queries1[previous_frame_index], gl::QUERY_RESULT, &mut start_time);
-				gl::GetQueryObjectui64v(queries2[previous_frame_index], gl::QUERY_RESULT, &mut end_time1);
-				gl::GetQueryObjectui64v(queries3[previous_frame_index], gl::QUERY_RESULT, &mut end_time2);
+				let mut start_time: gl::GLuint64 = 0;
+				let mut end_time1: gl::GLuint64 = 0;
+				let mut end_time2: gl::GLuint64 = 0;
+				gl::glGetQueryObjectui64v(queries1[previous_frame_index], gl::GL_QUERY_RESULT, &mut start_time);
+				gl::glGetQueryObjectui64v(queries2[previous_frame_index], gl::GL_QUERY_RESULT, &mut end_time1);
+				gl::glGetQueryObjectui64v(queries3[previous_frame_index], gl::GL_QUERY_RESULT, &mut end_time2);
 				
 				let duration1: f64 = ((end_time1 - start_time) as f64 / 1000000000.0) as f64;
 				let duration2: f64 = ((end_time2 - start_time) as f64 / 1000000000.0) as f64;

@@ -28,7 +28,7 @@ pub struct FontSystem
     letter_datas: Vec<LetterData>,
     font_texture: render_gl::Texture,
 	shader_textured_program: render_gl::Program,
-    vao: gl::types::GLuint,
+    vao: gl::GLuint,
     canvas_width: f32,
     canvas_height: f32
 }
@@ -83,9 +83,9 @@ impl FontSystem
                 let texture_height = 12;
 
 
-                font_texture = render_gl::Texture::new_texture(texture_width, texture_height, gl::TEXTURE_2D, gl::RGBA8);
-                gl::TextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::BGRA, 
-                    gl::UNSIGNED_BYTE, font_tex_data.as_ptr() as *const gl::types::GLvoid);
+                font_texture = render_gl::Texture::new_texture(texture_width, texture_height, gl::GL_TEXTURE_2D, gl::GL_RGBA8);
+                gl::glTextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::GL_BGRA, 
+                    gl::GL_UNSIGNED_BYTE, font_tex_data.as_ptr() as *const gl::GLvoid);
             }
         }
         
@@ -101,16 +101,16 @@ impl FontSystem
 
 
         let letter_buffer: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
-            gl::SHADER_STORAGE_BUFFER,
+            gl::GL_SHADER_STORAGE_BUFFER,
             letter_datas.len() * std::mem::size_of::<LetterData>(),
-            letter_datas.as_ptr() as *const gl::types::GLvoid
+            letter_datas.as_ptr() as *const gl::GLvoid
         );
         letter_datas.clear();
     
-        let mut vao: gl::types::GLuint = 0;
+        let mut vao: gl::GLuint = 0;
         unsafe
         {
-            gl::GenVertexArrays(1, &mut vao);
+            gl::glGenVertexArrays(1, &mut vao);
         }
 
        Ok(Self{ letter_buffer, letter_datas, font_texture, shader_textured_program, vao, canvas_width: 0.0f32, canvas_height: 0.0f32 })
@@ -144,7 +144,7 @@ impl FontSystem
         if self.letter_datas.len() > 0
         {
             self.letter_buffer.write_data(0, self.letter_datas.len() * std::mem::size_of::<LetterData>(),
-                self.letter_datas.as_ptr() as *const gl::types::GLvoid);
+                self.letter_datas.as_ptr() as *const gl::GLvoid);
         }
     }
 
@@ -154,18 +154,18 @@ impl FontSystem
         {
             unsafe
     		{
-                gl::BindVertexArray(self.vao);
+                gl::glBindVertexArray(self.vao);
 
                 self.shader_textured_program.set_used();
                 self.letter_buffer.bind(1);
                 
-                gl::BindTexture(gl::TEXTURE_2D, self.font_texture.handle);
-                gl::Enable(gl::BLEND);
-                gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+                gl::glBindTexture(gl::GL_TEXTURE_2D, self.font_texture.handle);
+                gl::glEnable(gl::GL_BLEND);
+                gl::glBlendFunc(gl::GL_SRC_ALPHA, gl::GL_ONE_MINUS_SRC_ALPHA);
 
 
-                gl::DrawArrays(
-                    gl::TRIANGLES, // mode
+                gl::glDrawArrays(
+                    gl::GL_TRIANGLES, // mode
                     0, // starting index in the enabled arrays
                     6 * self.letter_datas.len() as i32// number of indices to be rendered
                 );

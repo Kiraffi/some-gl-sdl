@@ -77,6 +77,8 @@ fn save_file(name: &String, letters: &Vec<u8>) -> Result<(), String>
 
 fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 {
+	//gl::load_with(app.video.gl_get_proc_address());
+
 	render_gl::init_gl(&app.window_state)?;
 
 	let box_size = 30;
@@ -183,16 +185,16 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 
 
 	let ssbo: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new_with_data(
-		gl::SHADER_STORAGE_BUFFER,
+		gl::GL_SHADER_STORAGE_BUFFER,
 //			gl::UNIFORM_BUFFER,
 		shader_data.len() * std::mem::size_of::<ShaderData>(),
-		shader_data.as_ptr() as *const gl::types::GLvoid
+		shader_data.as_ptr() as *const gl::GLvoid
 	);
 
-	let mut vao: gl::types::GLuint = 0;
+	let mut vao: gl::GLuint = 0;
 	unsafe
 	{
-		gl::GenVertexArrays(1, &mut vao);
+		gl::glGenVertexArrays(1, &mut vao);
 	}
 
 	while !app.window_state.quit
@@ -283,7 +285,7 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 			}
 		}
 
-		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::types::GLvoid);
+		ssbo.write_data(0, ssbo.get_size(), shader_data.as_ptr() as *const gl::GLvoid);
 
 
 
@@ -291,19 +293,19 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 		shader_program.set_used();
 		unsafe
 		{
-			gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT );
-			gl::DepthFunc(gl::LESS);
-			gl::Enable(gl::DEPTH_TEST);
-			gl::DepthFunc(gl::ALWAYS);
+			gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT );
+			gl::glDepthFunc(gl::GL_LESS);
+			gl::glEnable(gl::GL_DEPTH_TEST);
+			gl::glDepthFunc(gl::GL_ALWAYS);
 
-			gl::Uniform4f(0, 0.0f32, box_size as f32, app.window_state.window_width as f32, app.window_state.window_height as f32);
+			gl::glUniform4f(0, 0.0f32, box_size as f32, app.window_state.window_width as f32, app.window_state.window_height as f32);
 
-			gl::BindVertexArray(vao);
+			gl::glBindVertexArray(vao);
 
 			ssbo.bind(2);
 
-			gl::DrawArrays(
-				gl::TRIANGLES, // mode
+			gl::glDrawArrays(
+				gl::GL_TRIANGLES, // mode
 				0, // starting index in the enabled arrays
 				6 * shader_data.len() as i32 // number of indices to be rendered
 			);
