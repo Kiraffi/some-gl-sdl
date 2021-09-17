@@ -300,21 +300,19 @@ pub const ERROR_INVALID_PROFILE_ARB: u32 = 0x2096;
 pub const ERROR_INCOMPATIBLE_DEVICE_CONTEXTS_ARB: u32 = 0x2054;
 
 
+pub enum empty_enum_type {}
+pub type HINSTANCE = *mut empty_enum_type;
+pub type FARPROC = HINSTANCE;
+pub type HMODULE = HINSTANCE;
+pub type LPCSTR = *const std::os::raw::c_char;
+pub type BOOL = std::os::raw::c_int;
 
-
-
-
-
-
-
-
-
-
-
-
-use winapi::shared::minwindef::{HINSTANCE, PROC};
-use winapi::shared::ntdef::LPCSTR;
-
+extern "system" 
+{
+    pub fn GetProcAddress(hModule: HMODULE, lpProcName: LPCSTR) -> FARPROC;
+    pub fn LoadLibraryA(lpFileName: LPCSTR) -> HMODULE;
+    pub fn FreeLibrary(hLibModule: HMODULE) -> BOOL;
+}
 
 
 // `find_min!` will calculate the minimum of any number of arguments.
@@ -330,12 +328,12 @@ macro_rules! find_min {
 
 
 static mut _sapp_opengl32: HINSTANCE = std::ptr::null_mut();
-static mut _sapp_wglGetProcAddress: Option<extern "system" fn(_: LPCSTR) -> PROC> = None;
+static mut _sapp_wglGetProcAddress: Option<extern "system" fn(_: LPCSTR) -> FARPROC> = None;
 
 
 
 unsafe fn get_proc_address<T>(lib: HINSTANCE, proc: &[u8]) -> Option<T> {
-    let proc = winapi::um::libloaderapi::GetProcAddress(lib, proc.as_ptr() as *const _);
+    let proc = GetProcAddress(lib, proc.as_ptr() as *const _);
 
     if proc.is_null() {
         return None;
@@ -353,7 +351,7 @@ pub unsafe fn load_gl_func<T>(name: &str)  -> Option<T>
             let mut proc_ptr = _sapp_wglGetProcAddress.unwrap()(fn_name);
             if proc_ptr.is_null() 
             {
-                proc_ptr = winapi::um::libloaderapi::GetProcAddress(_sapp_opengl32, fn_name);
+                proc_ptr = GetProcAddress(_sapp_opengl32, fn_name);
             }
             assert!(proc_ptr.is_null() == false, "Load GL func {} failed.", name);
             Some(std::mem::transmute_copy(&proc_ptr))
@@ -417,7 +415,7 @@ fn test_fn() -> Result<(), String>
 
     unsafe 
     {
-        _sapp_opengl32 = winapi::um::libloaderapi::LoadLibraryA(b"opengl32.dll\0".as_ptr() as *const _);
+        _sapp_opengl32 = LoadLibraryA(b"opengl32.dll\0".as_ptr() as *const _);
         if _sapp_opengl32.is_null() 
         {
             panic!("Failed to load opengl32.dll");
@@ -457,6 +455,10 @@ fn test_fn() -> Result<(), String>
 	}
 
 	println!("OpenGL version {}", version);
+    unsafe
+    {
+        FreeLibrary(_sapp_opengl32);
+    }
     Ok(())
 }
 
