@@ -364,7 +364,11 @@ macro_rules! gl_macro_func_generator
                 {
                     let fn_name = stringify!($fn);
                     let proc_ptr = loadfn(fn_name);
-                    assert!(proc_ptr.is_null() == false, "Load GL func {:?} failed.", fn_name);
+                    if proc_ptr.is_null()
+                    {
+                        println!("Load GL func {:?} failed.", fn_name);
+                        return false;
+                    }
                     __temp_funcs::$fn = Some(std::mem::transmute(proc_ptr));
                 }
             )*

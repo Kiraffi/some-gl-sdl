@@ -6,7 +6,8 @@ members = [
 	"dyn_link_test",
 
 	#"vulkan",
-	#"macrotest",
+	"macrotest",
+	"carp_sdl",
 ]
 
 [profile.dev]
