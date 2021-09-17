@@ -1,6 +1,5 @@
 
 extern crate gl;
-extern crate core;
 
 //use render_gl::*;
 

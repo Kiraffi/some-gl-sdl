@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 gl = { path = "../lib/gl" } 
 render_gl = { path = "../lib/render_gl" }
-core = { path = "../lib/core" }
+my_core = { path = "../lib/my_core" }
 sdl_window = { path = "../lib/sdl_window" }
 sdl_window_state = { path = "../lib/sdl_window_state" }
 render_systems = { path = "../lib/render_systems" }

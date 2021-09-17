@@ -335,7 +335,16 @@ fn test_sdl() -> Result<(), &'static str>
 
         println!("OpenGL version {}", version);
             
-
+        let mut font_system: render_systems::fontsystem::FontSystem = render_systems::fontsystem::FontSystem::init()?;
+        let frame_data_buffer: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new(
+            gl::GL_UNIFORM_BUFFER,
+            65536
+        );
+    
+        let mut vao: gl::GLuint = 0;
+        {
+            gl::glGenVertexArrays(1, &mut vao);
+        }
         /*
         //Initialize OpenGL
         if( !initGL() )
@@ -346,9 +355,12 @@ fn test_sdl() -> Result<(), &'static str>
 
 
         */  
+        let letter_size = 16f32;
 
         let mut quit = false;
        
+        let colors = my_core::get_u32_agbr_color(1.0, 1.0, 1.0, 1.0);
+
         //While application is running
         while !quit
         {
@@ -367,6 +379,17 @@ fn test_sdl() -> Result<(), &'static str>
                    }
                 }
             }
+            let s: String = "High Score: ".to_string();
+    		font_system.draw_string(&s, (width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors);
+		
+            let tmp = render_gl::CommonShaderFrameDate::new(width, height);
+			frame_data_buffer.write_data(0, std::mem::size_of::<render_gl::CommonShaderFrameDate>(), &tmp as *const _ as *const gl::GLvoid);
+
+            gl::glBindVertexArray(vao);
+			frame_data_buffer.bind(0);
+
+			font_system.update(width as f32, height as f32);
+			font_system.draw();
             //println!("Events done");
             
             //Render quad

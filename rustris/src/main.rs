@@ -10,7 +10,7 @@ use sdl_window_state::MyKey;
 use std::ffi::CString;
 use render_systems::fontsystem::FontSystem;
 use render_gl::CommonShaderFrameDate;
-use core::RandomPCG;
+use my_core::RandomPCG;
 
 pub struct Block
 {
@@ -419,19 +419,19 @@ fn run() -> Result<(), String>
 
 	let colors: [u32; 9] = [
 		// Background color
-		core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
+		my_core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
 
 		// Block colors
-		core::get_u32_agbr_color(1.0, 0.0, 0.0, 1.0),
-		core::get_u32_agbr_color(0.0, 1.0, 0.0, 1.0),
-		core::get_u32_agbr_color(0.0, 0.0, 1.0, 1.0),
-		core::get_u32_agbr_color(1.0, 0.0, 1.0, 1.0),
-		core::get_u32_agbr_color(0.0, 1.0, 1.0, 1.0),
-		core::get_u32_agbr_color(1.0, 1.0, 0.0, 1.0),
-		core::get_u32_agbr_color(1.0, 0.6, 1.0, 1.0),
+		my_core::get_u32_agbr_color(1.0, 0.0, 0.0, 1.0),
+		my_core::get_u32_agbr_color(0.0, 1.0, 0.0, 1.0),
+		my_core::get_u32_agbr_color(0.0, 0.0, 1.0, 1.0),
+		my_core::get_u32_agbr_color(1.0, 0.0, 1.0, 1.0),
+		my_core::get_u32_agbr_color(0.0, 1.0, 1.0, 1.0),
+		my_core::get_u32_agbr_color(1.0, 1.0, 0.0, 1.0),
+		my_core::get_u32_agbr_color(1.0, 0.6, 1.0, 1.0),
 
 		// Font color
-		core::get_u32_agbr_color(1.0, 1.6, 1.0, 1.0),
+		my_core::get_u32_agbr_color(1.0, 1.6, 1.0, 1.0),
 	];
 
 	let mut board: Board = Board::new(10, 20, 4);

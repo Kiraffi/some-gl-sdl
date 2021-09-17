@@ -139,7 +139,7 @@ impl App
 */
 		let event_pump = sdl.event_pump()?;
 		let mut t = Self{ window_state: sdl_window_state::SdlWindowState { window_width, window_height, vsync: vsync,
-			timer: core::MyTimer{ now_stamp: sdl_timer.performance_counter(),
+			timer: my_core::MyTimer{ now_stamp: sdl_timer.performance_counter(),
 				 last_stamp: sdl_timer.performance_counter(), 
 				 perf_freq: sdl_timer.performance_frequency() as f64, 
 				 dt: 0.0f64 

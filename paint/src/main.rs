@@ -99,8 +99,8 @@ fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 	shader_program.set_used();
 
 	let colors: [u32;2] = [
-		core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
-		core::get_u32_agbr_color(1.0, 1.0, 1.0, 1.0),
+		my_core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
+		my_core::get_u32_agbr_color(1.0, 1.0, 1.0, 1.0),
 	];
 
 	let board_size_x = 8;

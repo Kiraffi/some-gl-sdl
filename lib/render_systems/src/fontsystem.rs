@@ -37,17 +37,25 @@ pub struct FontSystem
 impl FontSystem
 {
     
-    pub fn init() -> Result<FontSystem, String>
+    pub fn init() -> Result<FontSystem, &'static str>
     {
         let shader_textured_program;
         {
-            let textured_vert_shader = render_gl::Shader::from_vert_source(
-                &CString::new(include_str!("textured_triangle.vert")).unwrap(), &"textured_triangle.vert".to_string()
-            )?;
+            let textured_vert_shader = 
+                match render_gl::Shader::from_vert_source(
+                &CString::new(include_str!("textured_triangle.vert")).unwrap(), &"textured_triangle.vert".to_string())
+                {
+                    Ok(v) => v,
+                    Err(_) => { println!("Failed to load vert shader!"); return Err("Failed to load vert shader!"); }
+                };
+                
     
-            let textured_frag_shader = render_gl::Shader::from_frag_source(
-                &CString::new(include_str!("textured_triangle.frag")).unwrap(), &"textured_triangle.frag".to_string()
-            )?;
+            let textured_frag_shader = match render_gl::Shader::from_frag_source(
+                &CString::new(include_str!("textured_triangle.frag")).unwrap(), &"textured_triangle.frag".to_string())
+            {
+                Ok(v) => v,
+                Err(_) => { println!("Failed to load frag shader!"); return Err("Failed to load frag shader!"); }
+            };
     
             shader_textured_program = render_gl::Program::from_shaders(
                 &[textured_vert_shader, textured_frag_shader]

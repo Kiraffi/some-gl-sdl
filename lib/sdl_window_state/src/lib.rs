@@ -4,7 +4,7 @@ pub struct SdlWindowState
 	pub window_height: i32,
 	pub vsync: bool,
 
-	pub timer: core::MyTimer,
+	pub timer: my_core::MyTimer,
 
 	pub key_downs: [u8; 512],
 	pub key_downs_previous: [u8; 512],
