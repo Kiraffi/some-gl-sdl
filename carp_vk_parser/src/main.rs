@@ -1,4 +1,75 @@
-use std::{any::Any, io::Read};
+#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
+
+
+use std::{io::Read, mem};
+
+
+
+
+type void = std::os::raw::c_void;
+type uint32_t = u32;
+type uint16_t = u16;
+type uint8_t = u8;
+
+type int32_t = i32;
+type int16_t = i16;
+type int8_t = i8;
+
+
+type char = std::os::raw::c_char;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 fn read_file_to_string(filename: &str) -> Result<String, std::io::Error>
 {
@@ -131,11 +202,11 @@ fn parse_vk_structs(root: &xmltree::Element) -> String
     
     for struct_type in &s_vec
     {
-        string_out.push_str(&format!("pub struct {}\r\n{{\r\n", struct_type.struct_name)[..]);
+        string_out.push_str(&format!("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct {}\r\n{{\r\n", struct_type.struct_name)[..]);
         assert!(struct_type.param_names.len() == struct_type.type_names.len());
         for i in 0..struct_type.param_names.len()
         {
-            string_out.push_str(&format!("\t{}: {}\r\n", struct_type.param_names[i], struct_type.type_names[i])[..]);
+            string_out.push_str(&format!("\t{}: {},\r\n", struct_type.param_names[i], struct_type.type_names[i])[..]);
         }
         let mut s_type_str = String::new();
         if struct_type.s_type_name.len() > 0
@@ -171,10 +242,10 @@ fn parse_vk_enums(root: &xmltree::Element) -> String
     s_vec.extend(node_children(&root, "enums", &vec![("type", "enum"), ("name", "")], |child|
     {
         let mut s_vec: Vec<String> = Vec::new();
-        s_vec.push(format!("pub enum {}\r\n{{\r\n", child.attributes["name"]));
+        s_vec.push(format!("#[repr(i32)]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", child.attributes["name"]));
         s_vec.extend(node_children(&child, "enum",&vec![("value", ""), ("name", "")],  |child2|
         {
-            return vec![format!("\t{}: i32 = {},\r\n", child2.attributes["name"], child2.attributes["value"])];
+            return vec![format!("\t{} = {},\r\n", child2.attributes["name"], child2.attributes["value"])];
         }));
         s_vec.push(("}\r\n\r\n").to_string());
         return s_vec;
@@ -187,9 +258,26 @@ fn parse_vk_enums(root: &xmltree::Element) -> String
     return s;
 }
 
+#[repr(C)]
+struct SetSt
+{
+    poo: u64,
+    foo: i32,
+    faa: u32,
+}
+
+fn get_set() -> SetSt
+{
+    let poo: SetSt = unsafe { mem::zeroed() };
+    return poo;
+}
 
 fn main() 
 {
+    let poo = get_set();
+    println!("{}, {}, {}", poo.poo, poo.foo, poo.faa);
+
+
     let vk_xml = match read_file_to_string("carp_vk_parser/vk.xml") 
     {
         Ok(v) => v,
@@ -204,3 +292,14 @@ fn main()
     std::fs::write("carp_vk_parser/vk_enums.rs", &vk_enums).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_structs.rs", &vk_structs).expect("Unable to write file");
 }
+
+
+
+
+
+
+
+
+
+
+

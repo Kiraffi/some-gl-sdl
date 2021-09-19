@@ -1,7 +1,9 @@
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBaseOutStructure
 {
-	sType: VkStructureType
-	pNext: VkBaseOutStructure
+	sType: VkStructureType,
+	pNext: VkBaseOutStructure,
 }
 impl VkBaseOutStructure
 {
@@ -13,10 +15,12 @@ impl VkBaseOutStructure
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBaseInStructure
 {
-	sType: VkStructureType
-	pNext: VkBaseInStructure
+	sType: VkStructureType,
+	pNext: VkBaseInStructure,
 }
 impl VkBaseInStructure
 {
@@ -28,10 +32,12 @@ impl VkBaseInStructure
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkOffset2D
 {
-	x: int32_t
-	y: int32_t
+	x: int32_t,
+	y: int32_t,
 }
 impl VkOffset2D
 {
@@ -43,11 +49,13 @@ impl VkOffset2D
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkOffset3D
 {
-	x: int32_t
-	y: int32_t
-	z: int32_t
+	x: int32_t,
+	y: int32_t,
+	z: int32_t,
 }
 impl VkOffset3D
 {
@@ -59,10 +67,12 @@ impl VkOffset3D
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExtent2D
 {
-	width: uint32_t
-	height: uint32_t
+	width: uint32_t,
+	height: uint32_t,
 }
 impl VkExtent2D
 {
@@ -74,11 +84,13 @@ impl VkExtent2D
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExtent3D
 {
-	width: uint32_t
-	height: uint32_t
-	depth: uint32_t
+	width: uint32_t,
+	height: uint32_t,
+	depth: uint32_t,
 }
 impl VkExtent3D
 {
@@ -90,14 +102,16 @@ impl VkExtent3D
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkViewport
 {
-	x: float
-	y: float
-	width: float
-	height: float
-	minDepth: float
-	maxDepth: float
+	x: float,
+	y: float,
+	width: float,
+	height: float,
+	minDepth: float,
+	maxDepth: float,
 }
 impl VkViewport
 {
@@ -109,10 +123,12 @@ impl VkViewport
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRect2D
 {
-	offset: VkOffset2D
-	extent: VkExtent2D
+	offset: VkOffset2D,
+	extent: VkExtent2D,
 }
 impl VkRect2D
 {
@@ -124,11 +140,13 @@ impl VkRect2D
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkClearRect
 {
-	rect: VkRect2D
-	baseArrayLayer: uint32_t
-	layerCount: uint32_t
+	rect: VkRect2D,
+	baseArrayLayer: uint32_t,
+	layerCount: uint32_t,
 }
 impl VkClearRect
 {
@@ -140,12 +158,14 @@ impl VkClearRect
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkComponentMapping
 {
-	r: VkComponentSwizzle
-	g: VkComponentSwizzle
-	b: VkComponentSwizzle
-	a: VkComponentSwizzle
+	r: VkComponentSwizzle,
+	g: VkComponentSwizzle,
+	b: VkComponentSwizzle,
+	a: VkComponentSwizzle,
 }
 impl VkComponentMapping
 {
@@ -157,17 +177,19 @@ impl VkComponentMapping
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProperties
 {
-	apiVersion: uint32_t
-	driverVersion: uint32_t
-	vendorID: uint32_t
-	deviceID: uint32_t
-	deviceType: VkPhysicalDeviceType
-	deviceName: char
-	pipelineCacheUUID: uint8_t
-	limits: VkPhysicalDeviceLimits
-	sparseProperties: VkPhysicalDeviceSparseProperties
+	apiVersion: uint32_t,
+	driverVersion: uint32_t,
+	vendorID: uint32_t,
+	deviceID: uint32_t,
+	deviceType: VkPhysicalDeviceType,
+	deviceName: char,
+	pipelineCacheUUID: uint8_t,
+	limits: VkPhysicalDeviceLimits,
+	sparseProperties: VkPhysicalDeviceSparseProperties,
 }
 impl VkPhysicalDeviceProperties
 {
@@ -179,10 +201,12 @@ impl VkPhysicalDeviceProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExtensionProperties
 {
-	extensionName: char
-	specVersion: uint32_t
+	extensionName: char,
+	specVersion: uint32_t,
 }
 impl VkExtensionProperties
 {
@@ -194,12 +218,14 @@ impl VkExtensionProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkLayerProperties
 {
-	layerName: char
-	specVersion: uint32_t
-	implementationVersion: uint32_t
-	description: char
+	layerName: char,
+	specVersion: uint32_t,
+	implementationVersion: uint32_t,
+	description: char,
 }
 impl VkLayerProperties
 {
@@ -211,15 +237,17 @@ impl VkLayerProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkApplicationInfo
 {
-	sType: VkStructureType
-	pNext: void
-	pApplicationName: char
-	applicationVersion: uint32_t
-	pEngineName: char
-	engineVersion: uint32_t
-	apiVersion: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	pApplicationName: char,
+	applicationVersion: uint32_t,
+	pEngineName: char,
+	engineVersion: uint32_t,
+	apiVersion: uint32_t,
 }
 impl VkApplicationInfo
 {
@@ -232,14 +260,16 @@ impl VkApplicationInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAllocationCallbacks
 {
-	pUserData: void
-	pfnAllocation: PFN_vkAllocationFunction
-	pfnReallocation: PFN_vkReallocationFunction
-	pfnFree: PFN_vkFreeFunction
-	pfnInternalAllocation: PFN_vkInternalAllocationNotification
-	pfnInternalFree: PFN_vkInternalFreeNotification
+	pUserData: void,
+	pfnAllocation: PFN_vkAllocationFunction,
+	pfnReallocation: PFN_vkReallocationFunction,
+	pfnFree: PFN_vkFreeFunction,
+	pfnInternalAllocation: PFN_vkInternalAllocationNotification,
+	pfnInternalFree: PFN_vkInternalFreeNotification,
 }
 impl VkAllocationCallbacks
 {
@@ -251,14 +281,16 @@ impl VkAllocationCallbacks
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceQueueCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDeviceQueueCreateFlags
-	queueFamilyIndex: uint32_t
-	queueCount: uint32_t
-	pQueuePriorities: float
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDeviceQueueCreateFlags,
+	queueFamilyIndex: uint32_t,
+	queueCount: uint32_t,
+	pQueuePriorities: float,
 }
 impl VkDeviceQueueCreateInfo
 {
@@ -271,18 +303,20 @@ impl VkDeviceQueueCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDeviceCreateFlags
-	queueCreateInfoCount: uint32_t
-	pQueueCreateInfos: VkDeviceQueueCreateInfo
-	enabledLayerCount: uint32_t
-	ppEnabledLayerNames: char
-	enabledExtensionCount: uint32_t
-	ppEnabledExtensionNames: char
-	pEnabledFeatures: VkPhysicalDeviceFeatures
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDeviceCreateFlags,
+	queueCreateInfoCount: uint32_t,
+	pQueueCreateInfos: VkDeviceQueueCreateInfo,
+	enabledLayerCount: uint32_t,
+	ppEnabledLayerNames: char,
+	enabledExtensionCount: uint32_t,
+	ppEnabledExtensionNames: char,
+	pEnabledFeatures: VkPhysicalDeviceFeatures,
 }
 impl VkDeviceCreateInfo
 {
@@ -295,16 +329,18 @@ impl VkDeviceCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkInstanceCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkInstanceCreateFlags
-	pApplicationInfo: VkApplicationInfo
-	enabledLayerCount: uint32_t
-	ppEnabledLayerNames: char
-	enabledExtensionCount: uint32_t
-	ppEnabledExtensionNames: char
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkInstanceCreateFlags,
+	pApplicationInfo: VkApplicationInfo,
+	enabledLayerCount: uint32_t,
+	ppEnabledLayerNames: char,
+	enabledExtensionCount: uint32_t,
+	ppEnabledExtensionNames: char,
 }
 impl VkInstanceCreateInfo
 {
@@ -317,12 +353,14 @@ impl VkInstanceCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties
 {
-	queueFlags: VkQueueFlags
-	queueCount: uint32_t
-	timestampValidBits: uint32_t
-	minImageTransferGranularity: VkExtent3D
+	queueFlags: VkQueueFlags,
+	queueCount: uint32_t,
+	timestampValidBits: uint32_t,
+	minImageTransferGranularity: VkExtent3D,
 }
 impl VkQueueFamilyProperties
 {
@@ -334,12 +372,14 @@ impl VkQueueFamilyProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryProperties
 {
-	memoryTypeCount: uint32_t
-	memoryTypes: VkMemoryType
-	memoryHeapCount: uint32_t
-	memoryHeaps: VkMemoryHeap
+	memoryTypeCount: uint32_t,
+	memoryTypes: VkMemoryType,
+	memoryHeapCount: uint32_t,
+	memoryHeaps: VkMemoryHeap,
 }
 impl VkPhysicalDeviceMemoryProperties
 {
@@ -351,12 +391,14 @@ impl VkPhysicalDeviceMemoryProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	allocationSize: VkDeviceSize
-	memoryTypeIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	allocationSize: VkDeviceSize,
+	memoryTypeIndex: uint32_t,
 }
 impl VkMemoryAllocateInfo
 {
@@ -369,11 +411,13 @@ impl VkMemoryAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryRequirements
 {
-	size: VkDeviceSize
-	alignment: VkDeviceSize
-	memoryTypeBits: uint32_t
+	size: VkDeviceSize,
+	alignment: VkDeviceSize,
+	memoryTypeBits: uint32_t,
 }
 impl VkMemoryRequirements
 {
@@ -385,11 +429,13 @@ impl VkMemoryRequirements
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties
 {
-	aspectMask: VkImageAspectFlags
-	imageGranularity: VkExtent3D
-	flags: VkSparseImageFormatFlags
+	aspectMask: VkImageAspectFlags,
+	imageGranularity: VkExtent3D,
+	flags: VkSparseImageFormatFlags,
 }
 impl VkSparseImageFormatProperties
 {
@@ -401,13 +447,15 @@ impl VkSparseImageFormatProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryRequirements
 {
-	formatProperties: VkSparseImageFormatProperties
-	imageMipTailFirstLod: uint32_t
-	imageMipTailSize: VkDeviceSize
-	imageMipTailOffset: VkDeviceSize
-	imageMipTailStride: VkDeviceSize
+	formatProperties: VkSparseImageFormatProperties,
+	imageMipTailFirstLod: uint32_t,
+	imageMipTailSize: VkDeviceSize,
+	imageMipTailOffset: VkDeviceSize,
+	imageMipTailStride: VkDeviceSize,
 }
 impl VkSparseImageMemoryRequirements
 {
@@ -419,10 +467,12 @@ impl VkSparseImageMemoryRequirements
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryType
 {
-	propertyFlags: VkMemoryPropertyFlags
-	heapIndex: uint32_t
+	propertyFlags: VkMemoryPropertyFlags,
+	heapIndex: uint32_t,
 }
 impl VkMemoryType
 {
@@ -434,10 +484,12 @@ impl VkMemoryType
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryHeap
 {
-	size: VkDeviceSize
-	flags: VkMemoryHeapFlags
+	size: VkDeviceSize,
+	flags: VkMemoryHeapFlags,
 }
 impl VkMemoryHeap
 {
@@ -449,13 +501,15 @@ impl VkMemoryHeap
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMappedMemoryRange
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
-	offset: VkDeviceSize
-	size: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
+	offset: VkDeviceSize,
+	size: VkDeviceSize,
 }
 impl VkMappedMemoryRange
 {
@@ -468,11 +522,13 @@ impl VkMappedMemoryRange
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFormatProperties
 {
-	linearTilingFeatures: VkFormatFeatureFlags
-	optimalTilingFeatures: VkFormatFeatureFlags
-	bufferFeatures: VkFormatFeatureFlags
+	linearTilingFeatures: VkFormatFeatureFlags,
+	optimalTilingFeatures: VkFormatFeatureFlags,
+	bufferFeatures: VkFormatFeatureFlags,
 }
 impl VkFormatProperties
 {
@@ -484,13 +540,15 @@ impl VkFormatProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageFormatProperties
 {
-	maxExtent: VkExtent3D
-	maxMipLevels: uint32_t
-	maxArrayLayers: uint32_t
-	sampleCounts: VkSampleCountFlags
-	maxResourceSize: VkDeviceSize
+	maxExtent: VkExtent3D,
+	maxMipLevels: uint32_t,
+	maxArrayLayers: uint32_t,
+	sampleCounts: VkSampleCountFlags,
+	maxResourceSize: VkDeviceSize,
 }
 impl VkImageFormatProperties
 {
@@ -502,11 +560,13 @@ impl VkImageFormatProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorBufferInfo
 {
-	buffer: VkBuffer
-	offset: VkDeviceSize
-	range: VkDeviceSize
+	buffer: VkBuffer,
+	offset: VkDeviceSize,
+	range: VkDeviceSize,
 }
 impl VkDescriptorBufferInfo
 {
@@ -518,11 +578,13 @@ impl VkDescriptorBufferInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorImageInfo
 {
-	sampler: VkSampler
-	imageView: VkImageView
-	imageLayout: VkImageLayout
+	sampler: VkSampler,
+	imageView: VkImageView,
+	imageLayout: VkImageLayout,
 }
 impl VkDescriptorImageInfo
 {
@@ -534,18 +596,20 @@ impl VkDescriptorImageInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWriteDescriptorSet
 {
-	sType: VkStructureType
-	pNext: void
-	dstSet: VkDescriptorSet
-	dstBinding: uint32_t
-	dstArrayElement: uint32_t
-	descriptorCount: uint32_t
-	descriptorType: VkDescriptorType
-	pImageInfo: VkDescriptorImageInfo
-	pBufferInfo: VkDescriptorBufferInfo
-	pTexelBufferView: VkBufferView
+	sType: VkStructureType,
+	pNext: void,
+	dstSet: VkDescriptorSet,
+	dstBinding: uint32_t,
+	dstArrayElement: uint32_t,
+	descriptorCount: uint32_t,
+	descriptorType: VkDescriptorType,
+	pImageInfo: VkDescriptorImageInfo,
+	pBufferInfo: VkDescriptorBufferInfo,
+	pTexelBufferView: VkBufferView,
 }
 impl VkWriteDescriptorSet
 {
@@ -558,17 +622,19 @@ impl VkWriteDescriptorSet
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyDescriptorSet
 {
-	sType: VkStructureType
-	pNext: void
-	srcSet: VkDescriptorSet
-	srcBinding: uint32_t
-	srcArrayElement: uint32_t
-	dstSet: VkDescriptorSet
-	dstBinding: uint32_t
-	dstArrayElement: uint32_t
-	descriptorCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	srcSet: VkDescriptorSet,
+	srcBinding: uint32_t,
+	srcArrayElement: uint32_t,
+	dstSet: VkDescriptorSet,
+	dstBinding: uint32_t,
+	dstArrayElement: uint32_t,
+	descriptorCount: uint32_t,
 }
 impl VkCopyDescriptorSet
 {
@@ -581,16 +647,18 @@ impl VkCopyDescriptorSet
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkBufferCreateFlags
-	size: VkDeviceSize
-	usage: VkBufferUsageFlags
-	sharingMode: VkSharingMode
-	queueFamilyIndexCount: uint32_t
-	pQueueFamilyIndices: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkBufferCreateFlags,
+	size: VkDeviceSize,
+	usage: VkBufferUsageFlags,
+	sharingMode: VkSharingMode,
+	queueFamilyIndexCount: uint32_t,
+	pQueueFamilyIndices: uint32_t,
 }
 impl VkBufferCreateInfo
 {
@@ -603,15 +671,17 @@ impl VkBufferCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferViewCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkBufferViewCreateFlags
-	buffer: VkBuffer
-	format: VkFormat
-	offset: VkDeviceSize
-	range: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkBufferViewCreateFlags,
+	buffer: VkBuffer,
+	format: VkFormat,
+	offset: VkDeviceSize,
+	range: VkDeviceSize,
 }
 impl VkBufferViewCreateInfo
 {
@@ -624,11 +694,13 @@ impl VkBufferViewCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageSubresource
 {
-	aspectMask: VkImageAspectFlags
-	mipLevel: uint32_t
-	arrayLayer: uint32_t
+	aspectMask: VkImageAspectFlags,
+	mipLevel: uint32_t,
+	arrayLayer: uint32_t,
 }
 impl VkImageSubresource
 {
@@ -640,12 +712,14 @@ impl VkImageSubresource
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageSubresourceLayers
 {
-	aspectMask: VkImageAspectFlags
-	mipLevel: uint32_t
-	baseArrayLayer: uint32_t
-	layerCount: uint32_t
+	aspectMask: VkImageAspectFlags,
+	mipLevel: uint32_t,
+	baseArrayLayer: uint32_t,
+	layerCount: uint32_t,
 }
 impl VkImageSubresourceLayers
 {
@@ -657,13 +731,15 @@ impl VkImageSubresourceLayers
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageSubresourceRange
 {
-	aspectMask: VkImageAspectFlags
-	baseMipLevel: uint32_t
-	levelCount: uint32_t
-	baseArrayLayer: uint32_t
-	layerCount: uint32_t
+	aspectMask: VkImageAspectFlags,
+	baseMipLevel: uint32_t,
+	levelCount: uint32_t,
+	baseArrayLayer: uint32_t,
+	layerCount: uint32_t,
 }
 impl VkImageSubresourceRange
 {
@@ -675,12 +751,14 @@ impl VkImageSubresourceRange
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryBarrier
 {
-	sType: VkStructureType
-	pNext: void
-	srcAccessMask: VkAccessFlags
-	dstAccessMask: VkAccessFlags
+	sType: VkStructureType,
+	pNext: void,
+	srcAccessMask: VkAccessFlags,
+	dstAccessMask: VkAccessFlags,
 }
 impl VkMemoryBarrier
 {
@@ -693,17 +771,19 @@ impl VkMemoryBarrier
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferMemoryBarrier
 {
-	sType: VkStructureType
-	pNext: void
-	srcAccessMask: VkAccessFlags
-	dstAccessMask: VkAccessFlags
-	srcQueueFamilyIndex: uint32_t
-	dstQueueFamilyIndex: uint32_t
-	buffer: VkBuffer
-	offset: VkDeviceSize
-	size: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	srcAccessMask: VkAccessFlags,
+	dstAccessMask: VkAccessFlags,
+	srcQueueFamilyIndex: uint32_t,
+	dstQueueFamilyIndex: uint32_t,
+	buffer: VkBuffer,
+	offset: VkDeviceSize,
+	size: VkDeviceSize,
 }
 impl VkBufferMemoryBarrier
 {
@@ -716,18 +796,20 @@ impl VkBufferMemoryBarrier
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageMemoryBarrier
 {
-	sType: VkStructureType
-	pNext: void
-	srcAccessMask: VkAccessFlags
-	dstAccessMask: VkAccessFlags
-	oldLayout: VkImageLayout
-	newLayout: VkImageLayout
-	srcQueueFamilyIndex: uint32_t
-	dstQueueFamilyIndex: uint32_t
-	image: VkImage
-	subresourceRange: VkImageSubresourceRange
+	sType: VkStructureType,
+	pNext: void,
+	srcAccessMask: VkAccessFlags,
+	dstAccessMask: VkAccessFlags,
+	oldLayout: VkImageLayout,
+	newLayout: VkImageLayout,
+	srcQueueFamilyIndex: uint32_t,
+	dstQueueFamilyIndex: uint32_t,
+	image: VkImage,
+	subresourceRange: VkImageSubresourceRange,
 }
 impl VkImageMemoryBarrier
 {
@@ -740,23 +822,25 @@ impl VkImageMemoryBarrier
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkImageCreateFlags
-	imageType: VkImageType
-	format: VkFormat
-	extent: VkExtent3D
-	mipLevels: uint32_t
-	arrayLayers: uint32_t
-	samples: VkSampleCountFlagBits
-	tiling: VkImageTiling
-	usage: VkImageUsageFlags
-	sharingMode: VkSharingMode
-	queueFamilyIndexCount: uint32_t
-	pQueueFamilyIndices: uint32_t
-	initialLayout: VkImageLayout
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkImageCreateFlags,
+	imageType: VkImageType,
+	format: VkFormat,
+	extent: VkExtent3D,
+	mipLevels: uint32_t,
+	arrayLayers: uint32_t,
+	samples: VkSampleCountFlagBits,
+	tiling: VkImageTiling,
+	usage: VkImageUsageFlags,
+	sharingMode: VkSharingMode,
+	queueFamilyIndexCount: uint32_t,
+	pQueueFamilyIndices: uint32_t,
+	initialLayout: VkImageLayout,
 }
 impl VkImageCreateInfo
 {
@@ -769,13 +853,15 @@ impl VkImageCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubresourceLayout
 {
-	offset: VkDeviceSize
-	size: VkDeviceSize
-	rowPitch: VkDeviceSize
-	arrayPitch: VkDeviceSize
-	depthPitch: VkDeviceSize
+	offset: VkDeviceSize,
+	size: VkDeviceSize,
+	rowPitch: VkDeviceSize,
+	arrayPitch: VkDeviceSize,
+	depthPitch: VkDeviceSize,
 }
 impl VkSubresourceLayout
 {
@@ -787,16 +873,18 @@ impl VkSubresourceLayout
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageViewCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkImageViewCreateFlags
-	image: VkImage
-	viewType: VkImageViewType
-	format: VkFormat
-	components: VkComponentMapping
-	subresourceRange: VkImageSubresourceRange
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkImageViewCreateFlags,
+	image: VkImage,
+	viewType: VkImageViewType,
+	format: VkFormat,
+	components: VkComponentMapping,
+	subresourceRange: VkImageSubresourceRange,
 }
 impl VkImageViewCreateInfo
 {
@@ -809,11 +897,13 @@ impl VkImageViewCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferCopy
 {
-	srcOffset: VkDeviceSize
-	dstOffset: VkDeviceSize
-	size: VkDeviceSize
+	srcOffset: VkDeviceSize,
+	dstOffset: VkDeviceSize,
+	size: VkDeviceSize,
 }
 impl VkBufferCopy
 {
@@ -825,13 +915,15 @@ impl VkBufferCopy
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseMemoryBind
 {
-	resourceOffset: VkDeviceSize
-	size: VkDeviceSize
-	memory: VkDeviceMemory
-	memoryOffset: VkDeviceSize
-	flags: VkSparseMemoryBindFlags
+	resourceOffset: VkDeviceSize,
+	size: VkDeviceSize,
+	memory: VkDeviceMemory,
+	memoryOffset: VkDeviceSize,
+	flags: VkSparseMemoryBindFlags,
 }
 impl VkSparseMemoryBind
 {
@@ -843,14 +935,16 @@ impl VkSparseMemoryBind
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryBind
 {
-	subresource: VkImageSubresource
-	offset: VkOffset3D
-	extent: VkExtent3D
-	memory: VkDeviceMemory
-	memoryOffset: VkDeviceSize
-	flags: VkSparseMemoryBindFlags
+	subresource: VkImageSubresource,
+	offset: VkOffset3D,
+	extent: VkExtent3D,
+	memory: VkDeviceMemory,
+	memoryOffset: VkDeviceSize,
+	flags: VkSparseMemoryBindFlags,
 }
 impl VkSparseImageMemoryBind
 {
@@ -862,11 +956,13 @@ impl VkSparseImageMemoryBind
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseBufferMemoryBindInfo
 {
-	buffer: VkBuffer
-	bindCount: uint32_t
-	pBinds: VkSparseMemoryBind
+	buffer: VkBuffer,
+	bindCount: uint32_t,
+	pBinds: VkSparseMemoryBind,
 }
 impl VkSparseBufferMemoryBindInfo
 {
@@ -878,11 +974,13 @@ impl VkSparseBufferMemoryBindInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageOpaqueMemoryBindInfo
 {
-	image: VkImage
-	bindCount: uint32_t
-	pBinds: VkSparseMemoryBind
+	image: VkImage,
+	bindCount: uint32_t,
+	pBinds: VkSparseMemoryBind,
 }
 impl VkSparseImageOpaqueMemoryBindInfo
 {
@@ -894,11 +992,13 @@ impl VkSparseImageOpaqueMemoryBindInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryBindInfo
 {
-	image: VkImage
-	bindCount: uint32_t
-	pBinds: VkSparseImageMemoryBind
+	image: VkImage,
+	bindCount: uint32_t,
+	pBinds: VkSparseImageMemoryBind,
 }
 impl VkSparseImageMemoryBindInfo
 {
@@ -910,20 +1010,22 @@ impl VkSparseImageMemoryBindInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindSparseInfo
 {
-	sType: VkStructureType
-	pNext: void
-	waitSemaphoreCount: uint32_t
-	pWaitSemaphores: VkSemaphore
-	bufferBindCount: uint32_t
-	pBufferBinds: VkSparseBufferMemoryBindInfo
-	imageOpaqueBindCount: uint32_t
-	pImageOpaqueBinds: VkSparseImageOpaqueMemoryBindInfo
-	imageBindCount: uint32_t
-	pImageBinds: VkSparseImageMemoryBindInfo
-	signalSemaphoreCount: uint32_t
-	pSignalSemaphores: VkSemaphore
+	sType: VkStructureType,
+	pNext: void,
+	waitSemaphoreCount: uint32_t,
+	pWaitSemaphores: VkSemaphore,
+	bufferBindCount: uint32_t,
+	pBufferBinds: VkSparseBufferMemoryBindInfo,
+	imageOpaqueBindCount: uint32_t,
+	pImageOpaqueBinds: VkSparseImageOpaqueMemoryBindInfo,
+	imageBindCount: uint32_t,
+	pImageBinds: VkSparseImageMemoryBindInfo,
+	signalSemaphoreCount: uint32_t,
+	pSignalSemaphores: VkSemaphore,
 }
 impl VkBindSparseInfo
 {
@@ -936,13 +1038,15 @@ impl VkBindSparseInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageCopy
 {
-	srcSubresource: VkImageSubresourceLayers
-	srcOffset: VkOffset3D
-	dstSubresource: VkImageSubresourceLayers
-	dstOffset: VkOffset3D
-	extent: VkExtent3D
+	srcSubresource: VkImageSubresourceLayers,
+	srcOffset: VkOffset3D,
+	dstSubresource: VkImageSubresourceLayers,
+	dstOffset: VkOffset3D,
+	extent: VkExtent3D,
 }
 impl VkImageCopy
 {
@@ -954,12 +1058,14 @@ impl VkImageCopy
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageBlit
 {
-	srcSubresource: VkImageSubresourceLayers
-	srcOffsets: VkOffset3D
-	dstSubresource: VkImageSubresourceLayers
-	dstOffsets: VkOffset3D
+	srcSubresource: VkImageSubresourceLayers,
+	srcOffsets: VkOffset3D,
+	dstSubresource: VkImageSubresourceLayers,
+	dstOffsets: VkOffset3D,
 }
 impl VkImageBlit
 {
@@ -971,14 +1077,16 @@ impl VkImageBlit
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferImageCopy
 {
-	bufferOffset: VkDeviceSize
-	bufferRowLength: uint32_t
-	bufferImageHeight: uint32_t
-	imageSubresource: VkImageSubresourceLayers
-	imageOffset: VkOffset3D
-	imageExtent: VkExtent3D
+	bufferOffset: VkDeviceSize,
+	bufferRowLength: uint32_t,
+	bufferImageHeight: uint32_t,
+	imageSubresource: VkImageSubresourceLayers,
+	imageOffset: VkOffset3D,
+	imageExtent: VkExtent3D,
 }
 impl VkBufferImageCopy
 {
@@ -990,13 +1098,15 @@ impl VkBufferImageCopy
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageResolve
 {
-	srcSubresource: VkImageSubresourceLayers
-	srcOffset: VkOffset3D
-	dstSubresource: VkImageSubresourceLayers
-	dstOffset: VkOffset3D
-	extent: VkExtent3D
+	srcSubresource: VkImageSubresourceLayers,
+	srcOffset: VkOffset3D,
+	dstSubresource: VkImageSubresourceLayers,
+	dstOffset: VkOffset3D,
+	extent: VkExtent3D,
 }
 impl VkImageResolve
 {
@@ -1008,13 +1118,15 @@ impl VkImageResolve
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkShaderModuleCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkShaderModuleCreateFlags
-	codeSize: size_t
-	pCode: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkShaderModuleCreateFlags,
+	codeSize: size_t,
+	pCode: uint32_t,
 }
 impl VkShaderModuleCreateInfo
 {
@@ -1027,13 +1139,15 @@ impl VkShaderModuleCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutBinding
 {
-	binding: uint32_t
-	descriptorType: VkDescriptorType
-	descriptorCount: uint32_t
-	stageFlags: VkShaderStageFlags
-	pImmutableSamplers: VkSampler
+	binding: uint32_t,
+	descriptorType: VkDescriptorType,
+	descriptorCount: uint32_t,
+	stageFlags: VkShaderStageFlags,
+	pImmutableSamplers: VkSampler,
 }
 impl VkDescriptorSetLayoutBinding
 {
@@ -1045,13 +1159,15 @@ impl VkDescriptorSetLayoutBinding
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDescriptorSetLayoutCreateFlags
-	bindingCount: uint32_t
-	pBindings: VkDescriptorSetLayoutBinding
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDescriptorSetLayoutCreateFlags,
+	bindingCount: uint32_t,
+	pBindings: VkDescriptorSetLayoutBinding,
 }
 impl VkDescriptorSetLayoutCreateInfo
 {
@@ -1064,10 +1180,12 @@ impl VkDescriptorSetLayoutCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorPoolSize
 {
-	type: VkDescriptorType
-	descriptorCount: uint32_t
+	type: VkDescriptorType,
+	descriptorCount: uint32_t,
 }
 impl VkDescriptorPoolSize
 {
@@ -1079,14 +1197,16 @@ impl VkDescriptorPoolSize
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorPoolCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDescriptorPoolCreateFlags
-	maxSets: uint32_t
-	poolSizeCount: uint32_t
-	pPoolSizes: VkDescriptorPoolSize
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDescriptorPoolCreateFlags,
+	maxSets: uint32_t,
+	poolSizeCount: uint32_t,
+	pPoolSizes: VkDescriptorPoolSize,
 }
 impl VkDescriptorPoolCreateInfo
 {
@@ -1099,13 +1219,15 @@ impl VkDescriptorPoolCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	descriptorPool: VkDescriptorPool
-	descriptorSetCount: uint32_t
-	pSetLayouts: VkDescriptorSetLayout
+	sType: VkStructureType,
+	pNext: void,
+	descriptorPool: VkDescriptorPool,
+	descriptorSetCount: uint32_t,
+	pSetLayouts: VkDescriptorSetLayout,
 }
 impl VkDescriptorSetAllocateInfo
 {
@@ -1118,11 +1240,13 @@ impl VkDescriptorSetAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSpecializationMapEntry
 {
-	constantID: uint32_t
-	offset: uint32_t
-	size: size_t
+	constantID: uint32_t,
+	offset: uint32_t,
+	size: size_t,
 }
 impl VkSpecializationMapEntry
 {
@@ -1134,12 +1258,14 @@ impl VkSpecializationMapEntry
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSpecializationInfo
 {
-	mapEntryCount: uint32_t
-	pMapEntries: VkSpecializationMapEntry
-	dataSize: size_t
-	pData: void
+	mapEntryCount: uint32_t,
+	pMapEntries: VkSpecializationMapEntry,
+	dataSize: size_t,
+	pData: void,
 }
 impl VkSpecializationInfo
 {
@@ -1151,15 +1277,17 @@ impl VkSpecializationInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineShaderStageCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineShaderStageCreateFlags
-	stage: VkShaderStageFlagBits
-	module: VkShaderModule
-	pName: char
-	pSpecializationInfo: VkSpecializationInfo
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineShaderStageCreateFlags,
+	stage: VkShaderStageFlagBits,
+	module: VkShaderModule,
+	pName: char,
+	pSpecializationInfo: VkSpecializationInfo,
 }
 impl VkPipelineShaderStageCreateInfo
 {
@@ -1172,15 +1300,17 @@ impl VkPipelineShaderStageCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkComputePipelineCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCreateFlags
-	stage: VkPipelineShaderStageCreateInfo
-	layout: VkPipelineLayout
-	basePipelineHandle: VkPipeline
-	basePipelineIndex: int32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCreateFlags,
+	stage: VkPipelineShaderStageCreateInfo,
+	layout: VkPipelineLayout,
+	basePipelineHandle: VkPipeline,
+	basePipelineIndex: int32_t,
 }
 impl VkComputePipelineCreateInfo
 {
@@ -1193,11 +1323,13 @@ impl VkComputePipelineCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVertexInputBindingDescription
 {
-	binding: uint32_t
-	stride: uint32_t
-	inputRate: VkVertexInputRate
+	binding: uint32_t,
+	stride: uint32_t,
+	inputRate: VkVertexInputRate,
 }
 impl VkVertexInputBindingDescription
 {
@@ -1209,12 +1341,14 @@ impl VkVertexInputBindingDescription
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVertexInputAttributeDescription
 {
-	location: uint32_t
-	binding: uint32_t
-	format: VkFormat
-	offset: uint32_t
+	location: uint32_t,
+	binding: uint32_t,
+	format: VkFormat,
+	offset: uint32_t,
 }
 impl VkVertexInputAttributeDescription
 {
@@ -1226,15 +1360,17 @@ impl VkVertexInputAttributeDescription
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineVertexInputStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineVertexInputStateCreateFlags
-	vertexBindingDescriptionCount: uint32_t
-	pVertexBindingDescriptions: VkVertexInputBindingDescription
-	vertexAttributeDescriptionCount: uint32_t
-	pVertexAttributeDescriptions: VkVertexInputAttributeDescription
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineVertexInputStateCreateFlags,
+	vertexBindingDescriptionCount: uint32_t,
+	pVertexBindingDescriptions: VkVertexInputBindingDescription,
+	vertexAttributeDescriptionCount: uint32_t,
+	pVertexAttributeDescriptions: VkVertexInputAttributeDescription,
 }
 impl VkPipelineVertexInputStateCreateInfo
 {
@@ -1247,13 +1383,15 @@ impl VkPipelineVertexInputStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineInputAssemblyStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineInputAssemblyStateCreateFlags
-	topology: VkPrimitiveTopology
-	primitiveRestartEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineInputAssemblyStateCreateFlags,
+	topology: VkPrimitiveTopology,
+	primitiveRestartEnable: VkBool32,
 }
 impl VkPipelineInputAssemblyStateCreateInfo
 {
@@ -1266,12 +1404,14 @@ impl VkPipelineInputAssemblyStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineTessellationStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineTessellationStateCreateFlags
-	patchControlPoints: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineTessellationStateCreateFlags,
+	patchControlPoints: uint32_t,
 }
 impl VkPipelineTessellationStateCreateInfo
 {
@@ -1284,15 +1424,17 @@ impl VkPipelineTessellationStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineViewportStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineViewportStateCreateFlags
-	viewportCount: uint32_t
-	pViewports: VkViewport
-	scissorCount: uint32_t
-	pScissors: VkRect2D
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineViewportStateCreateFlags,
+	viewportCount: uint32_t,
+	pViewports: VkViewport,
+	scissorCount: uint32_t,
+	pScissors: VkRect2D,
 }
 impl VkPipelineViewportStateCreateInfo
 {
@@ -1305,21 +1447,23 @@ impl VkPipelineViewportStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineRasterizationStateCreateFlags
-	depthClampEnable: VkBool32
-	rasterizerDiscardEnable: VkBool32
-	polygonMode: VkPolygonMode
-	cullMode: VkCullModeFlags
-	frontFace: VkFrontFace
-	depthBiasEnable: VkBool32
-	depthBiasConstantFactor: float
-	depthBiasClamp: float
-	depthBiasSlopeFactor: float
-	lineWidth: float
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineRasterizationStateCreateFlags,
+	depthClampEnable: VkBool32,
+	rasterizerDiscardEnable: VkBool32,
+	polygonMode: VkPolygonMode,
+	cullMode: VkCullModeFlags,
+	frontFace: VkFrontFace,
+	depthBiasEnable: VkBool32,
+	depthBiasConstantFactor: float,
+	depthBiasClamp: float,
+	depthBiasSlopeFactor: float,
+	lineWidth: float,
 }
 impl VkPipelineRasterizationStateCreateInfo
 {
@@ -1332,17 +1476,19 @@ impl VkPipelineRasterizationStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineMultisampleStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineMultisampleStateCreateFlags
-	rasterizationSamples: VkSampleCountFlagBits
-	sampleShadingEnable: VkBool32
-	minSampleShading: float
-	pSampleMask: VkSampleMask
-	alphaToCoverageEnable: VkBool32
-	alphaToOneEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineMultisampleStateCreateFlags,
+	rasterizationSamples: VkSampleCountFlagBits,
+	sampleShadingEnable: VkBool32,
+	minSampleShading: float,
+	pSampleMask: VkSampleMask,
+	alphaToCoverageEnable: VkBool32,
+	alphaToOneEnable: VkBool32,
 }
 impl VkPipelineMultisampleStateCreateInfo
 {
@@ -1355,16 +1501,18 @@ impl VkPipelineMultisampleStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineColorBlendAttachmentState
 {
-	blendEnable: VkBool32
-	srcColorBlendFactor: VkBlendFactor
-	dstColorBlendFactor: VkBlendFactor
-	colorBlendOp: VkBlendOp
-	srcAlphaBlendFactor: VkBlendFactor
-	dstAlphaBlendFactor: VkBlendFactor
-	alphaBlendOp: VkBlendOp
-	colorWriteMask: VkColorComponentFlags
+	blendEnable: VkBool32,
+	srcColorBlendFactor: VkBlendFactor,
+	dstColorBlendFactor: VkBlendFactor,
+	colorBlendOp: VkBlendOp,
+	srcAlphaBlendFactor: VkBlendFactor,
+	dstAlphaBlendFactor: VkBlendFactor,
+	alphaBlendOp: VkBlendOp,
+	colorWriteMask: VkColorComponentFlags,
 }
 impl VkPipelineColorBlendAttachmentState
 {
@@ -1376,16 +1524,18 @@ impl VkPipelineColorBlendAttachmentState
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineColorBlendStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineColorBlendStateCreateFlags
-	logicOpEnable: VkBool32
-	logicOp: VkLogicOp
-	attachmentCount: uint32_t
-	pAttachments: VkPipelineColorBlendAttachmentState
-	blendConstants: float
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineColorBlendStateCreateFlags,
+	logicOpEnable: VkBool32,
+	logicOp: VkLogicOp,
+	attachmentCount: uint32_t,
+	pAttachments: VkPipelineColorBlendAttachmentState,
+	blendConstants: float,
 }
 impl VkPipelineColorBlendStateCreateInfo
 {
@@ -1398,13 +1548,15 @@ impl VkPipelineColorBlendStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineDynamicStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineDynamicStateCreateFlags
-	dynamicStateCount: uint32_t
-	pDynamicStates: VkDynamicState
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineDynamicStateCreateFlags,
+	dynamicStateCount: uint32_t,
+	pDynamicStates: VkDynamicState,
 }
 impl VkPipelineDynamicStateCreateInfo
 {
@@ -1417,15 +1569,17 @@ impl VkPipelineDynamicStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkStencilOpState
 {
-	failOp: VkStencilOp
-	passOp: VkStencilOp
-	depthFailOp: VkStencilOp
-	compareOp: VkCompareOp
-	compareMask: uint32_t
-	writeMask: uint32_t
-	reference: uint32_t
+	failOp: VkStencilOp,
+	passOp: VkStencilOp,
+	depthFailOp: VkStencilOp,
+	compareOp: VkCompareOp,
+	compareMask: uint32_t,
+	writeMask: uint32_t,
+	reference: uint32_t,
 }
 impl VkStencilOpState
 {
@@ -1437,20 +1591,22 @@ impl VkStencilOpState
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineDepthStencilStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineDepthStencilStateCreateFlags
-	depthTestEnable: VkBool32
-	depthWriteEnable: VkBool32
-	depthCompareOp: VkCompareOp
-	depthBoundsTestEnable: VkBool32
-	stencilTestEnable: VkBool32
-	front: VkStencilOpState
-	back: VkStencilOpState
-	minDepthBounds: float
-	maxDepthBounds: float
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineDepthStencilStateCreateFlags,
+	depthTestEnable: VkBool32,
+	depthWriteEnable: VkBool32,
+	depthCompareOp: VkCompareOp,
+	depthBoundsTestEnable: VkBool32,
+	stencilTestEnable: VkBool32,
+	front: VkStencilOpState,
+	back: VkStencilOpState,
+	minDepthBounds: float,
+	maxDepthBounds: float,
 }
 impl VkPipelineDepthStencilStateCreateInfo
 {
@@ -1463,27 +1619,29 @@ impl VkPipelineDepthStencilStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGraphicsPipelineCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCreateFlags
-	stageCount: uint32_t
-	pStages: VkPipelineShaderStageCreateInfo
-	pVertexInputState: VkPipelineVertexInputStateCreateInfo
-	pInputAssemblyState: VkPipelineInputAssemblyStateCreateInfo
-	pTessellationState: VkPipelineTessellationStateCreateInfo
-	pViewportState: VkPipelineViewportStateCreateInfo
-	pRasterizationState: VkPipelineRasterizationStateCreateInfo
-	pMultisampleState: VkPipelineMultisampleStateCreateInfo
-	pDepthStencilState: VkPipelineDepthStencilStateCreateInfo
-	pColorBlendState: VkPipelineColorBlendStateCreateInfo
-	pDynamicState: VkPipelineDynamicStateCreateInfo
-	layout: VkPipelineLayout
-	renderPass: VkRenderPass
-	subpass: uint32_t
-	basePipelineHandle: VkPipeline
-	basePipelineIndex: int32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCreateFlags,
+	stageCount: uint32_t,
+	pStages: VkPipelineShaderStageCreateInfo,
+	pVertexInputState: VkPipelineVertexInputStateCreateInfo,
+	pInputAssemblyState: VkPipelineInputAssemblyStateCreateInfo,
+	pTessellationState: VkPipelineTessellationStateCreateInfo,
+	pViewportState: VkPipelineViewportStateCreateInfo,
+	pRasterizationState: VkPipelineRasterizationStateCreateInfo,
+	pMultisampleState: VkPipelineMultisampleStateCreateInfo,
+	pDepthStencilState: VkPipelineDepthStencilStateCreateInfo,
+	pColorBlendState: VkPipelineColorBlendStateCreateInfo,
+	pDynamicState: VkPipelineDynamicStateCreateInfo,
+	layout: VkPipelineLayout,
+	renderPass: VkRenderPass,
+	subpass: uint32_t,
+	basePipelineHandle: VkPipeline,
+	basePipelineIndex: int32_t,
 }
 impl VkGraphicsPipelineCreateInfo
 {
@@ -1496,13 +1654,15 @@ impl VkGraphicsPipelineCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCacheCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCacheCreateFlags
-	initialDataSize: size_t
-	pInitialData: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCacheCreateFlags,
+	initialDataSize: size_t,
+	pInitialData: void,
 }
 impl VkPipelineCacheCreateInfo
 {
@@ -1515,13 +1675,15 @@ impl VkPipelineCacheCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCacheHeaderVersionOne
 {
-	headerSize: uint32_t
-	headerVersion: VkPipelineCacheHeaderVersion
-	vendorID: uint32_t
-	deviceID: uint32_t
-	pipelineCacheUUID: uint8_t
+	headerSize: uint32_t,
+	headerVersion: VkPipelineCacheHeaderVersion,
+	vendorID: uint32_t,
+	deviceID: uint32_t,
+	pipelineCacheUUID: uint8_t,
 }
 impl VkPipelineCacheHeaderVersionOne
 {
@@ -1533,11 +1695,13 @@ impl VkPipelineCacheHeaderVersionOne
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPushConstantRange
 {
-	stageFlags: VkShaderStageFlags
-	offset: uint32_t
-	size: uint32_t
+	stageFlags: VkShaderStageFlags,
+	offset: uint32_t,
+	size: uint32_t,
 }
 impl VkPushConstantRange
 {
@@ -1549,15 +1713,17 @@ impl VkPushConstantRange
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineLayoutCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineLayoutCreateFlags
-	setLayoutCount: uint32_t
-	pSetLayouts: VkDescriptorSetLayout
-	pushConstantRangeCount: uint32_t
-	pPushConstantRanges: VkPushConstantRange
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineLayoutCreateFlags,
+	setLayoutCount: uint32_t,
+	pSetLayouts: VkDescriptorSetLayout,
+	pushConstantRangeCount: uint32_t,
+	pPushConstantRanges: VkPushConstantRange,
 }
 impl VkPipelineLayoutCreateInfo
 {
@@ -1570,26 +1736,28 @@ impl VkPipelineLayoutCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkSamplerCreateFlags
-	magFilter: VkFilter
-	minFilter: VkFilter
-	mipmapMode: VkSamplerMipmapMode
-	addressModeU: VkSamplerAddressMode
-	addressModeV: VkSamplerAddressMode
-	addressModeW: VkSamplerAddressMode
-	mipLodBias: float
-	anisotropyEnable: VkBool32
-	maxAnisotropy: float
-	compareEnable: VkBool32
-	compareOp: VkCompareOp
-	minLod: float
-	maxLod: float
-	borderColor: VkBorderColor
-	unnormalizedCoordinates: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkSamplerCreateFlags,
+	magFilter: VkFilter,
+	minFilter: VkFilter,
+	mipmapMode: VkSamplerMipmapMode,
+	addressModeU: VkSamplerAddressMode,
+	addressModeV: VkSamplerAddressMode,
+	addressModeW: VkSamplerAddressMode,
+	mipLodBias: float,
+	anisotropyEnable: VkBool32,
+	maxAnisotropy: float,
+	compareEnable: VkBool32,
+	compareOp: VkCompareOp,
+	minLod: float,
+	maxLod: float,
+	borderColor: VkBorderColor,
+	unnormalizedCoordinates: VkBool32,
 }
 impl VkSamplerCreateInfo
 {
@@ -1602,12 +1770,14 @@ impl VkSamplerCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandPoolCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkCommandPoolCreateFlags
-	queueFamilyIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkCommandPoolCreateFlags,
+	queueFamilyIndex: uint32_t,
 }
 impl VkCommandPoolCreateInfo
 {
@@ -1620,13 +1790,15 @@ impl VkCommandPoolCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	commandPool: VkCommandPool
-	level: VkCommandBufferLevel
-	commandBufferCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	commandPool: VkCommandPool,
+	level: VkCommandBufferLevel,
+	commandBufferCount: uint32_t,
 }
 impl VkCommandBufferAllocateInfo
 {
@@ -1639,16 +1811,18 @@ impl VkCommandBufferAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferInheritanceInfo
 {
-	sType: VkStructureType
-	pNext: void
-	renderPass: VkRenderPass
-	subpass: uint32_t
-	framebuffer: VkFramebuffer
-	occlusionQueryEnable: VkBool32
-	queryFlags: VkQueryControlFlags
-	pipelineStatistics: VkQueryPipelineStatisticFlags
+	sType: VkStructureType,
+	pNext: void,
+	renderPass: VkRenderPass,
+	subpass: uint32_t,
+	framebuffer: VkFramebuffer,
+	occlusionQueryEnable: VkBool32,
+	queryFlags: VkQueryControlFlags,
+	pipelineStatistics: VkQueryPipelineStatisticFlags,
 }
 impl VkCommandBufferInheritanceInfo
 {
@@ -1661,12 +1835,14 @@ impl VkCommandBufferInheritanceInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferBeginInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkCommandBufferUsageFlags
-	pInheritanceInfo: VkCommandBufferInheritanceInfo
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkCommandBufferUsageFlags,
+	pInheritanceInfo: VkCommandBufferInheritanceInfo,
 }
 impl VkCommandBufferBeginInfo
 {
@@ -1679,15 +1855,17 @@ impl VkCommandBufferBeginInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassBeginInfo
 {
-	sType: VkStructureType
-	pNext: void
-	renderPass: VkRenderPass
-	framebuffer: VkFramebuffer
-	renderArea: VkRect2D
-	clearValueCount: uint32_t
-	pClearValues: VkClearValue
+	sType: VkStructureType,
+	pNext: void,
+	renderPass: VkRenderPass,
+	framebuffer: VkFramebuffer,
+	renderArea: VkRect2D,
+	clearValueCount: uint32_t,
+	pClearValues: VkClearValue,
 }
 impl VkRenderPassBeginInfo
 {
@@ -1700,10 +1878,12 @@ impl VkRenderPassBeginInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkClearDepthStencilValue
 {
-	depth: float
-	stencil: uint32_t
+	depth: float,
+	stencil: uint32_t,
 }
 impl VkClearDepthStencilValue
 {
@@ -1715,11 +1895,13 @@ impl VkClearDepthStencilValue
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkClearAttachment
 {
-	aspectMask: VkImageAspectFlags
-	colorAttachment: uint32_t
-	clearValue: VkClearValue
+	aspectMask: VkImageAspectFlags,
+	colorAttachment: uint32_t,
+	clearValue: VkClearValue,
 }
 impl VkClearAttachment
 {
@@ -1731,17 +1913,19 @@ impl VkClearAttachment
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentDescription
 {
-	flags: VkAttachmentDescriptionFlags
-	format: VkFormat
-	samples: VkSampleCountFlagBits
-	loadOp: VkAttachmentLoadOp
-	storeOp: VkAttachmentStoreOp
-	stencilLoadOp: VkAttachmentLoadOp
-	stencilStoreOp: VkAttachmentStoreOp
-	initialLayout: VkImageLayout
-	finalLayout: VkImageLayout
+	flags: VkAttachmentDescriptionFlags,
+	format: VkFormat,
+	samples: VkSampleCountFlagBits,
+	loadOp: VkAttachmentLoadOp,
+	storeOp: VkAttachmentStoreOp,
+	stencilLoadOp: VkAttachmentLoadOp,
+	stencilStoreOp: VkAttachmentStoreOp,
+	initialLayout: VkImageLayout,
+	finalLayout: VkImageLayout,
 }
 impl VkAttachmentDescription
 {
@@ -1753,10 +1937,12 @@ impl VkAttachmentDescription
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentReference
 {
-	attachment: uint32_t
-	layout: VkImageLayout
+	attachment: uint32_t,
+	layout: VkImageLayout,
 }
 impl VkAttachmentReference
 {
@@ -1768,18 +1954,20 @@ impl VkAttachmentReference
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDescription
 {
-	flags: VkSubpassDescriptionFlags
-	pipelineBindPoint: VkPipelineBindPoint
-	inputAttachmentCount: uint32_t
-	pInputAttachments: VkAttachmentReference
-	colorAttachmentCount: uint32_t
-	pColorAttachments: VkAttachmentReference
-	pResolveAttachments: VkAttachmentReference
-	pDepthStencilAttachment: VkAttachmentReference
-	preserveAttachmentCount: uint32_t
-	pPreserveAttachments: uint32_t
+	flags: VkSubpassDescriptionFlags,
+	pipelineBindPoint: VkPipelineBindPoint,
+	inputAttachmentCount: uint32_t,
+	pInputAttachments: VkAttachmentReference,
+	colorAttachmentCount: uint32_t,
+	pColorAttachments: VkAttachmentReference,
+	pResolveAttachments: VkAttachmentReference,
+	pDepthStencilAttachment: VkAttachmentReference,
+	preserveAttachmentCount: uint32_t,
+	pPreserveAttachments: uint32_t,
 }
 impl VkSubpassDescription
 {
@@ -1791,15 +1979,17 @@ impl VkSubpassDescription
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDependency
 {
-	srcSubpass: uint32_t
-	dstSubpass: uint32_t
-	srcStageMask: VkPipelineStageFlags
-	dstStageMask: VkPipelineStageFlags
-	srcAccessMask: VkAccessFlags
-	dstAccessMask: VkAccessFlags
-	dependencyFlags: VkDependencyFlags
+	srcSubpass: uint32_t,
+	dstSubpass: uint32_t,
+	srcStageMask: VkPipelineStageFlags,
+	dstStageMask: VkPipelineStageFlags,
+	srcAccessMask: VkAccessFlags,
+	dstAccessMask: VkAccessFlags,
+	dependencyFlags: VkDependencyFlags,
 }
 impl VkSubpassDependency
 {
@@ -1811,17 +2001,19 @@ impl VkSubpassDependency
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkRenderPassCreateFlags
-	attachmentCount: uint32_t
-	pAttachments: VkAttachmentDescription
-	subpassCount: uint32_t
-	pSubpasses: VkSubpassDescription
-	dependencyCount: uint32_t
-	pDependencies: VkSubpassDependency
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkRenderPassCreateFlags,
+	attachmentCount: uint32_t,
+	pAttachments: VkAttachmentDescription,
+	subpassCount: uint32_t,
+	pSubpasses: VkSubpassDescription,
+	dependencyCount: uint32_t,
+	pDependencies: VkSubpassDependency,
 }
 impl VkRenderPassCreateInfo
 {
@@ -1834,11 +2026,13 @@ impl VkRenderPassCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkEventCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkEventCreateFlags
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkEventCreateFlags,
 }
 impl VkEventCreateInfo
 {
@@ -1851,11 +2045,13 @@ impl VkEventCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFenceCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkFenceCreateFlags
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkFenceCreateFlags,
 }
 impl VkFenceCreateInfo
 {
@@ -1868,63 +2064,65 @@ impl VkFenceCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFeatures
 {
-	robustBufferAccess: VkBool32
-	fullDrawIndexUint32: VkBool32
-	imageCubeArray: VkBool32
-	independentBlend: VkBool32
-	geometryShader: VkBool32
-	tessellationShader: VkBool32
-	sampleRateShading: VkBool32
-	dualSrcBlend: VkBool32
-	logicOp: VkBool32
-	multiDrawIndirect: VkBool32
-	drawIndirectFirstInstance: VkBool32
-	depthClamp: VkBool32
-	depthBiasClamp: VkBool32
-	fillModeNonSolid: VkBool32
-	depthBounds: VkBool32
-	wideLines: VkBool32
-	largePoints: VkBool32
-	alphaToOne: VkBool32
-	multiViewport: VkBool32
-	samplerAnisotropy: VkBool32
-	textureCompressionETC2: VkBool32
-	textureCompressionASTC_LDR: VkBool32
-	textureCompressionBC: VkBool32
-	occlusionQueryPrecise: VkBool32
-	pipelineStatisticsQuery: VkBool32
-	vertexPipelineStoresAndAtomics: VkBool32
-	fragmentStoresAndAtomics: VkBool32
-	shaderTessellationAndGeometryPointSize: VkBool32
-	shaderImageGatherExtended: VkBool32
-	shaderStorageImageExtendedFormats: VkBool32
-	shaderStorageImageMultisample: VkBool32
-	shaderStorageImageReadWithoutFormat: VkBool32
-	shaderStorageImageWriteWithoutFormat: VkBool32
-	shaderUniformBufferArrayDynamicIndexing: VkBool32
-	shaderSampledImageArrayDynamicIndexing: VkBool32
-	shaderStorageBufferArrayDynamicIndexing: VkBool32
-	shaderStorageImageArrayDynamicIndexing: VkBool32
-	shaderClipDistance: VkBool32
-	shaderCullDistance: VkBool32
-	shaderFloat64: VkBool32
-	shaderInt64: VkBool32
-	shaderInt16: VkBool32
-	shaderResourceResidency: VkBool32
-	shaderResourceMinLod: VkBool32
-	sparseBinding: VkBool32
-	sparseResidencyBuffer: VkBool32
-	sparseResidencyImage2D: VkBool32
-	sparseResidencyImage3D: VkBool32
-	sparseResidency2Samples: VkBool32
-	sparseResidency4Samples: VkBool32
-	sparseResidency8Samples: VkBool32
-	sparseResidency16Samples: VkBool32
-	sparseResidencyAliased: VkBool32
-	variableMultisampleRate: VkBool32
-	inheritedQueries: VkBool32
+	robustBufferAccess: VkBool32,
+	fullDrawIndexUint32: VkBool32,
+	imageCubeArray: VkBool32,
+	independentBlend: VkBool32,
+	geometryShader: VkBool32,
+	tessellationShader: VkBool32,
+	sampleRateShading: VkBool32,
+	dualSrcBlend: VkBool32,
+	logicOp: VkBool32,
+	multiDrawIndirect: VkBool32,
+	drawIndirectFirstInstance: VkBool32,
+	depthClamp: VkBool32,
+	depthBiasClamp: VkBool32,
+	fillModeNonSolid: VkBool32,
+	depthBounds: VkBool32,
+	wideLines: VkBool32,
+	largePoints: VkBool32,
+	alphaToOne: VkBool32,
+	multiViewport: VkBool32,
+	samplerAnisotropy: VkBool32,
+	textureCompressionETC2: VkBool32,
+	textureCompressionASTC_LDR: VkBool32,
+	textureCompressionBC: VkBool32,
+	occlusionQueryPrecise: VkBool32,
+	pipelineStatisticsQuery: VkBool32,
+	vertexPipelineStoresAndAtomics: VkBool32,
+	fragmentStoresAndAtomics: VkBool32,
+	shaderTessellationAndGeometryPointSize: VkBool32,
+	shaderImageGatherExtended: VkBool32,
+	shaderStorageImageExtendedFormats: VkBool32,
+	shaderStorageImageMultisample: VkBool32,
+	shaderStorageImageReadWithoutFormat: VkBool32,
+	shaderStorageImageWriteWithoutFormat: VkBool32,
+	shaderUniformBufferArrayDynamicIndexing: VkBool32,
+	shaderSampledImageArrayDynamicIndexing: VkBool32,
+	shaderStorageBufferArrayDynamicIndexing: VkBool32,
+	shaderStorageImageArrayDynamicIndexing: VkBool32,
+	shaderClipDistance: VkBool32,
+	shaderCullDistance: VkBool32,
+	shaderFloat64: VkBool32,
+	shaderInt64: VkBool32,
+	shaderInt16: VkBool32,
+	shaderResourceResidency: VkBool32,
+	shaderResourceMinLod: VkBool32,
+	sparseBinding: VkBool32,
+	sparseResidencyBuffer: VkBool32,
+	sparseResidencyImage2D: VkBool32,
+	sparseResidencyImage3D: VkBool32,
+	sparseResidency2Samples: VkBool32,
+	sparseResidency4Samples: VkBool32,
+	sparseResidency8Samples: VkBool32,
+	sparseResidency16Samples: VkBool32,
+	sparseResidencyAliased: VkBool32,
+	variableMultisampleRate: VkBool32,
+	inheritedQueries: VkBool32,
 }
 impl VkPhysicalDeviceFeatures
 {
@@ -1936,13 +2134,15 @@ impl VkPhysicalDeviceFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSparseProperties
 {
-	residencyStandard2DBlockShape: VkBool32
-	residencyStandard2DMultisampleBlockShape: VkBool32
-	residencyStandard3DBlockShape: VkBool32
-	residencyAlignedMipSize: VkBool32
-	residencyNonResidentStrict: VkBool32
+	residencyStandard2DBlockShape: VkBool32,
+	residencyStandard2DMultisampleBlockShape: VkBool32,
+	residencyStandard3DBlockShape: VkBool32,
+	residencyAlignedMipSize: VkBool32,
+	residencyNonResidentStrict: VkBool32,
 }
 impl VkPhysicalDeviceSparseProperties
 {
@@ -1954,114 +2154,116 @@ impl VkPhysicalDeviceSparseProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceLimits
 {
-	maxImageDimension1D: uint32_t
-	maxImageDimension2D: uint32_t
-	maxImageDimension3D: uint32_t
-	maxImageDimensionCube: uint32_t
-	maxImageArrayLayers: uint32_t
-	maxTexelBufferElements: uint32_t
-	maxUniformBufferRange: uint32_t
-	maxStorageBufferRange: uint32_t
-	maxPushConstantsSize: uint32_t
-	maxMemoryAllocationCount: uint32_t
-	maxSamplerAllocationCount: uint32_t
-	bufferImageGranularity: VkDeviceSize
-	sparseAddressSpaceSize: VkDeviceSize
-	maxBoundDescriptorSets: uint32_t
-	maxPerStageDescriptorSamplers: uint32_t
-	maxPerStageDescriptorUniformBuffers: uint32_t
-	maxPerStageDescriptorStorageBuffers: uint32_t
-	maxPerStageDescriptorSampledImages: uint32_t
-	maxPerStageDescriptorStorageImages: uint32_t
-	maxPerStageDescriptorInputAttachments: uint32_t
-	maxPerStageResources: uint32_t
-	maxDescriptorSetSamplers: uint32_t
-	maxDescriptorSetUniformBuffers: uint32_t
-	maxDescriptorSetUniformBuffersDynamic: uint32_t
-	maxDescriptorSetStorageBuffers: uint32_t
-	maxDescriptorSetStorageBuffersDynamic: uint32_t
-	maxDescriptorSetSampledImages: uint32_t
-	maxDescriptorSetStorageImages: uint32_t
-	maxDescriptorSetInputAttachments: uint32_t
-	maxVertexInputAttributes: uint32_t
-	maxVertexInputBindings: uint32_t
-	maxVertexInputAttributeOffset: uint32_t
-	maxVertexInputBindingStride: uint32_t
-	maxVertexOutputComponents: uint32_t
-	maxTessellationGenerationLevel: uint32_t
-	maxTessellationPatchSize: uint32_t
-	maxTessellationControlPerVertexInputComponents: uint32_t
-	maxTessellationControlPerVertexOutputComponents: uint32_t
-	maxTessellationControlPerPatchOutputComponents: uint32_t
-	maxTessellationControlTotalOutputComponents: uint32_t
-	maxTessellationEvaluationInputComponents: uint32_t
-	maxTessellationEvaluationOutputComponents: uint32_t
-	maxGeometryShaderInvocations: uint32_t
-	maxGeometryInputComponents: uint32_t
-	maxGeometryOutputComponents: uint32_t
-	maxGeometryOutputVertices: uint32_t
-	maxGeometryTotalOutputComponents: uint32_t
-	maxFragmentInputComponents: uint32_t
-	maxFragmentOutputAttachments: uint32_t
-	maxFragmentDualSrcAttachments: uint32_t
-	maxFragmentCombinedOutputResources: uint32_t
-	maxComputeSharedMemorySize: uint32_t
-	maxComputeWorkGroupCount: uint32_t
-	maxComputeWorkGroupInvocations: uint32_t
-	maxComputeWorkGroupSize: uint32_t
-	subPixelPrecisionBits: uint32_t
-	subTexelPrecisionBits: uint32_t
-	mipmapPrecisionBits: uint32_t
-	maxDrawIndexedIndexValue: uint32_t
-	maxDrawIndirectCount: uint32_t
-	maxSamplerLodBias: float
-	maxSamplerAnisotropy: float
-	maxViewports: uint32_t
-	maxViewportDimensions: uint32_t
-	viewportBoundsRange: float
-	viewportSubPixelBits: uint32_t
-	minMemoryMapAlignment: size_t
-	minTexelBufferOffsetAlignment: VkDeviceSize
-	minUniformBufferOffsetAlignment: VkDeviceSize
-	minStorageBufferOffsetAlignment: VkDeviceSize
-	minTexelOffset: int32_t
-	maxTexelOffset: uint32_t
-	minTexelGatherOffset: int32_t
-	maxTexelGatherOffset: uint32_t
-	minInterpolationOffset: float
-	maxInterpolationOffset: float
-	subPixelInterpolationOffsetBits: uint32_t
-	maxFramebufferWidth: uint32_t
-	maxFramebufferHeight: uint32_t
-	maxFramebufferLayers: uint32_t
-	framebufferColorSampleCounts: VkSampleCountFlags
-	framebufferDepthSampleCounts: VkSampleCountFlags
-	framebufferStencilSampleCounts: VkSampleCountFlags
-	framebufferNoAttachmentsSampleCounts: VkSampleCountFlags
-	maxColorAttachments: uint32_t
-	sampledImageColorSampleCounts: VkSampleCountFlags
-	sampledImageIntegerSampleCounts: VkSampleCountFlags
-	sampledImageDepthSampleCounts: VkSampleCountFlags
-	sampledImageStencilSampleCounts: VkSampleCountFlags
-	storageImageSampleCounts: VkSampleCountFlags
-	maxSampleMaskWords: uint32_t
-	timestampComputeAndGraphics: VkBool32
-	timestampPeriod: float
-	maxClipDistances: uint32_t
-	maxCullDistances: uint32_t
-	maxCombinedClipAndCullDistances: uint32_t
-	discreteQueuePriorities: uint32_t
-	pointSizeRange: float
-	lineWidthRange: float
-	pointSizeGranularity: float
-	lineWidthGranularity: float
-	strictLines: VkBool32
-	standardSampleLocations: VkBool32
-	optimalBufferCopyOffsetAlignment: VkDeviceSize
-	optimalBufferCopyRowPitchAlignment: VkDeviceSize
-	nonCoherentAtomSize: VkDeviceSize
+	maxImageDimension1D: uint32_t,
+	maxImageDimension2D: uint32_t,
+	maxImageDimension3D: uint32_t,
+	maxImageDimensionCube: uint32_t,
+	maxImageArrayLayers: uint32_t,
+	maxTexelBufferElements: uint32_t,
+	maxUniformBufferRange: uint32_t,
+	maxStorageBufferRange: uint32_t,
+	maxPushConstantsSize: uint32_t,
+	maxMemoryAllocationCount: uint32_t,
+	maxSamplerAllocationCount: uint32_t,
+	bufferImageGranularity: VkDeviceSize,
+	sparseAddressSpaceSize: VkDeviceSize,
+	maxBoundDescriptorSets: uint32_t,
+	maxPerStageDescriptorSamplers: uint32_t,
+	maxPerStageDescriptorUniformBuffers: uint32_t,
+	maxPerStageDescriptorStorageBuffers: uint32_t,
+	maxPerStageDescriptorSampledImages: uint32_t,
+	maxPerStageDescriptorStorageImages: uint32_t,
+	maxPerStageDescriptorInputAttachments: uint32_t,
+	maxPerStageResources: uint32_t,
+	maxDescriptorSetSamplers: uint32_t,
+	maxDescriptorSetUniformBuffers: uint32_t,
+	maxDescriptorSetUniformBuffersDynamic: uint32_t,
+	maxDescriptorSetStorageBuffers: uint32_t,
+	maxDescriptorSetStorageBuffersDynamic: uint32_t,
+	maxDescriptorSetSampledImages: uint32_t,
+	maxDescriptorSetStorageImages: uint32_t,
+	maxDescriptorSetInputAttachments: uint32_t,
+	maxVertexInputAttributes: uint32_t,
+	maxVertexInputBindings: uint32_t,
+	maxVertexInputAttributeOffset: uint32_t,
+	maxVertexInputBindingStride: uint32_t,
+	maxVertexOutputComponents: uint32_t,
+	maxTessellationGenerationLevel: uint32_t,
+	maxTessellationPatchSize: uint32_t,
+	maxTessellationControlPerVertexInputComponents: uint32_t,
+	maxTessellationControlPerVertexOutputComponents: uint32_t,
+	maxTessellationControlPerPatchOutputComponents: uint32_t,
+	maxTessellationControlTotalOutputComponents: uint32_t,
+	maxTessellationEvaluationInputComponents: uint32_t,
+	maxTessellationEvaluationOutputComponents: uint32_t,
+	maxGeometryShaderInvocations: uint32_t,
+	maxGeometryInputComponents: uint32_t,
+	maxGeometryOutputComponents: uint32_t,
+	maxGeometryOutputVertices: uint32_t,
+	maxGeometryTotalOutputComponents: uint32_t,
+	maxFragmentInputComponents: uint32_t,
+	maxFragmentOutputAttachments: uint32_t,
+	maxFragmentDualSrcAttachments: uint32_t,
+	maxFragmentCombinedOutputResources: uint32_t,
+	maxComputeSharedMemorySize: uint32_t,
+	maxComputeWorkGroupCount: uint32_t,
+	maxComputeWorkGroupInvocations: uint32_t,
+	maxComputeWorkGroupSize: uint32_t,
+	subPixelPrecisionBits: uint32_t,
+	subTexelPrecisionBits: uint32_t,
+	mipmapPrecisionBits: uint32_t,
+	maxDrawIndexedIndexValue: uint32_t,
+	maxDrawIndirectCount: uint32_t,
+	maxSamplerLodBias: float,
+	maxSamplerAnisotropy: float,
+	maxViewports: uint32_t,
+	maxViewportDimensions: uint32_t,
+	viewportBoundsRange: float,
+	viewportSubPixelBits: uint32_t,
+	minMemoryMapAlignment: size_t,
+	minTexelBufferOffsetAlignment: VkDeviceSize,
+	minUniformBufferOffsetAlignment: VkDeviceSize,
+	minStorageBufferOffsetAlignment: VkDeviceSize,
+	minTexelOffset: int32_t,
+	maxTexelOffset: uint32_t,
+	minTexelGatherOffset: int32_t,
+	maxTexelGatherOffset: uint32_t,
+	minInterpolationOffset: float,
+	maxInterpolationOffset: float,
+	subPixelInterpolationOffsetBits: uint32_t,
+	maxFramebufferWidth: uint32_t,
+	maxFramebufferHeight: uint32_t,
+	maxFramebufferLayers: uint32_t,
+	framebufferColorSampleCounts: VkSampleCountFlags,
+	framebufferDepthSampleCounts: VkSampleCountFlags,
+	framebufferStencilSampleCounts: VkSampleCountFlags,
+	framebufferNoAttachmentsSampleCounts: VkSampleCountFlags,
+	maxColorAttachments: uint32_t,
+	sampledImageColorSampleCounts: VkSampleCountFlags,
+	sampledImageIntegerSampleCounts: VkSampleCountFlags,
+	sampledImageDepthSampleCounts: VkSampleCountFlags,
+	sampledImageStencilSampleCounts: VkSampleCountFlags,
+	storageImageSampleCounts: VkSampleCountFlags,
+	maxSampleMaskWords: uint32_t,
+	timestampComputeAndGraphics: VkBool32,
+	timestampPeriod: float,
+	maxClipDistances: uint32_t,
+	maxCullDistances: uint32_t,
+	maxCombinedClipAndCullDistances: uint32_t,
+	discreteQueuePriorities: uint32_t,
+	pointSizeRange: float,
+	lineWidthRange: float,
+	pointSizeGranularity: float,
+	lineWidthGranularity: float,
+	strictLines: VkBool32,
+	standardSampleLocations: VkBool32,
+	optimalBufferCopyOffsetAlignment: VkDeviceSize,
+	optimalBufferCopyRowPitchAlignment: VkDeviceSize,
+	nonCoherentAtomSize: VkDeviceSize,
 }
 impl VkPhysicalDeviceLimits
 {
@@ -2073,11 +2275,13 @@ impl VkPhysicalDeviceLimits
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkSemaphoreCreateFlags
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkSemaphoreCreateFlags,
 }
 impl VkSemaphoreCreateInfo
 {
@@ -2090,14 +2294,16 @@ impl VkSemaphoreCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueryPoolCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkQueryPoolCreateFlags
-	queryType: VkQueryType
-	queryCount: uint32_t
-	pipelineStatistics: VkQueryPipelineStatisticFlags
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkQueryPoolCreateFlags,
+	queryType: VkQueryType,
+	queryCount: uint32_t,
+	pipelineStatistics: VkQueryPipelineStatisticFlags,
 }
 impl VkQueryPoolCreateInfo
 {
@@ -2110,17 +2316,19 @@ impl VkQueryPoolCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFramebufferCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkFramebufferCreateFlags
-	renderPass: VkRenderPass
-	attachmentCount: uint32_t
-	pAttachments: VkImageView
-	width: uint32_t
-	height: uint32_t
-	layers: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkFramebufferCreateFlags,
+	renderPass: VkRenderPass,
+	attachmentCount: uint32_t,
+	pAttachments: VkImageView,
+	width: uint32_t,
+	height: uint32_t,
+	layers: uint32_t,
 }
 impl VkFramebufferCreateInfo
 {
@@ -2133,12 +2341,14 @@ impl VkFramebufferCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDrawIndirectCommand
 {
-	vertexCount: uint32_t
-	instanceCount: uint32_t
-	firstVertex: uint32_t
-	firstInstance: uint32_t
+	vertexCount: uint32_t,
+	instanceCount: uint32_t,
+	firstVertex: uint32_t,
+	firstInstance: uint32_t,
 }
 impl VkDrawIndirectCommand
 {
@@ -2150,13 +2360,15 @@ impl VkDrawIndirectCommand
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDrawIndexedIndirectCommand
 {
-	indexCount: uint32_t
-	instanceCount: uint32_t
-	firstIndex: uint32_t
-	vertexOffset: int32_t
-	firstInstance: uint32_t
+	indexCount: uint32_t,
+	instanceCount: uint32_t,
+	firstIndex: uint32_t,
+	vertexOffset: int32_t,
+	firstInstance: uint32_t,
 }
 impl VkDrawIndexedIndirectCommand
 {
@@ -2168,11 +2380,13 @@ impl VkDrawIndexedIndirectCommand
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDispatchIndirectCommand
 {
-	x: uint32_t
-	y: uint32_t
-	z: uint32_t
+	x: uint32_t,
+	y: uint32_t,
+	z: uint32_t,
 }
 impl VkDispatchIndirectCommand
 {
@@ -2184,10 +2398,12 @@ impl VkDispatchIndirectCommand
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMultiDrawInfoEXT
 {
-	firstVertex: uint32_t
-	vertexCount: uint32_t
+	firstVertex: uint32_t,
+	vertexCount: uint32_t,
 }
 impl VkMultiDrawInfoEXT
 {
@@ -2199,11 +2415,13 @@ impl VkMultiDrawInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMultiDrawIndexedInfoEXT
 {
-	firstIndex: uint32_t
-	indexCount: uint32_t
-	vertexOffset: int32_t
+	firstIndex: uint32_t,
+	indexCount: uint32_t,
+	vertexOffset: int32_t,
 }
 impl VkMultiDrawIndexedInfoEXT
 {
@@ -2215,17 +2433,19 @@ impl VkMultiDrawIndexedInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubmitInfo
 {
-	sType: VkStructureType
-	pNext: void
-	waitSemaphoreCount: uint32_t
-	pWaitSemaphores: VkSemaphore
-	pWaitDstStageMask: VkPipelineStageFlags
-	commandBufferCount: uint32_t
-	pCommandBuffers: VkCommandBuffer
-	signalSemaphoreCount: uint32_t
-	pSignalSemaphores: VkSemaphore
+	sType: VkStructureType,
+	pNext: void,
+	waitSemaphoreCount: uint32_t,
+	pWaitSemaphores: VkSemaphore,
+	pWaitDstStageMask: VkPipelineStageFlags,
+	commandBufferCount: uint32_t,
+	pCommandBuffers: VkCommandBuffer,
+	signalSemaphoreCount: uint32_t,
+	pSignalSemaphores: VkSemaphore,
 }
 impl VkSubmitInfo
 {
@@ -2238,15 +2458,17 @@ impl VkSubmitInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPropertiesKHR
 {
-	display: VkDisplayKHR
-	displayName: char
-	physicalDimensions: VkExtent2D
-	physicalResolution: VkExtent2D
-	supportedTransforms: VkSurfaceTransformFlagsKHR
-	planeReorderPossible: VkBool32
-	persistentContent: VkBool32
+	display: VkDisplayKHR,
+	displayName: char,
+	physicalDimensions: VkExtent2D,
+	physicalResolution: VkExtent2D,
+	supportedTransforms: VkSurfaceTransformFlagsKHR,
+	planeReorderPossible: VkBool32,
+	persistentContent: VkBool32,
 }
 impl VkDisplayPropertiesKHR
 {
@@ -2258,10 +2480,12 @@ impl VkDisplayPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPlanePropertiesKHR
 {
-	currentDisplay: VkDisplayKHR
-	currentStackIndex: uint32_t
+	currentDisplay: VkDisplayKHR,
+	currentStackIndex: uint32_t,
 }
 impl VkDisplayPlanePropertiesKHR
 {
@@ -2273,10 +2497,12 @@ impl VkDisplayPlanePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayModeParametersKHR
 {
-	visibleRegion: VkExtent2D
-	refreshRate: uint32_t
+	visibleRegion: VkExtent2D,
+	refreshRate: uint32_t,
 }
 impl VkDisplayModeParametersKHR
 {
@@ -2288,10 +2514,12 @@ impl VkDisplayModeParametersKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayModePropertiesKHR
 {
-	displayMode: VkDisplayModeKHR
-	parameters: VkDisplayModeParametersKHR
+	displayMode: VkDisplayModeKHR,
+	parameters: VkDisplayModeParametersKHR,
 }
 impl VkDisplayModePropertiesKHR
 {
@@ -2303,12 +2531,14 @@ impl VkDisplayModePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayModeCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDisplayModeCreateFlagsKHR
-	parameters: VkDisplayModeParametersKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDisplayModeCreateFlagsKHR,
+	parameters: VkDisplayModeParametersKHR,
 }
 impl VkDisplayModeCreateInfoKHR
 {
@@ -2321,17 +2551,19 @@ impl VkDisplayModeCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPlaneCapabilitiesKHR
 {
-	supportedAlpha: VkDisplayPlaneAlphaFlagsKHR
-	minSrcPosition: VkOffset2D
-	maxSrcPosition: VkOffset2D
-	minSrcExtent: VkExtent2D
-	maxSrcExtent: VkExtent2D
-	minDstPosition: VkOffset2D
-	maxDstPosition: VkOffset2D
-	minDstExtent: VkExtent2D
-	maxDstExtent: VkExtent2D
+	supportedAlpha: VkDisplayPlaneAlphaFlagsKHR,
+	minSrcPosition: VkOffset2D,
+	maxSrcPosition: VkOffset2D,
+	minSrcExtent: VkExtent2D,
+	maxSrcExtent: VkExtent2D,
+	minDstPosition: VkOffset2D,
+	maxDstPosition: VkOffset2D,
+	minDstExtent: VkExtent2D,
+	maxDstExtent: VkExtent2D,
 }
 impl VkDisplayPlaneCapabilitiesKHR
 {
@@ -2343,18 +2575,20 @@ impl VkDisplayPlaneCapabilitiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplaySurfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDisplaySurfaceCreateFlagsKHR
-	displayMode: VkDisplayModeKHR
-	planeIndex: uint32_t
-	planeStackIndex: uint32_t
-	transform: VkSurfaceTransformFlagBitsKHR
-	globalAlpha: float
-	alphaMode: VkDisplayPlaneAlphaFlagBitsKHR
-	imageExtent: VkExtent2D
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDisplaySurfaceCreateFlagsKHR,
+	displayMode: VkDisplayModeKHR,
+	planeIndex: uint32_t,
+	planeStackIndex: uint32_t,
+	transform: VkSurfaceTransformFlagBitsKHR,
+	globalAlpha: float,
+	alphaMode: VkDisplayPlaneAlphaFlagBitsKHR,
+	imageExtent: VkExtent2D,
 }
 impl VkDisplaySurfaceCreateInfoKHR
 {
@@ -2367,13 +2601,15 @@ impl VkDisplaySurfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPresentInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcRect: VkRect2D
-	dstRect: VkRect2D
-	persistent: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	srcRect: VkRect2D,
+	dstRect: VkRect2D,
+	persistent: VkBool32,
 }
 impl VkDisplayPresentInfoKHR
 {
@@ -2386,18 +2622,20 @@ impl VkDisplayPresentInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceCapabilitiesKHR
 {
-	minImageCount: uint32_t
-	maxImageCount: uint32_t
-	currentExtent: VkExtent2D
-	minImageExtent: VkExtent2D
-	maxImageExtent: VkExtent2D
-	maxImageArrayLayers: uint32_t
-	supportedTransforms: VkSurfaceTransformFlagsKHR
-	currentTransform: VkSurfaceTransformFlagBitsKHR
-	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR
-	supportedUsageFlags: VkImageUsageFlags
+	minImageCount: uint32_t,
+	maxImageCount: uint32_t,
+	currentExtent: VkExtent2D,
+	minImageExtent: VkExtent2D,
+	maxImageExtent: VkExtent2D,
+	maxImageArrayLayers: uint32_t,
+	supportedTransforms: VkSurfaceTransformFlagsKHR,
+	currentTransform: VkSurfaceTransformFlagBitsKHR,
+	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
+	supportedUsageFlags: VkImageUsageFlags,
 }
 impl VkSurfaceCapabilitiesKHR
 {
@@ -2409,12 +2647,14 @@ impl VkSurfaceCapabilitiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAndroidSurfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkAndroidSurfaceCreateFlagsKHR
-	window: ANativeWindow
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkAndroidSurfaceCreateFlagsKHR,
+	window: ANativeWindow,
 }
 impl VkAndroidSurfaceCreateInfoKHR
 {
@@ -2427,12 +2667,14 @@ impl VkAndroidSurfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkViSurfaceCreateInfoNN
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkViSurfaceCreateFlagsNN
-	window: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkViSurfaceCreateFlagsNN,
+	window: void,
 }
 impl VkViSurfaceCreateInfoNN
 {
@@ -2445,13 +2687,15 @@ impl VkViSurfaceCreateInfoNN
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWaylandSurfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkWaylandSurfaceCreateFlagsKHR
-	display: wl_display
-	surface: wl_surface
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkWaylandSurfaceCreateFlagsKHR,
+	display: wl_display,
+	surface: wl_surface,
 }
 impl VkWaylandSurfaceCreateInfoKHR
 {
@@ -2464,13 +2708,15 @@ impl VkWaylandSurfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWin32SurfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkWin32SurfaceCreateFlagsKHR
-	hinstance: HINSTANCE
-	hwnd: HWND
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkWin32SurfaceCreateFlagsKHR,
+	hinstance: HINSTANCE,
+	hwnd: HWND,
 }
 impl VkWin32SurfaceCreateInfoKHR
 {
@@ -2483,13 +2729,15 @@ impl VkWin32SurfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkXlibSurfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkXlibSurfaceCreateFlagsKHR
-	dpy: Display
-	window: Window
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkXlibSurfaceCreateFlagsKHR,
+	dpy: Display,
+	window: Window,
 }
 impl VkXlibSurfaceCreateInfoKHR
 {
@@ -2502,13 +2750,15 @@ impl VkXlibSurfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkXcbSurfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkXcbSurfaceCreateFlagsKHR
-	connection: xcb_connection_t
-	window: xcb_window_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkXcbSurfaceCreateFlagsKHR,
+	connection: xcb_connection_t,
+	window: xcb_window_t,
 }
 impl VkXcbSurfaceCreateInfoKHR
 {
@@ -2521,13 +2771,15 @@ impl VkXcbSurfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDirectFBSurfaceCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDirectFBSurfaceCreateFlagsEXT
-	dfb: IDirectFB
-	surface: IDirectFBSurface
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDirectFBSurfaceCreateFlagsEXT,
+	dfb: IDirectFB,
+	surface: IDirectFBSurface,
 }
 impl VkDirectFBSurfaceCreateInfoEXT
 {
@@ -2540,12 +2792,14 @@ impl VkDirectFBSurfaceCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImagePipeSurfaceCreateInfoFUCHSIA
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkImagePipeSurfaceCreateFlagsFUCHSIA
-	imagePipeHandle: zx_handle_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkImagePipeSurfaceCreateFlagsFUCHSIA,
+	imagePipeHandle: zx_handle_t,
 }
 impl VkImagePipeSurfaceCreateInfoFUCHSIA
 {
@@ -2558,12 +2812,14 @@ impl VkImagePipeSurfaceCreateInfoFUCHSIA
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkStreamDescriptorSurfaceCreateInfoGGP
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkStreamDescriptorSurfaceCreateFlagsGGP
-	streamDescriptor: GgpStreamDescriptor
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkStreamDescriptorSurfaceCreateFlagsGGP,
+	streamDescriptor: GgpStreamDescriptor,
 }
 impl VkStreamDescriptorSurfaceCreateInfoGGP
 {
@@ -2576,13 +2832,15 @@ impl VkStreamDescriptorSurfaceCreateInfoGGP
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkScreenSurfaceCreateInfoQNX
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkScreenSurfaceCreateFlagsQNX
-	context: _screen_context
-	window: _screen_window
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkScreenSurfaceCreateFlagsQNX,
+	context: _screen_context,
+	window: _screen_window,
 }
 impl VkScreenSurfaceCreateInfoQNX
 {
@@ -2595,10 +2853,12 @@ impl VkScreenSurfaceCreateInfoQNX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceFormatKHR
 {
-	format: VkFormat
-	colorSpace: VkColorSpaceKHR
+	format: VkFormat,
+	colorSpace: VkColorSpaceKHR,
 }
 impl VkSurfaceFormatKHR
 {
@@ -2610,26 +2870,28 @@ impl VkSurfaceFormatKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSwapchainCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkSwapchainCreateFlagsKHR
-	surface: VkSurfaceKHR
-	minImageCount: uint32_t
-	imageFormat: VkFormat
-	imageColorSpace: VkColorSpaceKHR
-	imageExtent: VkExtent2D
-	imageArrayLayers: uint32_t
-	imageUsage: VkImageUsageFlags
-	imageSharingMode: VkSharingMode
-	queueFamilyIndexCount: uint32_t
-	pQueueFamilyIndices: uint32_t
-	preTransform: VkSurfaceTransformFlagBitsKHR
-	compositeAlpha: VkCompositeAlphaFlagBitsKHR
-	presentMode: VkPresentModeKHR
-	clipped: VkBool32
-	oldSwapchain: VkSwapchainKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkSwapchainCreateFlagsKHR,
+	surface: VkSurfaceKHR,
+	minImageCount: uint32_t,
+	imageFormat: VkFormat,
+	imageColorSpace: VkColorSpaceKHR,
+	imageExtent: VkExtent2D,
+	imageArrayLayers: uint32_t,
+	imageUsage: VkImageUsageFlags,
+	imageSharingMode: VkSharingMode,
+	queueFamilyIndexCount: uint32_t,
+	pQueueFamilyIndices: uint32_t,
+	preTransform: VkSurfaceTransformFlagBitsKHR,
+	compositeAlpha: VkCompositeAlphaFlagBitsKHR,
+	presentMode: VkPresentModeKHR,
+	clipped: VkBool32,
+	oldSwapchain: VkSwapchainKHR,
 }
 impl VkSwapchainCreateInfoKHR
 {
@@ -2642,16 +2904,18 @@ impl VkSwapchainCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	waitSemaphoreCount: uint32_t
-	pWaitSemaphores: VkSemaphore
-	swapchainCount: uint32_t
-	pSwapchains: VkSwapchainKHR
-	pImageIndices: uint32_t
-	pResults: VkResult
+	sType: VkStructureType,
+	pNext: void,
+	waitSemaphoreCount: uint32_t,
+	pWaitSemaphores: VkSemaphore,
+	swapchainCount: uint32_t,
+	pSwapchains: VkSwapchainKHR,
+	pImageIndices: uint32_t,
+	pResults: VkResult,
 }
 impl VkPresentInfoKHR
 {
@@ -2664,13 +2928,15 @@ impl VkPresentInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugReportCallbackCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDebugReportFlagsEXT
-	pfnCallback: PFN_vkDebugReportCallbackEXT
-	pUserData: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDebugReportFlagsEXT,
+	pfnCallback: PFN_vkDebugReportCallbackEXT,
+	pUserData: void,
 }
 impl VkDebugReportCallbackCreateInfoEXT
 {
@@ -2683,12 +2949,14 @@ impl VkDebugReportCallbackCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkValidationFlagsEXT
 {
-	sType: VkStructureType
-	pNext: void
-	disabledValidationCheckCount: uint32_t
-	pDisabledValidationChecks: VkValidationCheckEXT
+	sType: VkStructureType,
+	pNext: void,
+	disabledValidationCheckCount: uint32_t,
+	pDisabledValidationChecks: VkValidationCheckEXT,
 }
 impl VkValidationFlagsEXT
 {
@@ -2701,14 +2969,16 @@ impl VkValidationFlagsEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkValidationFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	enabledValidationFeatureCount: uint32_t
-	pEnabledValidationFeatures: VkValidationFeatureEnableEXT
-	disabledValidationFeatureCount: uint32_t
-	pDisabledValidationFeatures: VkValidationFeatureDisableEXT
+	sType: VkStructureType,
+	pNext: void,
+	enabledValidationFeatureCount: uint32_t,
+	pEnabledValidationFeatures: VkValidationFeatureEnableEXT,
+	disabledValidationFeatureCount: uint32_t,
+	pDisabledValidationFeatures: VkValidationFeatureDisableEXT,
 }
 impl VkValidationFeaturesEXT
 {
@@ -2721,11 +2991,13 @@ impl VkValidationFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationStateRasterizationOrderAMD
 {
-	sType: VkStructureType
-	pNext: void
-	rasterizationOrder: VkRasterizationOrderAMD
+	sType: VkStructureType,
+	pNext: void,
+	rasterizationOrder: VkRasterizationOrderAMD,
 }
 impl VkPipelineRasterizationStateRasterizationOrderAMD
 {
@@ -2738,13 +3010,15 @@ impl VkPipelineRasterizationStateRasterizationOrderAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugMarkerObjectNameInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	objectType: VkDebugReportObjectTypeEXT
-	object: uint64_t
-	pObjectName: char
+	sType: VkStructureType,
+	pNext: void,
+	objectType: VkDebugReportObjectTypeEXT,
+	object: uint64_t,
+	pObjectName: char,
 }
 impl VkDebugMarkerObjectNameInfoEXT
 {
@@ -2757,15 +3031,17 @@ impl VkDebugMarkerObjectNameInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugMarkerObjectTagInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	objectType: VkDebugReportObjectTypeEXT
-	object: uint64_t
-	tagName: uint64_t
-	tagSize: size_t
-	pTag: void
+	sType: VkStructureType,
+	pNext: void,
+	objectType: VkDebugReportObjectTypeEXT,
+	object: uint64_t,
+	tagName: uint64_t,
+	tagSize: size_t,
+	pTag: void,
 }
 impl VkDebugMarkerObjectTagInfoEXT
 {
@@ -2778,12 +3054,14 @@ impl VkDebugMarkerObjectTagInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugMarkerMarkerInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pMarkerName: char
-	color: float
+	sType: VkStructureType,
+	pNext: void,
+	pMarkerName: char,
+	color: float,
 }
 impl VkDebugMarkerMarkerInfoEXT
 {
@@ -2796,11 +3074,13 @@ impl VkDebugMarkerMarkerInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDedicatedAllocationImageCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	dedicatedAllocation: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	dedicatedAllocation: VkBool32,
 }
 impl VkDedicatedAllocationImageCreateInfoNV
 {
@@ -2813,11 +3093,13 @@ impl VkDedicatedAllocationImageCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDedicatedAllocationBufferCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	dedicatedAllocation: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	dedicatedAllocation: VkBool32,
 }
 impl VkDedicatedAllocationBufferCreateInfoNV
 {
@@ -2830,12 +3112,14 @@ impl VkDedicatedAllocationBufferCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDedicatedAllocationMemoryAllocateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	image: VkImage
-	buffer: VkBuffer
+	sType: VkStructureType,
+	pNext: void,
+	image: VkImage,
+	buffer: VkBuffer,
 }
 impl VkDedicatedAllocationMemoryAllocateInfoNV
 {
@@ -2848,12 +3132,14 @@ impl VkDedicatedAllocationMemoryAllocateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalImageFormatPropertiesNV
 {
-	imageFormatProperties: VkImageFormatProperties
-	externalMemoryFeatures: VkExternalMemoryFeatureFlagsNV
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagsNV
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagsNV
+	imageFormatProperties: VkImageFormatProperties,
+	externalMemoryFeatures: VkExternalMemoryFeatureFlagsNV,
+	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
+	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
 }
 impl VkExternalImageFormatPropertiesNV
 {
@@ -2865,11 +3151,13 @@ impl VkExternalImageFormatPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryImageCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalMemoryHandleTypeFlagsNV
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalMemoryHandleTypeFlagsNV,
 }
 impl VkExternalMemoryImageCreateInfoNV
 {
@@ -2882,11 +3170,13 @@ impl VkExternalMemoryImageCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportMemoryAllocateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalMemoryHandleTypeFlagsNV
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalMemoryHandleTypeFlagsNV,
 }
 impl VkExportMemoryAllocateInfoNV
 {
@@ -2899,12 +3189,14 @@ impl VkExportMemoryAllocateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportMemoryWin32HandleInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalMemoryHandleTypeFlagsNV
-	handle: HANDLE
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalMemoryHandleTypeFlagsNV,
+	handle: HANDLE,
 }
 impl VkImportMemoryWin32HandleInfoNV
 {
@@ -2917,12 +3209,14 @@ impl VkImportMemoryWin32HandleInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportMemoryWin32HandleInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	pAttributes: SECURITY_ATTRIBUTES
-	dwAccess: DWORD
+	sType: VkStructureType,
+	pNext: void,
+	pAttributes: SECURITY_ATTRIBUTES,
+	dwAccess: DWORD,
 }
 impl VkExportMemoryWin32HandleInfoNV
 {
@@ -2935,17 +3229,19 @@ impl VkExportMemoryWin32HandleInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWin32KeyedMutexAcquireReleaseInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	acquireCount: uint32_t
-	pAcquireSyncs: VkDeviceMemory
-	pAcquireKeys: uint64_t
-	pAcquireTimeoutMilliseconds: uint32_t
-	releaseCount: uint32_t
-	pReleaseSyncs: VkDeviceMemory
-	pReleaseKeys: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	acquireCount: uint32_t,
+	pAcquireSyncs: VkDeviceMemory,
+	pAcquireKeys: uint64_t,
+	pAcquireTimeoutMilliseconds: uint32_t,
+	releaseCount: uint32_t,
+	pReleaseSyncs: VkDeviceMemory,
+	pReleaseKeys: uint64_t,
 }
 impl VkWin32KeyedMutexAcquireReleaseInfoNV
 {
@@ -2958,11 +3254,13 @@ impl VkWin32KeyedMutexAcquireReleaseInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	deviceGeneratedCommands: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	deviceGeneratedCommands: VkBool32,
 }
 impl VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV
 {
@@ -2975,11 +3273,13 @@ impl VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDevicePrivateDataCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	privateDataSlotRequestCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	privateDataSlotRequestCount: uint32_t,
 }
 impl VkDevicePrivateDataCreateInfoEXT
 {
@@ -2992,11 +3292,13 @@ impl VkDevicePrivateDataCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPrivateDataSlotCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPrivateDataSlotCreateFlagsEXT
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPrivateDataSlotCreateFlagsEXT,
 }
 impl VkPrivateDataSlotCreateInfoEXT
 {
@@ -3009,11 +3311,13 @@ impl VkPrivateDataSlotCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePrivateDataFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	privateData: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	privateData: VkBool32,
 }
 impl VkPhysicalDevicePrivateDataFeaturesEXT
 {
@@ -3026,19 +3330,21 @@ impl VkPhysicalDevicePrivateDataFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	maxGraphicsShaderGroupCount: uint32_t
-	maxIndirectSequenceCount: uint32_t
-	maxIndirectCommandsTokenCount: uint32_t
-	maxIndirectCommandsStreamCount: uint32_t
-	maxIndirectCommandsTokenOffset: uint32_t
-	maxIndirectCommandsStreamStride: uint32_t
-	minSequencesCountBufferOffsetAlignment: uint32_t
-	minSequencesIndexBufferOffsetAlignment: uint32_t
-	minIndirectCommandsBufferOffsetAlignment: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxGraphicsShaderGroupCount: uint32_t,
+	maxIndirectSequenceCount: uint32_t,
+	maxIndirectCommandsTokenCount: uint32_t,
+	maxIndirectCommandsStreamCount: uint32_t,
+	maxIndirectCommandsTokenOffset: uint32_t,
+	maxIndirectCommandsStreamStride: uint32_t,
+	minSequencesCountBufferOffsetAlignment: uint32_t,
+	minSequencesIndexBufferOffsetAlignment: uint32_t,
+	minIndirectCommandsBufferOffsetAlignment: uint32_t,
 }
 impl VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV
 {
@@ -3051,11 +3357,13 @@ impl VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiDrawPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxMultiDrawCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxMultiDrawCount: uint32_t,
 }
 impl VkPhysicalDeviceMultiDrawPropertiesEXT
 {
@@ -3068,14 +3376,16 @@ impl VkPhysicalDeviceMultiDrawPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGraphicsShaderGroupCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	stageCount: uint32_t
-	pStages: VkPipelineShaderStageCreateInfo
-	pVertexInputState: VkPipelineVertexInputStateCreateInfo
-	pTessellationState: VkPipelineTessellationStateCreateInfo
+	sType: VkStructureType,
+	pNext: void,
+	stageCount: uint32_t,
+	pStages: VkPipelineShaderStageCreateInfo,
+	pVertexInputState: VkPipelineVertexInputStateCreateInfo,
+	pTessellationState: VkPipelineTessellationStateCreateInfo,
 }
 impl VkGraphicsShaderGroupCreateInfoNV
 {
@@ -3088,14 +3398,16 @@ impl VkGraphicsShaderGroupCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGraphicsPipelineShaderGroupsCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	groupCount: uint32_t
-	pGroups: VkGraphicsShaderGroupCreateInfoNV
-	pipelineCount: uint32_t
-	pPipelines: VkPipeline
+	sType: VkStructureType,
+	pNext: void,
+	groupCount: uint32_t,
+	pGroups: VkGraphicsShaderGroupCreateInfoNV,
+	pipelineCount: uint32_t,
+	pPipelines: VkPipeline,
 }
 impl VkGraphicsPipelineShaderGroupsCreateInfoNV
 {
@@ -3108,9 +3420,11 @@ impl VkGraphicsPipelineShaderGroupsCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindShaderGroupIndirectCommandNV
 {
-	groupIndex: uint32_t
+	groupIndex: uint32_t,
 }
 impl VkBindShaderGroupIndirectCommandNV
 {
@@ -3122,11 +3436,13 @@ impl VkBindShaderGroupIndirectCommandNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindIndexBufferIndirectCommandNV
 {
-	bufferAddress: VkDeviceAddress
-	size: uint32_t
-	indexType: VkIndexType
+	bufferAddress: VkDeviceAddress,
+	size: uint32_t,
+	indexType: VkIndexType,
 }
 impl VkBindIndexBufferIndirectCommandNV
 {
@@ -3138,11 +3454,13 @@ impl VkBindIndexBufferIndirectCommandNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindVertexBufferIndirectCommandNV
 {
-	bufferAddress: VkDeviceAddress
-	size: uint32_t
-	stride: uint32_t
+	bufferAddress: VkDeviceAddress,
+	size: uint32_t,
+	stride: uint32_t,
 }
 impl VkBindVertexBufferIndirectCommandNV
 {
@@ -3154,9 +3472,11 @@ impl VkBindVertexBufferIndirectCommandNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSetStateFlagsIndirectCommandNV
 {
-	data: uint32_t
+	data: uint32_t,
 }
 impl VkSetStateFlagsIndirectCommandNV
 {
@@ -3168,10 +3488,12 @@ impl VkSetStateFlagsIndirectCommandNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkIndirectCommandsStreamNV
 {
-	buffer: VkBuffer
-	offset: VkDeviceSize
+	buffer: VkBuffer,
+	offset: VkDeviceSize,
 }
 impl VkIndirectCommandsStreamNV
 {
@@ -3183,23 +3505,25 @@ impl VkIndirectCommandsStreamNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkIndirectCommandsLayoutTokenNV
 {
-	sType: VkStructureType
-	pNext: void
-	tokenType: VkIndirectCommandsTokenTypeNV
-	stream: uint32_t
-	offset: uint32_t
-	vertexBindingUnit: uint32_t
-	vertexDynamicStride: VkBool32
-	pushconstantPipelineLayout: VkPipelineLayout
-	pushconstantShaderStageFlags: VkShaderStageFlags
-	pushconstantOffset: uint32_t
-	pushconstantSize: uint32_t
-	indirectStateFlags: VkIndirectStateFlagsNV
-	indexTypeCount: uint32_t
-	pIndexTypes: VkIndexType
-	pIndexTypeValues: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	tokenType: VkIndirectCommandsTokenTypeNV,
+	stream: uint32_t,
+	offset: uint32_t,
+	vertexBindingUnit: uint32_t,
+	vertexDynamicStride: VkBool32,
+	pushconstantPipelineLayout: VkPipelineLayout,
+	pushconstantShaderStageFlags: VkShaderStageFlags,
+	pushconstantOffset: uint32_t,
+	pushconstantSize: uint32_t,
+	indirectStateFlags: VkIndirectStateFlagsNV,
+	indexTypeCount: uint32_t,
+	pIndexTypes: VkIndexType,
+	pIndexTypeValues: uint32_t,
 }
 impl VkIndirectCommandsLayoutTokenNV
 {
@@ -3212,16 +3536,18 @@ impl VkIndirectCommandsLayoutTokenNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkIndirectCommandsLayoutCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkIndirectCommandsLayoutUsageFlagsNV
-	pipelineBindPoint: VkPipelineBindPoint
-	tokenCount: uint32_t
-	pTokens: VkIndirectCommandsLayoutTokenNV
-	streamCount: uint32_t
-	pStreamStrides: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkIndirectCommandsLayoutUsageFlagsNV,
+	pipelineBindPoint: VkPipelineBindPoint,
+	tokenCount: uint32_t,
+	pTokens: VkIndirectCommandsLayoutTokenNV,
+	streamCount: uint32_t,
+	pStreamStrides: uint32_t,
 }
 impl VkIndirectCommandsLayoutCreateInfoNV
 {
@@ -3234,23 +3560,25 @@ impl VkIndirectCommandsLayoutCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGeneratedCommandsInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	pipelineBindPoint: VkPipelineBindPoint
-	pipeline: VkPipeline
-	indirectCommandsLayout: VkIndirectCommandsLayoutNV
-	streamCount: uint32_t
-	pStreams: VkIndirectCommandsStreamNV
-	sequencesCount: uint32_t
-	preprocessBuffer: VkBuffer
-	preprocessOffset: VkDeviceSize
-	preprocessSize: VkDeviceSize
-	sequencesCountBuffer: VkBuffer
-	sequencesCountOffset: VkDeviceSize
-	sequencesIndexBuffer: VkBuffer
-	sequencesIndexOffset: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	pipelineBindPoint: VkPipelineBindPoint,
+	pipeline: VkPipeline,
+	indirectCommandsLayout: VkIndirectCommandsLayoutNV,
+	streamCount: uint32_t,
+	pStreams: VkIndirectCommandsStreamNV,
+	sequencesCount: uint32_t,
+	preprocessBuffer: VkBuffer,
+	preprocessOffset: VkDeviceSize,
+	preprocessSize: VkDeviceSize,
+	sequencesCountBuffer: VkBuffer,
+	sequencesCountOffset: VkDeviceSize,
+	sequencesIndexBuffer: VkBuffer,
+	sequencesIndexOffset: VkDeviceSize,
 }
 impl VkGeneratedCommandsInfoNV
 {
@@ -3263,14 +3591,16 @@ impl VkGeneratedCommandsInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGeneratedCommandsMemoryRequirementsInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	pipelineBindPoint: VkPipelineBindPoint
-	pipeline: VkPipeline
-	indirectCommandsLayout: VkIndirectCommandsLayoutNV
-	maxSequencesCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	pipelineBindPoint: VkPipelineBindPoint,
+	pipeline: VkPipeline,
+	indirectCommandsLayout: VkIndirectCommandsLayoutNV,
+	maxSequencesCount: uint32_t,
 }
 impl VkGeneratedCommandsMemoryRequirementsInfoNV
 {
@@ -3283,11 +3613,13 @@ impl VkGeneratedCommandsMemoryRequirementsInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFeatures2
 {
-	sType: VkStructureType
-	pNext: void
-	features: VkPhysicalDeviceFeatures
+	sType: VkStructureType,
+	pNext: void,
+	features: VkPhysicalDeviceFeatures,
 }
 impl VkPhysicalDeviceFeatures2
 {
@@ -3300,6 +3632,8 @@ impl VkPhysicalDeviceFeatures2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFeatures2KHR
 {
 }
@@ -3313,11 +3647,13 @@ impl VkPhysicalDeviceFeatures2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProperties2
 {
-	sType: VkStructureType
-	pNext: void
-	properties: VkPhysicalDeviceProperties
+	sType: VkStructureType,
+	pNext: void,
+	properties: VkPhysicalDeviceProperties,
 }
 impl VkPhysicalDeviceProperties2
 {
@@ -3330,6 +3666,8 @@ impl VkPhysicalDeviceProperties2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProperties2KHR
 {
 }
@@ -3343,11 +3681,13 @@ impl VkPhysicalDeviceProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFormatProperties2
 {
-	sType: VkStructureType
-	pNext: void
-	formatProperties: VkFormatProperties
+	sType: VkStructureType,
+	pNext: void,
+	formatProperties: VkFormatProperties,
 }
 impl VkFormatProperties2
 {
@@ -3360,6 +3700,8 @@ impl VkFormatProperties2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFormatProperties2KHR
 {
 }
@@ -3373,11 +3715,13 @@ impl VkFormatProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageFormatProperties2
 {
-	sType: VkStructureType
-	pNext: void
-	imageFormatProperties: VkImageFormatProperties
+	sType: VkStructureType,
+	pNext: void,
+	imageFormatProperties: VkImageFormatProperties,
 }
 impl VkImageFormatProperties2
 {
@@ -3390,6 +3734,8 @@ impl VkImageFormatProperties2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageFormatProperties2KHR
 {
 }
@@ -3403,15 +3749,17 @@ impl VkImageFormatProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageFormatInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	format: VkFormat
-	type: VkImageType
-	tiling: VkImageTiling
-	usage: VkImageUsageFlags
-	flags: VkImageCreateFlags
+	sType: VkStructureType,
+	pNext: void,
+	format: VkFormat,
+	type: VkImageType,
+	tiling: VkImageTiling,
+	usage: VkImageUsageFlags,
+	flags: VkImageCreateFlags,
 }
 impl VkPhysicalDeviceImageFormatInfo2
 {
@@ -3424,6 +3772,8 @@ impl VkPhysicalDeviceImageFormatInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageFormatInfo2KHR
 {
 }
@@ -3437,11 +3787,13 @@ impl VkPhysicalDeviceImageFormatInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties2
 {
-	sType: VkStructureType
-	pNext: void
-	queueFamilyProperties: VkQueueFamilyProperties
+	sType: VkStructureType,
+	pNext: void,
+	queueFamilyProperties: VkQueueFamilyProperties,
 }
 impl VkQueueFamilyProperties2
 {
@@ -3454,6 +3806,8 @@ impl VkQueueFamilyProperties2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties2KHR
 {
 }
@@ -3467,11 +3821,13 @@ impl VkQueueFamilyProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryProperties2
 {
-	sType: VkStructureType
-	pNext: void
-	memoryProperties: VkPhysicalDeviceMemoryProperties
+	sType: VkStructureType,
+	pNext: void,
+	memoryProperties: VkPhysicalDeviceMemoryProperties,
 }
 impl VkPhysicalDeviceMemoryProperties2
 {
@@ -3484,6 +3840,8 @@ impl VkPhysicalDeviceMemoryProperties2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryProperties2KHR
 {
 }
@@ -3497,11 +3855,13 @@ impl VkPhysicalDeviceMemoryProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties2
 {
-	sType: VkStructureType
-	pNext: void
-	properties: VkSparseImageFormatProperties
+	sType: VkStructureType,
+	pNext: void,
+	properties: VkSparseImageFormatProperties,
 }
 impl VkSparseImageFormatProperties2
 {
@@ -3514,6 +3874,8 @@ impl VkSparseImageFormatProperties2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties2KHR
 {
 }
@@ -3527,15 +3889,17 @@ impl VkSparseImageFormatProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSparseImageFormatInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	format: VkFormat
-	type: VkImageType
-	samples: VkSampleCountFlagBits
-	usage: VkImageUsageFlags
-	tiling: VkImageTiling
+	sType: VkStructureType,
+	pNext: void,
+	format: VkFormat,
+	type: VkImageType,
+	samples: VkSampleCountFlagBits,
+	usage: VkImageUsageFlags,
+	tiling: VkImageTiling,
 }
 impl VkPhysicalDeviceSparseImageFormatInfo2
 {
@@ -3548,6 +3912,8 @@ impl VkPhysicalDeviceSparseImageFormatInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSparseImageFormatInfo2KHR
 {
 }
@@ -3561,11 +3927,13 @@ impl VkPhysicalDeviceSparseImageFormatInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePushDescriptorPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	maxPushDescriptors: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxPushDescriptors: uint32_t,
 }
 impl VkPhysicalDevicePushDescriptorPropertiesKHR
 {
@@ -3578,12 +3946,14 @@ impl VkPhysicalDevicePushDescriptorPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkConformanceVersion
 {
-	major: uint8_t
-	minor: uint8_t
-	subminor: uint8_t
-	patch: uint8_t
+	major: uint8_t,
+	minor: uint8_t,
+	subminor: uint8_t,
+	patch: uint8_t,
 }
 impl VkConformanceVersion
 {
@@ -3595,6 +3965,8 @@ impl VkConformanceVersion
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkConformanceVersionKHR
 {
 }
@@ -3608,14 +3980,16 @@ impl VkConformanceVersionKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDriverProperties
 {
-	sType: VkStructureType
-	pNext: void
-	driverID: VkDriverId
-	driverName: char
-	driverInfo: char
-	conformanceVersion: VkConformanceVersion
+	sType: VkStructureType,
+	pNext: void,
+	driverID: VkDriverId,
+	driverName: char,
+	driverInfo: char,
+	conformanceVersion: VkConformanceVersion,
 }
 impl VkPhysicalDeviceDriverProperties
 {
@@ -3628,6 +4002,8 @@ impl VkPhysicalDeviceDriverProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDriverPropertiesKHR
 {
 }
@@ -3641,12 +4017,14 @@ impl VkPhysicalDeviceDriverPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentRegionsKHR
 {
-	sType: VkStructureType
-	pNext: void
-	swapchainCount: uint32_t
-	pRegions: VkPresentRegionKHR
+	sType: VkStructureType,
+	pNext: void,
+	swapchainCount: uint32_t,
+	pRegions: VkPresentRegionKHR,
 }
 impl VkPresentRegionsKHR
 {
@@ -3659,10 +4037,12 @@ impl VkPresentRegionsKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentRegionKHR
 {
-	rectangleCount: uint32_t
-	pRectangles: VkRectLayerKHR
+	rectangleCount: uint32_t,
+	pRectangles: VkRectLayerKHR,
 }
 impl VkPresentRegionKHR
 {
@@ -3674,11 +4054,13 @@ impl VkPresentRegionKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRectLayerKHR
 {
-	offset: VkOffset2D
-	extent: VkExtent2D
-	layer: uint32_t
+	offset: VkOffset2D,
+	extent: VkExtent2D,
+	layer: uint32_t,
 }
 impl VkRectLayerKHR
 {
@@ -3690,12 +4072,14 @@ impl VkRectLayerKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVariablePointersFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	variablePointersStorageBuffer: VkBool32
-	variablePointers: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	variablePointersStorageBuffer: VkBool32,
+	variablePointers: VkBool32,
 }
 impl VkPhysicalDeviceVariablePointersFeatures
 {
@@ -3708,6 +4092,8 @@ impl VkPhysicalDeviceVariablePointersFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVariablePointersFeaturesKHR
 {
 }
@@ -3721,6 +4107,8 @@ impl VkPhysicalDeviceVariablePointersFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVariablePointerFeaturesKHR
 {
 }
@@ -3734,6 +4122,8 @@ impl VkPhysicalDeviceVariablePointerFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVariablePointerFeatures
 {
 }
@@ -3747,11 +4137,13 @@ impl VkPhysicalDeviceVariablePointerFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryProperties
 {
-	externalMemoryFeatures: VkExternalMemoryFeatureFlags
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlags
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlags
+	externalMemoryFeatures: VkExternalMemoryFeatureFlags,
+	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlags,
+	compatibleHandleTypes: VkExternalMemoryHandleTypeFlags,
 }
 impl VkExternalMemoryProperties
 {
@@ -3763,6 +4155,8 @@ impl VkExternalMemoryProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryPropertiesKHR
 {
 }
@@ -3776,11 +4170,13 @@ impl VkExternalMemoryPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalImageFormatInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalMemoryHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalImageFormatInfo
 {
@@ -3793,6 +4189,8 @@ impl VkPhysicalDeviceExternalImageFormatInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalImageFormatInfoKHR
 {
 }
@@ -3806,11 +4204,13 @@ impl VkPhysicalDeviceExternalImageFormatInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalImageFormatProperties
 {
-	sType: VkStructureType
-	pNext: void
-	externalMemoryProperties: VkExternalMemoryProperties
+	sType: VkStructureType,
+	pNext: void,
+	externalMemoryProperties: VkExternalMemoryProperties,
 }
 impl VkExternalImageFormatProperties
 {
@@ -3823,6 +4223,8 @@ impl VkExternalImageFormatProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalImageFormatPropertiesKHR
 {
 }
@@ -3836,13 +4238,15 @@ impl VkExternalImageFormatPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalBufferInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkBufferCreateFlags
-	usage: VkBufferUsageFlags
-	handleType: VkExternalMemoryHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkBufferCreateFlags,
+	usage: VkBufferUsageFlags,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalBufferInfo
 {
@@ -3855,6 +4259,8 @@ impl VkPhysicalDeviceExternalBufferInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalBufferInfoKHR
 {
 }
@@ -3868,11 +4274,13 @@ impl VkPhysicalDeviceExternalBufferInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalBufferProperties
 {
-	sType: VkStructureType
-	pNext: void
-	externalMemoryProperties: VkExternalMemoryProperties
+	sType: VkStructureType,
+	pNext: void,
+	externalMemoryProperties: VkExternalMemoryProperties,
 }
 impl VkExternalBufferProperties
 {
@@ -3885,6 +4293,8 @@ impl VkExternalBufferProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalBufferPropertiesKHR
 {
 }
@@ -3898,15 +4308,17 @@ impl VkExternalBufferPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceIDProperties
 {
-	sType: VkStructureType
-	pNext: void
-	deviceUUID: uint8_t
-	driverUUID: uint8_t
-	deviceLUID: uint8_t
-	deviceNodeMask: uint32_t
-	deviceLUIDValid: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	deviceUUID: uint8_t,
+	driverUUID: uint8_t,
+	deviceLUID: uint8_t,
+	deviceNodeMask: uint32_t,
+	deviceLUIDValid: VkBool32,
 }
 impl VkPhysicalDeviceIDProperties
 {
@@ -3919,6 +4331,8 @@ impl VkPhysicalDeviceIDProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceIDPropertiesKHR
 {
 }
@@ -3932,11 +4346,13 @@ impl VkPhysicalDeviceIDPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryImageCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalMemoryHandleTypeFlags
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 impl VkExternalMemoryImageCreateInfo
 {
@@ -3949,6 +4365,8 @@ impl VkExternalMemoryImageCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryImageCreateInfoKHR
 {
 }
@@ -3962,11 +4380,13 @@ impl VkExternalMemoryImageCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryBufferCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalMemoryHandleTypeFlags
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 impl VkExternalMemoryBufferCreateInfo
 {
@@ -3979,6 +4399,8 @@ impl VkExternalMemoryBufferCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalMemoryBufferCreateInfoKHR
 {
 }
@@ -3992,11 +4414,13 @@ impl VkExternalMemoryBufferCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportMemoryAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalMemoryHandleTypeFlags
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalMemoryHandleTypeFlags,
 }
 impl VkExportMemoryAllocateInfo
 {
@@ -4009,6 +4433,8 @@ impl VkExportMemoryAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportMemoryAllocateInfoKHR
 {
 }
@@ -4022,13 +4448,15 @@ impl VkExportMemoryAllocateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportMemoryWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalMemoryHandleTypeFlagBits
-	handle: HANDLE
-	name: LPCWSTR
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
+	handle: HANDLE,
+	name: LPCWSTR,
 }
 impl VkImportMemoryWin32HandleInfoKHR
 {
@@ -4041,13 +4469,15 @@ impl VkImportMemoryWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportMemoryWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pAttributes: SECURITY_ATTRIBUTES
-	dwAccess: DWORD
-	name: LPCWSTR
+	sType: VkStructureType,
+	pNext: void,
+	pAttributes: SECURITY_ATTRIBUTES,
+	dwAccess: DWORD,
+	name: LPCWSTR,
 }
 impl VkExportMemoryWin32HandleInfoKHR
 {
@@ -4060,12 +4490,14 @@ impl VkExportMemoryWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportMemoryZirconHandleInfoFUCHSIA
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalMemoryHandleTypeFlagBits
-	handle: zx_handle_t
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
+	handle: zx_handle_t,
 }
 impl VkImportMemoryZirconHandleInfoFUCHSIA
 {
@@ -4078,11 +4510,13 @@ impl VkImportMemoryZirconHandleInfoFUCHSIA
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryZirconHandlePropertiesFUCHSIA
 {
-	sType: VkStructureType
-	pNext: void
-	memoryTypeBits: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	memoryTypeBits: uint32_t,
 }
 impl VkMemoryZirconHandlePropertiesFUCHSIA
 {
@@ -4095,12 +4529,14 @@ impl VkMemoryZirconHandlePropertiesFUCHSIA
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryGetZirconHandleInfoFUCHSIA
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
-	handleType: VkExternalMemoryHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkMemoryGetZirconHandleInfoFUCHSIA
 {
@@ -4113,11 +4549,13 @@ impl VkMemoryGetZirconHandleInfoFUCHSIA
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryWin32HandlePropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	memoryTypeBits: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	memoryTypeBits: uint32_t,
 }
 impl VkMemoryWin32HandlePropertiesKHR
 {
@@ -4130,12 +4568,14 @@ impl VkMemoryWin32HandlePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryGetWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
-	handleType: VkExternalMemoryHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkMemoryGetWin32HandleInfoKHR
 {
@@ -4148,12 +4588,14 @@ impl VkMemoryGetWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportMemoryFdInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalMemoryHandleTypeFlagBits
-	fd: int
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
+	fd: int,
 }
 impl VkImportMemoryFdInfoKHR
 {
@@ -4166,11 +4608,13 @@ impl VkImportMemoryFdInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryFdPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	memoryTypeBits: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	memoryTypeBits: uint32_t,
 }
 impl VkMemoryFdPropertiesKHR
 {
@@ -4183,12 +4627,14 @@ impl VkMemoryFdPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryGetFdInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
-	handleType: VkExternalMemoryHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkMemoryGetFdInfoKHR
 {
@@ -4201,17 +4647,19 @@ impl VkMemoryGetFdInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWin32KeyedMutexAcquireReleaseInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	acquireCount: uint32_t
-	pAcquireSyncs: VkDeviceMemory
-	pAcquireKeys: uint64_t
-	pAcquireTimeouts: uint32_t
-	releaseCount: uint32_t
-	pReleaseSyncs: VkDeviceMemory
-	pReleaseKeys: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	acquireCount: uint32_t,
+	pAcquireSyncs: VkDeviceMemory,
+	pAcquireKeys: uint64_t,
+	pAcquireTimeouts: uint32_t,
+	releaseCount: uint32_t,
+	pReleaseSyncs: VkDeviceMemory,
+	pReleaseKeys: uint64_t,
 }
 impl VkWin32KeyedMutexAcquireReleaseInfoKHR
 {
@@ -4224,11 +4672,13 @@ impl VkWin32KeyedMutexAcquireReleaseInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalSemaphoreInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalSemaphoreInfo
 {
@@ -4241,6 +4691,8 @@ impl VkPhysicalDeviceExternalSemaphoreInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalSemaphoreInfoKHR
 {
 }
@@ -4254,13 +4706,15 @@ impl VkPhysicalDeviceExternalSemaphoreInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalSemaphoreProperties
 {
-	sType: VkStructureType
-	pNext: void
-	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlags
-	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlags
-	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlags
+	sType: VkStructureType,
+	pNext: void,
+	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlags,
+	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlags,
+	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlags,
 }
 impl VkExternalSemaphoreProperties
 {
@@ -4273,6 +4727,8 @@ impl VkExternalSemaphoreProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalSemaphorePropertiesKHR
 {
 }
@@ -4286,11 +4742,13 @@ impl VkExternalSemaphorePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportSemaphoreCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalSemaphoreHandleTypeFlags
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalSemaphoreHandleTypeFlags,
 }
 impl VkExportSemaphoreCreateInfo
 {
@@ -4303,6 +4761,8 @@ impl VkExportSemaphoreCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportSemaphoreCreateInfoKHR
 {
 }
@@ -4316,15 +4776,17 @@ impl VkExportSemaphoreCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportSemaphoreWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	flags: VkSemaphoreImportFlags
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
-	handle: HANDLE
-	name: LPCWSTR
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	flags: VkSemaphoreImportFlags,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	handle: HANDLE,
+	name: LPCWSTR,
 }
 impl VkImportSemaphoreWin32HandleInfoKHR
 {
@@ -4337,13 +4799,15 @@ impl VkImportSemaphoreWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportSemaphoreWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pAttributes: SECURITY_ATTRIBUTES
-	dwAccess: DWORD
-	name: LPCWSTR
+	sType: VkStructureType,
+	pNext: void,
+	pAttributes: SECURITY_ATTRIBUTES,
+	dwAccess: DWORD,
+	name: LPCWSTR,
 }
 impl VkExportSemaphoreWin32HandleInfoKHR
 {
@@ -4356,14 +4820,16 @@ impl VkExportSemaphoreWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkD3D12FenceSubmitInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	waitSemaphoreValuesCount: uint32_t
-	pWaitSemaphoreValues: uint64_t
-	signalSemaphoreValuesCount: uint32_t
-	pSignalSemaphoreValues: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	waitSemaphoreValuesCount: uint32_t,
+	pWaitSemaphoreValues: uint64_t,
+	signalSemaphoreValuesCount: uint32_t,
+	pSignalSemaphoreValues: uint64_t,
 }
 impl VkD3D12FenceSubmitInfoKHR
 {
@@ -4376,12 +4842,14 @@ impl VkD3D12FenceSubmitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreGetWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 impl VkSemaphoreGetWin32HandleInfoKHR
 {
@@ -4394,14 +4862,16 @@ impl VkSemaphoreGetWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportSemaphoreFdInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	flags: VkSemaphoreImportFlags
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
-	fd: int
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	flags: VkSemaphoreImportFlags,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	fd: int,
 }
 impl VkImportSemaphoreFdInfoKHR
 {
@@ -4414,12 +4884,14 @@ impl VkImportSemaphoreFdInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreGetFdInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 impl VkSemaphoreGetFdInfoKHR
 {
@@ -4432,14 +4904,16 @@ impl VkSemaphoreGetFdInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportSemaphoreZirconHandleInfoFUCHSIA
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	flags: VkSemaphoreImportFlags
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
-	zirconHandle: zx_handle_t
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	flags: VkSemaphoreImportFlags,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	zirconHandle: zx_handle_t,
 }
 impl VkImportSemaphoreZirconHandleInfoFUCHSIA
 {
@@ -4452,12 +4926,14 @@ impl VkImportSemaphoreZirconHandleInfoFUCHSIA
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreGetZirconHandleInfoFUCHSIA
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	handleType: VkExternalSemaphoreHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 impl VkSemaphoreGetZirconHandleInfoFUCHSIA
 {
@@ -4470,11 +4946,13 @@ impl VkSemaphoreGetZirconHandleInfoFUCHSIA
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalFenceInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalFenceHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalFenceHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalFenceInfo
 {
@@ -4487,6 +4965,8 @@ impl VkPhysicalDeviceExternalFenceInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalFenceInfoKHR
 {
 }
@@ -4500,13 +4980,15 @@ impl VkPhysicalDeviceExternalFenceInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalFenceProperties
 {
-	sType: VkStructureType
-	pNext: void
-	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlags
-	compatibleHandleTypes: VkExternalFenceHandleTypeFlags
-	externalFenceFeatures: VkExternalFenceFeatureFlags
+	sType: VkStructureType,
+	pNext: void,
+	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlags,
+	compatibleHandleTypes: VkExternalFenceHandleTypeFlags,
+	externalFenceFeatures: VkExternalFenceFeatureFlags,
 }
 impl VkExternalFenceProperties
 {
@@ -4519,6 +5001,8 @@ impl VkExternalFenceProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalFencePropertiesKHR
 {
 }
@@ -4532,11 +5016,13 @@ impl VkExternalFencePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportFenceCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	handleTypes: VkExternalFenceHandleTypeFlags
+	sType: VkStructureType,
+	pNext: void,
+	handleTypes: VkExternalFenceHandleTypeFlags,
 }
 impl VkExportFenceCreateInfo
 {
@@ -4549,6 +5035,8 @@ impl VkExportFenceCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportFenceCreateInfoKHR
 {
 }
@@ -4562,15 +5050,17 @@ impl VkExportFenceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportFenceWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	fence: VkFence
-	flags: VkFenceImportFlags
-	handleType: VkExternalFenceHandleTypeFlagBits
-	handle: HANDLE
-	name: LPCWSTR
+	sType: VkStructureType,
+	pNext: void,
+	fence: VkFence,
+	flags: VkFenceImportFlags,
+	handleType: VkExternalFenceHandleTypeFlagBits,
+	handle: HANDLE,
+	name: LPCWSTR,
 }
 impl VkImportFenceWin32HandleInfoKHR
 {
@@ -4583,13 +5073,15 @@ impl VkImportFenceWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExportFenceWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pAttributes: SECURITY_ATTRIBUTES
-	dwAccess: DWORD
-	name: LPCWSTR
+	sType: VkStructureType,
+	pNext: void,
+	pAttributes: SECURITY_ATTRIBUTES,
+	dwAccess: DWORD,
+	name: LPCWSTR,
 }
 impl VkExportFenceWin32HandleInfoKHR
 {
@@ -4602,12 +5094,14 @@ impl VkExportFenceWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFenceGetWin32HandleInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	fence: VkFence
-	handleType: VkExternalFenceHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	fence: VkFence,
+	handleType: VkExternalFenceHandleTypeFlagBits,
 }
 impl VkFenceGetWin32HandleInfoKHR
 {
@@ -4620,14 +5114,16 @@ impl VkFenceGetWin32HandleInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportFenceFdInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	fence: VkFence
-	flags: VkFenceImportFlags
-	handleType: VkExternalFenceHandleTypeFlagBits
-	fd: int
+	sType: VkStructureType,
+	pNext: void,
+	fence: VkFence,
+	flags: VkFenceImportFlags,
+	handleType: VkExternalFenceHandleTypeFlagBits,
+	fd: int,
 }
 impl VkImportFenceFdInfoKHR
 {
@@ -4640,12 +5136,14 @@ impl VkImportFenceFdInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFenceGetFdInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	fence: VkFence
-	handleType: VkExternalFenceHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	fence: VkFence,
+	handleType: VkExternalFenceHandleTypeFlagBits,
 }
 impl VkFenceGetFdInfoKHR
 {
@@ -4658,13 +5156,15 @@ impl VkFenceGetFdInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	multiview: VkBool32
-	multiviewGeometryShader: VkBool32
-	multiviewTessellationShader: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	multiview: VkBool32,
+	multiviewGeometryShader: VkBool32,
+	multiviewTessellationShader: VkBool32,
 }
 impl VkPhysicalDeviceMultiviewFeatures
 {
@@ -4677,6 +5177,8 @@ impl VkPhysicalDeviceMultiviewFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewFeaturesKHR
 {
 }
@@ -4690,12 +5192,14 @@ impl VkPhysicalDeviceMultiviewFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewProperties
 {
-	sType: VkStructureType
-	pNext: void
-	maxMultiviewViewCount: uint32_t
-	maxMultiviewInstanceIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxMultiviewViewCount: uint32_t,
+	maxMultiviewInstanceIndex: uint32_t,
 }
 impl VkPhysicalDeviceMultiviewProperties
 {
@@ -4708,6 +5212,8 @@ impl VkPhysicalDeviceMultiviewProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewPropertiesKHR
 {
 }
@@ -4721,16 +5227,18 @@ impl VkPhysicalDeviceMultiviewPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassMultiviewCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	subpassCount: uint32_t
-	pViewMasks: uint32_t
-	dependencyCount: uint32_t
-	pViewOffsets: int32_t
-	correlationMaskCount: uint32_t
-	pCorrelationMasks: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	subpassCount: uint32_t,
+	pViewMasks: uint32_t,
+	dependencyCount: uint32_t,
+	pViewOffsets: int32_t,
+	correlationMaskCount: uint32_t,
+	pCorrelationMasks: uint32_t,
 }
 impl VkRenderPassMultiviewCreateInfo
 {
@@ -4743,6 +5251,8 @@ impl VkRenderPassMultiviewCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassMultiviewCreateInfoKHR
 {
 }
@@ -4756,21 +5266,23 @@ impl VkRenderPassMultiviewCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceCapabilities2EXT
 {
-	sType: VkStructureType
-	pNext: void
-	minImageCount: uint32_t
-	maxImageCount: uint32_t
-	currentExtent: VkExtent2D
-	minImageExtent: VkExtent2D
-	maxImageExtent: VkExtent2D
-	maxImageArrayLayers: uint32_t
-	supportedTransforms: VkSurfaceTransformFlagsKHR
-	currentTransform: VkSurfaceTransformFlagBitsKHR
-	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR
-	supportedUsageFlags: VkImageUsageFlags
-	supportedSurfaceCounters: VkSurfaceCounterFlagsEXT
+	sType: VkStructureType,
+	pNext: void,
+	minImageCount: uint32_t,
+	maxImageCount: uint32_t,
+	currentExtent: VkExtent2D,
+	minImageExtent: VkExtent2D,
+	maxImageExtent: VkExtent2D,
+	maxImageArrayLayers: uint32_t,
+	supportedTransforms: VkSurfaceTransformFlagsKHR,
+	currentTransform: VkSurfaceTransformFlagBitsKHR,
+	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
+	supportedUsageFlags: VkImageUsageFlags,
+	supportedSurfaceCounters: VkSurfaceCounterFlagsEXT,
 }
 impl VkSurfaceCapabilities2EXT
 {
@@ -4783,11 +5295,13 @@ impl VkSurfaceCapabilities2EXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPowerInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	powerState: VkDisplayPowerStateEXT
+	sType: VkStructureType,
+	pNext: void,
+	powerState: VkDisplayPowerStateEXT,
 }
 impl VkDisplayPowerInfoEXT
 {
@@ -4800,11 +5314,13 @@ impl VkDisplayPowerInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceEventInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	deviceEvent: VkDeviceEventTypeEXT
+	sType: VkStructureType,
+	pNext: void,
+	deviceEvent: VkDeviceEventTypeEXT,
 }
 impl VkDeviceEventInfoEXT
 {
@@ -4817,11 +5333,13 @@ impl VkDeviceEventInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayEventInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	displayEvent: VkDisplayEventTypeEXT
+	sType: VkStructureType,
+	pNext: void,
+	displayEvent: VkDisplayEventTypeEXT,
 }
 impl VkDisplayEventInfoEXT
 {
@@ -4834,11 +5352,13 @@ impl VkDisplayEventInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSwapchainCounterCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	surfaceCounters: VkSurfaceCounterFlagsEXT
+	sType: VkStructureType,
+	pNext: void,
+	surfaceCounters: VkSurfaceCounterFlagsEXT,
 }
 impl VkSwapchainCounterCreateInfoEXT
 {
@@ -4851,13 +5371,15 @@ impl VkSwapchainCounterCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceGroupProperties
 {
-	sType: VkStructureType
-	pNext: void
-	physicalDeviceCount: uint32_t
-	physicalDevices: VkPhysicalDevice
-	subsetAllocation: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	physicalDeviceCount: uint32_t,
+	physicalDevices: VkPhysicalDevice,
+	subsetAllocation: VkBool32,
 }
 impl VkPhysicalDeviceGroupProperties
 {
@@ -4870,6 +5392,8 @@ impl VkPhysicalDeviceGroupProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceGroupPropertiesKHR
 {
 }
@@ -4883,12 +5407,14 @@ impl VkPhysicalDeviceGroupPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryAllocateFlagsInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkMemoryAllocateFlags
-	deviceMask: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkMemoryAllocateFlags,
+	deviceMask: uint32_t,
 }
 impl VkMemoryAllocateFlagsInfo
 {
@@ -4901,6 +5427,8 @@ impl VkMemoryAllocateFlagsInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryAllocateFlagsInfoKHR
 {
 }
@@ -4914,13 +5442,15 @@ impl VkMemoryAllocateFlagsInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindBufferMemoryInfo
 {
-	sType: VkStructureType
-	pNext: void
-	buffer: VkBuffer
-	memory: VkDeviceMemory
-	memoryOffset: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	buffer: VkBuffer,
+	memory: VkDeviceMemory,
+	memoryOffset: VkDeviceSize,
 }
 impl VkBindBufferMemoryInfo
 {
@@ -4933,6 +5463,8 @@ impl VkBindBufferMemoryInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindBufferMemoryInfoKHR
 {
 }
@@ -4946,12 +5478,14 @@ impl VkBindBufferMemoryInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindBufferMemoryDeviceGroupInfo
 {
-	sType: VkStructureType
-	pNext: void
-	deviceIndexCount: uint32_t
-	pDeviceIndices: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	deviceIndexCount: uint32_t,
+	pDeviceIndices: uint32_t,
 }
 impl VkBindBufferMemoryDeviceGroupInfo
 {
@@ -4964,6 +5498,8 @@ impl VkBindBufferMemoryDeviceGroupInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindBufferMemoryDeviceGroupInfoKHR
 {
 }
@@ -4977,13 +5513,15 @@ impl VkBindBufferMemoryDeviceGroupInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImageMemoryInfo
 {
-	sType: VkStructureType
-	pNext: void
-	image: VkImage
-	memory: VkDeviceMemory
-	memoryOffset: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	image: VkImage,
+	memory: VkDeviceMemory,
+	memoryOffset: VkDeviceSize,
 }
 impl VkBindImageMemoryInfo
 {
@@ -4996,6 +5534,8 @@ impl VkBindImageMemoryInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImageMemoryInfoKHR
 {
 }
@@ -5009,14 +5549,16 @@ impl VkBindImageMemoryInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImageMemoryDeviceGroupInfo
 {
-	sType: VkStructureType
-	pNext: void
-	deviceIndexCount: uint32_t
-	pDeviceIndices: uint32_t
-	splitInstanceBindRegionCount: uint32_t
-	pSplitInstanceBindRegions: VkRect2D
+	sType: VkStructureType,
+	pNext: void,
+	deviceIndexCount: uint32_t,
+	pDeviceIndices: uint32_t,
+	splitInstanceBindRegionCount: uint32_t,
+	pSplitInstanceBindRegions: VkRect2D,
 }
 impl VkBindImageMemoryDeviceGroupInfo
 {
@@ -5029,6 +5571,8 @@ impl VkBindImageMemoryDeviceGroupInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImageMemoryDeviceGroupInfoKHR
 {
 }
@@ -5042,13 +5586,15 @@ impl VkBindImageMemoryDeviceGroupInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupRenderPassBeginInfo
 {
-	sType: VkStructureType
-	pNext: void
-	deviceMask: uint32_t
-	deviceRenderAreaCount: uint32_t
-	pDeviceRenderAreas: VkRect2D
+	sType: VkStructureType,
+	pNext: void,
+	deviceMask: uint32_t,
+	deviceRenderAreaCount: uint32_t,
+	pDeviceRenderAreas: VkRect2D,
 }
 impl VkDeviceGroupRenderPassBeginInfo
 {
@@ -5061,6 +5607,8 @@ impl VkDeviceGroupRenderPassBeginInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupRenderPassBeginInfoKHR
 {
 }
@@ -5074,11 +5622,13 @@ impl VkDeviceGroupRenderPassBeginInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupCommandBufferBeginInfo
 {
-	sType: VkStructureType
-	pNext: void
-	deviceMask: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	deviceMask: uint32_t,
 }
 impl VkDeviceGroupCommandBufferBeginInfo
 {
@@ -5091,6 +5641,8 @@ impl VkDeviceGroupCommandBufferBeginInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupCommandBufferBeginInfoKHR
 {
 }
@@ -5104,16 +5656,18 @@ impl VkDeviceGroupCommandBufferBeginInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupSubmitInfo
 {
-	sType: VkStructureType
-	pNext: void
-	waitSemaphoreCount: uint32_t
-	pWaitSemaphoreDeviceIndices: uint32_t
-	commandBufferCount: uint32_t
-	pCommandBufferDeviceMasks: uint32_t
-	signalSemaphoreCount: uint32_t
-	pSignalSemaphoreDeviceIndices: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	waitSemaphoreCount: uint32_t,
+	pWaitSemaphoreDeviceIndices: uint32_t,
+	commandBufferCount: uint32_t,
+	pCommandBufferDeviceMasks: uint32_t,
+	signalSemaphoreCount: uint32_t,
+	pSignalSemaphoreDeviceIndices: uint32_t,
 }
 impl VkDeviceGroupSubmitInfo
 {
@@ -5126,6 +5680,8 @@ impl VkDeviceGroupSubmitInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupSubmitInfoKHR
 {
 }
@@ -5139,12 +5695,14 @@ impl VkDeviceGroupSubmitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupBindSparseInfo
 {
-	sType: VkStructureType
-	pNext: void
-	resourceDeviceIndex: uint32_t
-	memoryDeviceIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	resourceDeviceIndex: uint32_t,
+	memoryDeviceIndex: uint32_t,
 }
 impl VkDeviceGroupBindSparseInfo
 {
@@ -5157,6 +5715,8 @@ impl VkDeviceGroupBindSparseInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupBindSparseInfoKHR
 {
 }
@@ -5170,12 +5730,14 @@ impl VkDeviceGroupBindSparseInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupPresentCapabilitiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	presentMask: uint32_t
-	modes: VkDeviceGroupPresentModeFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	presentMask: uint32_t,
+	modes: VkDeviceGroupPresentModeFlagsKHR,
 }
 impl VkDeviceGroupPresentCapabilitiesKHR
 {
@@ -5188,11 +5750,13 @@ impl VkDeviceGroupPresentCapabilitiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageSwapchainCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	swapchain: VkSwapchainKHR
+	sType: VkStructureType,
+	pNext: void,
+	swapchain: VkSwapchainKHR,
 }
 impl VkImageSwapchainCreateInfoKHR
 {
@@ -5205,12 +5769,14 @@ impl VkImageSwapchainCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImageMemorySwapchainInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	swapchain: VkSwapchainKHR
-	imageIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	swapchain: VkSwapchainKHR,
+	imageIndex: uint32_t,
 }
 impl VkBindImageMemorySwapchainInfoKHR
 {
@@ -5223,15 +5789,17 @@ impl VkBindImageMemorySwapchainInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAcquireNextImageInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	swapchain: VkSwapchainKHR
-	timeout: uint64_t
-	semaphore: VkSemaphore
-	fence: VkFence
-	deviceMask: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	swapchain: VkSwapchainKHR,
+	timeout: uint64_t,
+	semaphore: VkSemaphore,
+	fence: VkFence,
+	deviceMask: uint32_t,
 }
 impl VkAcquireNextImageInfoKHR
 {
@@ -5244,13 +5812,15 @@ impl VkAcquireNextImageInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupPresentInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	swapchainCount: uint32_t
-	pDeviceMasks: uint32_t
-	mode: VkDeviceGroupPresentModeFlagBitsKHR
+	sType: VkStructureType,
+	pNext: void,
+	swapchainCount: uint32_t,
+	pDeviceMasks: uint32_t,
+	mode: VkDeviceGroupPresentModeFlagBitsKHR,
 }
 impl VkDeviceGroupPresentInfoKHR
 {
@@ -5263,12 +5833,14 @@ impl VkDeviceGroupPresentInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupDeviceCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	physicalDeviceCount: uint32_t
-	pPhysicalDevices: VkPhysicalDevice
+	sType: VkStructureType,
+	pNext: void,
+	physicalDeviceCount: uint32_t,
+	pPhysicalDevices: VkPhysicalDevice,
 }
 impl VkDeviceGroupDeviceCreateInfo
 {
@@ -5281,6 +5853,8 @@ impl VkDeviceGroupDeviceCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupDeviceCreateInfoKHR
 {
 }
@@ -5294,11 +5868,13 @@ impl VkDeviceGroupDeviceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceGroupSwapchainCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	modes: VkDeviceGroupPresentModeFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	modes: VkDeviceGroupPresentModeFlagsKHR,
 }
 impl VkDeviceGroupSwapchainCreateInfoKHR
 {
@@ -5311,14 +5887,16 @@ impl VkDeviceGroupSwapchainCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorUpdateTemplateEntry
 {
-	dstBinding: uint32_t
-	dstArrayElement: uint32_t
-	descriptorCount: uint32_t
-	descriptorType: VkDescriptorType
-	offset: size_t
-	stride: size_t
+	dstBinding: uint32_t,
+	dstArrayElement: uint32_t,
+	descriptorCount: uint32_t,
+	descriptorType: VkDescriptorType,
+	offset: size_t,
+	stride: size_t,
 }
 impl VkDescriptorUpdateTemplateEntry
 {
@@ -5330,6 +5908,8 @@ impl VkDescriptorUpdateTemplateEntry
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorUpdateTemplateEntryKHR
 {
 }
@@ -5343,18 +5923,20 @@ impl VkDescriptorUpdateTemplateEntryKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorUpdateTemplateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDescriptorUpdateTemplateCreateFlags
-	descriptorUpdateEntryCount: uint32_t
-	pDescriptorUpdateEntries: VkDescriptorUpdateTemplateEntry
-	templateType: VkDescriptorUpdateTemplateType
-	descriptorSetLayout: VkDescriptorSetLayout
-	pipelineBindPoint: VkPipelineBindPoint
-	pipelineLayout: VkPipelineLayout
-	set: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDescriptorUpdateTemplateCreateFlags,
+	descriptorUpdateEntryCount: uint32_t,
+	pDescriptorUpdateEntries: VkDescriptorUpdateTemplateEntry,
+	templateType: VkDescriptorUpdateTemplateType,
+	descriptorSetLayout: VkDescriptorSetLayout,
+	pipelineBindPoint: VkPipelineBindPoint,
+	pipelineLayout: VkPipelineLayout,
+	set: uint32_t,
 }
 impl VkDescriptorUpdateTemplateCreateInfo
 {
@@ -5367,6 +5949,8 @@ impl VkDescriptorUpdateTemplateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorUpdateTemplateCreateInfoKHR
 {
 }
@@ -5380,10 +5964,12 @@ impl VkDescriptorUpdateTemplateCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkXYColorEXT
 {
-	x: float
-	y: float
+	x: float,
+	y: float,
 }
 impl VkXYColorEXT
 {
@@ -5395,11 +5981,13 @@ impl VkXYColorEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePresentIdFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	presentId: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	presentId: VkBool32,
 }
 impl VkPhysicalDevicePresentIdFeaturesKHR
 {
@@ -5412,12 +6000,14 @@ impl VkPhysicalDevicePresentIdFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentIdKHR
 {
-	sType: VkStructureType
-	pNext: void
-	swapchainCount: uint32_t
-	pPresentIds: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	swapchainCount: uint32_t,
+	pPresentIds: uint64_t,
 }
 impl VkPresentIdKHR
 {
@@ -5430,11 +6020,13 @@ impl VkPresentIdKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePresentWaitFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	presentWait: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	presentWait: VkBool32,
 }
 impl VkPhysicalDevicePresentWaitFeaturesKHR
 {
@@ -5447,18 +6039,20 @@ impl VkPhysicalDevicePresentWaitFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkHdrMetadataEXT
 {
-	sType: VkStructureType
-	pNext: void
-	displayPrimaryRed: VkXYColorEXT
-	displayPrimaryGreen: VkXYColorEXT
-	displayPrimaryBlue: VkXYColorEXT
-	whitePoint: VkXYColorEXT
-	maxLuminance: float
-	minLuminance: float
-	maxContentLightLevel: float
-	maxFrameAverageLightLevel: float
+	sType: VkStructureType,
+	pNext: void,
+	displayPrimaryRed: VkXYColorEXT,
+	displayPrimaryGreen: VkXYColorEXT,
+	displayPrimaryBlue: VkXYColorEXT,
+	whitePoint: VkXYColorEXT,
+	maxLuminance: float,
+	minLuminance: float,
+	maxContentLightLevel: float,
+	maxFrameAverageLightLevel: float,
 }
 impl VkHdrMetadataEXT
 {
@@ -5471,11 +6065,13 @@ impl VkHdrMetadataEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayNativeHdrSurfaceCapabilitiesAMD
 {
-	sType: VkStructureType
-	pNext: void
-	localDimmingSupport: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	localDimmingSupport: VkBool32,
 }
 impl VkDisplayNativeHdrSurfaceCapabilitiesAMD
 {
@@ -5488,11 +6084,13 @@ impl VkDisplayNativeHdrSurfaceCapabilitiesAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSwapchainDisplayNativeHdrCreateInfoAMD
 {
-	sType: VkStructureType
-	pNext: void
-	localDimmingEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	localDimmingEnable: VkBool32,
 }
 impl VkSwapchainDisplayNativeHdrCreateInfoAMD
 {
@@ -5505,9 +6103,11 @@ impl VkSwapchainDisplayNativeHdrCreateInfoAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRefreshCycleDurationGOOGLE
 {
-	refreshDuration: uint64_t
+	refreshDuration: uint64_t,
 }
 impl VkRefreshCycleDurationGOOGLE
 {
@@ -5519,13 +6119,15 @@ impl VkRefreshCycleDurationGOOGLE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPastPresentationTimingGOOGLE
 {
-	presentID: uint32_t
-	desiredPresentTime: uint64_t
-	actualPresentTime: uint64_t
-	earliestPresentTime: uint64_t
-	presentMargin: uint64_t
+	presentID: uint32_t,
+	desiredPresentTime: uint64_t,
+	actualPresentTime: uint64_t,
+	earliestPresentTime: uint64_t,
+	presentMargin: uint64_t,
 }
 impl VkPastPresentationTimingGOOGLE
 {
@@ -5537,12 +6139,14 @@ impl VkPastPresentationTimingGOOGLE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentTimesInfoGOOGLE
 {
-	sType: VkStructureType
-	pNext: void
-	swapchainCount: uint32_t
-	pTimes: VkPresentTimeGOOGLE
+	sType: VkStructureType,
+	pNext: void,
+	swapchainCount: uint32_t,
+	pTimes: VkPresentTimeGOOGLE,
 }
 impl VkPresentTimesInfoGOOGLE
 {
@@ -5555,10 +6159,12 @@ impl VkPresentTimesInfoGOOGLE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentTimeGOOGLE
 {
-	presentID: uint32_t
-	desiredPresentTime: uint64_t
+	presentID: uint32_t,
+	desiredPresentTime: uint64_t,
 }
 impl VkPresentTimeGOOGLE
 {
@@ -5570,12 +6176,14 @@ impl VkPresentTimeGOOGLE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkIOSSurfaceCreateInfoMVK
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkIOSSurfaceCreateFlagsMVK
-	pView: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkIOSSurfaceCreateFlagsMVK,
+	pView: void,
 }
 impl VkIOSSurfaceCreateInfoMVK
 {
@@ -5588,12 +6196,14 @@ impl VkIOSSurfaceCreateInfoMVK
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMacOSSurfaceCreateInfoMVK
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkMacOSSurfaceCreateFlagsMVK
-	pView: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkMacOSSurfaceCreateFlagsMVK,
+	pView: void,
 }
 impl VkMacOSSurfaceCreateInfoMVK
 {
@@ -5606,12 +6216,14 @@ impl VkMacOSSurfaceCreateInfoMVK
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMetalSurfaceCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkMetalSurfaceCreateFlagsEXT
-	pLayer: CAMetalLayer
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkMetalSurfaceCreateFlagsEXT,
+	pLayer: CAMetalLayer,
 }
 impl VkMetalSurfaceCreateInfoEXT
 {
@@ -5624,10 +6236,12 @@ impl VkMetalSurfaceCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkViewportWScalingNV
 {
-	xcoeff: float
-	ycoeff: float
+	xcoeff: float,
+	ycoeff: float,
 }
 impl VkViewportWScalingNV
 {
@@ -5639,13 +6253,15 @@ impl VkViewportWScalingNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineViewportWScalingStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	viewportWScalingEnable: VkBool32
-	viewportCount: uint32_t
-	pViewportWScalings: VkViewportWScalingNV
+	sType: VkStructureType,
+	pNext: void,
+	viewportWScalingEnable: VkBool32,
+	viewportCount: uint32_t,
+	pViewportWScalings: VkViewportWScalingNV,
 }
 impl VkPipelineViewportWScalingStateCreateInfoNV
 {
@@ -5658,12 +6274,14 @@ impl VkPipelineViewportWScalingStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkViewportSwizzleNV
 {
-	x: VkViewportCoordinateSwizzleNV
-	y: VkViewportCoordinateSwizzleNV
-	z: VkViewportCoordinateSwizzleNV
-	w: VkViewportCoordinateSwizzleNV
+	x: VkViewportCoordinateSwizzleNV,
+	y: VkViewportCoordinateSwizzleNV,
+	z: VkViewportCoordinateSwizzleNV,
+	w: VkViewportCoordinateSwizzleNV,
 }
 impl VkViewportSwizzleNV
 {
@@ -5675,13 +6293,15 @@ impl VkViewportSwizzleNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineViewportSwizzleStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineViewportSwizzleStateCreateFlagsNV
-	viewportCount: uint32_t
-	pViewportSwizzles: VkViewportSwizzleNV
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineViewportSwizzleStateCreateFlagsNV,
+	viewportCount: uint32_t,
+	pViewportSwizzles: VkViewportSwizzleNV,
 }
 impl VkPipelineViewportSwizzleStateCreateInfoNV
 {
@@ -5694,11 +6314,13 @@ impl VkPipelineViewportSwizzleStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDiscardRectanglePropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxDiscardRectangles: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxDiscardRectangles: uint32_t,
 }
 impl VkPhysicalDeviceDiscardRectanglePropertiesEXT
 {
@@ -5711,14 +6333,16 @@ impl VkPhysicalDeviceDiscardRectanglePropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineDiscardRectangleStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineDiscardRectangleStateCreateFlagsEXT
-	discardRectangleMode: VkDiscardRectangleModeEXT
-	discardRectangleCount: uint32_t
-	pDiscardRectangles: VkRect2D
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineDiscardRectangleStateCreateFlagsEXT,
+	discardRectangleMode: VkDiscardRectangleModeEXT,
+	discardRectangleCount: uint32_t,
+	pDiscardRectangles: VkRect2D,
 }
 impl VkPipelineDiscardRectangleStateCreateInfoEXT
 {
@@ -5731,11 +6355,13 @@ impl VkPipelineDiscardRectangleStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 {
-	sType: VkStructureType
-	pNext: void
-	perViewPositionAllComponents: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	perViewPositionAllComponents: VkBool32,
 }
 impl VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 {
@@ -5748,11 +6374,13 @@ impl VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkInputAttachmentAspectReference
 {
-	subpass: uint32_t
-	inputAttachmentIndex: uint32_t
-	aspectMask: VkImageAspectFlags
+	subpass: uint32_t,
+	inputAttachmentIndex: uint32_t,
+	aspectMask: VkImageAspectFlags,
 }
 impl VkInputAttachmentAspectReference
 {
@@ -5764,6 +6392,8 @@ impl VkInputAttachmentAspectReference
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkInputAttachmentAspectReferenceKHR
 {
 }
@@ -5777,12 +6407,14 @@ impl VkInputAttachmentAspectReferenceKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassInputAttachmentAspectCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	aspectReferenceCount: uint32_t
-	pAspectReferences: VkInputAttachmentAspectReference
+	sType: VkStructureType,
+	pNext: void,
+	aspectReferenceCount: uint32_t,
+	pAspectReferences: VkInputAttachmentAspectReference,
 }
 impl VkRenderPassInputAttachmentAspectCreateInfo
 {
@@ -5795,6 +6427,8 @@ impl VkRenderPassInputAttachmentAspectCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassInputAttachmentAspectCreateInfoKHR
 {
 }
@@ -5808,11 +6442,13 @@ impl VkRenderPassInputAttachmentAspectCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSurfaceInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	surface: VkSurfaceKHR
+	sType: VkStructureType,
+	pNext: void,
+	surface: VkSurfaceKHR,
 }
 impl VkPhysicalDeviceSurfaceInfo2KHR
 {
@@ -5825,11 +6461,13 @@ impl VkPhysicalDeviceSurfaceInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceCapabilities2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	surfaceCapabilities: VkSurfaceCapabilitiesKHR
+	sType: VkStructureType,
+	pNext: void,
+	surfaceCapabilities: VkSurfaceCapabilitiesKHR,
 }
 impl VkSurfaceCapabilities2KHR
 {
@@ -5842,11 +6480,13 @@ impl VkSurfaceCapabilities2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceFormat2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	surfaceFormat: VkSurfaceFormatKHR
+	sType: VkStructureType,
+	pNext: void,
+	surfaceFormat: VkSurfaceFormatKHR,
 }
 impl VkSurfaceFormat2KHR
 {
@@ -5859,11 +6499,13 @@ impl VkSurfaceFormat2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayProperties2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	displayProperties: VkDisplayPropertiesKHR
+	sType: VkStructureType,
+	pNext: void,
+	displayProperties: VkDisplayPropertiesKHR,
 }
 impl VkDisplayProperties2KHR
 {
@@ -5876,11 +6518,13 @@ impl VkDisplayProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPlaneProperties2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	displayPlaneProperties: VkDisplayPlanePropertiesKHR
+	sType: VkStructureType,
+	pNext: void,
+	displayPlaneProperties: VkDisplayPlanePropertiesKHR,
 }
 impl VkDisplayPlaneProperties2KHR
 {
@@ -5893,11 +6537,13 @@ impl VkDisplayPlaneProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayModeProperties2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	displayModeProperties: VkDisplayModePropertiesKHR
+	sType: VkStructureType,
+	pNext: void,
+	displayModeProperties: VkDisplayModePropertiesKHR,
 }
 impl VkDisplayModeProperties2KHR
 {
@@ -5910,12 +6556,14 @@ impl VkDisplayModeProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPlaneInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	mode: VkDisplayModeKHR
-	planeIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	mode: VkDisplayModeKHR,
+	planeIndex: uint32_t,
 }
 impl VkDisplayPlaneInfo2KHR
 {
@@ -5928,11 +6576,13 @@ impl VkDisplayPlaneInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDisplayPlaneCapabilities2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	capabilities: VkDisplayPlaneCapabilitiesKHR
+	sType: VkStructureType,
+	pNext: void,
+	capabilities: VkDisplayPlaneCapabilitiesKHR,
 }
 impl VkDisplayPlaneCapabilities2KHR
 {
@@ -5945,11 +6595,13 @@ impl VkDisplayPlaneCapabilities2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSharedPresentSurfaceCapabilitiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	sharedPresentSupportedUsageFlags: VkImageUsageFlags
+	sType: VkStructureType,
+	pNext: void,
+	sharedPresentSupportedUsageFlags: VkImageUsageFlags,
 }
 impl VkSharedPresentSurfaceCapabilitiesKHR
 {
@@ -5962,14 +6614,16 @@ impl VkSharedPresentSurfaceCapabilitiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevice16BitStorageFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	storageBuffer16BitAccess: VkBool32
-	uniformAndStorageBuffer16BitAccess: VkBool32
-	storagePushConstant16: VkBool32
-	storageInputOutput16: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	storageBuffer16BitAccess: VkBool32,
+	uniformAndStorageBuffer16BitAccess: VkBool32,
+	storagePushConstant16: VkBool32,
+	storageInputOutput16: VkBool32,
 }
 impl VkPhysicalDevice16BitStorageFeatures
 {
@@ -5982,6 +6636,8 @@ impl VkPhysicalDevice16BitStorageFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevice16BitStorageFeaturesKHR
 {
 }
@@ -5995,14 +6651,16 @@ impl VkPhysicalDevice16BitStorageFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSubgroupProperties
 {
-	sType: VkStructureType
-	pNext: void
-	subgroupSize: uint32_t
-	supportedStages: VkShaderStageFlags
-	supportedOperations: VkSubgroupFeatureFlags
-	quadOperationsInAllStages: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	subgroupSize: uint32_t,
+	supportedStages: VkShaderStageFlags,
+	supportedOperations: VkSubgroupFeatureFlags,
+	quadOperationsInAllStages: VkBool32,
 }
 impl VkPhysicalDeviceSubgroupProperties
 {
@@ -6015,11 +6673,13 @@ impl VkPhysicalDeviceSubgroupProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	shaderSubgroupExtendedTypes: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderSubgroupExtendedTypes: VkBool32,
 }
 impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 {
@@ -6032,6 +6692,8 @@ impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR
 {
 }
@@ -6045,11 +6707,13 @@ impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferMemoryRequirementsInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	buffer: VkBuffer
+	sType: VkStructureType,
+	pNext: void,
+	buffer: VkBuffer,
 }
 impl VkBufferMemoryRequirementsInfo2
 {
@@ -6062,6 +6726,8 @@ impl VkBufferMemoryRequirementsInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferMemoryRequirementsInfo2KHR
 {
 }
@@ -6075,11 +6741,13 @@ impl VkBufferMemoryRequirementsInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageMemoryRequirementsInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	image: VkImage
+	sType: VkStructureType,
+	pNext: void,
+	image: VkImage,
 }
 impl VkImageMemoryRequirementsInfo2
 {
@@ -6092,6 +6760,8 @@ impl VkImageMemoryRequirementsInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageMemoryRequirementsInfo2KHR
 {
 }
@@ -6105,11 +6775,13 @@ impl VkImageMemoryRequirementsInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageSparseMemoryRequirementsInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	image: VkImage
+	sType: VkStructureType,
+	pNext: void,
+	image: VkImage,
 }
 impl VkImageSparseMemoryRequirementsInfo2
 {
@@ -6122,6 +6794,8 @@ impl VkImageSparseMemoryRequirementsInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageSparseMemoryRequirementsInfo2KHR
 {
 }
@@ -6135,11 +6809,13 @@ impl VkImageSparseMemoryRequirementsInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryRequirements2
 {
-	sType: VkStructureType
-	pNext: void
-	memoryRequirements: VkMemoryRequirements
+	sType: VkStructureType,
+	pNext: void,
+	memoryRequirements: VkMemoryRequirements,
 }
 impl VkMemoryRequirements2
 {
@@ -6152,6 +6828,8 @@ impl VkMemoryRequirements2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryRequirements2KHR
 {
 }
@@ -6165,11 +6843,13 @@ impl VkMemoryRequirements2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryRequirements2
 {
-	sType: VkStructureType
-	pNext: void
-	memoryRequirements: VkSparseImageMemoryRequirements
+	sType: VkStructureType,
+	pNext: void,
+	memoryRequirements: VkSparseImageMemoryRequirements,
 }
 impl VkSparseImageMemoryRequirements2
 {
@@ -6182,6 +6862,8 @@ impl VkSparseImageMemoryRequirements2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryRequirements2KHR
 {
 }
@@ -6195,11 +6877,13 @@ impl VkSparseImageMemoryRequirements2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePointClippingProperties
 {
-	sType: VkStructureType
-	pNext: void
-	pointClippingBehavior: VkPointClippingBehavior
+	sType: VkStructureType,
+	pNext: void,
+	pointClippingBehavior: VkPointClippingBehavior,
 }
 impl VkPhysicalDevicePointClippingProperties
 {
@@ -6212,6 +6896,8 @@ impl VkPhysicalDevicePointClippingProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePointClippingPropertiesKHR
 {
 }
@@ -6225,12 +6911,14 @@ impl VkPhysicalDevicePointClippingPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryDedicatedRequirements
 {
-	sType: VkStructureType
-	pNext: void
-	prefersDedicatedAllocation: VkBool32
-	requiresDedicatedAllocation: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	prefersDedicatedAllocation: VkBool32,
+	requiresDedicatedAllocation: VkBool32,
 }
 impl VkMemoryDedicatedRequirements
 {
@@ -6243,6 +6931,8 @@ impl VkMemoryDedicatedRequirements
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryDedicatedRequirementsKHR
 {
 }
@@ -6256,12 +6946,14 @@ impl VkMemoryDedicatedRequirementsKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryDedicatedAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	image: VkImage
-	buffer: VkBuffer
+	sType: VkStructureType,
+	pNext: void,
+	image: VkImage,
+	buffer: VkBuffer,
 }
 impl VkMemoryDedicatedAllocateInfo
 {
@@ -6274,6 +6966,8 @@ impl VkMemoryDedicatedAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryDedicatedAllocateInfoKHR
 {
 }
@@ -6287,11 +6981,13 @@ impl VkMemoryDedicatedAllocateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageViewUsageCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	usage: VkImageUsageFlags
+	sType: VkStructureType,
+	pNext: void,
+	usage: VkImageUsageFlags,
 }
 impl VkImageViewUsageCreateInfo
 {
@@ -6304,6 +7000,8 @@ impl VkImageViewUsageCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageViewUsageCreateInfoKHR
 {
 }
@@ -6317,11 +7015,13 @@ impl VkImageViewUsageCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineTessellationDomainOriginStateCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	domainOrigin: VkTessellationDomainOrigin
+	sType: VkStructureType,
+	pNext: void,
+	domainOrigin: VkTessellationDomainOrigin,
 }
 impl VkPipelineTessellationDomainOriginStateCreateInfo
 {
@@ -6334,6 +7034,8 @@ impl VkPipelineTessellationDomainOriginStateCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineTessellationDomainOriginStateCreateInfoKHR
 {
 }
@@ -6347,11 +7049,13 @@ impl VkPipelineTessellationDomainOriginStateCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionInfo
 {
-	sType: VkStructureType
-	pNext: void
-	conversion: VkSamplerYcbcrConversion
+	sType: VkStructureType,
+	pNext: void,
+	conversion: VkSamplerYcbcrConversion,
 }
 impl VkSamplerYcbcrConversionInfo
 {
@@ -6364,6 +7068,8 @@ impl VkSamplerYcbcrConversionInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionInfoKHR
 {
 }
@@ -6377,18 +7083,20 @@ impl VkSamplerYcbcrConversionInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	format: VkFormat
-	ycbcrModel: VkSamplerYcbcrModelConversion
-	ycbcrRange: VkSamplerYcbcrRange
-	components: VkComponentMapping
-	xChromaOffset: VkChromaLocation
-	yChromaOffset: VkChromaLocation
-	chromaFilter: VkFilter
-	forceExplicitReconstruction: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	format: VkFormat,
+	ycbcrModel: VkSamplerYcbcrModelConversion,
+	ycbcrRange: VkSamplerYcbcrRange,
+	components: VkComponentMapping,
+	xChromaOffset: VkChromaLocation,
+	yChromaOffset: VkChromaLocation,
+	chromaFilter: VkFilter,
+	forceExplicitReconstruction: VkBool32,
 }
 impl VkSamplerYcbcrConversionCreateInfo
 {
@@ -6401,6 +7109,8 @@ impl VkSamplerYcbcrConversionCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionCreateInfoKHR
 {
 }
@@ -6414,11 +7124,13 @@ impl VkSamplerYcbcrConversionCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImagePlaneMemoryInfo
 {
-	sType: VkStructureType
-	pNext: void
-	planeAspect: VkImageAspectFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	planeAspect: VkImageAspectFlagBits,
 }
 impl VkBindImagePlaneMemoryInfo
 {
@@ -6431,6 +7143,8 @@ impl VkBindImagePlaneMemoryInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindImagePlaneMemoryInfoKHR
 {
 }
@@ -6444,11 +7158,13 @@ impl VkBindImagePlaneMemoryInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImagePlaneMemoryRequirementsInfo
 {
-	sType: VkStructureType
-	pNext: void
-	planeAspect: VkImageAspectFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	planeAspect: VkImageAspectFlagBits,
 }
 impl VkImagePlaneMemoryRequirementsInfo
 {
@@ -6461,6 +7177,8 @@ impl VkImagePlaneMemoryRequirementsInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImagePlaneMemoryRequirementsInfoKHR
 {
 }
@@ -6474,11 +7192,13 @@ impl VkImagePlaneMemoryRequirementsInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSamplerYcbcrConversionFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	samplerYcbcrConversion: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	samplerYcbcrConversion: VkBool32,
 }
 impl VkPhysicalDeviceSamplerYcbcrConversionFeatures
 {
@@ -6491,6 +7211,8 @@ impl VkPhysicalDeviceSamplerYcbcrConversionFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR
 {
 }
@@ -6504,11 +7226,13 @@ impl VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionImageFormatProperties
 {
-	sType: VkStructureType
-	pNext: void
-	combinedImageSamplerDescriptorCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	combinedImageSamplerDescriptorCount: uint32_t,
 }
 impl VkSamplerYcbcrConversionImageFormatProperties
 {
@@ -6521,6 +7245,8 @@ impl VkSamplerYcbcrConversionImageFormatProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionImageFormatPropertiesKHR
 {
 }
@@ -6534,11 +7260,13 @@ impl VkSamplerYcbcrConversionImageFormatPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkTextureLODGatherFormatPropertiesAMD
 {
-	sType: VkStructureType
-	pNext: void
-	supportsTextureGatherLODBiasAMD: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	supportsTextureGatherLODBiasAMD: VkBool32,
 }
 impl VkTextureLODGatherFormatPropertiesAMD
 {
@@ -6551,13 +7279,15 @@ impl VkTextureLODGatherFormatPropertiesAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkConditionalRenderingBeginInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	buffer: VkBuffer
-	offset: VkDeviceSize
-	flags: VkConditionalRenderingFlagsEXT
+	sType: VkStructureType,
+	pNext: void,
+	buffer: VkBuffer,
+	offset: VkDeviceSize,
+	flags: VkConditionalRenderingFlagsEXT,
 }
 impl VkConditionalRenderingBeginInfoEXT
 {
@@ -6570,11 +7300,13 @@ impl VkConditionalRenderingBeginInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkProtectedSubmitInfo
 {
-	sType: VkStructureType
-	pNext: void
-	protectedSubmit: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	protectedSubmit: VkBool32,
 }
 impl VkProtectedSubmitInfo
 {
@@ -6587,11 +7319,13 @@ impl VkProtectedSubmitInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProtectedMemoryFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	protectedMemory: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	protectedMemory: VkBool32,
 }
 impl VkPhysicalDeviceProtectedMemoryFeatures
 {
@@ -6604,11 +7338,13 @@ impl VkPhysicalDeviceProtectedMemoryFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProtectedMemoryProperties
 {
-	sType: VkStructureType
-	pNext: void
-	protectedNoFault: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	protectedNoFault: VkBool32,
 }
 impl VkPhysicalDeviceProtectedMemoryProperties
 {
@@ -6621,13 +7357,15 @@ impl VkPhysicalDeviceProtectedMemoryProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceQueueInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDeviceQueueCreateFlags
-	queueFamilyIndex: uint32_t
-	queueIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDeviceQueueCreateFlags,
+	queueFamilyIndex: uint32_t,
+	queueIndex: uint32_t,
 }
 impl VkDeviceQueueInfo2
 {
@@ -6640,13 +7378,15 @@ impl VkDeviceQueueInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCoverageToColorStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCoverageToColorStateCreateFlagsNV
-	coverageToColorEnable: VkBool32
-	coverageToColorLocation: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCoverageToColorStateCreateFlagsNV,
+	coverageToColorEnable: VkBool32,
+	coverageToColorLocation: uint32_t,
 }
 impl VkPipelineCoverageToColorStateCreateInfoNV
 {
@@ -6659,12 +7399,14 @@ impl VkPipelineCoverageToColorStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSamplerFilterMinmaxProperties
 {
-	sType: VkStructureType
-	pNext: void
-	filterMinmaxSingleComponentFormats: VkBool32
-	filterMinmaxImageComponentMapping: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	filterMinmaxSingleComponentFormats: VkBool32,
+	filterMinmaxImageComponentMapping: VkBool32,
 }
 impl VkPhysicalDeviceSamplerFilterMinmaxProperties
 {
@@ -6677,6 +7419,8 @@ impl VkPhysicalDeviceSamplerFilterMinmaxProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
 {
 }
@@ -6690,10 +7434,12 @@ impl VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSampleLocationEXT
 {
-	x: float
-	y: float
+	x: float,
+	y: float,
 }
 impl VkSampleLocationEXT
 {
@@ -6705,14 +7451,16 @@ impl VkSampleLocationEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSampleLocationsInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	sampleLocationsPerPixel: VkSampleCountFlagBits
-	sampleLocationGridSize: VkExtent2D
-	sampleLocationsCount: uint32_t
-	pSampleLocations: VkSampleLocationEXT
+	sType: VkStructureType,
+	pNext: void,
+	sampleLocationsPerPixel: VkSampleCountFlagBits,
+	sampleLocationGridSize: VkExtent2D,
+	sampleLocationsCount: uint32_t,
+	pSampleLocations: VkSampleLocationEXT,
 }
 impl VkSampleLocationsInfoEXT
 {
@@ -6725,10 +7473,12 @@ impl VkSampleLocationsInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentSampleLocationsEXT
 {
-	attachmentIndex: uint32_t
-	sampleLocationsInfo: VkSampleLocationsInfoEXT
+	attachmentIndex: uint32_t,
+	sampleLocationsInfo: VkSampleLocationsInfoEXT,
 }
 impl VkAttachmentSampleLocationsEXT
 {
@@ -6740,10 +7490,12 @@ impl VkAttachmentSampleLocationsEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassSampleLocationsEXT
 {
-	subpassIndex: uint32_t
-	sampleLocationsInfo: VkSampleLocationsInfoEXT
+	subpassIndex: uint32_t,
+	sampleLocationsInfo: VkSampleLocationsInfoEXT,
 }
 impl VkSubpassSampleLocationsEXT
 {
@@ -6755,14 +7507,16 @@ impl VkSubpassSampleLocationsEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassSampleLocationsBeginInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	attachmentInitialSampleLocationsCount: uint32_t
-	pAttachmentInitialSampleLocations: VkAttachmentSampleLocationsEXT
-	postSubpassSampleLocationsCount: uint32_t
-	pPostSubpassSampleLocations: VkSubpassSampleLocationsEXT
+	sType: VkStructureType,
+	pNext: void,
+	attachmentInitialSampleLocationsCount: uint32_t,
+	pAttachmentInitialSampleLocations: VkAttachmentSampleLocationsEXT,
+	postSubpassSampleLocationsCount: uint32_t,
+	pPostSubpassSampleLocations: VkSubpassSampleLocationsEXT,
 }
 impl VkRenderPassSampleLocationsBeginInfoEXT
 {
@@ -6775,12 +7529,14 @@ impl VkRenderPassSampleLocationsBeginInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineSampleLocationsStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	sampleLocationsEnable: VkBool32
-	sampleLocationsInfo: VkSampleLocationsInfoEXT
+	sType: VkStructureType,
+	pNext: void,
+	sampleLocationsEnable: VkBool32,
+	sampleLocationsInfo: VkSampleLocationsInfoEXT,
 }
 impl VkPipelineSampleLocationsStateCreateInfoEXT
 {
@@ -6793,15 +7549,17 @@ impl VkPipelineSampleLocationsStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSampleLocationsPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	sampleLocationSampleCounts: VkSampleCountFlags
-	maxSampleLocationGridSize: VkExtent2D
-	sampleLocationCoordinateRange: float
-	sampleLocationSubPixelBits: uint32_t
-	variableSampleLocations: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	sampleLocationSampleCounts: VkSampleCountFlags,
+	maxSampleLocationGridSize: VkExtent2D,
+	sampleLocationCoordinateRange: float,
+	sampleLocationSubPixelBits: uint32_t,
+	variableSampleLocations: VkBool32,
 }
 impl VkPhysicalDeviceSampleLocationsPropertiesEXT
 {
@@ -6814,11 +7572,13 @@ impl VkPhysicalDeviceSampleLocationsPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMultisamplePropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxSampleLocationGridSize: VkExtent2D
+	sType: VkStructureType,
+	pNext: void,
+	maxSampleLocationGridSize: VkExtent2D,
 }
 impl VkMultisamplePropertiesEXT
 {
@@ -6831,11 +7591,13 @@ impl VkMultisamplePropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerReductionModeCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	reductionMode: VkSamplerReductionMode
+	sType: VkStructureType,
+	pNext: void,
+	reductionMode: VkSamplerReductionMode,
 }
 impl VkSamplerReductionModeCreateInfo
 {
@@ -6848,6 +7610,8 @@ impl VkSamplerReductionModeCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerReductionModeCreateInfoEXT
 {
 }
@@ -6861,11 +7625,13 @@ impl VkSamplerReductionModeCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	advancedBlendCoherentOperations: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	advancedBlendCoherentOperations: VkBool32,
 }
 impl VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
 {
@@ -6878,11 +7644,13 @@ impl VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiDrawFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	multiDraw: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	multiDraw: VkBool32,
 }
 impl VkPhysicalDeviceMultiDrawFeaturesEXT
 {
@@ -6895,16 +7663,18 @@ impl VkPhysicalDeviceMultiDrawFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	advancedBlendMaxColorAttachments: uint32_t
-	advancedBlendIndependentBlend: VkBool32
-	advancedBlendNonPremultipliedSrcColor: VkBool32
-	advancedBlendNonPremultipliedDstColor: VkBool32
-	advancedBlendCorrelatedOverlap: VkBool32
-	advancedBlendAllOperations: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	advancedBlendMaxColorAttachments: uint32_t,
+	advancedBlendIndependentBlend: VkBool32,
+	advancedBlendNonPremultipliedSrcColor: VkBool32,
+	advancedBlendNonPremultipliedDstColor: VkBool32,
+	advancedBlendCorrelatedOverlap: VkBool32,
+	advancedBlendAllOperations: VkBool32,
 }
 impl VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
 {
@@ -6917,13 +7687,15 @@ impl VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineColorBlendAdvancedStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	srcPremultiplied: VkBool32
-	dstPremultiplied: VkBool32
-	blendOverlap: VkBlendOverlapEXT
+	sType: VkStructureType,
+	pNext: void,
+	srcPremultiplied: VkBool32,
+	dstPremultiplied: VkBool32,
+	blendOverlap: VkBlendOverlapEXT,
 }
 impl VkPipelineColorBlendAdvancedStateCreateInfoEXT
 {
@@ -6936,12 +7708,14 @@ impl VkPipelineColorBlendAdvancedStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceInlineUniformBlockFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	inlineUniformBlock: VkBool32
-	descriptorBindingInlineUniformBlockUpdateAfterBind: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	inlineUniformBlock: VkBool32,
+	descriptorBindingInlineUniformBlockUpdateAfterBind: VkBool32,
 }
 impl VkPhysicalDeviceInlineUniformBlockFeaturesEXT
 {
@@ -6954,15 +7728,17 @@ impl VkPhysicalDeviceInlineUniformBlockFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceInlineUniformBlockPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxInlineUniformBlockSize: uint32_t
-	maxPerStageDescriptorInlineUniformBlocks: uint32_t
-	maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: uint32_t
-	maxDescriptorSetInlineUniformBlocks: uint32_t
-	maxDescriptorSetUpdateAfterBindInlineUniformBlocks: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxInlineUniformBlockSize: uint32_t,
+	maxPerStageDescriptorInlineUniformBlocks: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: uint32_t,
+	maxDescriptorSetInlineUniformBlocks: uint32_t,
+	maxDescriptorSetUpdateAfterBindInlineUniformBlocks: uint32_t,
 }
 impl VkPhysicalDeviceInlineUniformBlockPropertiesEXT
 {
@@ -6975,12 +7751,14 @@ impl VkPhysicalDeviceInlineUniformBlockPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWriteDescriptorSetInlineUniformBlockEXT
 {
-	sType: VkStructureType
-	pNext: void
-	dataSize: uint32_t
-	pData: void
+	sType: VkStructureType,
+	pNext: void,
+	dataSize: uint32_t,
+	pData: void,
 }
 impl VkWriteDescriptorSetInlineUniformBlockEXT
 {
@@ -6993,11 +7771,13 @@ impl VkWriteDescriptorSetInlineUniformBlockEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorPoolInlineUniformBlockCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxInlineUniformBlockBindings: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxInlineUniformBlockBindings: uint32_t,
 }
 impl VkDescriptorPoolInlineUniformBlockCreateInfoEXT
 {
@@ -7010,15 +7790,17 @@ impl VkDescriptorPoolInlineUniformBlockCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCoverageModulationStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCoverageModulationStateCreateFlagsNV
-	coverageModulationMode: VkCoverageModulationModeNV
-	coverageModulationTableEnable: VkBool32
-	coverageModulationTableCount: uint32_t
-	pCoverageModulationTable: float
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCoverageModulationStateCreateFlagsNV,
+	coverageModulationMode: VkCoverageModulationModeNV,
+	coverageModulationTableEnable: VkBool32,
+	coverageModulationTableCount: uint32_t,
+	pCoverageModulationTable: float,
 }
 impl VkPipelineCoverageModulationStateCreateInfoNV
 {
@@ -7031,12 +7813,14 @@ impl VkPipelineCoverageModulationStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageFormatListCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	viewFormatCount: uint32_t
-	pViewFormats: VkFormat
+	sType: VkStructureType,
+	pNext: void,
+	viewFormatCount: uint32_t,
+	pViewFormats: VkFormat,
 }
 impl VkImageFormatListCreateInfo
 {
@@ -7049,6 +7833,8 @@ impl VkImageFormatListCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageFormatListCreateInfoKHR
 {
 }
@@ -7062,13 +7848,15 @@ impl VkImageFormatListCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkValidationCacheCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkValidationCacheCreateFlagsEXT
-	initialDataSize: size_t
-	pInitialData: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkValidationCacheCreateFlagsEXT,
+	initialDataSize: size_t,
+	pInitialData: void,
 }
 impl VkValidationCacheCreateInfoEXT
 {
@@ -7081,11 +7869,13 @@ impl VkValidationCacheCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkShaderModuleValidationCacheCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	validationCache: VkValidationCacheEXT
+	sType: VkStructureType,
+	pNext: void,
+	validationCache: VkValidationCacheEXT,
 }
 impl VkShaderModuleValidationCacheCreateInfoEXT
 {
@@ -7098,12 +7888,14 @@ impl VkShaderModuleValidationCacheCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMaintenance3Properties
 {
-	sType: VkStructureType
-	pNext: void
-	maxPerSetDescriptors: uint32_t
-	maxMemoryAllocationSize: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	maxPerSetDescriptors: uint32_t,
+	maxMemoryAllocationSize: VkDeviceSize,
 }
 impl VkPhysicalDeviceMaintenance3Properties
 {
@@ -7116,6 +7908,8 @@ impl VkPhysicalDeviceMaintenance3Properties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMaintenance3PropertiesKHR
 {
 }
@@ -7129,11 +7923,13 @@ impl VkPhysicalDeviceMaintenance3PropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutSupport
 {
-	sType: VkStructureType
-	pNext: void
-	supported: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	supported: VkBool32,
 }
 impl VkDescriptorSetLayoutSupport
 {
@@ -7146,6 +7942,8 @@ impl VkDescriptorSetLayoutSupport
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutSupportKHR
 {
 }
@@ -7159,11 +7957,13 @@ impl VkDescriptorSetLayoutSupportKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderDrawParametersFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	shaderDrawParameters: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderDrawParameters: VkBool32,
 }
 impl VkPhysicalDeviceShaderDrawParametersFeatures
 {
@@ -7176,6 +7976,8 @@ impl VkPhysicalDeviceShaderDrawParametersFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderDrawParameterFeatures
 {
 }
@@ -7189,12 +7991,14 @@ impl VkPhysicalDeviceShaderDrawParameterFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderFloat16Int8Features
 {
-	sType: VkStructureType
-	pNext: void
-	shaderFloat16: VkBool32
-	shaderInt8: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderFloat16: VkBool32,
+	shaderInt8: VkBool32,
 }
 impl VkPhysicalDeviceShaderFloat16Int8Features
 {
@@ -7207,6 +8011,8 @@ impl VkPhysicalDeviceShaderFloat16Int8Features
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderFloat16Int8FeaturesKHR
 {
 }
@@ -7220,6 +8026,8 @@ impl VkPhysicalDeviceShaderFloat16Int8FeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFloat16Int8FeaturesKHR
 {
 }
@@ -7233,27 +8041,29 @@ impl VkPhysicalDeviceFloat16Int8FeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFloatControlsProperties
 {
-	sType: VkStructureType
-	pNext: void
-	denormBehaviorIndependence: VkShaderFloatControlsIndependence
-	roundingModeIndependence: VkShaderFloatControlsIndependence
-	shaderSignedZeroInfNanPreserveFloat16: VkBool32
-	shaderSignedZeroInfNanPreserveFloat32: VkBool32
-	shaderSignedZeroInfNanPreserveFloat64: VkBool32
-	shaderDenormPreserveFloat16: VkBool32
-	shaderDenormPreserveFloat32: VkBool32
-	shaderDenormPreserveFloat64: VkBool32
-	shaderDenormFlushToZeroFloat16: VkBool32
-	shaderDenormFlushToZeroFloat32: VkBool32
-	shaderDenormFlushToZeroFloat64: VkBool32
-	shaderRoundingModeRTEFloat16: VkBool32
-	shaderRoundingModeRTEFloat32: VkBool32
-	shaderRoundingModeRTEFloat64: VkBool32
-	shaderRoundingModeRTZFloat16: VkBool32
-	shaderRoundingModeRTZFloat32: VkBool32
-	shaderRoundingModeRTZFloat64: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	roundingModeIndependence: VkShaderFloatControlsIndependence,
+	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	shaderDenormPreserveFloat16: VkBool32,
+	shaderDenormPreserveFloat32: VkBool32,
+	shaderDenormPreserveFloat64: VkBool32,
+	shaderDenormFlushToZeroFloat16: VkBool32,
+	shaderDenormFlushToZeroFloat32: VkBool32,
+	shaderDenormFlushToZeroFloat64: VkBool32,
+	shaderRoundingModeRTEFloat16: VkBool32,
+	shaderRoundingModeRTEFloat32: VkBool32,
+	shaderRoundingModeRTEFloat64: VkBool32,
+	shaderRoundingModeRTZFloat16: VkBool32,
+	shaderRoundingModeRTZFloat32: VkBool32,
+	shaderRoundingModeRTZFloat64: VkBool32,
 }
 impl VkPhysicalDeviceFloatControlsProperties
 {
@@ -7266,6 +8076,8 @@ impl VkPhysicalDeviceFloatControlsProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFloatControlsPropertiesKHR
 {
 }
@@ -7279,11 +8091,13 @@ impl VkPhysicalDeviceFloatControlsPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceHostQueryResetFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	hostQueryReset: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	hostQueryReset: VkBool32,
 }
 impl VkPhysicalDeviceHostQueryResetFeatures
 {
@@ -7296,6 +8110,8 @@ impl VkPhysicalDeviceHostQueryResetFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceHostQueryResetFeaturesEXT
 {
 }
@@ -7309,10 +8125,12 @@ impl VkPhysicalDeviceHostQueryResetFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkNativeBufferUsage2ANDROID
 {
-	consumer: uint64_t
-	producer: uint64_t
+	consumer: uint64_t,
+	producer: uint64_t,
 }
 impl VkNativeBufferUsage2ANDROID
 {
@@ -7324,15 +8142,17 @@ impl VkNativeBufferUsage2ANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkNativeBufferANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	handle: void
-	stride: int
-	format: int
-	usage: int
-	usage2: VkNativeBufferUsage2ANDROID
+	sType: VkStructureType,
+	pNext: void,
+	handle: void,
+	stride: int,
+	format: int,
+	usage: int,
+	usage2: VkNativeBufferUsage2ANDROID,
 }
 impl VkNativeBufferANDROID
 {
@@ -7345,11 +8165,13 @@ impl VkNativeBufferANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSwapchainImageCreateInfoANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	usage: VkSwapchainImageUsageFlagsANDROID
+	sType: VkStructureType,
+	pNext: void,
+	usage: VkSwapchainImageUsageFlagsANDROID,
 }
 impl VkSwapchainImageCreateInfoANDROID
 {
@@ -7362,11 +8184,13 @@ impl VkSwapchainImageCreateInfoANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePresentationPropertiesANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	sharedImage: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	sharedImage: VkBool32,
 }
 impl VkPhysicalDevicePresentationPropertiesANDROID
 {
@@ -7379,13 +8203,15 @@ impl VkPhysicalDevicePresentationPropertiesANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkShaderResourceUsageAMD
 {
-	numUsedVgprs: uint32_t
-	numUsedSgprs: uint32_t
-	ldsSizePerLocalWorkGroup: uint32_t
-	ldsUsageSizeInBytes: size_t
-	scratchMemUsageInBytes: size_t
+	numUsedVgprs: uint32_t,
+	numUsedSgprs: uint32_t,
+	ldsSizePerLocalWorkGroup: uint32_t,
+	ldsUsageSizeInBytes: size_t,
+	scratchMemUsageInBytes: size_t,
 }
 impl VkShaderResourceUsageAMD
 {
@@ -7397,15 +8223,17 @@ impl VkShaderResourceUsageAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkShaderStatisticsInfoAMD
 {
-	shaderStageMask: VkShaderStageFlags
-	resourceUsage: VkShaderResourceUsageAMD
-	numPhysicalVgprs: uint32_t
-	numPhysicalSgprs: uint32_t
-	numAvailableVgprs: uint32_t
-	numAvailableSgprs: uint32_t
-	computeWorkGroupSize: uint32_t
+	shaderStageMask: VkShaderStageFlags,
+	resourceUsage: VkShaderResourceUsageAMD,
+	numPhysicalVgprs: uint32_t,
+	numPhysicalSgprs: uint32_t,
+	numAvailableVgprs: uint32_t,
+	numAvailableSgprs: uint32_t,
+	computeWorkGroupSize: uint32_t,
 }
 impl VkShaderStatisticsInfoAMD
 {
@@ -7417,11 +8245,13 @@ impl VkShaderStatisticsInfoAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceQueueGlobalPriorityCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	globalPriority: VkQueueGlobalPriorityEXT
+	sType: VkStructureType,
+	pNext: void,
+	globalPriority: VkQueueGlobalPriorityEXT,
 }
 impl VkDeviceQueueGlobalPriorityCreateInfoEXT
 {
@@ -7434,11 +8264,13 @@ impl VkDeviceQueueGlobalPriorityCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	globalPriorityQuery: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	globalPriorityQuery: VkBool32,
 }
 impl VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT
 {
@@ -7451,12 +8283,14 @@ impl VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueueFamilyGlobalPriorityPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	priorityCount: uint32_t
-	priorities: VkQueueGlobalPriorityEXT
+	sType: VkStructureType,
+	pNext: void,
+	priorityCount: uint32_t,
+	priorities: VkQueueGlobalPriorityEXT,
 }
 impl VkQueueFamilyGlobalPriorityPropertiesEXT
 {
@@ -7469,13 +8303,15 @@ impl VkQueueFamilyGlobalPriorityPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugUtilsObjectNameInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	objectType: VkObjectType
-	objectHandle: uint64_t
-	pObjectName: char
+	sType: VkStructureType,
+	pNext: void,
+	objectType: VkObjectType,
+	objectHandle: uint64_t,
+	pObjectName: char,
 }
 impl VkDebugUtilsObjectNameInfoEXT
 {
@@ -7488,15 +8324,17 @@ impl VkDebugUtilsObjectNameInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugUtilsObjectTagInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	objectType: VkObjectType
-	objectHandle: uint64_t
-	tagName: uint64_t
-	tagSize: size_t
-	pTag: void
+	sType: VkStructureType,
+	pNext: void,
+	objectType: VkObjectType,
+	objectHandle: uint64_t,
+	tagName: uint64_t,
+	tagSize: size_t,
+	pTag: void,
 }
 impl VkDebugUtilsObjectTagInfoEXT
 {
@@ -7509,12 +8347,14 @@ impl VkDebugUtilsObjectTagInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugUtilsLabelEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pLabelName: char
-	color: float
+	sType: VkStructureType,
+	pNext: void,
+	pLabelName: char,
+	color: float,
 }
 impl VkDebugUtilsLabelEXT
 {
@@ -7527,15 +8367,17 @@ impl VkDebugUtilsLabelEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugUtilsMessengerCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDebugUtilsMessengerCreateFlagsEXT
-	messageSeverity: VkDebugUtilsMessageSeverityFlagsEXT
-	messageType: VkDebugUtilsMessageTypeFlagsEXT
-	pfnUserCallback: PFN_vkDebugUtilsMessengerCallbackEXT
-	pUserData: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDebugUtilsMessengerCreateFlagsEXT,
+	messageSeverity: VkDebugUtilsMessageSeverityFlagsEXT,
+	messageType: VkDebugUtilsMessageTypeFlagsEXT,
+	pfnUserCallback: PFN_vkDebugUtilsMessengerCallbackEXT,
+	pUserData: void,
 }
 impl VkDebugUtilsMessengerCreateInfoEXT
 {
@@ -7548,20 +8390,22 @@ impl VkDebugUtilsMessengerCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDebugUtilsMessengerCallbackDataEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDebugUtilsMessengerCallbackDataFlagsEXT
-	pMessageIdName: char
-	messageIdNumber: int32_t
-	pMessage: char
-	queueLabelCount: uint32_t
-	pQueueLabels: VkDebugUtilsLabelEXT
-	cmdBufLabelCount: uint32_t
-	pCmdBufLabels: VkDebugUtilsLabelEXT
-	objectCount: uint32_t
-	pObjects: VkDebugUtilsObjectNameInfoEXT
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDebugUtilsMessengerCallbackDataFlagsEXT,
+	pMessageIdName: char,
+	messageIdNumber: int32_t,
+	pMessage: char,
+	queueLabelCount: uint32_t,
+	pQueueLabels: VkDebugUtilsLabelEXT,
+	cmdBufLabelCount: uint32_t,
+	pCmdBufLabels: VkDebugUtilsLabelEXT,
+	objectCount: uint32_t,
+	pObjects: VkDebugUtilsObjectNameInfoEXT,
 }
 impl VkDebugUtilsMessengerCallbackDataEXT
 {
@@ -7574,11 +8418,13 @@ impl VkDebugUtilsMessengerCallbackDataEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDeviceMemoryReportFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	deviceMemoryReport: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	deviceMemoryReport: VkBool32,
 }
 impl VkPhysicalDeviceDeviceMemoryReportFeaturesEXT
 {
@@ -7591,13 +8437,15 @@ impl VkPhysicalDeviceDeviceMemoryReportFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceDeviceMemoryReportCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDeviceMemoryReportFlagsEXT
-	pfnUserCallback: PFN_vkDeviceMemoryReportCallbackEXT
-	pUserData: void
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDeviceMemoryReportFlagsEXT,
+	pfnUserCallback: PFN_vkDeviceMemoryReportCallbackEXT,
+	pUserData: void,
 }
 impl VkDeviceDeviceMemoryReportCreateInfoEXT
 {
@@ -7610,17 +8458,19 @@ impl VkDeviceDeviceMemoryReportCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceMemoryReportCallbackDataEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDeviceMemoryReportFlagsEXT
-	type: VkDeviceMemoryReportEventTypeEXT
-	memoryObjectId: uint64_t
-	size: VkDeviceSize
-	objectType: VkObjectType
-	objectHandle: uint64_t
-	heapIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDeviceMemoryReportFlagsEXT,
+	type: VkDeviceMemoryReportEventTypeEXT,
+	memoryObjectId: uint64_t,
+	size: VkDeviceSize,
+	objectType: VkObjectType,
+	objectHandle: uint64_t,
+	heapIndex: uint32_t,
 }
 impl VkDeviceMemoryReportCallbackDataEXT
 {
@@ -7633,12 +8483,14 @@ impl VkDeviceMemoryReportCallbackDataEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportMemoryHostPointerInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	handleType: VkExternalMemoryHandleTypeFlagBits
-	pHostPointer: void
+	sType: VkStructureType,
+	pNext: void,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pHostPointer: void,
 }
 impl VkImportMemoryHostPointerInfoEXT
 {
@@ -7651,11 +8503,13 @@ impl VkImportMemoryHostPointerInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryHostPointerPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	memoryTypeBits: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	memoryTypeBits: uint32_t,
 }
 impl VkMemoryHostPointerPropertiesEXT
 {
@@ -7668,11 +8522,13 @@ impl VkMemoryHostPointerPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalMemoryHostPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	minImportedHostPointerAlignment: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	minImportedHostPointerAlignment: VkDeviceSize,
 }
 impl VkPhysicalDeviceExternalMemoryHostPropertiesEXT
 {
@@ -7685,19 +8541,21 @@ impl VkPhysicalDeviceExternalMemoryHostPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceConservativeRasterizationPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	primitiveOverestimationSize: float
-	maxExtraPrimitiveOverestimationSize: float
-	extraPrimitiveOverestimationSizeGranularity: float
-	primitiveUnderestimation: VkBool32
-	conservativePointAndLineRasterization: VkBool32
-	degenerateTrianglesRasterized: VkBool32
-	degenerateLinesRasterized: VkBool32
-	fullyCoveredFragmentShaderInputVariable: VkBool32
-	conservativeRasterizationPostDepthCoverage: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	primitiveOverestimationSize: float,
+	maxExtraPrimitiveOverestimationSize: float,
+	extraPrimitiveOverestimationSizeGranularity: float,
+	primitiveUnderestimation: VkBool32,
+	conservativePointAndLineRasterization: VkBool32,
+	degenerateTrianglesRasterized: VkBool32,
+	degenerateLinesRasterized: VkBool32,
+	fullyCoveredFragmentShaderInputVariable: VkBool32,
+	conservativeRasterizationPostDepthCoverage: VkBool32,
 }
 impl VkPhysicalDeviceConservativeRasterizationPropertiesEXT
 {
@@ -7710,11 +8568,13 @@ impl VkPhysicalDeviceConservativeRasterizationPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCalibratedTimestampInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	timeDomain: VkTimeDomainEXT
+	sType: VkStructureType,
+	pNext: void,
+	timeDomain: VkTimeDomainEXT,
 }
 impl VkCalibratedTimestampInfoEXT
 {
@@ -7727,24 +8587,26 @@ impl VkCalibratedTimestampInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderCorePropertiesAMD
 {
-	sType: VkStructureType
-	pNext: void
-	shaderEngineCount: uint32_t
-	shaderArraysPerEngineCount: uint32_t
-	computeUnitsPerShaderArray: uint32_t
-	simdPerComputeUnit: uint32_t
-	wavefrontsPerSimd: uint32_t
-	wavefrontSize: uint32_t
-	sgprsPerSimd: uint32_t
-	minSgprAllocation: uint32_t
-	maxSgprAllocation: uint32_t
-	sgprAllocationGranularity: uint32_t
-	vgprsPerSimd: uint32_t
-	minVgprAllocation: uint32_t
-	maxVgprAllocation: uint32_t
-	vgprAllocationGranularity: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	shaderEngineCount: uint32_t,
+	shaderArraysPerEngineCount: uint32_t,
+	computeUnitsPerShaderArray: uint32_t,
+	simdPerComputeUnit: uint32_t,
+	wavefrontsPerSimd: uint32_t,
+	wavefrontSize: uint32_t,
+	sgprsPerSimd: uint32_t,
+	minSgprAllocation: uint32_t,
+	maxSgprAllocation: uint32_t,
+	sgprAllocationGranularity: uint32_t,
+	vgprsPerSimd: uint32_t,
+	minVgprAllocation: uint32_t,
+	maxVgprAllocation: uint32_t,
+	vgprAllocationGranularity: uint32_t,
 }
 impl VkPhysicalDeviceShaderCorePropertiesAMD
 {
@@ -7757,12 +8619,14 @@ impl VkPhysicalDeviceShaderCorePropertiesAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderCoreProperties2AMD
 {
-	sType: VkStructureType
-	pNext: void
-	shaderCoreFeatures: VkShaderCorePropertiesFlagsAMD
-	activeComputeUnitCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	shaderCoreFeatures: VkShaderCorePropertiesFlagsAMD,
+	activeComputeUnitCount: uint32_t,
 }
 impl VkPhysicalDeviceShaderCoreProperties2AMD
 {
@@ -7775,13 +8639,15 @@ impl VkPhysicalDeviceShaderCoreProperties2AMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationConservativeStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineRasterizationConservativeStateCreateFlagsEXT
-	conservativeRasterizationMode: VkConservativeRasterizationModeEXT
-	extraPrimitiveOverestimationSize: float
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineRasterizationConservativeStateCreateFlagsEXT,
+	conservativeRasterizationMode: VkConservativeRasterizationModeEXT,
+	extraPrimitiveOverestimationSize: float,
 }
 impl VkPipelineRasterizationConservativeStateCreateInfoEXT
 {
@@ -7794,30 +8660,32 @@ impl VkPipelineRasterizationConservativeStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDescriptorIndexingFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	shaderInputAttachmentArrayDynamicIndexing: VkBool32
-	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32
-	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32
-	shaderUniformBufferArrayNonUniformIndexing: VkBool32
-	shaderSampledImageArrayNonUniformIndexing: VkBool32
-	shaderStorageBufferArrayNonUniformIndexing: VkBool32
-	shaderStorageImageArrayNonUniformIndexing: VkBool32
-	shaderInputAttachmentArrayNonUniformIndexing: VkBool32
-	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32
-	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32
-	descriptorBindingUniformBufferUpdateAfterBind: VkBool32
-	descriptorBindingSampledImageUpdateAfterBind: VkBool32
-	descriptorBindingStorageImageUpdateAfterBind: VkBool32
-	descriptorBindingStorageBufferUpdateAfterBind: VkBool32
-	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32
-	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32
-	descriptorBindingUpdateUnusedWhilePending: VkBool32
-	descriptorBindingPartiallyBound: VkBool32
-	descriptorBindingVariableDescriptorCount: VkBool32
-	runtimeDescriptorArray: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	descriptorBindingPartiallyBound: VkBool32,
+	descriptorBindingVariableDescriptorCount: VkBool32,
+	runtimeDescriptorArray: VkBool32,
 }
 impl VkPhysicalDeviceDescriptorIndexingFeatures
 {
@@ -7830,6 +8698,8 @@ impl VkPhysicalDeviceDescriptorIndexingFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDescriptorIndexingFeaturesEXT
 {
 }
@@ -7843,33 +8713,35 @@ impl VkPhysicalDeviceDescriptorIndexingFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDescriptorIndexingProperties
 {
-	sType: VkStructureType
-	pNext: void
-	maxUpdateAfterBindDescriptorsInAllPools: uint32_t
-	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32
-	shaderSampledImageArrayNonUniformIndexingNative: VkBool32
-	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32
-	shaderStorageImageArrayNonUniformIndexingNative: VkBool32
-	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32
-	robustBufferAccessUpdateAfterBind: VkBool32
-	quadDivergentImplicitLod: VkBool32
-	maxPerStageDescriptorUpdateAfterBindSamplers: uint32_t
-	maxPerStageDescriptorUpdateAfterBindUniformBuffers: uint32_t
-	maxPerStageDescriptorUpdateAfterBindStorageBuffers: uint32_t
-	maxPerStageDescriptorUpdateAfterBindSampledImages: uint32_t
-	maxPerStageDescriptorUpdateAfterBindStorageImages: uint32_t
-	maxPerStageDescriptorUpdateAfterBindInputAttachments: uint32_t
-	maxPerStageUpdateAfterBindResources: uint32_t
-	maxDescriptorSetUpdateAfterBindSamplers: uint32_t
-	maxDescriptorSetUpdateAfterBindUniformBuffers: uint32_t
-	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: uint32_t
-	maxDescriptorSetUpdateAfterBindStorageBuffers: uint32_t
-	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: uint32_t
-	maxDescriptorSetUpdateAfterBindSampledImages: uint32_t
-	maxDescriptorSetUpdateAfterBindStorageImages: uint32_t
-	maxDescriptorSetUpdateAfterBindInputAttachments: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxUpdateAfterBindDescriptorsInAllPools: uint32_t,
+	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	robustBufferAccessUpdateAfterBind: VkBool32,
+	quadDivergentImplicitLod: VkBool32,
+	maxPerStageDescriptorUpdateAfterBindSamplers: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindUniformBuffers: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindStorageBuffers: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindSampledImages: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindStorageImages: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindInputAttachments: uint32_t,
+	maxPerStageUpdateAfterBindResources: uint32_t,
+	maxDescriptorSetUpdateAfterBindSamplers: uint32_t,
+	maxDescriptorSetUpdateAfterBindUniformBuffers: uint32_t,
+	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: uint32_t,
+	maxDescriptorSetUpdateAfterBindStorageBuffers: uint32_t,
+	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: uint32_t,
+	maxDescriptorSetUpdateAfterBindSampledImages: uint32_t,
+	maxDescriptorSetUpdateAfterBindStorageImages: uint32_t,
+	maxDescriptorSetUpdateAfterBindInputAttachments: uint32_t,
 }
 impl VkPhysicalDeviceDescriptorIndexingProperties
 {
@@ -7882,6 +8754,8 @@ impl VkPhysicalDeviceDescriptorIndexingProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDescriptorIndexingPropertiesEXT
 {
 }
@@ -7895,12 +8769,14 @@ impl VkPhysicalDeviceDescriptorIndexingPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutBindingFlagsCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	bindingCount: uint32_t
-	pBindingFlags: VkDescriptorBindingFlags
+	sType: VkStructureType,
+	pNext: void,
+	bindingCount: uint32_t,
+	pBindingFlags: VkDescriptorBindingFlags,
 }
 impl VkDescriptorSetLayoutBindingFlagsCreateInfo
 {
@@ -7913,6 +8789,8 @@ impl VkDescriptorSetLayoutBindingFlagsCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutBindingFlagsCreateInfoEXT
 {
 }
@@ -7926,12 +8804,14 @@ impl VkDescriptorSetLayoutBindingFlagsCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetVariableDescriptorCountAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	descriptorSetCount: uint32_t
-	pDescriptorCounts: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	descriptorSetCount: uint32_t,
+	pDescriptorCounts: uint32_t,
 }
 impl VkDescriptorSetVariableDescriptorCountAllocateInfo
 {
@@ -7944,6 +8824,8 @@ impl VkDescriptorSetVariableDescriptorCountAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetVariableDescriptorCountAllocateInfoEXT
 {
 }
@@ -7957,11 +8839,13 @@ impl VkDescriptorSetVariableDescriptorCountAllocateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetVariableDescriptorCountLayoutSupport
 {
-	sType: VkStructureType
-	pNext: void
-	maxVariableDescriptorCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxVariableDescriptorCount: uint32_t,
 }
 impl VkDescriptorSetVariableDescriptorCountLayoutSupport
 {
@@ -7974,6 +8858,8 @@ impl VkDescriptorSetVariableDescriptorCountLayoutSupport
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDescriptorSetVariableDescriptorCountLayoutSupportEXT
 {
 }
@@ -7987,19 +8873,21 @@ impl VkDescriptorSetVariableDescriptorCountLayoutSupportEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentDescription2
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkAttachmentDescriptionFlags
-	format: VkFormat
-	samples: VkSampleCountFlagBits
-	loadOp: VkAttachmentLoadOp
-	storeOp: VkAttachmentStoreOp
-	stencilLoadOp: VkAttachmentLoadOp
-	stencilStoreOp: VkAttachmentStoreOp
-	initialLayout: VkImageLayout
-	finalLayout: VkImageLayout
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkAttachmentDescriptionFlags,
+	format: VkFormat,
+	samples: VkSampleCountFlagBits,
+	loadOp: VkAttachmentLoadOp,
+	storeOp: VkAttachmentStoreOp,
+	stencilLoadOp: VkAttachmentLoadOp,
+	stencilStoreOp: VkAttachmentStoreOp,
+	initialLayout: VkImageLayout,
+	finalLayout: VkImageLayout,
 }
 impl VkAttachmentDescription2
 {
@@ -8012,6 +8900,8 @@ impl VkAttachmentDescription2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentDescription2KHR
 {
 }
@@ -8025,13 +8915,15 @@ impl VkAttachmentDescription2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentReference2
 {
-	sType: VkStructureType
-	pNext: void
-	attachment: uint32_t
-	layout: VkImageLayout
-	aspectMask: VkImageAspectFlags
+	sType: VkStructureType,
+	pNext: void,
+	attachment: uint32_t,
+	layout: VkImageLayout,
+	aspectMask: VkImageAspectFlags,
 }
 impl VkAttachmentReference2
 {
@@ -8044,6 +8936,8 @@ impl VkAttachmentReference2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentReference2KHR
 {
 }
@@ -8057,21 +8951,23 @@ impl VkAttachmentReference2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDescription2
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkSubpassDescriptionFlags
-	pipelineBindPoint: VkPipelineBindPoint
-	viewMask: uint32_t
-	inputAttachmentCount: uint32_t
-	pInputAttachments: VkAttachmentReference2
-	colorAttachmentCount: uint32_t
-	pColorAttachments: VkAttachmentReference2
-	pResolveAttachments: VkAttachmentReference2
-	pDepthStencilAttachment: VkAttachmentReference2
-	preserveAttachmentCount: uint32_t
-	pPreserveAttachments: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkSubpassDescriptionFlags,
+	pipelineBindPoint: VkPipelineBindPoint,
+	viewMask: uint32_t,
+	inputAttachmentCount: uint32_t,
+	pInputAttachments: VkAttachmentReference2,
+	colorAttachmentCount: uint32_t,
+	pColorAttachments: VkAttachmentReference2,
+	pResolveAttachments: VkAttachmentReference2,
+	pDepthStencilAttachment: VkAttachmentReference2,
+	preserveAttachmentCount: uint32_t,
+	pPreserveAttachments: uint32_t,
 }
 impl VkSubpassDescription2
 {
@@ -8084,6 +8980,8 @@ impl VkSubpassDescription2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDescription2KHR
 {
 }
@@ -8097,18 +8995,20 @@ impl VkSubpassDescription2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDependency2
 {
-	sType: VkStructureType
-	pNext: void
-	srcSubpass: uint32_t
-	dstSubpass: uint32_t
-	srcStageMask: VkPipelineStageFlags
-	dstStageMask: VkPipelineStageFlags
-	srcAccessMask: VkAccessFlags
-	dstAccessMask: VkAccessFlags
-	dependencyFlags: VkDependencyFlags
-	viewOffset: int32_t
+	sType: VkStructureType,
+	pNext: void,
+	srcSubpass: uint32_t,
+	dstSubpass: uint32_t,
+	srcStageMask: VkPipelineStageFlags,
+	dstStageMask: VkPipelineStageFlags,
+	srcAccessMask: VkAccessFlags,
+	dstAccessMask: VkAccessFlags,
+	dependencyFlags: VkDependencyFlags,
+	viewOffset: int32_t,
 }
 impl VkSubpassDependency2
 {
@@ -8121,6 +9021,8 @@ impl VkSubpassDependency2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDependency2KHR
 {
 }
@@ -8134,19 +9036,21 @@ impl VkSubpassDependency2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassCreateInfo2
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkRenderPassCreateFlags
-	attachmentCount: uint32_t
-	pAttachments: VkAttachmentDescription2
-	subpassCount: uint32_t
-	pSubpasses: VkSubpassDescription2
-	dependencyCount: uint32_t
-	pDependencies: VkSubpassDependency2
-	correlatedViewMaskCount: uint32_t
-	pCorrelatedViewMasks: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkRenderPassCreateFlags,
+	attachmentCount: uint32_t,
+	pAttachments: VkAttachmentDescription2,
+	subpassCount: uint32_t,
+	pSubpasses: VkSubpassDescription2,
+	dependencyCount: uint32_t,
+	pDependencies: VkSubpassDependency2,
+	correlatedViewMaskCount: uint32_t,
+	pCorrelatedViewMasks: uint32_t,
 }
 impl VkRenderPassCreateInfo2
 {
@@ -8159,6 +9063,8 @@ impl VkRenderPassCreateInfo2
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassCreateInfo2KHR
 {
 }
@@ -8172,11 +9078,13 @@ impl VkRenderPassCreateInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassBeginInfo
 {
-	sType: VkStructureType
-	pNext: void
-	contents: VkSubpassContents
+	sType: VkStructureType,
+	pNext: void,
+	contents: VkSubpassContents,
 }
 impl VkSubpassBeginInfo
 {
@@ -8189,6 +9097,8 @@ impl VkSubpassBeginInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassBeginInfoKHR
 {
 }
@@ -8202,10 +9112,12 @@ impl VkSubpassBeginInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassEndInfo
 {
-	sType: VkStructureType
-	pNext: void
+	sType: VkStructureType,
+	pNext: void,
 }
 impl VkSubpassEndInfo
 {
@@ -8218,6 +9130,8 @@ impl VkSubpassEndInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassEndInfoKHR
 {
 }
@@ -8231,11 +9145,13 @@ impl VkSubpassEndInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTimelineSemaphoreFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	timelineSemaphore: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	timelineSemaphore: VkBool32,
 }
 impl VkPhysicalDeviceTimelineSemaphoreFeatures
 {
@@ -8248,6 +9164,8 @@ impl VkPhysicalDeviceTimelineSemaphoreFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTimelineSemaphoreFeaturesKHR
 {
 }
@@ -8261,11 +9179,13 @@ impl VkPhysicalDeviceTimelineSemaphoreFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTimelineSemaphoreProperties
 {
-	sType: VkStructureType
-	pNext: void
-	maxTimelineSemaphoreValueDifference: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	maxTimelineSemaphoreValueDifference: uint64_t,
 }
 impl VkPhysicalDeviceTimelineSemaphoreProperties
 {
@@ -8278,6 +9198,8 @@ impl VkPhysicalDeviceTimelineSemaphoreProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTimelineSemaphorePropertiesKHR
 {
 }
@@ -8291,12 +9213,14 @@ impl VkPhysicalDeviceTimelineSemaphorePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreTypeCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	semaphoreType: VkSemaphoreType
-	initialValue: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	semaphoreType: VkSemaphoreType,
+	initialValue: uint64_t,
 }
 impl VkSemaphoreTypeCreateInfo
 {
@@ -8309,6 +9233,8 @@ impl VkSemaphoreTypeCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreTypeCreateInfoKHR
 {
 }
@@ -8322,14 +9248,16 @@ impl VkSemaphoreTypeCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkTimelineSemaphoreSubmitInfo
 {
-	sType: VkStructureType
-	pNext: void
-	waitSemaphoreValueCount: uint32_t
-	pWaitSemaphoreValues: uint64_t
-	signalSemaphoreValueCount: uint32_t
-	pSignalSemaphoreValues: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	waitSemaphoreValueCount: uint32_t,
+	pWaitSemaphoreValues: uint64_t,
+	signalSemaphoreValueCount: uint32_t,
+	pSignalSemaphoreValues: uint64_t,
 }
 impl VkTimelineSemaphoreSubmitInfo
 {
@@ -8342,6 +9270,8 @@ impl VkTimelineSemaphoreSubmitInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkTimelineSemaphoreSubmitInfoKHR
 {
 }
@@ -8355,14 +9285,16 @@ impl VkTimelineSemaphoreSubmitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreWaitInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkSemaphoreWaitFlags
-	semaphoreCount: uint32_t
-	pSemaphores: VkSemaphore
-	pValues: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkSemaphoreWaitFlags,
+	semaphoreCount: uint32_t,
+	pSemaphores: VkSemaphore,
+	pValues: uint64_t,
 }
 impl VkSemaphoreWaitInfo
 {
@@ -8375,6 +9307,8 @@ impl VkSemaphoreWaitInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreWaitInfoKHR
 {
 }
@@ -8388,12 +9322,14 @@ impl VkSemaphoreWaitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreSignalInfo
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	value: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	value: uint64_t,
 }
 impl VkSemaphoreSignalInfo
 {
@@ -8406,6 +9342,8 @@ impl VkSemaphoreSignalInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreSignalInfoKHR
 {
 }
@@ -8419,10 +9357,12 @@ impl VkSemaphoreSignalInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVertexInputBindingDivisorDescriptionEXT
 {
-	binding: uint32_t
-	divisor: uint32_t
+	binding: uint32_t,
+	divisor: uint32_t,
 }
 impl VkVertexInputBindingDivisorDescriptionEXT
 {
@@ -8434,12 +9374,14 @@ impl VkVertexInputBindingDivisorDescriptionEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineVertexInputDivisorStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	vertexBindingDivisorCount: uint32_t
-	pVertexBindingDivisors: VkVertexInputBindingDivisorDescriptionEXT
+	sType: VkStructureType,
+	pNext: void,
+	vertexBindingDivisorCount: uint32_t,
+	pVertexBindingDivisors: VkVertexInputBindingDivisorDescriptionEXT,
 }
 impl VkPipelineVertexInputDivisorStateCreateInfoEXT
 {
@@ -8452,11 +9394,13 @@ impl VkPipelineVertexInputDivisorStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxVertexAttribDivisor: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxVertexAttribDivisor: uint32_t,
 }
 impl VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
 {
@@ -8469,14 +9413,16 @@ impl VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePCIBusInfoPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pciDomain: uint32_t
-	pciBus: uint32_t
-	pciDevice: uint32_t
-	pciFunction: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	pciDomain: uint32_t,
+	pciBus: uint32_t,
+	pciDevice: uint32_t,
+	pciFunction: uint32_t,
 }
 impl VkPhysicalDevicePCIBusInfoPropertiesEXT
 {
@@ -8489,11 +9435,13 @@ impl VkPhysicalDevicePCIBusInfoPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImportAndroidHardwareBufferInfoANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	buffer: AHardwareBuffer
+	sType: VkStructureType,
+	pNext: void,
+	buffer: AHardwareBuffer,
 }
 impl VkImportAndroidHardwareBufferInfoANDROID
 {
@@ -8506,11 +9454,13 @@ impl VkImportAndroidHardwareBufferInfoANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAndroidHardwareBufferUsageANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	androidHardwareBufferUsage: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	androidHardwareBufferUsage: uint64_t,
 }
 impl VkAndroidHardwareBufferUsageANDROID
 {
@@ -8523,12 +9473,14 @@ impl VkAndroidHardwareBufferUsageANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAndroidHardwareBufferPropertiesANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	allocationSize: VkDeviceSize
-	memoryTypeBits: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	allocationSize: VkDeviceSize,
+	memoryTypeBits: uint32_t,
 }
 impl VkAndroidHardwareBufferPropertiesANDROID
 {
@@ -8541,11 +9493,13 @@ impl VkAndroidHardwareBufferPropertiesANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryGetAndroidHardwareBufferInfoANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
 }
 impl VkMemoryGetAndroidHardwareBufferInfoANDROID
 {
@@ -8558,18 +9512,20 @@ impl VkMemoryGetAndroidHardwareBufferInfoANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAndroidHardwareBufferFormatPropertiesANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	format: VkFormat
-	externalFormat: uint64_t
-	formatFeatures: VkFormatFeatureFlags
-	samplerYcbcrConversionComponents: VkComponentMapping
-	suggestedYcbcrModel: VkSamplerYcbcrModelConversion
-	suggestedYcbcrRange: VkSamplerYcbcrRange
-	suggestedXChromaOffset: VkChromaLocation
-	suggestedYChromaOffset: VkChromaLocation
+	sType: VkStructureType,
+	pNext: void,
+	format: VkFormat,
+	externalFormat: uint64_t,
+	formatFeatures: VkFormatFeatureFlags,
+	samplerYcbcrConversionComponents: VkComponentMapping,
+	suggestedYcbcrModel: VkSamplerYcbcrModelConversion,
+	suggestedYcbcrRange: VkSamplerYcbcrRange,
+	suggestedXChromaOffset: VkChromaLocation,
+	suggestedYChromaOffset: VkChromaLocation,
 }
 impl VkAndroidHardwareBufferFormatPropertiesANDROID
 {
@@ -8582,11 +9538,13 @@ impl VkAndroidHardwareBufferFormatPropertiesANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferInheritanceConditionalRenderingInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	conditionalRenderingEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	conditionalRenderingEnable: VkBool32,
 }
 impl VkCommandBufferInheritanceConditionalRenderingInfoEXT
 {
@@ -8599,11 +9557,13 @@ impl VkCommandBufferInheritanceConditionalRenderingInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkExternalFormatANDROID
 {
-	sType: VkStructureType
-	pNext: void
-	externalFormat: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	externalFormat: uint64_t,
 }
 impl VkExternalFormatANDROID
 {
@@ -8616,13 +9576,15 @@ impl VkExternalFormatANDROID
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevice8BitStorageFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	storageBuffer8BitAccess: VkBool32
-	uniformAndStorageBuffer8BitAccess: VkBool32
-	storagePushConstant8: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	storageBuffer8BitAccess: VkBool32,
+	uniformAndStorageBuffer8BitAccess: VkBool32,
+	storagePushConstant8: VkBool32,
 }
 impl VkPhysicalDevice8BitStorageFeatures
 {
@@ -8635,6 +9597,8 @@ impl VkPhysicalDevice8BitStorageFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevice8BitStorageFeaturesKHR
 {
 }
@@ -8648,12 +9612,14 @@ impl VkPhysicalDevice8BitStorageFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceConditionalRenderingFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	conditionalRendering: VkBool32
-	inheritedConditionalRendering: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	conditionalRendering: VkBool32,
+	inheritedConditionalRendering: VkBool32,
 }
 impl VkPhysicalDeviceConditionalRenderingFeaturesEXT
 {
@@ -8666,13 +9632,15 @@ impl VkPhysicalDeviceConditionalRenderingFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkanMemoryModelFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	vulkanMemoryModel: VkBool32
-	vulkanMemoryModelDeviceScope: VkBool32
-	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	vulkanMemoryModel: VkBool32,
+	vulkanMemoryModelDeviceScope: VkBool32,
+	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
 }
 impl VkPhysicalDeviceVulkanMemoryModelFeatures
 {
@@ -8685,6 +9653,8 @@ impl VkPhysicalDeviceVulkanMemoryModelFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkanMemoryModelFeaturesKHR
 {
 }
@@ -8698,12 +9668,14 @@ impl VkPhysicalDeviceVulkanMemoryModelFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderAtomicInt64Features
 {
-	sType: VkStructureType
-	pNext: void
-	shaderBufferInt64Atomics: VkBool32
-	shaderSharedInt64Atomics: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderBufferInt64Atomics: VkBool32,
+	shaderSharedInt64Atomics: VkBool32,
 }
 impl VkPhysicalDeviceShaderAtomicInt64Features
 {
@@ -8716,6 +9688,8 @@ impl VkPhysicalDeviceShaderAtomicInt64Features
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderAtomicInt64FeaturesKHR
 {
 }
@@ -8729,22 +9703,24 @@ impl VkPhysicalDeviceShaderAtomicInt64FeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderAtomicFloatFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	shaderBufferFloat32Atomics: VkBool32
-	shaderBufferFloat32AtomicAdd: VkBool32
-	shaderBufferFloat64Atomics: VkBool32
-	shaderBufferFloat64AtomicAdd: VkBool32
-	shaderSharedFloat32Atomics: VkBool32
-	shaderSharedFloat32AtomicAdd: VkBool32
-	shaderSharedFloat64Atomics: VkBool32
-	shaderSharedFloat64AtomicAdd: VkBool32
-	shaderImageFloat32Atomics: VkBool32
-	shaderImageFloat32AtomicAdd: VkBool32
-	sparseImageFloat32Atomics: VkBool32
-	sparseImageFloat32AtomicAdd: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderBufferFloat32Atomics: VkBool32,
+	shaderBufferFloat32AtomicAdd: VkBool32,
+	shaderBufferFloat64Atomics: VkBool32,
+	shaderBufferFloat64AtomicAdd: VkBool32,
+	shaderSharedFloat32Atomics: VkBool32,
+	shaderSharedFloat32AtomicAdd: VkBool32,
+	shaderSharedFloat64Atomics: VkBool32,
+	shaderSharedFloat64AtomicAdd: VkBool32,
+	shaderImageFloat32Atomics: VkBool32,
+	shaderImageFloat32AtomicAdd: VkBool32,
+	sparseImageFloat32Atomics: VkBool32,
+	sparseImageFloat32AtomicAdd: VkBool32,
 }
 impl VkPhysicalDeviceShaderAtomicFloatFeaturesEXT
 {
@@ -8757,22 +9733,24 @@ impl VkPhysicalDeviceShaderAtomicFloatFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	shaderBufferFloat16Atomics: VkBool32
-	shaderBufferFloat16AtomicAdd: VkBool32
-	shaderBufferFloat16AtomicMinMax: VkBool32
-	shaderBufferFloat32AtomicMinMax: VkBool32
-	shaderBufferFloat64AtomicMinMax: VkBool32
-	shaderSharedFloat16Atomics: VkBool32
-	shaderSharedFloat16AtomicAdd: VkBool32
-	shaderSharedFloat16AtomicMinMax: VkBool32
-	shaderSharedFloat32AtomicMinMax: VkBool32
-	shaderSharedFloat64AtomicMinMax: VkBool32
-	shaderImageFloat32AtomicMinMax: VkBool32
-	sparseImageFloat32AtomicMinMax: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderBufferFloat16Atomics: VkBool32,
+	shaderBufferFloat16AtomicAdd: VkBool32,
+	shaderBufferFloat16AtomicMinMax: VkBool32,
+	shaderBufferFloat32AtomicMinMax: VkBool32,
+	shaderBufferFloat64AtomicMinMax: VkBool32,
+	shaderSharedFloat16Atomics: VkBool32,
+	shaderSharedFloat16AtomicAdd: VkBool32,
+	shaderSharedFloat16AtomicMinMax: VkBool32,
+	shaderSharedFloat32AtomicMinMax: VkBool32,
+	shaderSharedFloat64AtomicMinMax: VkBool32,
+	shaderImageFloat32AtomicMinMax: VkBool32,
+	sparseImageFloat32AtomicMinMax: VkBool32,
 }
 impl VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT
 {
@@ -8785,12 +9763,14 @@ impl VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	vertexAttributeInstanceRateDivisor: VkBool32
-	vertexAttributeInstanceRateZeroDivisor: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	vertexAttributeInstanceRateDivisor: VkBool32,
+	vertexAttributeInstanceRateZeroDivisor: VkBool32,
 }
 impl VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT
 {
@@ -8803,11 +9783,13 @@ impl VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueueFamilyCheckpointPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	checkpointExecutionStageMask: VkPipelineStageFlags
+	sType: VkStructureType,
+	pNext: void,
+	checkpointExecutionStageMask: VkPipelineStageFlags,
 }
 impl VkQueueFamilyCheckpointPropertiesNV
 {
@@ -8820,12 +9802,14 @@ impl VkQueueFamilyCheckpointPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCheckpointDataNV
 {
-	sType: VkStructureType
-	pNext: void
-	stage: VkPipelineStageFlagBits
-	pCheckpointMarker: void
+	sType: VkStructureType,
+	pNext: void,
+	stage: VkPipelineStageFlagBits,
+	pCheckpointMarker: void,
 }
 impl VkCheckpointDataNV
 {
@@ -8838,14 +9822,16 @@ impl VkCheckpointDataNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDepthStencilResolveProperties
 {
-	sType: VkStructureType
-	pNext: void
-	supportedDepthResolveModes: VkResolveModeFlags
-	supportedStencilResolveModes: VkResolveModeFlags
-	independentResolveNone: VkBool32
-	independentResolve: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	supportedDepthResolveModes: VkResolveModeFlags,
+	supportedStencilResolveModes: VkResolveModeFlags,
+	independentResolveNone: VkBool32,
+	independentResolve: VkBool32,
 }
 impl VkPhysicalDeviceDepthStencilResolveProperties
 {
@@ -8858,6 +9844,8 @@ impl VkPhysicalDeviceDepthStencilResolveProperties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDepthStencilResolvePropertiesKHR
 {
 }
@@ -8871,13 +9859,15 @@ impl VkPhysicalDeviceDepthStencilResolvePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDescriptionDepthStencilResolve
 {
-	sType: VkStructureType
-	pNext: void
-	depthResolveMode: VkResolveModeFlagBits
-	stencilResolveMode: VkResolveModeFlagBits
-	pDepthStencilResolveAttachment: VkAttachmentReference2
+	sType: VkStructureType,
+	pNext: void,
+	depthResolveMode: VkResolveModeFlagBits,
+	stencilResolveMode: VkResolveModeFlagBits,
+	pDepthStencilResolveAttachment: VkAttachmentReference2,
 }
 impl VkSubpassDescriptionDepthStencilResolve
 {
@@ -8890,6 +9880,8 @@ impl VkSubpassDescriptionDepthStencilResolve
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassDescriptionDepthStencilResolveKHR
 {
 }
@@ -8903,11 +9895,13 @@ impl VkSubpassDescriptionDepthStencilResolveKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageViewASTCDecodeModeEXT
 {
-	sType: VkStructureType
-	pNext: void
-	decodeMode: VkFormat
+	sType: VkStructureType,
+	pNext: void,
+	decodeMode: VkFormat,
 }
 impl VkImageViewASTCDecodeModeEXT
 {
@@ -8920,11 +9914,13 @@ impl VkImageViewASTCDecodeModeEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceASTCDecodeFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	decodeModeSharedExponent: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	decodeModeSharedExponent: VkBool32,
 }
 impl VkPhysicalDeviceASTCDecodeFeaturesEXT
 {
@@ -8937,12 +9933,14 @@ impl VkPhysicalDeviceASTCDecodeFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTransformFeedbackFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	transformFeedback: VkBool32
-	geometryStreams: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	transformFeedback: VkBool32,
+	geometryStreams: VkBool32,
 }
 impl VkPhysicalDeviceTransformFeedbackFeaturesEXT
 {
@@ -8955,20 +9953,22 @@ impl VkPhysicalDeviceTransformFeedbackFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTransformFeedbackPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxTransformFeedbackStreams: uint32_t
-	maxTransformFeedbackBuffers: uint32_t
-	maxTransformFeedbackBufferSize: VkDeviceSize
-	maxTransformFeedbackStreamDataSize: uint32_t
-	maxTransformFeedbackBufferDataSize: uint32_t
-	maxTransformFeedbackBufferDataStride: uint32_t
-	transformFeedbackQueries: VkBool32
-	transformFeedbackStreamsLinesTriangles: VkBool32
-	transformFeedbackRasterizationStreamSelect: VkBool32
-	transformFeedbackDraw: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	maxTransformFeedbackStreams: uint32_t,
+	maxTransformFeedbackBuffers: uint32_t,
+	maxTransformFeedbackBufferSize: VkDeviceSize,
+	maxTransformFeedbackStreamDataSize: uint32_t,
+	maxTransformFeedbackBufferDataSize: uint32_t,
+	maxTransformFeedbackBufferDataStride: uint32_t,
+	transformFeedbackQueries: VkBool32,
+	transformFeedbackStreamsLinesTriangles: VkBool32,
+	transformFeedbackRasterizationStreamSelect: VkBool32,
+	transformFeedbackDraw: VkBool32,
 }
 impl VkPhysicalDeviceTransformFeedbackPropertiesEXT
 {
@@ -8981,12 +9981,14 @@ impl VkPhysicalDeviceTransformFeedbackPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationStateStreamCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineRasterizationStateStreamCreateFlagsEXT
-	rasterizationStream: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineRasterizationStateStreamCreateFlagsEXT,
+	rasterizationStream: uint32_t,
 }
 impl VkPipelineRasterizationStateStreamCreateInfoEXT
 {
@@ -8999,11 +10001,13 @@ impl VkPipelineRasterizationStateStreamCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	representativeFragmentTest: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	representativeFragmentTest: VkBool32,
 }
 impl VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV
 {
@@ -9016,11 +10020,13 @@ impl VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRepresentativeFragmentTestStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	representativeFragmentTestEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	representativeFragmentTestEnable: VkBool32,
 }
 impl VkPipelineRepresentativeFragmentTestStateCreateInfoNV
 {
@@ -9033,11 +10039,13 @@ impl VkPipelineRepresentativeFragmentTestStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExclusiveScissorFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	exclusiveScissor: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	exclusiveScissor: VkBool32,
 }
 impl VkPhysicalDeviceExclusiveScissorFeaturesNV
 {
@@ -9050,12 +10058,14 @@ impl VkPhysicalDeviceExclusiveScissorFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineViewportExclusiveScissorStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	exclusiveScissorCount: uint32_t
-	pExclusiveScissors: VkRect2D
+	sType: VkStructureType,
+	pNext: void,
+	exclusiveScissorCount: uint32_t,
+	pExclusiveScissors: VkRect2D,
 }
 impl VkPipelineViewportExclusiveScissorStateCreateInfoNV
 {
@@ -9068,11 +10078,13 @@ impl VkPipelineViewportExclusiveScissorStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCornerSampledImageFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	cornerSampledImage: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	cornerSampledImage: VkBool32,
 }
 impl VkPhysicalDeviceCornerSampledImageFeaturesNV
 {
@@ -9085,12 +10097,14 @@ impl VkPhysicalDeviceCornerSampledImageFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceComputeShaderDerivativesFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	computeDerivativeGroupQuads: VkBool32
-	computeDerivativeGroupLinear: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	computeDerivativeGroupQuads: VkBool32,
+	computeDerivativeGroupLinear: VkBool32,
 }
 impl VkPhysicalDeviceComputeShaderDerivativesFeaturesNV
 {
@@ -9103,11 +10117,13 @@ impl VkPhysicalDeviceComputeShaderDerivativesFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentShaderBarycentric: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	fragmentShaderBarycentric: VkBool32,
 }
 impl VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV
 {
@@ -9120,11 +10136,13 @@ impl VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderImageFootprintFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	imageFootprint: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	imageFootprint: VkBool32,
 }
 impl VkPhysicalDeviceShaderImageFootprintFeaturesNV
 {
@@ -9137,11 +10155,13 @@ impl VkPhysicalDeviceShaderImageFootprintFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	dedicatedAllocationImageAliasing: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	dedicatedAllocationImageAliasing: VkBool32,
 }
 impl VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
 {
@@ -9154,10 +10174,12 @@ impl VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkShadingRatePaletteNV
 {
-	shadingRatePaletteEntryCount: uint32_t
-	pShadingRatePaletteEntries: VkShadingRatePaletteEntryNV
+	shadingRatePaletteEntryCount: uint32_t,
+	pShadingRatePaletteEntries: VkShadingRatePaletteEntryNV,
 }
 impl VkShadingRatePaletteNV
 {
@@ -9169,13 +10191,15 @@ impl VkShadingRatePaletteNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineViewportShadingRateImageStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	shadingRateImageEnable: VkBool32
-	viewportCount: uint32_t
-	pShadingRatePalettes: VkShadingRatePaletteNV
+	sType: VkStructureType,
+	pNext: void,
+	shadingRateImageEnable: VkBool32,
+	viewportCount: uint32_t,
+	pShadingRatePalettes: VkShadingRatePaletteNV,
 }
 impl VkPipelineViewportShadingRateImageStateCreateInfoNV
 {
@@ -9188,12 +10212,14 @@ impl VkPipelineViewportShadingRateImageStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShadingRateImageFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	shadingRateImage: VkBool32
-	shadingRateCoarseSampleOrder: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shadingRateImage: VkBool32,
+	shadingRateCoarseSampleOrder: VkBool32,
 }
 impl VkPhysicalDeviceShadingRateImageFeaturesNV
 {
@@ -9206,13 +10232,15 @@ impl VkPhysicalDeviceShadingRateImageFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShadingRateImagePropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	shadingRateTexelSize: VkExtent2D
-	shadingRatePaletteSize: uint32_t
-	shadingRateMaxCoarseSamples: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	shadingRateTexelSize: VkExtent2D,
+	shadingRatePaletteSize: uint32_t,
+	shadingRateMaxCoarseSamples: uint32_t,
 }
 impl VkPhysicalDeviceShadingRateImagePropertiesNV
 {
@@ -9225,11 +10253,13 @@ impl VkPhysicalDeviceShadingRateImagePropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceInvocationMaskFeaturesHUAWEI
 {
-	sType: VkStructureType
-	pNext: void
-	invocationMask: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	invocationMask: VkBool32,
 }
 impl VkPhysicalDeviceInvocationMaskFeaturesHUAWEI
 {
@@ -9242,11 +10272,13 @@ impl VkPhysicalDeviceInvocationMaskFeaturesHUAWEI
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCoarseSampleLocationNV
 {
-	pixelX: uint32_t
-	pixelY: uint32_t
-	sample: uint32_t
+	pixelX: uint32_t,
+	pixelY: uint32_t,
+	sample: uint32_t,
 }
 impl VkCoarseSampleLocationNV
 {
@@ -9258,12 +10290,14 @@ impl VkCoarseSampleLocationNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCoarseSampleOrderCustomNV
 {
-	shadingRate: VkShadingRatePaletteEntryNV
-	sampleCount: uint32_t
-	sampleLocationCount: uint32_t
-	pSampleLocations: VkCoarseSampleLocationNV
+	shadingRate: VkShadingRatePaletteEntryNV,
+	sampleCount: uint32_t,
+	sampleLocationCount: uint32_t,
+	pSampleLocations: VkCoarseSampleLocationNV,
 }
 impl VkCoarseSampleOrderCustomNV
 {
@@ -9275,13 +10309,15 @@ impl VkCoarseSampleOrderCustomNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineViewportCoarseSampleOrderStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	sampleOrderType: VkCoarseSampleOrderTypeNV
-	customSampleOrderCount: uint32_t
-	pCustomSampleOrders: VkCoarseSampleOrderCustomNV
+	sType: VkStructureType,
+	pNext: void,
+	sampleOrderType: VkCoarseSampleOrderTypeNV,
+	customSampleOrderCount: uint32_t,
+	pCustomSampleOrders: VkCoarseSampleOrderCustomNV,
 }
 impl VkPipelineViewportCoarseSampleOrderStateCreateInfoNV
 {
@@ -9294,12 +10330,14 @@ impl VkPipelineViewportCoarseSampleOrderStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMeshShaderFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	taskShader: VkBool32
-	meshShader: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	taskShader: VkBool32,
+	meshShader: VkBool32,
 }
 impl VkPhysicalDeviceMeshShaderFeaturesNV
 {
@@ -9312,23 +10350,25 @@ impl VkPhysicalDeviceMeshShaderFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMeshShaderPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	maxDrawMeshTasksCount: uint32_t
-	maxTaskWorkGroupInvocations: uint32_t
-	maxTaskWorkGroupSize: uint32_t
-	maxTaskTotalMemorySize: uint32_t
-	maxTaskOutputCount: uint32_t
-	maxMeshWorkGroupInvocations: uint32_t
-	maxMeshWorkGroupSize: uint32_t
-	maxMeshTotalMemorySize: uint32_t
-	maxMeshOutputVertices: uint32_t
-	maxMeshOutputPrimitives: uint32_t
-	maxMeshMultiviewViewCount: uint32_t
-	meshOutputPerVertexGranularity: uint32_t
-	meshOutputPerPrimitiveGranularity: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxDrawMeshTasksCount: uint32_t,
+	maxTaskWorkGroupInvocations: uint32_t,
+	maxTaskWorkGroupSize: uint32_t,
+	maxTaskTotalMemorySize: uint32_t,
+	maxTaskOutputCount: uint32_t,
+	maxMeshWorkGroupInvocations: uint32_t,
+	maxMeshWorkGroupSize: uint32_t,
+	maxMeshTotalMemorySize: uint32_t,
+	maxMeshOutputVertices: uint32_t,
+	maxMeshOutputPrimitives: uint32_t,
+	maxMeshMultiviewViewCount: uint32_t,
+	meshOutputPerVertexGranularity: uint32_t,
+	meshOutputPerPrimitiveGranularity: uint32_t,
 }
 impl VkPhysicalDeviceMeshShaderPropertiesNV
 {
@@ -9341,10 +10381,12 @@ impl VkPhysicalDeviceMeshShaderPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDrawMeshTasksIndirectCommandNV
 {
-	taskCount: uint32_t
-	firstTask: uint32_t
+	taskCount: uint32_t,
+	firstTask: uint32_t,
 }
 impl VkDrawMeshTasksIndirectCommandNV
 {
@@ -9356,15 +10398,17 @@ impl VkDrawMeshTasksIndirectCommandNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRayTracingShaderGroupCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkRayTracingShaderGroupTypeKHR
-	generalShader: uint32_t
-	closestHitShader: uint32_t
-	anyHitShader: uint32_t
-	intersectionShader: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	type: VkRayTracingShaderGroupTypeKHR,
+	generalShader: uint32_t,
+	closestHitShader: uint32_t,
+	anyHitShader: uint32_t,
+	intersectionShader: uint32_t,
 }
 impl VkRayTracingShaderGroupCreateInfoNV
 {
@@ -9377,16 +10421,18 @@ impl VkRayTracingShaderGroupCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRayTracingShaderGroupCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkRayTracingShaderGroupTypeKHR
-	generalShader: uint32_t
-	closestHitShader: uint32_t
-	anyHitShader: uint32_t
-	intersectionShader: uint32_t
-	pShaderGroupCaptureReplayHandle: void
+	sType: VkStructureType,
+	pNext: void,
+	type: VkRayTracingShaderGroupTypeKHR,
+	generalShader: uint32_t,
+	closestHitShader: uint32_t,
+	anyHitShader: uint32_t,
+	intersectionShader: uint32_t,
+	pShaderGroupCaptureReplayHandle: void,
 }
 impl VkRayTracingShaderGroupCreateInfoKHR
 {
@@ -9399,19 +10445,21 @@ impl VkRayTracingShaderGroupCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRayTracingPipelineCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCreateFlags
-	stageCount: uint32_t
-	pStages: VkPipelineShaderStageCreateInfo
-	groupCount: uint32_t
-	pGroups: VkRayTracingShaderGroupCreateInfoNV
-	maxRecursionDepth: uint32_t
-	layout: VkPipelineLayout
-	basePipelineHandle: VkPipeline
-	basePipelineIndex: int32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCreateFlags,
+	stageCount: uint32_t,
+	pStages: VkPipelineShaderStageCreateInfo,
+	groupCount: uint32_t,
+	pGroups: VkRayTracingShaderGroupCreateInfoNV,
+	maxRecursionDepth: uint32_t,
+	layout: VkPipelineLayout,
+	basePipelineHandle: VkPipeline,
+	basePipelineIndex: int32_t,
 }
 impl VkRayTracingPipelineCreateInfoNV
 {
@@ -9424,22 +10472,24 @@ impl VkRayTracingPipelineCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRayTracingPipelineCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCreateFlags
-	stageCount: uint32_t
-	pStages: VkPipelineShaderStageCreateInfo
-	groupCount: uint32_t
-	pGroups: VkRayTracingShaderGroupCreateInfoKHR
-	maxPipelineRayRecursionDepth: uint32_t
-	pLibraryInfo: VkPipelineLibraryCreateInfoKHR
-	pLibraryInterface: VkRayTracingPipelineInterfaceCreateInfoKHR
-	pDynamicState: VkPipelineDynamicStateCreateInfo
-	layout: VkPipelineLayout
-	basePipelineHandle: VkPipeline
-	basePipelineIndex: int32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCreateFlags,
+	stageCount: uint32_t,
+	pStages: VkPipelineShaderStageCreateInfo,
+	groupCount: uint32_t,
+	pGroups: VkRayTracingShaderGroupCreateInfoKHR,
+	maxPipelineRayRecursionDepth: uint32_t,
+	pLibraryInfo: VkPipelineLibraryCreateInfoKHR,
+	pLibraryInterface: VkRayTracingPipelineInterfaceCreateInfoKHR,
+	pDynamicState: VkPipelineDynamicStateCreateInfo,
+	layout: VkPipelineLayout,
+	basePipelineHandle: VkPipeline,
+	basePipelineIndex: int32_t,
 }
 impl VkRayTracingPipelineCreateInfoKHR
 {
@@ -9452,21 +10502,23 @@ impl VkRayTracingPipelineCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGeometryTrianglesNV
 {
-	sType: VkStructureType
-	pNext: void
-	vertexData: VkBuffer
-	vertexOffset: VkDeviceSize
-	vertexCount: uint32_t
-	vertexStride: VkDeviceSize
-	vertexFormat: VkFormat
-	indexData: VkBuffer
-	indexOffset: VkDeviceSize
-	indexCount: uint32_t
-	indexType: VkIndexType
-	transformData: VkBuffer
-	transformOffset: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	vertexData: VkBuffer,
+	vertexOffset: VkDeviceSize,
+	vertexCount: uint32_t,
+	vertexStride: VkDeviceSize,
+	vertexFormat: VkFormat,
+	indexData: VkBuffer,
+	indexOffset: VkDeviceSize,
+	indexCount: uint32_t,
+	indexType: VkIndexType,
+	transformData: VkBuffer,
+	transformOffset: VkDeviceSize,
 }
 impl VkGeometryTrianglesNV
 {
@@ -9479,14 +10531,16 @@ impl VkGeometryTrianglesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGeometryAABBNV
 {
-	sType: VkStructureType
-	pNext: void
-	aabbData: VkBuffer
-	numAABBs: uint32_t
-	stride: uint32_t
-	offset: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	aabbData: VkBuffer,
+	numAABBs: uint32_t,
+	stride: uint32_t,
+	offset: VkDeviceSize,
 }
 impl VkGeometryAABBNV
 {
@@ -9499,10 +10553,12 @@ impl VkGeometryAABBNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGeometryDataNV
 {
-	triangles: VkGeometryTrianglesNV
-	aabbs: VkGeometryAABBNV
+	triangles: VkGeometryTrianglesNV,
+	aabbs: VkGeometryAABBNV,
 }
 impl VkGeometryDataNV
 {
@@ -9514,13 +10570,15 @@ impl VkGeometryDataNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkGeometryNV
 {
-	sType: VkStructureType
-	pNext: void
-	geometryType: VkGeometryTypeKHR
-	geometry: VkGeometryDataNV
-	flags: VkGeometryFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	geometryType: VkGeometryTypeKHR,
+	geometry: VkGeometryDataNV,
+	flags: VkGeometryFlagsKHR,
 }
 impl VkGeometryNV
 {
@@ -9533,15 +10591,17 @@ impl VkGeometryNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkAccelerationStructureTypeNV
-	flags: VkBuildAccelerationStructureFlagsNV
-	instanceCount: uint32_t
-	geometryCount: uint32_t
-	pGeometries: VkGeometryNV
+	sType: VkStructureType,
+	pNext: void,
+	type: VkAccelerationStructureTypeNV,
+	flags: VkBuildAccelerationStructureFlagsNV,
+	instanceCount: uint32_t,
+	geometryCount: uint32_t,
+	pGeometries: VkGeometryNV,
 }
 impl VkAccelerationStructureInfoNV
 {
@@ -9554,12 +10614,14 @@ impl VkAccelerationStructureInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	compactedSize: VkDeviceSize
-	info: VkAccelerationStructureInfoNV
+	sType: VkStructureType,
+	pNext: void,
+	compactedSize: VkDeviceSize,
+	info: VkAccelerationStructureInfoNV,
 }
 impl VkAccelerationStructureCreateInfoNV
 {
@@ -9572,15 +10634,17 @@ impl VkAccelerationStructureCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBindAccelerationStructureMemoryInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	accelerationStructure: VkAccelerationStructureNV
-	memory: VkDeviceMemory
-	memoryOffset: VkDeviceSize
-	deviceIndexCount: uint32_t
-	pDeviceIndices: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	accelerationStructure: VkAccelerationStructureNV,
+	memory: VkDeviceMemory,
+	memoryOffset: VkDeviceSize,
+	deviceIndexCount: uint32_t,
+	pDeviceIndices: uint32_t,
 }
 impl VkBindAccelerationStructureMemoryInfoNV
 {
@@ -9593,12 +10657,14 @@ impl VkBindAccelerationStructureMemoryInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWriteDescriptorSetAccelerationStructureKHR
 {
-	sType: VkStructureType
-	pNext: void
-	accelerationStructureCount: uint32_t
-	pAccelerationStructures: VkAccelerationStructureKHR
+	sType: VkStructureType,
+	pNext: void,
+	accelerationStructureCount: uint32_t,
+	pAccelerationStructures: VkAccelerationStructureKHR,
 }
 impl VkWriteDescriptorSetAccelerationStructureKHR
 {
@@ -9611,12 +10677,14 @@ impl VkWriteDescriptorSetAccelerationStructureKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkWriteDescriptorSetAccelerationStructureNV
 {
-	sType: VkStructureType
-	pNext: void
-	accelerationStructureCount: uint32_t
-	pAccelerationStructures: VkAccelerationStructureNV
+	sType: VkStructureType,
+	pNext: void,
+	accelerationStructureCount: uint32_t,
+	pAccelerationStructures: VkAccelerationStructureNV,
 }
 impl VkWriteDescriptorSetAccelerationStructureNV
 {
@@ -9629,12 +10697,14 @@ impl VkWriteDescriptorSetAccelerationStructureNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureMemoryRequirementsInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkAccelerationStructureMemoryRequirementsTypeNV
-	accelerationStructure: VkAccelerationStructureNV
+	sType: VkStructureType,
+	pNext: void,
+	type: VkAccelerationStructureMemoryRequirementsTypeNV,
+	accelerationStructure: VkAccelerationStructureNV,
 }
 impl VkAccelerationStructureMemoryRequirementsInfoNV
 {
@@ -9647,15 +10717,17 @@ impl VkAccelerationStructureMemoryRequirementsInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceAccelerationStructureFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	accelerationStructure: VkBool32
-	accelerationStructureCaptureReplay: VkBool32
-	accelerationStructureIndirectBuild: VkBool32
-	accelerationStructureHostCommands: VkBool32
-	descriptorBindingAccelerationStructureUpdateAfterBind: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	accelerationStructure: VkBool32,
+	accelerationStructureCaptureReplay: VkBool32,
+	accelerationStructureIndirectBuild: VkBool32,
+	accelerationStructureHostCommands: VkBool32,
+	descriptorBindingAccelerationStructureUpdateAfterBind: VkBool32,
 }
 impl VkPhysicalDeviceAccelerationStructureFeaturesKHR
 {
@@ -9668,15 +10740,17 @@ impl VkPhysicalDeviceAccelerationStructureFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRayTracingPipelineFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	rayTracingPipeline: VkBool32
-	rayTracingPipelineShaderGroupHandleCaptureReplay: VkBool32
-	rayTracingPipelineShaderGroupHandleCaptureReplayMixed: VkBool32
-	rayTracingPipelineTraceRaysIndirect: VkBool32
-	rayTraversalPrimitiveCulling: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	rayTracingPipeline: VkBool32,
+	rayTracingPipelineShaderGroupHandleCaptureReplay: VkBool32,
+	rayTracingPipelineShaderGroupHandleCaptureReplayMixed: VkBool32,
+	rayTracingPipelineTraceRaysIndirect: VkBool32,
+	rayTraversalPrimitiveCulling: VkBool32,
 }
 impl VkPhysicalDeviceRayTracingPipelineFeaturesKHR
 {
@@ -9689,11 +10763,13 @@ impl VkPhysicalDeviceRayTracingPipelineFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRayQueryFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	rayQuery: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	rayQuery: VkBool32,
 }
 impl VkPhysicalDeviceRayQueryFeaturesKHR
 {
@@ -9706,18 +10782,20 @@ impl VkPhysicalDeviceRayQueryFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceAccelerationStructurePropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	maxGeometryCount: uint64_t
-	maxInstanceCount: uint64_t
-	maxPrimitiveCount: uint64_t
-	maxPerStageDescriptorAccelerationStructures: uint32_t
-	maxPerStageDescriptorUpdateAfterBindAccelerationStructures: uint32_t
-	maxDescriptorSetAccelerationStructures: uint32_t
-	maxDescriptorSetUpdateAfterBindAccelerationStructures: uint32_t
-	minAccelerationStructureScratchOffsetAlignment: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxGeometryCount: uint64_t,
+	maxInstanceCount: uint64_t,
+	maxPrimitiveCount: uint64_t,
+	maxPerStageDescriptorAccelerationStructures: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindAccelerationStructures: uint32_t,
+	maxDescriptorSetAccelerationStructures: uint32_t,
+	maxDescriptorSetUpdateAfterBindAccelerationStructures: uint32_t,
+	minAccelerationStructureScratchOffsetAlignment: uint32_t,
 }
 impl VkPhysicalDeviceAccelerationStructurePropertiesKHR
 {
@@ -9730,18 +10808,20 @@ impl VkPhysicalDeviceAccelerationStructurePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRayTracingPipelinePropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	shaderGroupHandleSize: uint32_t
-	maxRayRecursionDepth: uint32_t
-	maxShaderGroupStride: uint32_t
-	shaderGroupBaseAlignment: uint32_t
-	shaderGroupHandleCaptureReplaySize: uint32_t
-	maxRayDispatchInvocationCount: uint32_t
-	shaderGroupHandleAlignment: uint32_t
-	maxRayHitAttributeSize: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	shaderGroupHandleSize: uint32_t,
+	maxRayRecursionDepth: uint32_t,
+	maxShaderGroupStride: uint32_t,
+	shaderGroupBaseAlignment: uint32_t,
+	shaderGroupHandleCaptureReplaySize: uint32_t,
+	maxRayDispatchInvocationCount: uint32_t,
+	shaderGroupHandleAlignment: uint32_t,
+	maxRayHitAttributeSize: uint32_t,
 }
 impl VkPhysicalDeviceRayTracingPipelinePropertiesKHR
 {
@@ -9754,18 +10834,20 @@ impl VkPhysicalDeviceRayTracingPipelinePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRayTracingPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	shaderGroupHandleSize: uint32_t
-	maxRecursionDepth: uint32_t
-	maxShaderGroupStride: uint32_t
-	shaderGroupBaseAlignment: uint32_t
-	maxGeometryCount: uint64_t
-	maxInstanceCount: uint64_t
-	maxTriangleCount: uint64_t
-	maxDescriptorSetAccelerationStructures: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	shaderGroupHandleSize: uint32_t,
+	maxRecursionDepth: uint32_t,
+	maxShaderGroupStride: uint32_t,
+	shaderGroupBaseAlignment: uint32_t,
+	maxGeometryCount: uint64_t,
+	maxInstanceCount: uint64_t,
+	maxTriangleCount: uint64_t,
+	maxDescriptorSetAccelerationStructures: uint32_t,
 }
 impl VkPhysicalDeviceRayTracingPropertiesNV
 {
@@ -9778,11 +10860,13 @@ impl VkPhysicalDeviceRayTracingPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkStridedDeviceAddressRegionKHR
 {
-	deviceAddress: VkDeviceAddress
-	stride: VkDeviceSize
-	size: VkDeviceSize
+	deviceAddress: VkDeviceAddress,
+	stride: VkDeviceSize,
+	size: VkDeviceSize,
 }
 impl VkStridedDeviceAddressRegionKHR
 {
@@ -9794,11 +10878,13 @@ impl VkStridedDeviceAddressRegionKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkTraceRaysIndirectCommandKHR
 {
-	width: uint32_t
-	height: uint32_t
-	depth: uint32_t
+	width: uint32_t,
+	height: uint32_t,
+	depth: uint32_t,
 }
 impl VkTraceRaysIndirectCommandKHR
 {
@@ -9810,12 +10896,14 @@ impl VkTraceRaysIndirectCommandKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDrmFormatModifierPropertiesListEXT
 {
-	sType: VkStructureType
-	pNext: void
-	drmFormatModifierCount: uint32_t
-	pDrmFormatModifierProperties: VkDrmFormatModifierPropertiesEXT
+	sType: VkStructureType,
+	pNext: void,
+	drmFormatModifierCount: uint32_t,
+	pDrmFormatModifierProperties: VkDrmFormatModifierPropertiesEXT,
 }
 impl VkDrmFormatModifierPropertiesListEXT
 {
@@ -9828,11 +10916,13 @@ impl VkDrmFormatModifierPropertiesListEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDrmFormatModifierPropertiesEXT
 {
-	drmFormatModifier: uint64_t
-	drmFormatModifierPlaneCount: uint32_t
-	drmFormatModifierTilingFeatures: VkFormatFeatureFlags
+	drmFormatModifier: uint64_t,
+	drmFormatModifierPlaneCount: uint32_t,
+	drmFormatModifierTilingFeatures: VkFormatFeatureFlags,
 }
 impl VkDrmFormatModifierPropertiesEXT
 {
@@ -9844,14 +10934,16 @@ impl VkDrmFormatModifierPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageDrmFormatModifierInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	drmFormatModifier: uint64_t
-	sharingMode: VkSharingMode
-	queueFamilyIndexCount: uint32_t
-	pQueueFamilyIndices: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	drmFormatModifier: uint64_t,
+	sharingMode: VkSharingMode,
+	queueFamilyIndexCount: uint32_t,
+	pQueueFamilyIndices: uint32_t,
 }
 impl VkPhysicalDeviceImageDrmFormatModifierInfoEXT
 {
@@ -9864,12 +10956,14 @@ impl VkPhysicalDeviceImageDrmFormatModifierInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageDrmFormatModifierListCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	drmFormatModifierCount: uint32_t
-	pDrmFormatModifiers: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	drmFormatModifierCount: uint32_t,
+	pDrmFormatModifiers: uint64_t,
 }
 impl VkImageDrmFormatModifierListCreateInfoEXT
 {
@@ -9882,13 +10976,15 @@ impl VkImageDrmFormatModifierListCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageDrmFormatModifierExplicitCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	drmFormatModifier: uint64_t
-	drmFormatModifierPlaneCount: uint32_t
-	pPlaneLayouts: VkSubresourceLayout
+	sType: VkStructureType,
+	pNext: void,
+	drmFormatModifier: uint64_t,
+	drmFormatModifierPlaneCount: uint32_t,
+	pPlaneLayouts: VkSubresourceLayout,
 }
 impl VkImageDrmFormatModifierExplicitCreateInfoEXT
 {
@@ -9901,11 +10997,13 @@ impl VkImageDrmFormatModifierExplicitCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageDrmFormatModifierPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	drmFormatModifier: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	drmFormatModifier: uint64_t,
 }
 impl VkImageDrmFormatModifierPropertiesEXT
 {
@@ -9918,11 +11016,13 @@ impl VkImageDrmFormatModifierPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageStencilUsageCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	stencilUsage: VkImageUsageFlags
+	sType: VkStructureType,
+	pNext: void,
+	stencilUsage: VkImageUsageFlags,
 }
 impl VkImageStencilUsageCreateInfo
 {
@@ -9935,6 +11035,8 @@ impl VkImageStencilUsageCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageStencilUsageCreateInfoEXT
 {
 }
@@ -9948,11 +11050,13 @@ impl VkImageStencilUsageCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceMemoryOverallocationCreateInfoAMD
 {
-	sType: VkStructureType
-	pNext: void
-	overallocationBehavior: VkMemoryOverallocationBehaviorAMD
+	sType: VkStructureType,
+	pNext: void,
+	overallocationBehavior: VkMemoryOverallocationBehaviorAMD,
 }
 impl VkDeviceMemoryOverallocationCreateInfoAMD
 {
@@ -9965,13 +11069,15 @@ impl VkDeviceMemoryOverallocationCreateInfoAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentDensityMapFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentDensityMap: VkBool32
-	fragmentDensityMapDynamic: VkBool32
-	fragmentDensityMapNonSubsampledImages: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	fragmentDensityMap: VkBool32,
+	fragmentDensityMapDynamic: VkBool32,
+	fragmentDensityMapNonSubsampledImages: VkBool32,
 }
 impl VkPhysicalDeviceFragmentDensityMapFeaturesEXT
 {
@@ -9984,11 +11090,13 @@ impl VkPhysicalDeviceFragmentDensityMapFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentDensityMap2FeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentDensityMapDeferred: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	fragmentDensityMapDeferred: VkBool32,
 }
 impl VkPhysicalDeviceFragmentDensityMap2FeaturesEXT
 {
@@ -10001,13 +11109,15 @@ impl VkPhysicalDeviceFragmentDensityMap2FeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentDensityMapPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	minFragmentDensityTexelSize: VkExtent2D
-	maxFragmentDensityTexelSize: VkExtent2D
-	fragmentDensityInvocations: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	minFragmentDensityTexelSize: VkExtent2D,
+	maxFragmentDensityTexelSize: VkExtent2D,
+	fragmentDensityInvocations: VkBool32,
 }
 impl VkPhysicalDeviceFragmentDensityMapPropertiesEXT
 {
@@ -10020,14 +11130,16 @@ impl VkPhysicalDeviceFragmentDensityMapPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentDensityMap2PropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	subsampledLoads: VkBool32
-	subsampledCoarseReconstructionEarlyAccess: VkBool32
-	maxSubsampledArrayLayers: uint32_t
-	maxDescriptorSetSubsampledSamplers: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	subsampledLoads: VkBool32,
+	subsampledCoarseReconstructionEarlyAccess: VkBool32,
+	maxSubsampledArrayLayers: uint32_t,
+	maxDescriptorSetSubsampledSamplers: uint32_t,
 }
 impl VkPhysicalDeviceFragmentDensityMap2PropertiesEXT
 {
@@ -10040,11 +11152,13 @@ impl VkPhysicalDeviceFragmentDensityMap2PropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassFragmentDensityMapCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentDensityMapAttachment: VkAttachmentReference
+	sType: VkStructureType,
+	pNext: void,
+	fragmentDensityMapAttachment: VkAttachmentReference,
 }
 impl VkRenderPassFragmentDensityMapCreateInfoEXT
 {
@@ -10057,11 +11171,13 @@ impl VkRenderPassFragmentDensityMapCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceScalarBlockLayoutFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	scalarBlockLayout: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	scalarBlockLayout: VkBool32,
 }
 impl VkPhysicalDeviceScalarBlockLayoutFeatures
 {
@@ -10074,6 +11190,8 @@ impl VkPhysicalDeviceScalarBlockLayoutFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceScalarBlockLayoutFeaturesEXT
 {
 }
@@ -10087,11 +11205,13 @@ impl VkPhysicalDeviceScalarBlockLayoutFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceProtectedCapabilitiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	supportsProtected: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	supportsProtected: VkBool32,
 }
 impl VkSurfaceProtectedCapabilitiesKHR
 {
@@ -10104,11 +11224,13 @@ impl VkSurfaceProtectedCapabilitiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	uniformBufferStandardLayout: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	uniformBufferStandardLayout: VkBool32,
 }
 impl VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 {
@@ -10121,6 +11243,8 @@ impl VkPhysicalDeviceUniformBufferStandardLayoutFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR
 {
 }
@@ -10134,11 +11258,13 @@ impl VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDepthClipEnableFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	depthClipEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	depthClipEnable: VkBool32,
 }
 impl VkPhysicalDeviceDepthClipEnableFeaturesEXT
 {
@@ -10151,12 +11277,14 @@ impl VkPhysicalDeviceDepthClipEnableFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationDepthClipStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineRasterizationDepthClipStateCreateFlagsEXT
-	depthClipEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineRasterizationDepthClipStateCreateFlagsEXT,
+	depthClipEnable: VkBool32,
 }
 impl VkPipelineRasterizationDepthClipStateCreateInfoEXT
 {
@@ -10169,12 +11297,14 @@ impl VkPipelineRasterizationDepthClipStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryBudgetPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	heapBudget: VkDeviceSize
-	heapUsage: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	heapBudget: VkDeviceSize,
+	heapUsage: VkDeviceSize,
 }
 impl VkPhysicalDeviceMemoryBudgetPropertiesEXT
 {
@@ -10187,11 +11317,13 @@ impl VkPhysicalDeviceMemoryBudgetPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryPriorityFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	memoryPriority: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	memoryPriority: VkBool32,
 }
 impl VkPhysicalDeviceMemoryPriorityFeaturesEXT
 {
@@ -10204,11 +11336,13 @@ impl VkPhysicalDeviceMemoryPriorityFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryPriorityAllocateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	priority: float
+	sType: VkStructureType,
+	pNext: void,
+	priority: float,
 }
 impl VkMemoryPriorityAllocateInfoEXT
 {
@@ -10221,11 +11355,13 @@ impl VkMemoryPriorityAllocateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pageableDeviceLocalMemory: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	pageableDeviceLocalMemory: VkBool32,
 }
 impl VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT
 {
@@ -10238,13 +11374,15 @@ impl VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBufferDeviceAddressFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	bufferDeviceAddress: VkBool32
-	bufferDeviceAddressCaptureReplay: VkBool32
-	bufferDeviceAddressMultiDevice: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	bufferDeviceAddress: VkBool32,
+	bufferDeviceAddressCaptureReplay: VkBool32,
+	bufferDeviceAddressMultiDevice: VkBool32,
 }
 impl VkPhysicalDeviceBufferDeviceAddressFeatures
 {
@@ -10257,6 +11395,8 @@ impl VkPhysicalDeviceBufferDeviceAddressFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBufferDeviceAddressFeaturesKHR
 {
 }
@@ -10270,13 +11410,15 @@ impl VkPhysicalDeviceBufferDeviceAddressFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBufferDeviceAddressFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	bufferDeviceAddress: VkBool32
-	bufferDeviceAddressCaptureReplay: VkBool32
-	bufferDeviceAddressMultiDevice: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	bufferDeviceAddress: VkBool32,
+	bufferDeviceAddressCaptureReplay: VkBool32,
+	bufferDeviceAddressMultiDevice: VkBool32,
 }
 impl VkPhysicalDeviceBufferDeviceAddressFeaturesEXT
 {
@@ -10289,6 +11431,8 @@ impl VkPhysicalDeviceBufferDeviceAddressFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBufferAddressFeaturesEXT
 {
 }
@@ -10302,11 +11446,13 @@ impl VkPhysicalDeviceBufferAddressFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferDeviceAddressInfo
 {
-	sType: VkStructureType
-	pNext: void
-	buffer: VkBuffer
+	sType: VkStructureType,
+	pNext: void,
+	buffer: VkBuffer,
 }
 impl VkBufferDeviceAddressInfo
 {
@@ -10319,6 +11465,8 @@ impl VkBufferDeviceAddressInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferDeviceAddressInfoKHR
 {
 }
@@ -10332,6 +11480,8 @@ impl VkBufferDeviceAddressInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferDeviceAddressInfoEXT
 {
 }
@@ -10345,11 +11495,13 @@ impl VkBufferDeviceAddressInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferOpaqueCaptureAddressCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	opaqueCaptureAddress: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	opaqueCaptureAddress: uint64_t,
 }
 impl VkBufferOpaqueCaptureAddressCreateInfo
 {
@@ -10362,6 +11514,8 @@ impl VkBufferOpaqueCaptureAddressCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferOpaqueCaptureAddressCreateInfoKHR
 {
 }
@@ -10375,11 +11529,13 @@ impl VkBufferOpaqueCaptureAddressCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferDeviceAddressCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	deviceAddress: VkDeviceAddress
+	sType: VkStructureType,
+	pNext: void,
+	deviceAddress: VkDeviceAddress,
 }
 impl VkBufferDeviceAddressCreateInfoEXT
 {
@@ -10392,11 +11548,13 @@ impl VkBufferDeviceAddressCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageViewImageFormatInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	imageViewType: VkImageViewType
+	sType: VkStructureType,
+	pNext: void,
+	imageViewType: VkImageViewType,
 }
 impl VkPhysicalDeviceImageViewImageFormatInfoEXT
 {
@@ -10409,12 +11567,14 @@ impl VkPhysicalDeviceImageViewImageFormatInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFilterCubicImageViewImageFormatPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	filterCubic: VkBool32
-	filterCubicMinmax: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	filterCubic: VkBool32,
+	filterCubicMinmax: VkBool32,
 }
 impl VkFilterCubicImageViewImageFormatPropertiesEXT
 {
@@ -10427,11 +11587,13 @@ impl VkFilterCubicImageViewImageFormatPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImagelessFramebufferFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	imagelessFramebuffer: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	imagelessFramebuffer: VkBool32,
 }
 impl VkPhysicalDeviceImagelessFramebufferFeatures
 {
@@ -10444,6 +11606,8 @@ impl VkPhysicalDeviceImagelessFramebufferFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImagelessFramebufferFeaturesKHR
 {
 }
@@ -10457,12 +11621,14 @@ impl VkPhysicalDeviceImagelessFramebufferFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFramebufferAttachmentsCreateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	attachmentImageInfoCount: uint32_t
-	pAttachmentImageInfos: VkFramebufferAttachmentImageInfo
+	sType: VkStructureType,
+	pNext: void,
+	attachmentImageInfoCount: uint32_t,
+	pAttachmentImageInfos: VkFramebufferAttachmentImageInfo,
 }
 impl VkFramebufferAttachmentsCreateInfo
 {
@@ -10475,6 +11641,8 @@ impl VkFramebufferAttachmentsCreateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFramebufferAttachmentsCreateInfoKHR
 {
 }
@@ -10488,17 +11656,19 @@ impl VkFramebufferAttachmentsCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFramebufferAttachmentImageInfo
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkImageCreateFlags
-	usage: VkImageUsageFlags
-	width: uint32_t
-	height: uint32_t
-	layerCount: uint32_t
-	viewFormatCount: uint32_t
-	pViewFormats: VkFormat
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkImageCreateFlags,
+	usage: VkImageUsageFlags,
+	width: uint32_t,
+	height: uint32_t,
+	layerCount: uint32_t,
+	viewFormatCount: uint32_t,
+	pViewFormats: VkFormat,
 }
 impl VkFramebufferAttachmentImageInfo
 {
@@ -10511,6 +11681,8 @@ impl VkFramebufferAttachmentImageInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFramebufferAttachmentImageInfoKHR
 {
 }
@@ -10524,12 +11696,14 @@ impl VkFramebufferAttachmentImageInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassAttachmentBeginInfo
 {
-	sType: VkStructureType
-	pNext: void
-	attachmentCount: uint32_t
-	pAttachments: VkImageView
+	sType: VkStructureType,
+	pNext: void,
+	attachmentCount: uint32_t,
+	pAttachments: VkImageView,
 }
 impl VkRenderPassAttachmentBeginInfo
 {
@@ -10542,6 +11716,8 @@ impl VkRenderPassAttachmentBeginInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassAttachmentBeginInfoKHR
 {
 }
@@ -10555,11 +11731,13 @@ impl VkRenderPassAttachmentBeginInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	textureCompressionASTC_HDR: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	textureCompressionASTC_HDR: VkBool32,
 }
 impl VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
 {
@@ -10572,12 +11750,14 @@ impl VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCooperativeMatrixFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	cooperativeMatrix: VkBool32
-	cooperativeMatrixRobustBufferAccess: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	cooperativeMatrix: VkBool32,
+	cooperativeMatrixRobustBufferAccess: VkBool32,
 }
 impl VkPhysicalDeviceCooperativeMatrixFeaturesNV
 {
@@ -10590,11 +11770,13 @@ impl VkPhysicalDeviceCooperativeMatrixFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCooperativeMatrixPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	cooperativeMatrixSupportedStages: VkShaderStageFlags
+	sType: VkStructureType,
+	pNext: void,
+	cooperativeMatrixSupportedStages: VkShaderStageFlags,
 }
 impl VkPhysicalDeviceCooperativeMatrixPropertiesNV
 {
@@ -10607,18 +11789,20 @@ impl VkPhysicalDeviceCooperativeMatrixPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCooperativeMatrixPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	MSize: uint32_t
-	NSize: uint32_t
-	KSize: uint32_t
-	AType: VkComponentTypeNV
-	BType: VkComponentTypeNV
-	CType: VkComponentTypeNV
-	DType: VkComponentTypeNV
-	scope: VkScopeNV
+	sType: VkStructureType,
+	pNext: void,
+	MSize: uint32_t,
+	NSize: uint32_t,
+	KSize: uint32_t,
+	AType: VkComponentTypeNV,
+	BType: VkComponentTypeNV,
+	CType: VkComponentTypeNV,
+	DType: VkComponentTypeNV,
+	scope: VkScopeNV,
 }
 impl VkCooperativeMatrixPropertiesNV
 {
@@ -10631,11 +11815,13 @@ impl VkCooperativeMatrixPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceYcbcrImageArraysFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	ycbcrImageArrays: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	ycbcrImageArrays: VkBool32,
 }
 impl VkPhysicalDeviceYcbcrImageArraysFeaturesEXT
 {
@@ -10648,13 +11834,15 @@ impl VkPhysicalDeviceYcbcrImageArraysFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageViewHandleInfoNVX
 {
-	sType: VkStructureType
-	pNext: void
-	imageView: VkImageView
-	descriptorType: VkDescriptorType
-	sampler: VkSampler
+	sType: VkStructureType,
+	pNext: void,
+	imageView: VkImageView,
+	descriptorType: VkDescriptorType,
+	sampler: VkSampler,
 }
 impl VkImageViewHandleInfoNVX
 {
@@ -10667,12 +11855,14 @@ impl VkImageViewHandleInfoNVX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageViewAddressPropertiesNVX
 {
-	sType: VkStructureType
-	pNext: void
-	deviceAddress: VkDeviceAddress
-	size: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	deviceAddress: VkDeviceAddress,
+	size: VkDeviceSize,
 }
 impl VkImageViewAddressPropertiesNVX
 {
@@ -10685,11 +11875,13 @@ impl VkImageViewAddressPropertiesNVX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPresentFrameTokenGGP
 {
-	sType: VkStructureType
-	pNext: void
-	frameToken: GgpFrameToken
+	sType: VkStructureType,
+	pNext: void,
+	frameToken: GgpFrameToken,
 }
 impl VkPresentFrameTokenGGP
 {
@@ -10702,10 +11894,12 @@ impl VkPresentFrameTokenGGP
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCreationFeedbackEXT
 {
-	flags: VkPipelineCreationFeedbackFlagsEXT
-	duration: uint64_t
+	flags: VkPipelineCreationFeedbackFlagsEXT,
+	duration: uint64_t,
 }
 impl VkPipelineCreationFeedbackEXT
 {
@@ -10717,13 +11911,15 @@ impl VkPipelineCreationFeedbackEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCreationFeedbackCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pPipelineCreationFeedback: VkPipelineCreationFeedbackEXT
-	pipelineStageCreationFeedbackCount: uint32_t
-	pPipelineStageCreationFeedbacks: VkPipelineCreationFeedbackEXT
+	sType: VkStructureType,
+	pNext: void,
+	pPipelineCreationFeedback: VkPipelineCreationFeedbackEXT,
+	pipelineStageCreationFeedbackCount: uint32_t,
+	pPipelineStageCreationFeedbacks: VkPipelineCreationFeedbackEXT,
 }
 impl VkPipelineCreationFeedbackCreateInfoEXT
 {
@@ -10736,11 +11932,13 @@ impl VkPipelineCreationFeedbackCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceFullScreenExclusiveInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	fullScreenExclusive: VkFullScreenExclusiveEXT
+	sType: VkStructureType,
+	pNext: void,
+	fullScreenExclusive: VkFullScreenExclusiveEXT,
 }
 impl VkSurfaceFullScreenExclusiveInfoEXT
 {
@@ -10753,11 +11951,13 @@ impl VkSurfaceFullScreenExclusiveInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceFullScreenExclusiveWin32InfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	hmonitor: HMONITOR
+	sType: VkStructureType,
+	pNext: void,
+	hmonitor: HMONITOR,
 }
 impl VkSurfaceFullScreenExclusiveWin32InfoEXT
 {
@@ -10770,11 +11970,13 @@ impl VkSurfaceFullScreenExclusiveWin32InfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSurfaceCapabilitiesFullScreenExclusiveEXT
 {
-	sType: VkStructureType
-	pNext: void
-	fullScreenExclusiveSupported: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	fullScreenExclusiveSupported: VkBool32,
 }
 impl VkSurfaceCapabilitiesFullScreenExclusiveEXT
 {
@@ -10787,12 +11989,14 @@ impl VkSurfaceCapabilitiesFullScreenExclusiveEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePerformanceQueryFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	performanceCounterQueryPools: VkBool32
-	performanceCounterMultipleQueryPools: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	performanceCounterQueryPools: VkBool32,
+	performanceCounterMultipleQueryPools: VkBool32,
 }
 impl VkPhysicalDevicePerformanceQueryFeaturesKHR
 {
@@ -10805,11 +12009,13 @@ impl VkPhysicalDevicePerformanceQueryFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePerformanceQueryPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	allowCommandBufferQueryCopies: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	allowCommandBufferQueryCopies: VkBool32,
 }
 impl VkPhysicalDevicePerformanceQueryPropertiesKHR
 {
@@ -10822,14 +12028,16 @@ impl VkPhysicalDevicePerformanceQueryPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceCounterKHR
 {
-	sType: VkStructureType
-	pNext: void
-	unit: VkPerformanceCounterUnitKHR
-	scope: VkPerformanceCounterScopeKHR
-	storage: VkPerformanceCounterStorageKHR
-	uuid: uint8_t
+	sType: VkStructureType,
+	pNext: void,
+	unit: VkPerformanceCounterUnitKHR,
+	scope: VkPerformanceCounterScopeKHR,
+	storage: VkPerformanceCounterStorageKHR,
+	uuid: uint8_t,
 }
 impl VkPerformanceCounterKHR
 {
@@ -10842,14 +12050,16 @@ impl VkPerformanceCounterKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceCounterDescriptionKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPerformanceCounterDescriptionFlagsKHR
-	name: char
-	category: char
-	description: char
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPerformanceCounterDescriptionFlagsKHR,
+	name: char,
+	category: char,
+	description: char,
 }
 impl VkPerformanceCounterDescriptionKHR
 {
@@ -10862,13 +12072,15 @@ impl VkPerformanceCounterDescriptionKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueryPoolPerformanceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	queueFamilyIndex: uint32_t
-	counterIndexCount: uint32_t
-	pCounterIndices: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	queueFamilyIndex: uint32_t,
+	counterIndexCount: uint32_t,
+	pCounterIndices: uint32_t,
 }
 impl VkQueryPoolPerformanceCreateInfoKHR
 {
@@ -10881,12 +12093,14 @@ impl VkQueryPoolPerformanceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAcquireProfilingLockInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkAcquireProfilingLockFlagsKHR
-	timeout: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkAcquireProfilingLockFlagsKHR,
+	timeout: uint64_t,
 }
 impl VkAcquireProfilingLockInfoKHR
 {
@@ -10899,11 +12113,13 @@ impl VkAcquireProfilingLockInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceQuerySubmitInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	counterPassIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	counterPassIndex: uint32_t,
 }
 impl VkPerformanceQuerySubmitInfoKHR
 {
@@ -10916,11 +12132,13 @@ impl VkPerformanceQuerySubmitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkHeadlessSurfaceCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkHeadlessSurfaceCreateFlagsEXT
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkHeadlessSurfaceCreateFlagsEXT,
 }
 impl VkHeadlessSurfaceCreateInfoEXT
 {
@@ -10933,11 +12151,13 @@ impl VkHeadlessSurfaceCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCoverageReductionModeFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	coverageReductionMode: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	coverageReductionMode: VkBool32,
 }
 impl VkPhysicalDeviceCoverageReductionModeFeaturesNV
 {
@@ -10950,12 +12170,14 @@ impl VkPhysicalDeviceCoverageReductionModeFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCoverageReductionStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkPipelineCoverageReductionStateCreateFlagsNV
-	coverageReductionMode: VkCoverageReductionModeNV
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkPipelineCoverageReductionStateCreateFlagsNV,
+	coverageReductionMode: VkCoverageReductionModeNV,
 }
 impl VkPipelineCoverageReductionStateCreateInfoNV
 {
@@ -10968,14 +12190,16 @@ impl VkPipelineCoverageReductionStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFramebufferMixedSamplesCombinationNV
 {
-	sType: VkStructureType
-	pNext: void
-	coverageReductionMode: VkCoverageReductionModeNV
-	rasterizationSamples: VkSampleCountFlagBits
-	depthStencilSamples: VkSampleCountFlags
-	colorSamples: VkSampleCountFlags
+	sType: VkStructureType,
+	pNext: void,
+	coverageReductionMode: VkCoverageReductionModeNV,
+	rasterizationSamples: VkSampleCountFlagBits,
+	depthStencilSamples: VkSampleCountFlags,
+	colorSamples: VkSampleCountFlags,
 }
 impl VkFramebufferMixedSamplesCombinationNV
 {
@@ -10988,11 +12212,13 @@ impl VkFramebufferMixedSamplesCombinationNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	shaderIntegerFunctions2: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderIntegerFunctions2: VkBool32,
 }
 impl VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
 {
@@ -11005,10 +12231,12 @@ impl VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceValueINTEL
 {
-	type: VkPerformanceValueTypeINTEL
-	data: VkPerformanceValueDataINTEL
+	type: VkPerformanceValueTypeINTEL,
+	data: VkPerformanceValueDataINTEL,
 }
 impl VkPerformanceValueINTEL
 {
@@ -11020,11 +12248,13 @@ impl VkPerformanceValueINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkInitializePerformanceApiInfoINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	pUserData: void
+	sType: VkStructureType,
+	pNext: void,
+	pUserData: void,
 }
 impl VkInitializePerformanceApiInfoINTEL
 {
@@ -11037,11 +12267,13 @@ impl VkInitializePerformanceApiInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueryPoolPerformanceQueryCreateInfoINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	performanceCountersSampling: VkQueryPoolSamplingModeINTEL
+	sType: VkStructureType,
+	pNext: void,
+	performanceCountersSampling: VkQueryPoolSamplingModeINTEL,
 }
 impl VkQueryPoolPerformanceQueryCreateInfoINTEL
 {
@@ -11054,6 +12286,8 @@ impl VkQueryPoolPerformanceQueryCreateInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueryPoolCreateInfoINTEL
 {
 }
@@ -11067,11 +12301,13 @@ impl VkQueryPoolCreateInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceMarkerInfoINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	marker: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	marker: uint64_t,
 }
 impl VkPerformanceMarkerInfoINTEL
 {
@@ -11084,11 +12320,13 @@ impl VkPerformanceMarkerInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceStreamMarkerInfoINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	marker: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	marker: uint32_t,
 }
 impl VkPerformanceStreamMarkerInfoINTEL
 {
@@ -11101,13 +12339,15 @@ impl VkPerformanceStreamMarkerInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceOverrideInfoINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkPerformanceOverrideTypeINTEL
-	enable: VkBool32
-	parameter: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	type: VkPerformanceOverrideTypeINTEL,
+	enable: VkBool32,
+	parameter: uint64_t,
 }
 impl VkPerformanceOverrideInfoINTEL
 {
@@ -11120,11 +12360,13 @@ impl VkPerformanceOverrideInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPerformanceConfigurationAcquireInfoINTEL
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkPerformanceConfigurationTypeINTEL
+	sType: VkStructureType,
+	pNext: void,
+	type: VkPerformanceConfigurationTypeINTEL,
 }
 impl VkPerformanceConfigurationAcquireInfoINTEL
 {
@@ -11137,12 +12379,14 @@ impl VkPerformanceConfigurationAcquireInfoINTEL
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderClockFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	shaderSubgroupClock: VkBool32
-	shaderDeviceClock: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderSubgroupClock: VkBool32,
+	shaderDeviceClock: VkBool32,
 }
 impl VkPhysicalDeviceShaderClockFeaturesKHR
 {
@@ -11155,11 +12399,13 @@ impl VkPhysicalDeviceShaderClockFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceIndexTypeUint8FeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	indexTypeUint8: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	indexTypeUint8: VkBool32,
 }
 impl VkPhysicalDeviceIndexTypeUint8FeaturesEXT
 {
@@ -11172,12 +12418,14 @@ impl VkPhysicalDeviceIndexTypeUint8FeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderSMBuiltinsPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	shaderSMCount: uint32_t
-	shaderWarpsPerSM: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	shaderSMCount: uint32_t,
+	shaderWarpsPerSM: uint32_t,
 }
 impl VkPhysicalDeviceShaderSMBuiltinsPropertiesNV
 {
@@ -11190,11 +12438,13 @@ impl VkPhysicalDeviceShaderSMBuiltinsPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderSMBuiltinsFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	shaderSMBuiltins: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderSMBuiltins: VkBool32,
 }
 impl VkPhysicalDeviceShaderSMBuiltinsFeaturesNV
 {
@@ -11207,13 +12457,15 @@ impl VkPhysicalDeviceShaderSMBuiltinsFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentShaderSampleInterlock: VkBool32
-	fragmentShaderPixelInterlock: VkBool32
-	fragmentShaderShadingRateInterlock: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	fragmentShaderSampleInterlock: VkBool32,
+	fragmentShaderPixelInterlock: VkBool32,
+	fragmentShaderShadingRateInterlock: VkBool32,
 }
 impl VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT
 {
@@ -11226,11 +12478,13 @@ impl VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
 {
-	sType: VkStructureType
-	pNext: void
-	separateDepthStencilLayouts: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	separateDepthStencilLayouts: VkBool32,
 }
 impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
 {
@@ -11243,6 +12497,8 @@ impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR
 {
 }
@@ -11256,11 +12512,13 @@ impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentReferenceStencilLayout
 {
-	sType: VkStructureType
-	pNext: void
-	stencilLayout: VkImageLayout
+	sType: VkStructureType,
+	pNext: void,
+	stencilLayout: VkImageLayout,
 }
 impl VkAttachmentReferenceStencilLayout
 {
@@ -11273,12 +12531,14 @@ impl VkAttachmentReferenceStencilLayout
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	primitiveTopologyListRestart: VkBool32
-	primitiveTopologyPatchListRestart: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	primitiveTopologyListRestart: VkBool32,
+	primitiveTopologyPatchListRestart: VkBool32,
 }
 impl VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT
 {
@@ -11291,6 +12551,8 @@ impl VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentReferenceStencilLayoutKHR
 {
 }
@@ -11304,12 +12566,14 @@ impl VkAttachmentReferenceStencilLayoutKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentDescriptionStencilLayout
 {
-	sType: VkStructureType
-	pNext: void
-	stencilInitialLayout: VkImageLayout
-	stencilFinalLayout: VkImageLayout
+	sType: VkStructureType,
+	pNext: void,
+	stencilInitialLayout: VkImageLayout,
+	stencilFinalLayout: VkImageLayout,
 }
 impl VkAttachmentDescriptionStencilLayout
 {
@@ -11322,6 +12586,8 @@ impl VkAttachmentDescriptionStencilLayout
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAttachmentDescriptionStencilLayoutKHR
 {
 }
@@ -11335,11 +12601,13 @@ impl VkAttachmentDescriptionStencilLayoutKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pipelineExecutableInfo: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	pipelineExecutableInfo: VkBool32,
 }
 impl VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR
 {
@@ -11352,11 +12620,13 @@ impl VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pipeline: VkPipeline
+	sType: VkStructureType,
+	pNext: void,
+	pipeline: VkPipeline,
 }
 impl VkPipelineInfoKHR
 {
@@ -11369,14 +12639,16 @@ impl VkPipelineInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineExecutablePropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	stages: VkShaderStageFlags
-	name: char
-	description: char
-	subgroupSize: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	stages: VkShaderStageFlags,
+	name: char,
+	description: char,
+	subgroupSize: uint32_t,
 }
 impl VkPipelineExecutablePropertiesKHR
 {
@@ -11389,12 +12661,14 @@ impl VkPipelineExecutablePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineExecutableInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pipeline: VkPipeline
-	executableIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	pipeline: VkPipeline,
+	executableIndex: uint32_t,
 }
 impl VkPipelineExecutableInfoKHR
 {
@@ -11407,14 +12681,16 @@ impl VkPipelineExecutableInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineExecutableStatisticKHR
 {
-	sType: VkStructureType
-	pNext: void
-	name: char
-	description: char
-	format: VkPipelineExecutableStatisticFormatKHR
-	value: VkPipelineExecutableStatisticValueKHR
+	sType: VkStructureType,
+	pNext: void,
+	name: char,
+	description: char,
+	format: VkPipelineExecutableStatisticFormatKHR,
+	value: VkPipelineExecutableStatisticValueKHR,
 }
 impl VkPipelineExecutableStatisticKHR
 {
@@ -11427,15 +12703,17 @@ impl VkPipelineExecutableStatisticKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineExecutableInternalRepresentationKHR
 {
-	sType: VkStructureType
-	pNext: void
-	name: char
-	description: char
-	isText: VkBool32
-	dataSize: size_t
-	pData: void
+	sType: VkStructureType,
+	pNext: void,
+	name: char,
+	description: char,
+	isText: VkBool32,
+	dataSize: size_t,
+	pData: void,
 }
 impl VkPipelineExecutableInternalRepresentationKHR
 {
@@ -11448,11 +12726,13 @@ impl VkPipelineExecutableInternalRepresentationKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	shaderDemoteToHelperInvocation: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderDemoteToHelperInvocation: VkBool32,
 }
 impl VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
 {
@@ -11465,11 +12745,13 @@ impl VkPhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	texelBufferAlignment: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	texelBufferAlignment: VkBool32,
 }
 impl VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT
 {
@@ -11482,14 +12764,16 @@ impl VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	storageTexelBufferOffsetAlignmentBytes: VkDeviceSize
-	storageTexelBufferOffsetSingleTexelAlignment: VkBool32
-	uniformTexelBufferOffsetAlignmentBytes: VkDeviceSize
-	uniformTexelBufferOffsetSingleTexelAlignment: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	storageTexelBufferOffsetAlignmentBytes: VkDeviceSize,
+	storageTexelBufferOffsetSingleTexelAlignment: VkBool32,
+	uniformTexelBufferOffsetAlignmentBytes: VkDeviceSize,
+	uniformTexelBufferOffsetSingleTexelAlignment: VkBool32,
 }
 impl VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT
 {
@@ -11502,12 +12786,14 @@ impl VkPhysicalDeviceTexelBufferAlignmentPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSubgroupSizeControlFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	subgroupSizeControl: VkBool32
-	computeFullSubgroups: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	subgroupSizeControl: VkBool32,
+	computeFullSubgroups: VkBool32,
 }
 impl VkPhysicalDeviceSubgroupSizeControlFeaturesEXT
 {
@@ -11520,14 +12806,16 @@ impl VkPhysicalDeviceSubgroupSizeControlFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSubgroupSizeControlPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	minSubgroupSize: uint32_t
-	maxSubgroupSize: uint32_t
-	maxComputeWorkgroupSubgroups: uint32_t
-	requiredSubgroupSizeStages: VkShaderStageFlags
+	sType: VkStructureType,
+	pNext: void,
+	minSubgroupSize: uint32_t,
+	maxSubgroupSize: uint32_t,
+	maxComputeWorkgroupSubgroups: uint32_t,
+	requiredSubgroupSizeStages: VkShaderStageFlags,
 }
 impl VkPhysicalDeviceSubgroupSizeControlPropertiesEXT
 {
@@ -11540,11 +12828,13 @@ impl VkPhysicalDeviceSubgroupSizeControlPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	requiredSubgroupSize: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	requiredSubgroupSize: uint32_t,
 }
 impl VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
 {
@@ -11557,12 +12847,14 @@ impl VkPipelineShaderStageRequiredSubgroupSizeCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubpassShadingPipelineCreateInfoHUAWEI
 {
-	sType: VkStructureType
-	pNext: void
-	renderPass: VkRenderPass
-	subpass: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	renderPass: VkRenderPass,
+	subpass: uint32_t,
 }
 impl VkSubpassShadingPipelineCreateInfoHUAWEI
 {
@@ -11575,11 +12867,13 @@ impl VkSubpassShadingPipelineCreateInfoHUAWEI
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSubpassShadingPropertiesHUAWEI
 {
-	sType: VkStructureType
-	pNext: void
-	maxSubpassShadingWorkgroupSizeAspectRatio: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxSubpassShadingWorkgroupSizeAspectRatio: uint32_t,
 }
 impl VkPhysicalDeviceSubpassShadingPropertiesHUAWEI
 {
@@ -11592,11 +12886,13 @@ impl VkPhysicalDeviceSubpassShadingPropertiesHUAWEI
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryOpaqueCaptureAddressAllocateInfo
 {
-	sType: VkStructureType
-	pNext: void
-	opaqueCaptureAddress: uint64_t
+	sType: VkStructureType,
+	pNext: void,
+	opaqueCaptureAddress: uint64_t,
 }
 impl VkMemoryOpaqueCaptureAddressAllocateInfo
 {
@@ -11609,6 +12905,8 @@ impl VkMemoryOpaqueCaptureAddressAllocateInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryOpaqueCaptureAddressAllocateInfoKHR
 {
 }
@@ -11622,11 +12920,13 @@ impl VkMemoryOpaqueCaptureAddressAllocateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceMemoryOpaqueCaptureAddressInfo
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
 }
 impl VkDeviceMemoryOpaqueCaptureAddressInfo
 {
@@ -11639,6 +12939,8 @@ impl VkDeviceMemoryOpaqueCaptureAddressInfo
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceMemoryOpaqueCaptureAddressInfoKHR
 {
 }
@@ -11652,16 +12954,18 @@ impl VkDeviceMemoryOpaqueCaptureAddressInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceLineRasterizationFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	rectangularLines: VkBool32
-	bresenhamLines: VkBool32
-	smoothLines: VkBool32
-	stippledRectangularLines: VkBool32
-	stippledBresenhamLines: VkBool32
-	stippledSmoothLines: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	rectangularLines: VkBool32,
+	bresenhamLines: VkBool32,
+	smoothLines: VkBool32,
+	stippledRectangularLines: VkBool32,
+	stippledBresenhamLines: VkBool32,
+	stippledSmoothLines: VkBool32,
 }
 impl VkPhysicalDeviceLineRasterizationFeaturesEXT
 {
@@ -11674,11 +12978,13 @@ impl VkPhysicalDeviceLineRasterizationFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceLineRasterizationPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	lineSubPixelPrecisionBits: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	lineSubPixelPrecisionBits: uint32_t,
 }
 impl VkPhysicalDeviceLineRasterizationPropertiesEXT
 {
@@ -11691,14 +12997,16 @@ impl VkPhysicalDeviceLineRasterizationPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationLineStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	lineRasterizationMode: VkLineRasterizationModeEXT
-	stippledLineEnable: VkBool32
-	lineStippleFactor: uint32_t
-	lineStipplePattern: uint16_t
+	sType: VkStructureType,
+	pNext: void,
+	lineRasterizationMode: VkLineRasterizationModeEXT,
+	stippledLineEnable: VkBool32,
+	lineStippleFactor: uint32_t,
+	lineStipplePattern: uint16_t,
 }
 impl VkPipelineRasterizationLineStateCreateInfoEXT
 {
@@ -11711,11 +13019,13 @@ impl VkPipelineRasterizationLineStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pipelineCreationCacheControl: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	pipelineCreationCacheControl: VkBool32,
 }
 impl VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT
 {
@@ -11728,22 +13038,24 @@ impl VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan11Features
 {
-	sType: VkStructureType
-	pNext: void
-	storageBuffer16BitAccess: VkBool32
-	uniformAndStorageBuffer16BitAccess: VkBool32
-	storagePushConstant16: VkBool32
-	storageInputOutput16: VkBool32
-	multiview: VkBool32
-	multiviewGeometryShader: VkBool32
-	multiviewTessellationShader: VkBool32
-	variablePointersStorageBuffer: VkBool32
-	variablePointers: VkBool32
-	protectedMemory: VkBool32
-	samplerYcbcrConversion: VkBool32
-	shaderDrawParameters: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	storageBuffer16BitAccess: VkBool32,
+	uniformAndStorageBuffer16BitAccess: VkBool32,
+	storagePushConstant16: VkBool32,
+	storageInputOutput16: VkBool32,
+	multiview: VkBool32,
+	multiviewGeometryShader: VkBool32,
+	multiviewTessellationShader: VkBool32,
+	variablePointersStorageBuffer: VkBool32,
+	variablePointers: VkBool32,
+	protectedMemory: VkBool32,
+	samplerYcbcrConversion: VkBool32,
+	shaderDrawParameters: VkBool32,
 }
 impl VkPhysicalDeviceVulkan11Features
 {
@@ -11756,25 +13068,27 @@ impl VkPhysicalDeviceVulkan11Features
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan11Properties
 {
-	sType: VkStructureType
-	pNext: void
-	deviceUUID: uint8_t
-	driverUUID: uint8_t
-	deviceLUID: uint8_t
-	deviceNodeMask: uint32_t
-	deviceLUIDValid: VkBool32
-	subgroupSize: uint32_t
-	subgroupSupportedStages: VkShaderStageFlags
-	subgroupSupportedOperations: VkSubgroupFeatureFlags
-	subgroupQuadOperationsInAllStages: VkBool32
-	pointClippingBehavior: VkPointClippingBehavior
-	maxMultiviewViewCount: uint32_t
-	maxMultiviewInstanceIndex: uint32_t
-	protectedNoFault: VkBool32
-	maxPerSetDescriptors: uint32_t
-	maxMemoryAllocationSize: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	deviceUUID: uint8_t,
+	driverUUID: uint8_t,
+	deviceLUID: uint8_t,
+	deviceNodeMask: uint32_t,
+	deviceLUIDValid: VkBool32,
+	subgroupSize: uint32_t,
+	subgroupSupportedStages: VkShaderStageFlags,
+	subgroupSupportedOperations: VkSubgroupFeatureFlags,
+	subgroupQuadOperationsInAllStages: VkBool32,
+	pointClippingBehavior: VkPointClippingBehavior,
+	maxMultiviewViewCount: uint32_t,
+	maxMultiviewInstanceIndex: uint32_t,
+	protectedNoFault: VkBool32,
+	maxPerSetDescriptors: uint32_t,
+	maxMemoryAllocationSize: VkDeviceSize,
 }
 impl VkPhysicalDeviceVulkan11Properties
 {
@@ -11787,57 +13101,59 @@ impl VkPhysicalDeviceVulkan11Properties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan12Features
 {
-	sType: VkStructureType
-	pNext: void
-	samplerMirrorClampToEdge: VkBool32
-	drawIndirectCount: VkBool32
-	storageBuffer8BitAccess: VkBool32
-	uniformAndStorageBuffer8BitAccess: VkBool32
-	storagePushConstant8: VkBool32
-	shaderBufferInt64Atomics: VkBool32
-	shaderSharedInt64Atomics: VkBool32
-	shaderFloat16: VkBool32
-	shaderInt8: VkBool32
-	descriptorIndexing: VkBool32
-	shaderInputAttachmentArrayDynamicIndexing: VkBool32
-	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32
-	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32
-	shaderUniformBufferArrayNonUniformIndexing: VkBool32
-	shaderSampledImageArrayNonUniformIndexing: VkBool32
-	shaderStorageBufferArrayNonUniformIndexing: VkBool32
-	shaderStorageImageArrayNonUniformIndexing: VkBool32
-	shaderInputAttachmentArrayNonUniformIndexing: VkBool32
-	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32
-	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32
-	descriptorBindingUniformBufferUpdateAfterBind: VkBool32
-	descriptorBindingSampledImageUpdateAfterBind: VkBool32
-	descriptorBindingStorageImageUpdateAfterBind: VkBool32
-	descriptorBindingStorageBufferUpdateAfterBind: VkBool32
-	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32
-	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32
-	descriptorBindingUpdateUnusedWhilePending: VkBool32
-	descriptorBindingPartiallyBound: VkBool32
-	descriptorBindingVariableDescriptorCount: VkBool32
-	runtimeDescriptorArray: VkBool32
-	samplerFilterMinmax: VkBool32
-	scalarBlockLayout: VkBool32
-	imagelessFramebuffer: VkBool32
-	uniformBufferStandardLayout: VkBool32
-	shaderSubgroupExtendedTypes: VkBool32
-	separateDepthStencilLayouts: VkBool32
-	hostQueryReset: VkBool32
-	timelineSemaphore: VkBool32
-	bufferDeviceAddress: VkBool32
-	bufferDeviceAddressCaptureReplay: VkBool32
-	bufferDeviceAddressMultiDevice: VkBool32
-	vulkanMemoryModel: VkBool32
-	vulkanMemoryModelDeviceScope: VkBool32
-	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32
-	shaderOutputViewportIndex: VkBool32
-	shaderOutputLayer: VkBool32
-	subgroupBroadcastDynamicId: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	samplerMirrorClampToEdge: VkBool32,
+	drawIndirectCount: VkBool32,
+	storageBuffer8BitAccess: VkBool32,
+	uniformAndStorageBuffer8BitAccess: VkBool32,
+	storagePushConstant8: VkBool32,
+	shaderBufferInt64Atomics: VkBool32,
+	shaderSharedInt64Atomics: VkBool32,
+	shaderFloat16: VkBool32,
+	shaderInt8: VkBool32,
+	descriptorIndexing: VkBool32,
+	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	descriptorBindingPartiallyBound: VkBool32,
+	descriptorBindingVariableDescriptorCount: VkBool32,
+	runtimeDescriptorArray: VkBool32,
+	samplerFilterMinmax: VkBool32,
+	scalarBlockLayout: VkBool32,
+	imagelessFramebuffer: VkBool32,
+	uniformBufferStandardLayout: VkBool32,
+	shaderSubgroupExtendedTypes: VkBool32,
+	separateDepthStencilLayouts: VkBool32,
+	hostQueryReset: VkBool32,
+	timelineSemaphore: VkBool32,
+	bufferDeviceAddress: VkBool32,
+	bufferDeviceAddressCaptureReplay: VkBool32,
+	bufferDeviceAddressMultiDevice: VkBool32,
+	vulkanMemoryModel: VkBool32,
+	vulkanMemoryModelDeviceScope: VkBool32,
+	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
+	shaderOutputViewportIndex: VkBool32,
+	shaderOutputLayer: VkBool32,
+	subgroupBroadcastDynamicId: VkBool32,
 }
 impl VkPhysicalDeviceVulkan12Features
 {
@@ -11850,62 +13166,64 @@ impl VkPhysicalDeviceVulkan12Features
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan12Properties
 {
-	sType: VkStructureType
-	pNext: void
-	driverID: VkDriverId
-	driverName: char
-	driverInfo: char
-	conformanceVersion: VkConformanceVersion
-	denormBehaviorIndependence: VkShaderFloatControlsIndependence
-	roundingModeIndependence: VkShaderFloatControlsIndependence
-	shaderSignedZeroInfNanPreserveFloat16: VkBool32
-	shaderSignedZeroInfNanPreserveFloat32: VkBool32
-	shaderSignedZeroInfNanPreserveFloat64: VkBool32
-	shaderDenormPreserveFloat16: VkBool32
-	shaderDenormPreserveFloat32: VkBool32
-	shaderDenormPreserveFloat64: VkBool32
-	shaderDenormFlushToZeroFloat16: VkBool32
-	shaderDenormFlushToZeroFloat32: VkBool32
-	shaderDenormFlushToZeroFloat64: VkBool32
-	shaderRoundingModeRTEFloat16: VkBool32
-	shaderRoundingModeRTEFloat32: VkBool32
-	shaderRoundingModeRTEFloat64: VkBool32
-	shaderRoundingModeRTZFloat16: VkBool32
-	shaderRoundingModeRTZFloat32: VkBool32
-	shaderRoundingModeRTZFloat64: VkBool32
-	maxUpdateAfterBindDescriptorsInAllPools: uint32_t
-	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32
-	shaderSampledImageArrayNonUniformIndexingNative: VkBool32
-	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32
-	shaderStorageImageArrayNonUniformIndexingNative: VkBool32
-	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32
-	robustBufferAccessUpdateAfterBind: VkBool32
-	quadDivergentImplicitLod: VkBool32
-	maxPerStageDescriptorUpdateAfterBindSamplers: uint32_t
-	maxPerStageDescriptorUpdateAfterBindUniformBuffers: uint32_t
-	maxPerStageDescriptorUpdateAfterBindStorageBuffers: uint32_t
-	maxPerStageDescriptorUpdateAfterBindSampledImages: uint32_t
-	maxPerStageDescriptorUpdateAfterBindStorageImages: uint32_t
-	maxPerStageDescriptorUpdateAfterBindInputAttachments: uint32_t
-	maxPerStageUpdateAfterBindResources: uint32_t
-	maxDescriptorSetUpdateAfterBindSamplers: uint32_t
-	maxDescriptorSetUpdateAfterBindUniformBuffers: uint32_t
-	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: uint32_t
-	maxDescriptorSetUpdateAfterBindStorageBuffers: uint32_t
-	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: uint32_t
-	maxDescriptorSetUpdateAfterBindSampledImages: uint32_t
-	maxDescriptorSetUpdateAfterBindStorageImages: uint32_t
-	maxDescriptorSetUpdateAfterBindInputAttachments: uint32_t
-	supportedDepthResolveModes: VkResolveModeFlags
-	supportedStencilResolveModes: VkResolveModeFlags
-	independentResolveNone: VkBool32
-	independentResolve: VkBool32
-	filterMinmaxSingleComponentFormats: VkBool32
-	filterMinmaxImageComponentMapping: VkBool32
-	maxTimelineSemaphoreValueDifference: uint64_t
-	framebufferIntegerColorSampleCounts: VkSampleCountFlags
+	sType: VkStructureType,
+	pNext: void,
+	driverID: VkDriverId,
+	driverName: char,
+	driverInfo: char,
+	conformanceVersion: VkConformanceVersion,
+	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	roundingModeIndependence: VkShaderFloatControlsIndependence,
+	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	shaderDenormPreserveFloat16: VkBool32,
+	shaderDenormPreserveFloat32: VkBool32,
+	shaderDenormPreserveFloat64: VkBool32,
+	shaderDenormFlushToZeroFloat16: VkBool32,
+	shaderDenormFlushToZeroFloat32: VkBool32,
+	shaderDenormFlushToZeroFloat64: VkBool32,
+	shaderRoundingModeRTEFloat16: VkBool32,
+	shaderRoundingModeRTEFloat32: VkBool32,
+	shaderRoundingModeRTEFloat64: VkBool32,
+	shaderRoundingModeRTZFloat16: VkBool32,
+	shaderRoundingModeRTZFloat32: VkBool32,
+	shaderRoundingModeRTZFloat64: VkBool32,
+	maxUpdateAfterBindDescriptorsInAllPools: uint32_t,
+	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	robustBufferAccessUpdateAfterBind: VkBool32,
+	quadDivergentImplicitLod: VkBool32,
+	maxPerStageDescriptorUpdateAfterBindSamplers: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindUniformBuffers: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindStorageBuffers: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindSampledImages: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindStorageImages: uint32_t,
+	maxPerStageDescriptorUpdateAfterBindInputAttachments: uint32_t,
+	maxPerStageUpdateAfterBindResources: uint32_t,
+	maxDescriptorSetUpdateAfterBindSamplers: uint32_t,
+	maxDescriptorSetUpdateAfterBindUniformBuffers: uint32_t,
+	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: uint32_t,
+	maxDescriptorSetUpdateAfterBindStorageBuffers: uint32_t,
+	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: uint32_t,
+	maxDescriptorSetUpdateAfterBindSampledImages: uint32_t,
+	maxDescriptorSetUpdateAfterBindStorageImages: uint32_t,
+	maxDescriptorSetUpdateAfterBindInputAttachments: uint32_t,
+	supportedDepthResolveModes: VkResolveModeFlags,
+	supportedStencilResolveModes: VkResolveModeFlags,
+	independentResolveNone: VkBool32,
+	independentResolve: VkBool32,
+	filterMinmaxSingleComponentFormats: VkBool32,
+	filterMinmaxImageComponentMapping: VkBool32,
+	maxTimelineSemaphoreValueDifference: uint64_t,
+	framebufferIntegerColorSampleCounts: VkSampleCountFlags,
 }
 impl VkPhysicalDeviceVulkan12Properties
 {
@@ -11918,11 +13236,13 @@ impl VkPhysicalDeviceVulkan12Properties
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineCompilerControlCreateInfoAMD
 {
-	sType: VkStructureType
-	pNext: void
-	compilerControlFlags: VkPipelineCompilerControlFlagsAMD
+	sType: VkStructureType,
+	pNext: void,
+	compilerControlFlags: VkPipelineCompilerControlFlagsAMD,
 }
 impl VkPipelineCompilerControlCreateInfoAMD
 {
@@ -11935,11 +13255,13 @@ impl VkPipelineCompilerControlCreateInfoAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCoherentMemoryFeaturesAMD
 {
-	sType: VkStructureType
-	pNext: void
-	deviceCoherentMemory: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	deviceCoherentMemory: VkBool32,
 }
 impl VkPhysicalDeviceCoherentMemoryFeaturesAMD
 {
@@ -11952,15 +13274,17 @@ impl VkPhysicalDeviceCoherentMemoryFeaturesAMD
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceToolPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	name: char
-	version: char
-	purposes: VkToolPurposeFlagsEXT
-	description: char
-	layer: char
+	sType: VkStructureType,
+	pNext: void,
+	name: char,
+	version: char,
+	purposes: VkToolPurposeFlagsEXT,
+	description: char,
+	layer: char,
 }
 impl VkPhysicalDeviceToolPropertiesEXT
 {
@@ -11973,12 +13297,14 @@ impl VkPhysicalDeviceToolPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSamplerCustomBorderColorCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	customBorderColor: VkClearColorValue
-	format: VkFormat
+	sType: VkStructureType,
+	pNext: void,
+	customBorderColor: VkClearColorValue,
+	format: VkFormat,
 }
 impl VkSamplerCustomBorderColorCreateInfoEXT
 {
@@ -11991,11 +13317,13 @@ impl VkSamplerCustomBorderColorCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCustomBorderColorPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxCustomBorderColorSamplers: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxCustomBorderColorSamplers: uint32_t,
 }
 impl VkPhysicalDeviceCustomBorderColorPropertiesEXT
 {
@@ -12008,12 +13336,14 @@ impl VkPhysicalDeviceCustomBorderColorPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceCustomBorderColorFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	customBorderColors: VkBool32
-	customBorderColorWithoutFormat: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	customBorderColors: VkBool32,
+	customBorderColorWithoutFormat: VkBool32,
 }
 impl VkPhysicalDeviceCustomBorderColorFeaturesEXT
 {
@@ -12026,17 +13356,19 @@ impl VkPhysicalDeviceCustomBorderColorFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureGeometryTrianglesDataKHR
 {
-	sType: VkStructureType
-	pNext: void
-	vertexFormat: VkFormat
-	vertexData: VkDeviceOrHostAddressConstKHR
-	vertexStride: VkDeviceSize
-	maxVertex: uint32_t
-	indexType: VkIndexType
-	indexData: VkDeviceOrHostAddressConstKHR
-	transformData: VkDeviceOrHostAddressConstKHR
+	sType: VkStructureType,
+	pNext: void,
+	vertexFormat: VkFormat,
+	vertexData: VkDeviceOrHostAddressConstKHR,
+	vertexStride: VkDeviceSize,
+	maxVertex: uint32_t,
+	indexType: VkIndexType,
+	indexData: VkDeviceOrHostAddressConstKHR,
+	transformData: VkDeviceOrHostAddressConstKHR,
 }
 impl VkAccelerationStructureGeometryTrianglesDataKHR
 {
@@ -12049,12 +13381,14 @@ impl VkAccelerationStructureGeometryTrianglesDataKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureGeometryAabbsDataKHR
 {
-	sType: VkStructureType
-	pNext: void
-	data: VkDeviceOrHostAddressConstKHR
-	stride: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	data: VkDeviceOrHostAddressConstKHR,
+	stride: VkDeviceSize,
 }
 impl VkAccelerationStructureGeometryAabbsDataKHR
 {
@@ -12067,12 +13401,14 @@ impl VkAccelerationStructureGeometryAabbsDataKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureGeometryInstancesDataKHR
 {
-	sType: VkStructureType
-	pNext: void
-	arrayOfPointers: VkBool32
-	data: VkDeviceOrHostAddressConstKHR
+	sType: VkStructureType,
+	pNext: void,
+	arrayOfPointers: VkBool32,
+	data: VkDeviceOrHostAddressConstKHR,
 }
 impl VkAccelerationStructureGeometryInstancesDataKHR
 {
@@ -12085,13 +13421,15 @@ impl VkAccelerationStructureGeometryInstancesDataKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureGeometryKHR
 {
-	sType: VkStructureType
-	pNext: void
-	geometryType: VkGeometryTypeKHR
-	geometry: VkAccelerationStructureGeometryDataKHR
-	flags: VkGeometryFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	geometryType: VkGeometryTypeKHR,
+	geometry: VkAccelerationStructureGeometryDataKHR,
+	flags: VkGeometryFlagsKHR,
 }
 impl VkAccelerationStructureGeometryKHR
 {
@@ -12104,19 +13442,21 @@ impl VkAccelerationStructureGeometryKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureBuildGeometryInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	type: VkAccelerationStructureTypeKHR
-	flags: VkBuildAccelerationStructureFlagsKHR
-	mode: VkBuildAccelerationStructureModeKHR
-	srcAccelerationStructure: VkAccelerationStructureKHR
-	dstAccelerationStructure: VkAccelerationStructureKHR
-	geometryCount: uint32_t
-	pGeometries: VkAccelerationStructureGeometryKHR
-	ppGeometries: VkAccelerationStructureGeometryKHR
-	scratchData: VkDeviceOrHostAddressKHR
+	sType: VkStructureType,
+	pNext: void,
+	type: VkAccelerationStructureTypeKHR,
+	flags: VkBuildAccelerationStructureFlagsKHR,
+	mode: VkBuildAccelerationStructureModeKHR,
+	srcAccelerationStructure: VkAccelerationStructureKHR,
+	dstAccelerationStructure: VkAccelerationStructureKHR,
+	geometryCount: uint32_t,
+	pGeometries: VkAccelerationStructureGeometryKHR,
+	ppGeometries: VkAccelerationStructureGeometryKHR,
+	scratchData: VkDeviceOrHostAddressKHR,
 }
 impl VkAccelerationStructureBuildGeometryInfoKHR
 {
@@ -12129,12 +13469,14 @@ impl VkAccelerationStructureBuildGeometryInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureBuildRangeInfoKHR
 {
-	primitiveCount: uint32_t
-	primitiveOffset: uint32_t
-	firstVertex: uint32_t
-	transformOffset: uint32_t
+	primitiveCount: uint32_t,
+	primitiveOffset: uint32_t,
+	firstVertex: uint32_t,
+	transformOffset: uint32_t,
 }
 impl VkAccelerationStructureBuildRangeInfoKHR
 {
@@ -12146,16 +13488,18 @@ impl VkAccelerationStructureBuildRangeInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	createFlags: VkAccelerationStructureCreateFlagsKHR
-	buffer: VkBuffer
-	offset: VkDeviceSize
-	size: VkDeviceSize
-	type: VkAccelerationStructureTypeKHR
-	deviceAddress: VkDeviceAddress
+	sType: VkStructureType,
+	pNext: void,
+	createFlags: VkAccelerationStructureCreateFlagsKHR,
+	buffer: VkBuffer,
+	offset: VkDeviceSize,
+	size: VkDeviceSize,
+	type: VkAccelerationStructureTypeKHR,
+	deviceAddress: VkDeviceAddress,
 }
 impl VkAccelerationStructureCreateInfoKHR
 {
@@ -12168,14 +13512,16 @@ impl VkAccelerationStructureCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAabbPositionsKHR
 {
-	minX: float
-	minY: float
-	minZ: float
-	maxX: float
-	maxY: float
-	maxZ: float
+	minX: float,
+	minY: float,
+	minZ: float,
+	maxX: float,
+	maxY: float,
+	maxZ: float,
 }
 impl VkAabbPositionsKHR
 {
@@ -12187,6 +13533,8 @@ impl VkAabbPositionsKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAabbPositionsNV
 {
 }
@@ -12200,9 +13548,11 @@ impl VkAabbPositionsNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkTransformMatrixKHR
 {
-	matrix: float
+	matrix: float,
 }
 impl VkTransformMatrixKHR
 {
@@ -12214,6 +13564,8 @@ impl VkTransformMatrixKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkTransformMatrixNV
 {
 }
@@ -12227,14 +13579,16 @@ impl VkTransformMatrixNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureInstanceKHR
 {
-	transform: VkTransformMatrixKHR
-	instanceCustomIndex: uint32_t
-	mask: uint32_t
-	instanceShaderBindingTableRecordOffset: uint32_t
-	flags: VkGeometryInstanceFlagsKHR
-	accelerationStructureReference: uint64_t
+	transform: VkTransformMatrixKHR,
+	instanceCustomIndex: uint32_t,
+	mask: uint32_t,
+	instanceShaderBindingTableRecordOffset: uint32_t,
+	flags: VkGeometryInstanceFlagsKHR,
+	accelerationStructureReference: uint64_t,
 }
 impl VkAccelerationStructureInstanceKHR
 {
@@ -12246,6 +13600,8 @@ impl VkAccelerationStructureInstanceKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureInstanceNV
 {
 }
@@ -12259,11 +13615,13 @@ impl VkAccelerationStructureInstanceNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureDeviceAddressInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	accelerationStructure: VkAccelerationStructureKHR
+	sType: VkStructureType,
+	pNext: void,
+	accelerationStructure: VkAccelerationStructureKHR,
 }
 impl VkAccelerationStructureDeviceAddressInfoKHR
 {
@@ -12276,11 +13634,13 @@ impl VkAccelerationStructureDeviceAddressInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureVersionInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pVersionData: uint8_t
+	sType: VkStructureType,
+	pNext: void,
+	pVersionData: uint8_t,
 }
 impl VkAccelerationStructureVersionInfoKHR
 {
@@ -12293,13 +13653,15 @@ impl VkAccelerationStructureVersionInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyAccelerationStructureInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	src: VkAccelerationStructureKHR
-	dst: VkAccelerationStructureKHR
-	mode: VkCopyAccelerationStructureModeKHR
+	sType: VkStructureType,
+	pNext: void,
+	src: VkAccelerationStructureKHR,
+	dst: VkAccelerationStructureKHR,
+	mode: VkCopyAccelerationStructureModeKHR,
 }
 impl VkCopyAccelerationStructureInfoKHR
 {
@@ -12312,13 +13674,15 @@ impl VkCopyAccelerationStructureInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyAccelerationStructureToMemoryInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	src: VkAccelerationStructureKHR
-	dst: VkDeviceOrHostAddressKHR
-	mode: VkCopyAccelerationStructureModeKHR
+	sType: VkStructureType,
+	pNext: void,
+	src: VkAccelerationStructureKHR,
+	dst: VkDeviceOrHostAddressKHR,
+	mode: VkCopyAccelerationStructureModeKHR,
 }
 impl VkCopyAccelerationStructureToMemoryInfoKHR
 {
@@ -12331,13 +13695,15 @@ impl VkCopyAccelerationStructureToMemoryInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyMemoryToAccelerationStructureInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	src: VkDeviceOrHostAddressConstKHR
-	dst: VkAccelerationStructureKHR
-	mode: VkCopyAccelerationStructureModeKHR
+	sType: VkStructureType,
+	pNext: void,
+	src: VkDeviceOrHostAddressConstKHR,
+	dst: VkAccelerationStructureKHR,
+	mode: VkCopyAccelerationStructureModeKHR,
 }
 impl VkCopyMemoryToAccelerationStructureInfoKHR
 {
@@ -12350,12 +13716,14 @@ impl VkCopyMemoryToAccelerationStructureInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRayTracingPipelineInterfaceCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	maxPipelineRayPayloadSize: uint32_t
-	maxPipelineRayHitAttributeSize: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	maxPipelineRayPayloadSize: uint32_t,
+	maxPipelineRayHitAttributeSize: uint32_t,
 }
 impl VkRayTracingPipelineInterfaceCreateInfoKHR
 {
@@ -12368,12 +13736,14 @@ impl VkRayTracingPipelineInterfaceCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineLibraryCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	libraryCount: uint32_t
-	pLibraries: VkPipeline
+	sType: VkStructureType,
+	pNext: void,
+	libraryCount: uint32_t,
+	pLibraries: VkPipeline,
 }
 impl VkPipelineLibraryCreateInfoKHR
 {
@@ -12386,11 +13756,13 @@ impl VkPipelineLibraryCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExtendedDynamicStateFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	extendedDynamicState: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	extendedDynamicState: VkBool32,
 }
 impl VkPhysicalDeviceExtendedDynamicStateFeaturesEXT
 {
@@ -12403,13 +13775,15 @@ impl VkPhysicalDeviceExtendedDynamicStateFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExtendedDynamicState2FeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	extendedDynamicState2: VkBool32
-	extendedDynamicState2LogicOp: VkBool32
-	extendedDynamicState2PatchControlPoints: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	extendedDynamicState2: VkBool32,
+	extendedDynamicState2LogicOp: VkBool32,
+	extendedDynamicState2PatchControlPoints: VkBool32,
 }
 impl VkPhysicalDeviceExtendedDynamicState2FeaturesEXT
 {
@@ -12422,11 +13796,13 @@ impl VkPhysicalDeviceExtendedDynamicState2FeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkRenderPassTransformBeginInfoQCOM
 {
-	sType: VkStructureType
-	pNext: void
-	transform: VkSurfaceTransformFlagBitsKHR
+	sType: VkStructureType,
+	pNext: void,
+	transform: VkSurfaceTransformFlagBitsKHR,
 }
 impl VkRenderPassTransformBeginInfoQCOM
 {
@@ -12439,11 +13815,13 @@ impl VkRenderPassTransformBeginInfoQCOM
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyCommandTransformInfoQCOM
 {
-	sType: VkStructureType
-	pNext: void
-	transform: VkSurfaceTransformFlagBitsKHR
+	sType: VkStructureType,
+	pNext: void,
+	transform: VkSurfaceTransformFlagBitsKHR,
 }
 impl VkCopyCommandTransformInfoQCOM
 {
@@ -12456,12 +13834,14 @@ impl VkCopyCommandTransformInfoQCOM
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferInheritanceRenderPassTransformInfoQCOM
 {
-	sType: VkStructureType
-	pNext: void
-	transform: VkSurfaceTransformFlagBitsKHR
-	renderArea: VkRect2D
+	sType: VkStructureType,
+	pNext: void,
+	transform: VkSurfaceTransformFlagBitsKHR,
+	renderArea: VkRect2D,
 }
 impl VkCommandBufferInheritanceRenderPassTransformInfoQCOM
 {
@@ -12474,11 +13854,13 @@ impl VkCommandBufferInheritanceRenderPassTransformInfoQCOM
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDiagnosticsConfigFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	diagnosticsConfig: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	diagnosticsConfig: VkBool32,
 }
 impl VkPhysicalDeviceDiagnosticsConfigFeaturesNV
 {
@@ -12491,11 +13873,13 @@ impl VkPhysicalDeviceDiagnosticsConfigFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDeviceDiagnosticsConfigCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkDeviceDiagnosticsConfigFlagsNV
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkDeviceDiagnosticsConfigFlagsNV,
 }
 impl VkDeviceDiagnosticsConfigCreateInfoNV
 {
@@ -12508,11 +13892,13 @@ impl VkDeviceDiagnosticsConfigCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	shaderZeroInitializeWorkgroupMemory: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderZeroInitializeWorkgroupMemory: VkBool32,
 }
 impl VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
 {
@@ -12525,11 +13911,13 @@ impl VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	shaderSubgroupUniformControlFlow: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderSubgroupUniformControlFlow: VkBool32,
 }
 impl VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR
 {
@@ -12542,13 +13930,15 @@ impl VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRobustness2FeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	robustBufferAccess2: VkBool32
-	robustImageAccess2: VkBool32
-	nullDescriptor: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	robustBufferAccess2: VkBool32,
+	robustImageAccess2: VkBool32,
+	nullDescriptor: VkBool32,
 }
 impl VkPhysicalDeviceRobustness2FeaturesEXT
 {
@@ -12561,12 +13951,14 @@ impl VkPhysicalDeviceRobustness2FeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRobustness2PropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	robustStorageBufferAccessSizeAlignment: VkDeviceSize
-	robustUniformBufferAccessSizeAlignment: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	robustStorageBufferAccessSizeAlignment: VkDeviceSize,
+	robustUniformBufferAccessSizeAlignment: VkDeviceSize,
 }
 impl VkPhysicalDeviceRobustness2PropertiesEXT
 {
@@ -12579,11 +13971,13 @@ impl VkPhysicalDeviceRobustness2PropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageRobustnessFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	robustImageAccess: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	robustImageAccess: VkBool32,
 }
 impl VkPhysicalDeviceImageRobustnessFeaturesEXT
 {
@@ -12596,14 +13990,16 @@ impl VkPhysicalDeviceImageRobustnessFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	workgroupMemoryExplicitLayout: VkBool32
-	workgroupMemoryExplicitLayoutScalarBlockLayout: VkBool32
-	workgroupMemoryExplicitLayout8BitAccess: VkBool32
-	workgroupMemoryExplicitLayout16BitAccess: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	workgroupMemoryExplicitLayout: VkBool32,
+	workgroupMemoryExplicitLayoutScalarBlockLayout: VkBool32,
+	workgroupMemoryExplicitLayout8BitAccess: VkBool32,
+	workgroupMemoryExplicitLayout16BitAccess: VkBool32,
 }
 impl VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
 {
@@ -12616,25 +14012,27 @@ impl VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePortabilitySubsetFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	constantAlphaColorBlendFactors: VkBool32
-	events: VkBool32
-	imageViewFormatReinterpretation: VkBool32
-	imageViewFormatSwizzle: VkBool32
-	imageView2DOn3DImage: VkBool32
-	multisampleArrayImage: VkBool32
-	mutableComparisonSamplers: VkBool32
-	pointPolygons: VkBool32
-	samplerMipLodBias: VkBool32
-	separateStencilMaskRef: VkBool32
-	shaderSampleRateInterpolationFunctions: VkBool32
-	tessellationIsolines: VkBool32
-	tessellationPointMode: VkBool32
-	triangleFans: VkBool32
-	vertexAttributeAccessBeyondStride: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	constantAlphaColorBlendFactors: VkBool32,
+	events: VkBool32,
+	imageViewFormatReinterpretation: VkBool32,
+	imageViewFormatSwizzle: VkBool32,
+	imageView2DOn3DImage: VkBool32,
+	multisampleArrayImage: VkBool32,
+	mutableComparisonSamplers: VkBool32,
+	pointPolygons: VkBool32,
+	samplerMipLodBias: VkBool32,
+	separateStencilMaskRef: VkBool32,
+	shaderSampleRateInterpolationFunctions: VkBool32,
+	tessellationIsolines: VkBool32,
+	tessellationPointMode: VkBool32,
+	triangleFans: VkBool32,
+	vertexAttributeAccessBeyondStride: VkBool32,
 }
 impl VkPhysicalDevicePortabilitySubsetFeaturesKHR
 {
@@ -12647,11 +14045,13 @@ impl VkPhysicalDevicePortabilitySubsetFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePortabilitySubsetPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	minVertexInputBindingStrideAlignment: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	minVertexInputBindingStrideAlignment: uint32_t,
 }
 impl VkPhysicalDevicePortabilitySubsetPropertiesKHR
 {
@@ -12664,12 +14064,14 @@ impl VkPhysicalDevicePortabilitySubsetPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDevice4444FormatsFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	formatA4R4G4B4: VkBool32
-	formatA4B4G4R4: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	formatA4R4G4B4: VkBool32,
+	formatA4B4G4R4: VkBool32,
 }
 impl VkPhysicalDevice4444FormatsFeaturesEXT
 {
@@ -12682,11 +14084,13 @@ impl VkPhysicalDevice4444FormatsFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSubpassShadingFeaturesHUAWEI
 {
-	sType: VkStructureType
-	pNext: void
-	subpassShading: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	subpassShading: VkBool32,
 }
 impl VkPhysicalDeviceSubpassShadingFeaturesHUAWEI
 {
@@ -12699,13 +14103,15 @@ impl VkPhysicalDeviceSubpassShadingFeaturesHUAWEI
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferCopy2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcOffset: VkDeviceSize
-	dstOffset: VkDeviceSize
-	size: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	srcOffset: VkDeviceSize,
+	dstOffset: VkDeviceSize,
+	size: VkDeviceSize,
 }
 impl VkBufferCopy2KHR
 {
@@ -12718,15 +14124,17 @@ impl VkBufferCopy2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageCopy2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcSubresource: VkImageSubresourceLayers
-	srcOffset: VkOffset3D
-	dstSubresource: VkImageSubresourceLayers
-	dstOffset: VkOffset3D
-	extent: VkExtent3D
+	sType: VkStructureType,
+	pNext: void,
+	srcSubresource: VkImageSubresourceLayers,
+	srcOffset: VkOffset3D,
+	dstSubresource: VkImageSubresourceLayers,
+	dstOffset: VkOffset3D,
+	extent: VkExtent3D,
 }
 impl VkImageCopy2KHR
 {
@@ -12739,14 +14147,16 @@ impl VkImageCopy2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageBlit2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcSubresource: VkImageSubresourceLayers
-	srcOffsets: VkOffset3D
-	dstSubresource: VkImageSubresourceLayers
-	dstOffsets: VkOffset3D
+	sType: VkStructureType,
+	pNext: void,
+	srcSubresource: VkImageSubresourceLayers,
+	srcOffsets: VkOffset3D,
+	dstSubresource: VkImageSubresourceLayers,
+	dstOffsets: VkOffset3D,
 }
 impl VkImageBlit2KHR
 {
@@ -12759,16 +14169,18 @@ impl VkImageBlit2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferImageCopy2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	bufferOffset: VkDeviceSize
-	bufferRowLength: uint32_t
-	bufferImageHeight: uint32_t
-	imageSubresource: VkImageSubresourceLayers
-	imageOffset: VkOffset3D
-	imageExtent: VkExtent3D
+	sType: VkStructureType,
+	pNext: void,
+	bufferOffset: VkDeviceSize,
+	bufferRowLength: uint32_t,
+	bufferImageHeight: uint32_t,
+	imageSubresource: VkImageSubresourceLayers,
+	imageOffset: VkOffset3D,
+	imageExtent: VkExtent3D,
 }
 impl VkBufferImageCopy2KHR
 {
@@ -12781,15 +14193,17 @@ impl VkBufferImageCopy2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageResolve2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcSubresource: VkImageSubresourceLayers
-	srcOffset: VkOffset3D
-	dstSubresource: VkImageSubresourceLayers
-	dstOffset: VkOffset3D
-	extent: VkExtent3D
+	sType: VkStructureType,
+	pNext: void,
+	srcSubresource: VkImageSubresourceLayers,
+	srcOffset: VkOffset3D,
+	dstSubresource: VkImageSubresourceLayers,
+	dstOffset: VkOffset3D,
+	extent: VkExtent3D,
 }
 impl VkImageResolve2KHR
 {
@@ -12802,14 +14216,16 @@ impl VkImageResolve2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyBufferInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcBuffer: VkBuffer
-	dstBuffer: VkBuffer
-	regionCount: uint32_t
-	pRegions: VkBufferCopy2KHR
+	sType: VkStructureType,
+	pNext: void,
+	srcBuffer: VkBuffer,
+	dstBuffer: VkBuffer,
+	regionCount: uint32_t,
+	pRegions: VkBufferCopy2KHR,
 }
 impl VkCopyBufferInfo2KHR
 {
@@ -12822,16 +14238,18 @@ impl VkCopyBufferInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyImageInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcImage: VkImage
-	srcImageLayout: VkImageLayout
-	dstImage: VkImage
-	dstImageLayout: VkImageLayout
-	regionCount: uint32_t
-	pRegions: VkImageCopy2KHR
+	sType: VkStructureType,
+	pNext: void,
+	srcImage: VkImage,
+	srcImageLayout: VkImageLayout,
+	dstImage: VkImage,
+	dstImageLayout: VkImageLayout,
+	regionCount: uint32_t,
+	pRegions: VkImageCopy2KHR,
 }
 impl VkCopyImageInfo2KHR
 {
@@ -12844,17 +14262,19 @@ impl VkCopyImageInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBlitImageInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcImage: VkImage
-	srcImageLayout: VkImageLayout
-	dstImage: VkImage
-	dstImageLayout: VkImageLayout
-	regionCount: uint32_t
-	pRegions: VkImageBlit2KHR
-	filter: VkFilter
+	sType: VkStructureType,
+	pNext: void,
+	srcImage: VkImage,
+	srcImageLayout: VkImageLayout,
+	dstImage: VkImage,
+	dstImageLayout: VkImageLayout,
+	regionCount: uint32_t,
+	pRegions: VkImageBlit2KHR,
+	filter: VkFilter,
 }
 impl VkBlitImageInfo2KHR
 {
@@ -12867,15 +14287,17 @@ impl VkBlitImageInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyBufferToImageInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcBuffer: VkBuffer
-	dstImage: VkImage
-	dstImageLayout: VkImageLayout
-	regionCount: uint32_t
-	pRegions: VkBufferImageCopy2KHR
+	sType: VkStructureType,
+	pNext: void,
+	srcBuffer: VkBuffer,
+	dstImage: VkImage,
+	dstImageLayout: VkImageLayout,
+	regionCount: uint32_t,
+	pRegions: VkBufferImageCopy2KHR,
 }
 impl VkCopyBufferToImageInfo2KHR
 {
@@ -12888,15 +14310,17 @@ impl VkCopyBufferToImageInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCopyImageToBufferInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcImage: VkImage
-	srcImageLayout: VkImageLayout
-	dstBuffer: VkBuffer
-	regionCount: uint32_t
-	pRegions: VkBufferImageCopy2KHR
+	sType: VkStructureType,
+	pNext: void,
+	srcImage: VkImage,
+	srcImageLayout: VkImageLayout,
+	dstBuffer: VkBuffer,
+	regionCount: uint32_t,
+	pRegions: VkBufferImageCopy2KHR,
 }
 impl VkCopyImageToBufferInfo2KHR
 {
@@ -12909,16 +14333,18 @@ impl VkCopyImageToBufferInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkResolveImageInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcImage: VkImage
-	srcImageLayout: VkImageLayout
-	dstImage: VkImage
-	dstImageLayout: VkImageLayout
-	regionCount: uint32_t
-	pRegions: VkImageResolve2KHR
+	sType: VkStructureType,
+	pNext: void,
+	srcImage: VkImage,
+	srcImageLayout: VkImageLayout,
+	dstImage: VkImage,
+	dstImageLayout: VkImageLayout,
+	regionCount: uint32_t,
+	pRegions: VkImageResolve2KHR,
 }
 impl VkResolveImageInfo2KHR
 {
@@ -12931,12 +14357,14 @@ impl VkResolveImageInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	shaderImageInt64Atomics: VkBool32
-	sparseImageInt64Atomics: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderImageInt64Atomics: VkBool32,
+	sparseImageInt64Atomics: VkBool32,
 }
 impl VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT
 {
@@ -12949,12 +14377,14 @@ impl VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkFragmentShadingRateAttachmentInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pFragmentShadingRateAttachment: VkAttachmentReference2
-	shadingRateAttachmentTexelSize: VkExtent2D
+	sType: VkStructureType,
+	pNext: void,
+	pFragmentShadingRateAttachment: VkAttachmentReference2,
+	shadingRateAttachmentTexelSize: VkExtent2D,
 }
 impl VkFragmentShadingRateAttachmentInfoKHR
 {
@@ -12967,12 +14397,14 @@ impl VkFragmentShadingRateAttachmentInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineFragmentShadingRateStateCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentSize: VkExtent2D
-	combinerOps: VkFragmentShadingRateCombinerOpKHR
+	sType: VkStructureType,
+	pNext: void,
+	fragmentSize: VkExtent2D,
+	combinerOps: VkFragmentShadingRateCombinerOpKHR,
 }
 impl VkPipelineFragmentShadingRateStateCreateInfoKHR
 {
@@ -12985,13 +14417,15 @@ impl VkPipelineFragmentShadingRateStateCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShadingRateFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	pipelineFragmentShadingRate: VkBool32
-	primitiveFragmentShadingRate: VkBool32
-	attachmentFragmentShadingRate: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	pipelineFragmentShadingRate: VkBool32,
+	primitiveFragmentShadingRate: VkBool32,
+	attachmentFragmentShadingRate: VkBool32,
 }
 impl VkPhysicalDeviceFragmentShadingRateFeaturesKHR
 {
@@ -13004,27 +14438,29 @@ impl VkPhysicalDeviceFragmentShadingRateFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShadingRatePropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	minFragmentShadingRateAttachmentTexelSize: VkExtent2D
-	maxFragmentShadingRateAttachmentTexelSize: VkExtent2D
-	maxFragmentShadingRateAttachmentTexelSizeAspectRatio: uint32_t
-	primitiveFragmentShadingRateWithMultipleViewports: VkBool32
-	layeredShadingRateAttachments: VkBool32
-	fragmentShadingRateNonTrivialCombinerOps: VkBool32
-	maxFragmentSize: VkExtent2D
-	maxFragmentSizeAspectRatio: uint32_t
-	maxFragmentShadingRateCoverageSamples: uint32_t
-	maxFragmentShadingRateRasterizationSamples: VkSampleCountFlagBits
-	fragmentShadingRateWithShaderDepthStencilWrites: VkBool32
-	fragmentShadingRateWithSampleMask: VkBool32
-	fragmentShadingRateWithShaderSampleMask: VkBool32
-	fragmentShadingRateWithConservativeRasterization: VkBool32
-	fragmentShadingRateWithFragmentShaderInterlock: VkBool32
-	fragmentShadingRateWithCustomSampleLocations: VkBool32
-	fragmentShadingRateStrictMultiplyCombiner: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	minFragmentShadingRateAttachmentTexelSize: VkExtent2D,
+	maxFragmentShadingRateAttachmentTexelSize: VkExtent2D,
+	maxFragmentShadingRateAttachmentTexelSizeAspectRatio: uint32_t,
+	primitiveFragmentShadingRateWithMultipleViewports: VkBool32,
+	layeredShadingRateAttachments: VkBool32,
+	fragmentShadingRateNonTrivialCombinerOps: VkBool32,
+	maxFragmentSize: VkExtent2D,
+	maxFragmentSizeAspectRatio: uint32_t,
+	maxFragmentShadingRateCoverageSamples: uint32_t,
+	maxFragmentShadingRateRasterizationSamples: VkSampleCountFlagBits,
+	fragmentShadingRateWithShaderDepthStencilWrites: VkBool32,
+	fragmentShadingRateWithSampleMask: VkBool32,
+	fragmentShadingRateWithShaderSampleMask: VkBool32,
+	fragmentShadingRateWithConservativeRasterization: VkBool32,
+	fragmentShadingRateWithFragmentShaderInterlock: VkBool32,
+	fragmentShadingRateWithCustomSampleLocations: VkBool32,
+	fragmentShadingRateStrictMultiplyCombiner: VkBool32,
 }
 impl VkPhysicalDeviceFragmentShadingRatePropertiesKHR
 {
@@ -13037,12 +14473,14 @@ impl VkPhysicalDeviceFragmentShadingRatePropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShadingRateKHR
 {
-	sType: VkStructureType
-	pNext: void
-	sampleCounts: VkSampleCountFlags
-	fragmentSize: VkExtent2D
+	sType: VkStructureType,
+	pNext: void,
+	sampleCounts: VkSampleCountFlags,
+	fragmentSize: VkExtent2D,
 }
 impl VkPhysicalDeviceFragmentShadingRateKHR
 {
@@ -13055,11 +14493,13 @@ impl VkPhysicalDeviceFragmentShadingRateKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	shaderTerminateInvocation: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderTerminateInvocation: VkBool32,
 }
 impl VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR
 {
@@ -13072,13 +14512,15 @@ impl VkPhysicalDeviceShaderTerminateInvocationFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	fragmentShadingRateEnums: VkBool32
-	supersampleFragmentShadingRates: VkBool32
-	noInvocationFragmentShadingRates: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	fragmentShadingRateEnums: VkBool32,
+	supersampleFragmentShadingRates: VkBool32,
+	noInvocationFragmentShadingRates: VkBool32,
 }
 impl VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV
 {
@@ -13091,11 +14533,13 @@ impl VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV
 {
-	sType: VkStructureType
-	pNext: void
-	maxFragmentShadingRateInvocationCount: VkSampleCountFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	maxFragmentShadingRateInvocationCount: VkSampleCountFlagBits,
 }
 impl VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV
 {
@@ -13108,13 +14552,15 @@ impl VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineFragmentShadingRateEnumStateCreateInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	shadingRateType: VkFragmentShadingRateTypeNV
-	shadingRate: VkFragmentShadingRateNV
-	combinerOps: VkFragmentShadingRateCombinerOpKHR
+	sType: VkStructureType,
+	pNext: void,
+	shadingRateType: VkFragmentShadingRateTypeNV,
+	shadingRate: VkFragmentShadingRateNV,
+	combinerOps: VkFragmentShadingRateCombinerOpKHR,
 }
 impl VkPipelineFragmentShadingRateEnumStateCreateInfoNV
 {
@@ -13127,13 +14573,15 @@ impl VkPipelineFragmentShadingRateEnumStateCreateInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureBuildSizesInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	accelerationStructureSize: VkDeviceSize
-	updateScratchSize: VkDeviceSize
-	buildScratchSize: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	accelerationStructureSize: VkDeviceSize,
+	updateScratchSize: VkDeviceSize,
+	buildScratchSize: VkDeviceSize,
 }
 impl VkAccelerationStructureBuildSizesInfoKHR
 {
@@ -13146,11 +14594,13 @@ impl VkAccelerationStructureBuildSizesInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE
 {
-	sType: VkStructureType
-	pNext: void
-	mutableDescriptorType: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	mutableDescriptorType: VkBool32,
 }
 impl VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE
 {
@@ -13163,10 +14613,12 @@ impl VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMutableDescriptorTypeListVALVE
 {
-	descriptorTypeCount: uint32_t
-	pDescriptorTypes: VkDescriptorType
+	descriptorTypeCount: uint32_t,
+	pDescriptorTypes: VkDescriptorType,
 }
 impl VkMutableDescriptorTypeListVALVE
 {
@@ -13178,12 +14630,14 @@ impl VkMutableDescriptorTypeListVALVE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMutableDescriptorTypeCreateInfoVALVE
 {
-	sType: VkStructureType
-	pNext: void
-	mutableDescriptorTypeListCount: uint32_t
-	pMutableDescriptorTypeLists: VkMutableDescriptorTypeListVALVE
+	sType: VkStructureType,
+	pNext: void,
+	mutableDescriptorTypeListCount: uint32_t,
+	pMutableDescriptorTypeLists: VkMutableDescriptorTypeListVALVE,
 }
 impl VkMutableDescriptorTypeCreateInfoVALVE
 {
@@ -13196,11 +14650,13 @@ impl VkMutableDescriptorTypeCreateInfoVALVE
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	vertexInputDynamicState: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	vertexInputDynamicState: VkBool32,
 }
 impl VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT
 {
@@ -13213,11 +14669,13 @@ impl VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalMemoryRDMAFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	externalMemoryRDMA: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	externalMemoryRDMA: VkBool32,
 }
 impl VkPhysicalDeviceExternalMemoryRDMAFeaturesNV
 {
@@ -13230,14 +14688,16 @@ impl VkPhysicalDeviceExternalMemoryRDMAFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVertexInputBindingDescription2EXT
 {
-	sType: VkStructureType
-	pNext: void
-	binding: uint32_t
-	stride: uint32_t
-	inputRate: VkVertexInputRate
-	divisor: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	binding: uint32_t,
+	stride: uint32_t,
+	inputRate: VkVertexInputRate,
+	divisor: uint32_t,
 }
 impl VkVertexInputBindingDescription2EXT
 {
@@ -13250,14 +14710,16 @@ impl VkVertexInputBindingDescription2EXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVertexInputAttributeDescription2EXT
 {
-	sType: VkStructureType
-	pNext: void
-	location: uint32_t
-	binding: uint32_t
-	format: VkFormat
-	offset: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	location: uint32_t,
+	binding: uint32_t,
+	format: VkFormat,
+	offset: uint32_t,
 }
 impl VkVertexInputAttributeDescription2EXT
 {
@@ -13270,11 +14732,13 @@ impl VkVertexInputAttributeDescription2EXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceColorWriteEnableFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	colorWriteEnable: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	colorWriteEnable: VkBool32,
 }
 impl VkPhysicalDeviceColorWriteEnableFeaturesEXT
 {
@@ -13287,12 +14751,14 @@ impl VkPhysicalDeviceColorWriteEnableFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineColorWriteCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	attachmentCount: uint32_t
-	pColorWriteEnables: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	attachmentCount: uint32_t,
+	pColorWriteEnables: VkBool32,
 }
 impl VkPipelineColorWriteCreateInfoEXT
 {
@@ -13305,14 +14771,16 @@ impl VkPipelineColorWriteCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryBarrier2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcStageMask: VkPipelineStageFlags2KHR
-	srcAccessMask: VkAccessFlags2KHR
-	dstStageMask: VkPipelineStageFlags2KHR
-	dstAccessMask: VkAccessFlags2KHR
+	sType: VkStructureType,
+	pNext: void,
+	srcStageMask: VkPipelineStageFlags2KHR,
+	srcAccessMask: VkAccessFlags2KHR,
+	dstStageMask: VkPipelineStageFlags2KHR,
+	dstAccessMask: VkAccessFlags2KHR,
 }
 impl VkMemoryBarrier2KHR
 {
@@ -13325,20 +14793,22 @@ impl VkMemoryBarrier2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkImageMemoryBarrier2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcStageMask: VkPipelineStageFlags2KHR
-	srcAccessMask: VkAccessFlags2KHR
-	dstStageMask: VkPipelineStageFlags2KHR
-	dstAccessMask: VkAccessFlags2KHR
-	oldLayout: VkImageLayout
-	newLayout: VkImageLayout
-	srcQueueFamilyIndex: uint32_t
-	dstQueueFamilyIndex: uint32_t
-	image: VkImage
-	subresourceRange: VkImageSubresourceRange
+	sType: VkStructureType,
+	pNext: void,
+	srcStageMask: VkPipelineStageFlags2KHR,
+	srcAccessMask: VkAccessFlags2KHR,
+	dstStageMask: VkPipelineStageFlags2KHR,
+	dstAccessMask: VkAccessFlags2KHR,
+	oldLayout: VkImageLayout,
+	newLayout: VkImageLayout,
+	srcQueueFamilyIndex: uint32_t,
+	dstQueueFamilyIndex: uint32_t,
+	image: VkImage,
+	subresourceRange: VkImageSubresourceRange,
 }
 impl VkImageMemoryBarrier2KHR
 {
@@ -13351,19 +14821,21 @@ impl VkImageMemoryBarrier2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkBufferMemoryBarrier2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	srcStageMask: VkPipelineStageFlags2KHR
-	srcAccessMask: VkAccessFlags2KHR
-	dstStageMask: VkPipelineStageFlags2KHR
-	dstAccessMask: VkAccessFlags2KHR
-	srcQueueFamilyIndex: uint32_t
-	dstQueueFamilyIndex: uint32_t
-	buffer: VkBuffer
-	offset: VkDeviceSize
-	size: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	srcStageMask: VkPipelineStageFlags2KHR,
+	srcAccessMask: VkAccessFlags2KHR,
+	dstStageMask: VkPipelineStageFlags2KHR,
+	dstAccessMask: VkAccessFlags2KHR,
+	srcQueueFamilyIndex: uint32_t,
+	dstQueueFamilyIndex: uint32_t,
+	buffer: VkBuffer,
+	offset: VkDeviceSize,
+	size: VkDeviceSize,
 }
 impl VkBufferMemoryBarrier2KHR
 {
@@ -13376,17 +14848,19 @@ impl VkBufferMemoryBarrier2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkDependencyInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	dependencyFlags: VkDependencyFlags
-	memoryBarrierCount: uint32_t
-	pMemoryBarriers: VkMemoryBarrier2KHR
-	bufferMemoryBarrierCount: uint32_t
-	pBufferMemoryBarriers: VkBufferMemoryBarrier2KHR
-	imageMemoryBarrierCount: uint32_t
-	pImageMemoryBarriers: VkImageMemoryBarrier2KHR
+	sType: VkStructureType,
+	pNext: void,
+	dependencyFlags: VkDependencyFlags,
+	memoryBarrierCount: uint32_t,
+	pMemoryBarriers: VkMemoryBarrier2KHR,
+	bufferMemoryBarrierCount: uint32_t,
+	pBufferMemoryBarriers: VkBufferMemoryBarrier2KHR,
+	imageMemoryBarrierCount: uint32_t,
+	pImageMemoryBarriers: VkImageMemoryBarrier2KHR,
 }
 impl VkDependencyInfoKHR
 {
@@ -13399,14 +14873,16 @@ impl VkDependencyInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSemaphoreSubmitInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	semaphore: VkSemaphore
-	value: uint64_t
-	stageMask: VkPipelineStageFlags2KHR
-	deviceIndex: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	semaphore: VkSemaphore,
+	value: uint64_t,
+	stageMask: VkPipelineStageFlags2KHR,
+	deviceIndex: uint32_t,
 }
 impl VkSemaphoreSubmitInfoKHR
 {
@@ -13419,12 +14895,14 @@ impl VkSemaphoreSubmitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferSubmitInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	commandBuffer: VkCommandBuffer
-	deviceMask: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	commandBuffer: VkCommandBuffer,
+	deviceMask: uint32_t,
 }
 impl VkCommandBufferSubmitInfoKHR
 {
@@ -13437,17 +14915,19 @@ impl VkCommandBufferSubmitInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSubmitInfo2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkSubmitFlagsKHR
-	waitSemaphoreInfoCount: uint32_t
-	pWaitSemaphoreInfos: VkSemaphoreSubmitInfoKHR
-	commandBufferInfoCount: uint32_t
-	pCommandBufferInfos: VkCommandBufferSubmitInfoKHR
-	signalSemaphoreInfoCount: uint32_t
-	pSignalSemaphoreInfos: VkSemaphoreSubmitInfoKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkSubmitFlagsKHR,
+	waitSemaphoreInfoCount: uint32_t,
+	pWaitSemaphoreInfos: VkSemaphoreSubmitInfoKHR,
+	commandBufferInfoCount: uint32_t,
+	pCommandBufferInfos: VkCommandBufferSubmitInfoKHR,
+	signalSemaphoreInfoCount: uint32_t,
+	pSignalSemaphoreInfos: VkSemaphoreSubmitInfoKHR,
 }
 impl VkSubmitInfo2KHR
 {
@@ -13460,11 +14940,13 @@ impl VkSubmitInfo2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkQueueFamilyCheckpointProperties2NV
 {
-	sType: VkStructureType
-	pNext: void
-	checkpointExecutionStageMask: VkPipelineStageFlags2KHR
+	sType: VkStructureType,
+	pNext: void,
+	checkpointExecutionStageMask: VkPipelineStageFlags2KHR,
 }
 impl VkQueueFamilyCheckpointProperties2NV
 {
@@ -13477,12 +14959,14 @@ impl VkQueueFamilyCheckpointProperties2NV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCheckpointData2NV
 {
-	sType: VkStructureType
-	pNext: void
-	stage: VkPipelineStageFlags2KHR
-	pCheckpointMarker: void
+	sType: VkStructureType,
+	pNext: void,
+	stage: VkPipelineStageFlags2KHR,
+	pCheckpointMarker: void,
 }
 impl VkCheckpointData2NV
 {
@@ -13495,11 +14979,13 @@ impl VkCheckpointData2NV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSynchronization2FeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	synchronization2: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	synchronization2: VkBool32,
 }
 impl VkPhysicalDeviceSynchronization2FeaturesKHR
 {
@@ -13512,11 +14998,13 @@ impl VkPhysicalDeviceSynchronization2FeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoQueueFamilyProperties2KHR
 {
-	sType: VkStructureType
-	pNext: void
-	videoCodecOperations: VkVideoCodecOperationFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	videoCodecOperations: VkVideoCodecOperationFlagsKHR,
 }
 impl VkVideoQueueFamilyProperties2KHR
 {
@@ -13529,12 +15017,14 @@ impl VkVideoQueueFamilyProperties2KHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoProfilesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	profileCount: uint32_t
-	pProfiles: VkVideoProfileKHR
+	sType: VkStructureType,
+	pNext: void,
+	profileCount: uint32_t,
+	pProfiles: VkVideoProfileKHR,
 }
 impl VkVideoProfilesKHR
 {
@@ -13547,12 +15037,14 @@ impl VkVideoProfilesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVideoFormatInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	imageUsage: VkImageUsageFlags
-	pVideoProfiles: VkVideoProfilesKHR
+	sType: VkStructureType,
+	pNext: void,
+	imageUsage: VkImageUsageFlags,
+	pVideoProfiles: VkVideoProfilesKHR,
 }
 impl VkPhysicalDeviceVideoFormatInfoKHR
 {
@@ -13565,11 +15057,13 @@ impl VkPhysicalDeviceVideoFormatInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoFormatPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	format: VkFormat
+	sType: VkStructureType,
+	pNext: void,
+	format: VkFormat,
 }
 impl VkVideoFormatPropertiesKHR
 {
@@ -13582,14 +15076,16 @@ impl VkVideoFormatPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoProfileKHR
 {
-	sType: VkStructureType
-	pNext: void
-	videoCodecOperation: VkVideoCodecOperationFlagBitsKHR
-	chromaSubsampling: VkVideoChromaSubsamplingFlagsKHR
-	lumaBitDepth: VkVideoComponentBitDepthFlagsKHR
-	chromaBitDepth: VkVideoComponentBitDepthFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	videoCodecOperation: VkVideoCodecOperationFlagBitsKHR,
+	chromaSubsampling: VkVideoChromaSubsamplingFlagsKHR,
+	lumaBitDepth: VkVideoComponentBitDepthFlagsKHR,
+	chromaBitDepth: VkVideoComponentBitDepthFlagsKHR,
 }
 impl VkVideoProfileKHR
 {
@@ -13602,18 +15098,20 @@ impl VkVideoProfileKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoCapabilitiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	capabilityFlags: VkVideoCapabilityFlagsKHR
-	minBitstreamBufferOffsetAlignment: VkDeviceSize
-	minBitstreamBufferSizeAlignment: VkDeviceSize
-	videoPictureExtentGranularity: VkExtent2D
-	minExtent: VkExtent2D
-	maxExtent: VkExtent2D
-	maxReferencePicturesSlotsCount: uint32_t
-	maxReferencePicturesActiveCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	capabilityFlags: VkVideoCapabilityFlagsKHR,
+	minBitstreamBufferOffsetAlignment: VkDeviceSize,
+	minBitstreamBufferSizeAlignment: VkDeviceSize,
+	videoPictureExtentGranularity: VkExtent2D,
+	minExtent: VkExtent2D,
+	maxExtent: VkExtent2D,
+	maxReferencePicturesSlotsCount: uint32_t,
+	maxReferencePicturesActiveCount: uint32_t,
 }
 impl VkVideoCapabilitiesKHR
 {
@@ -13626,12 +15124,14 @@ impl VkVideoCapabilitiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoGetMemoryPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	memoryBindIndex: uint32_t
-	pMemoryRequirements: VkMemoryRequirements2
+	sType: VkStructureType,
+	pNext: void,
+	memoryBindIndex: uint32_t,
+	pMemoryRequirements: VkMemoryRequirements2,
 }
 impl VkVideoGetMemoryPropertiesKHR
 {
@@ -13644,14 +15144,16 @@ impl VkVideoGetMemoryPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoBindMemoryKHR
 {
-	sType: VkStructureType
-	pNext: void
-	memoryBindIndex: uint32_t
-	memory: VkDeviceMemory
-	memoryOffset: VkDeviceSize
-	memorySize: VkDeviceSize
+	sType: VkStructureType,
+	pNext: void,
+	memoryBindIndex: uint32_t,
+	memory: VkDeviceMemory,
+	memoryOffset: VkDeviceSize,
+	memorySize: VkDeviceSize,
 }
 impl VkVideoBindMemoryKHR
 {
@@ -13664,14 +15166,16 @@ impl VkVideoBindMemoryKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoPictureResourceKHR
 {
-	sType: VkStructureType
-	pNext: void
-	codedOffset: VkOffset2D
-	codedExtent: VkExtent2D
-	baseArrayLayer: uint32_t
-	imageViewBinding: VkImageView
+	sType: VkStructureType,
+	pNext: void,
+	codedOffset: VkOffset2D,
+	codedExtent: VkExtent2D,
+	baseArrayLayer: uint32_t,
+	imageViewBinding: VkImageView,
 }
 impl VkVideoPictureResourceKHR
 {
@@ -13684,12 +15188,14 @@ impl VkVideoPictureResourceKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoReferenceSlotKHR
 {
-	sType: VkStructureType
-	pNext: void
-	slotIndex: int8_t
-	pPictureResource: VkVideoPictureResourceKHR
+	sType: VkStructureType,
+	pNext: void,
+	slotIndex: int8_t,
+	pPictureResource: VkVideoPictureResourceKHR,
 }
 impl VkVideoReferenceSlotKHR
 {
@@ -13702,20 +15208,22 @@ impl VkVideoReferenceSlotKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoDecodeFlagsKHR
-	codedOffset: VkOffset2D
-	codedExtent: VkExtent2D
-	srcBuffer: VkBuffer
-	srcBufferOffset: VkDeviceSize
-	srcBufferRange: VkDeviceSize
-	dstPictureResource: VkVideoPictureResourceKHR
-	pSetupReferenceSlot: VkVideoReferenceSlotKHR
-	referenceSlotCount: uint32_t
-	pReferenceSlots: VkVideoReferenceSlotKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoDecodeFlagsKHR,
+	codedOffset: VkOffset2D,
+	codedExtent: VkExtent2D,
+	srcBuffer: VkBuffer,
+	srcBufferOffset: VkDeviceSize,
+	srcBufferRange: VkDeviceSize,
+	dstPictureResource: VkVideoPictureResourceKHR,
+	pSetupReferenceSlot: VkVideoReferenceSlotKHR,
+	referenceSlotCount: uint32_t,
+	pReferenceSlots: VkVideoReferenceSlotKHR,
 }
 impl VkVideoDecodeInfoKHR
 {
@@ -13728,12 +15236,14 @@ impl VkVideoDecodeInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264ProfileEXT
 {
-	sType: VkStructureType
-	pNext: void
-	stdProfileIdc: StdVideoH264ProfileIdc
-	pictureLayout: VkVideoDecodeH264PictureLayoutFlagsEXT
+	sType: VkStructureType,
+	pNext: void,
+	stdProfileIdc: StdVideoH264ProfileIdc,
+	pictureLayout: VkVideoDecodeH264PictureLayoutFlagsEXT,
 }
 impl VkVideoDecodeH264ProfileEXT
 {
@@ -13746,13 +15256,15 @@ impl VkVideoDecodeH264ProfileEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264CapabilitiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxLevel: uint32_t
-	fieldOffsetGranularity: VkOffset2D
-	stdExtensionVersion: VkExtensionProperties
+	sType: VkStructureType,
+	pNext: void,
+	maxLevel: uint32_t,
+	fieldOffsetGranularity: VkOffset2D,
+	stdExtensionVersion: VkExtensionProperties,
 }
 impl VkVideoDecodeH264CapabilitiesEXT
 {
@@ -13765,12 +15277,14 @@ impl VkVideoDecodeH264CapabilitiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264SessionCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoDecodeH264CreateFlagsEXT
-	pStdExtensionVersion: VkExtensionProperties
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoDecodeH264CreateFlagsEXT,
+	pStdExtensionVersion: VkExtensionProperties,
 }
 impl VkVideoDecodeH264SessionCreateInfoEXT
 {
@@ -13783,14 +15297,16 @@ impl VkVideoDecodeH264SessionCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264SessionParametersAddInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	spsStdCount: uint32_t
-	pSpsStd: StdVideoH264SequenceParameterSet
-	ppsStdCount: uint32_t
-	pPpsStd: StdVideoH264PictureParameterSet
+	sType: VkStructureType,
+	pNext: void,
+	spsStdCount: uint32_t,
+	pSpsStd: StdVideoH264SequenceParameterSet,
+	ppsStdCount: uint32_t,
+	pPpsStd: StdVideoH264PictureParameterSet,
 }
 impl VkVideoDecodeH264SessionParametersAddInfoEXT
 {
@@ -13803,13 +15319,15 @@ impl VkVideoDecodeH264SessionParametersAddInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264SessionParametersCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxSpsStdCount: uint32_t
-	maxPpsStdCount: uint32_t
-	pParametersAddInfo: VkVideoDecodeH264SessionParametersAddInfoEXT
+	sType: VkStructureType,
+	pNext: void,
+	maxSpsStdCount: uint32_t,
+	maxPpsStdCount: uint32_t,
+	pParametersAddInfo: VkVideoDecodeH264SessionParametersAddInfoEXT,
 }
 impl VkVideoDecodeH264SessionParametersCreateInfoEXT
 {
@@ -13822,13 +15340,15 @@ impl VkVideoDecodeH264SessionParametersCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264PictureInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pStdPictureInfo: StdVideoDecodeH264PictureInfo
-	slicesCount: uint32_t
-	pSlicesDataOffsets: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	pStdPictureInfo: StdVideoDecodeH264PictureInfo,
+	slicesCount: uint32_t,
+	pSlicesDataOffsets: uint32_t,
 }
 impl VkVideoDecodeH264PictureInfoEXT
 {
@@ -13841,11 +15361,13 @@ impl VkVideoDecodeH264PictureInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264DpbSlotInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pStdReferenceInfo: StdVideoDecodeH264ReferenceInfo
+	sType: VkStructureType,
+	pNext: void,
+	pStdReferenceInfo: StdVideoDecodeH264ReferenceInfo,
 }
 impl VkVideoDecodeH264DpbSlotInfoEXT
 {
@@ -13858,11 +15380,13 @@ impl VkVideoDecodeH264DpbSlotInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH264MvcEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pStdMvc: StdVideoDecodeH264Mvc
+	sType: VkStructureType,
+	pNext: void,
+	pStdMvc: StdVideoDecodeH264Mvc,
 }
 impl VkVideoDecodeH264MvcEXT
 {
@@ -13875,11 +15399,13 @@ impl VkVideoDecodeH264MvcEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265ProfileEXT
 {
-	sType: VkStructureType
-	pNext: void
-	stdProfileIdc: StdVideoH265ProfileIdc
+	sType: VkStructureType,
+	pNext: void,
+	stdProfileIdc: StdVideoH265ProfileIdc,
 }
 impl VkVideoDecodeH265ProfileEXT
 {
@@ -13892,12 +15418,14 @@ impl VkVideoDecodeH265ProfileEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265CapabilitiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxLevel: uint32_t
-	stdExtensionVersion: VkExtensionProperties
+	sType: VkStructureType,
+	pNext: void,
+	maxLevel: uint32_t,
+	stdExtensionVersion: VkExtensionProperties,
 }
 impl VkVideoDecodeH265CapabilitiesEXT
 {
@@ -13910,12 +15438,14 @@ impl VkVideoDecodeH265CapabilitiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265SessionCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoDecodeH265CreateFlagsEXT
-	pStdExtensionVersion: VkExtensionProperties
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoDecodeH265CreateFlagsEXT,
+	pStdExtensionVersion: VkExtensionProperties,
 }
 impl VkVideoDecodeH265SessionCreateInfoEXT
 {
@@ -13928,14 +15458,16 @@ impl VkVideoDecodeH265SessionCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265SessionParametersAddInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	spsStdCount: uint32_t
-	pSpsStd: StdVideoH265SequenceParameterSet
-	ppsStdCount: uint32_t
-	pPpsStd: StdVideoH265PictureParameterSet
+	sType: VkStructureType,
+	pNext: void,
+	spsStdCount: uint32_t,
+	pSpsStd: StdVideoH265SequenceParameterSet,
+	ppsStdCount: uint32_t,
+	pPpsStd: StdVideoH265PictureParameterSet,
 }
 impl VkVideoDecodeH265SessionParametersAddInfoEXT
 {
@@ -13948,13 +15480,15 @@ impl VkVideoDecodeH265SessionParametersAddInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265SessionParametersCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxSpsStdCount: uint32_t
-	maxPpsStdCount: uint32_t
-	pParametersAddInfo: VkVideoDecodeH265SessionParametersAddInfoEXT
+	sType: VkStructureType,
+	pNext: void,
+	maxSpsStdCount: uint32_t,
+	maxPpsStdCount: uint32_t,
+	pParametersAddInfo: VkVideoDecodeH265SessionParametersAddInfoEXT,
 }
 impl VkVideoDecodeH265SessionParametersCreateInfoEXT
 {
@@ -13967,13 +15501,15 @@ impl VkVideoDecodeH265SessionParametersCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265PictureInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pStdPictureInfo: StdVideoDecodeH265PictureInfo
-	slicesCount: uint32_t
-	pSlicesDataOffsets: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	pStdPictureInfo: StdVideoDecodeH265PictureInfo,
+	slicesCount: uint32_t,
+	pSlicesDataOffsets: uint32_t,
 }
 impl VkVideoDecodeH265PictureInfoEXT
 {
@@ -13986,11 +15522,13 @@ impl VkVideoDecodeH265PictureInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoDecodeH265DpbSlotInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pStdReferenceInfo: StdVideoDecodeH265ReferenceInfo
+	sType: VkStructureType,
+	pNext: void,
+	pStdReferenceInfo: StdVideoDecodeH265ReferenceInfo,
 }
 impl VkVideoDecodeH265DpbSlotInfoEXT
 {
@@ -14003,18 +15541,20 @@ impl VkVideoDecodeH265DpbSlotInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoSessionCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	queueFamilyIndex: uint32_t
-	flags: VkVideoSessionCreateFlagsKHR
-	pVideoProfile: VkVideoProfileKHR
-	pictureFormat: VkFormat
-	maxCodedExtent: VkExtent2D
-	referencePicturesFormat: VkFormat
-	maxReferencePicturesSlotsCount: uint32_t
-	maxReferencePicturesActiveCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	queueFamilyIndex: uint32_t,
+	flags: VkVideoSessionCreateFlagsKHR,
+	pVideoProfile: VkVideoProfileKHR,
+	pictureFormat: VkFormat,
+	maxCodedExtent: VkExtent2D,
+	referencePicturesFormat: VkFormat,
+	maxReferencePicturesSlotsCount: uint32_t,
+	maxReferencePicturesActiveCount: uint32_t,
 }
 impl VkVideoSessionCreateInfoKHR
 {
@@ -14027,12 +15567,14 @@ impl VkVideoSessionCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoSessionParametersCreateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	videoSessionParametersTemplate: VkVideoSessionParametersKHR
-	videoSession: VkVideoSessionKHR
+	sType: VkStructureType,
+	pNext: void,
+	videoSessionParametersTemplate: VkVideoSessionParametersKHR,
+	videoSession: VkVideoSessionKHR,
 }
 impl VkVideoSessionParametersCreateInfoKHR
 {
@@ -14045,11 +15587,13 @@ impl VkVideoSessionParametersCreateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoSessionParametersUpdateInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	updateSequenceCount: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	updateSequenceCount: uint32_t,
 }
 impl VkVideoSessionParametersUpdateInfoKHR
 {
@@ -14062,16 +15606,18 @@ impl VkVideoSessionParametersUpdateInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoBeginCodingInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoBeginCodingFlagsKHR
-	codecQualityPreset: VkVideoCodingQualityPresetFlagsKHR
-	videoSession: VkVideoSessionKHR
-	videoSessionParameters: VkVideoSessionParametersKHR
-	referenceSlotCount: uint32_t
-	pReferenceSlots: VkVideoReferenceSlotKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoBeginCodingFlagsKHR,
+	codecQualityPreset: VkVideoCodingQualityPresetFlagsKHR,
+	videoSession: VkVideoSessionKHR,
+	videoSessionParameters: VkVideoSessionParametersKHR,
+	referenceSlotCount: uint32_t,
+	pReferenceSlots: VkVideoReferenceSlotKHR,
 }
 impl VkVideoBeginCodingInfoKHR
 {
@@ -14084,11 +15630,13 @@ impl VkVideoBeginCodingInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEndCodingInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoEndCodingFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoEndCodingFlagsKHR,
 }
 impl VkVideoEndCodingInfoKHR
 {
@@ -14101,11 +15649,13 @@ impl VkVideoEndCodingInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoCodingControlInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoCodingControlFlagsKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoCodingControlFlagsKHR,
 }
 impl VkVideoCodingControlInfoKHR
 {
@@ -14118,20 +15668,22 @@ impl VkVideoCodingControlInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoEncodeFlagsKHR
-	qualityLevel: uint32_t
-	codedExtent: VkExtent2D
-	dstBitstreamBuffer: VkBuffer
-	dstBitstreamBufferOffset: VkDeviceSize
-	dstBitstreamBufferMaxRange: VkDeviceSize
-	srcPictureResource: VkVideoPictureResourceKHR
-	pSetupReferenceSlot: VkVideoReferenceSlotKHR
-	referenceSlotCount: uint32_t
-	pReferenceSlots: VkVideoReferenceSlotKHR
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoEncodeFlagsKHR,
+	qualityLevel: uint32_t,
+	codedExtent: VkExtent2D,
+	dstBitstreamBuffer: VkBuffer,
+	dstBitstreamBufferOffset: VkDeviceSize,
+	dstBitstreamBufferMaxRange: VkDeviceSize,
+	srcPictureResource: VkVideoPictureResourceKHR,
+	pSetupReferenceSlot: VkVideoReferenceSlotKHR,
+	referenceSlotCount: uint32_t,
+	pReferenceSlots: VkVideoReferenceSlotKHR,
 }
 impl VkVideoEncodeInfoKHR
 {
@@ -14144,17 +15696,19 @@ impl VkVideoEncodeInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeRateControlInfoKHR
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoEncodeRateControlFlagsKHR
-	rateControlMode: VkVideoEncodeRateControlModeFlagBitsKHR
-	averageBitrate: uint32_t
-	peakToAverageBitrateRatio: uint16_t
-	frameRateNumerator: uint16_t
-	frameRateDenominator: uint16_t
-	virtualBufferSizeInMs: uint32_t
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoEncodeRateControlFlagsKHR,
+	rateControlMode: VkVideoEncodeRateControlModeFlagBitsKHR,
+	averageBitrate: uint32_t,
+	peakToAverageBitrateRatio: uint16_t,
+	frameRateNumerator: uint16_t,
+	frameRateDenominator: uint16_t,
+	virtualBufferSizeInMs: uint32_t,
 }
 impl VkVideoEncodeRateControlInfoKHR
 {
@@ -14167,21 +15721,23 @@ impl VkVideoEncodeRateControlInfoKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264CapabilitiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoEncodeH264CapabilityFlagsEXT
-	inputModeFlags: VkVideoEncodeH264InputModeFlagsEXT
-	outputModeFlags: VkVideoEncodeH264OutputModeFlagsEXT
-	minPictureSizeInMbs: VkExtent2D
-	maxPictureSizeInMbs: VkExtent2D
-	inputImageDataAlignment: VkExtent2D
-	maxNumL0ReferenceForP: uint8_t
-	maxNumL0ReferenceForB: uint8_t
-	maxNumL1Reference: uint8_t
-	qualityLevelCount: uint8_t
-	stdExtensionVersion: VkExtensionProperties
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoEncodeH264CapabilityFlagsEXT,
+	inputModeFlags: VkVideoEncodeH264InputModeFlagsEXT,
+	outputModeFlags: VkVideoEncodeH264OutputModeFlagsEXT,
+	minPictureSizeInMbs: VkExtent2D,
+	maxPictureSizeInMbs: VkExtent2D,
+	inputImageDataAlignment: VkExtent2D,
+	maxNumL0ReferenceForP: uint8_t,
+	maxNumL0ReferenceForB: uint8_t,
+	maxNumL1Reference: uint8_t,
+	qualityLevelCount: uint8_t,
+	stdExtensionVersion: VkExtensionProperties,
 }
 impl VkVideoEncodeH264CapabilitiesEXT
 {
@@ -14194,13 +15750,15 @@ impl VkVideoEncodeH264CapabilitiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264SessionCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	flags: VkVideoEncodeH264CreateFlagsEXT
-	maxPictureSizeInMbs: VkExtent2D
-	pStdExtensionVersion: VkExtensionProperties
+	sType: VkStructureType,
+	pNext: void,
+	flags: VkVideoEncodeH264CreateFlagsEXT,
+	maxPictureSizeInMbs: VkExtent2D,
+	pStdExtensionVersion: VkExtensionProperties,
 }
 impl VkVideoEncodeH264SessionCreateInfoEXT
 {
@@ -14213,14 +15771,16 @@ impl VkVideoEncodeH264SessionCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264SessionParametersAddInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	spsStdCount: uint32_t
-	pSpsStd: StdVideoH264SequenceParameterSet
-	ppsStdCount: uint32_t
-	pPpsStd: StdVideoH264PictureParameterSet
+	sType: VkStructureType,
+	pNext: void,
+	spsStdCount: uint32_t,
+	pSpsStd: StdVideoH264SequenceParameterSet,
+	ppsStdCount: uint32_t,
+	pPpsStd: StdVideoH264PictureParameterSet,
 }
 impl VkVideoEncodeH264SessionParametersAddInfoEXT
 {
@@ -14233,13 +15793,15 @@ impl VkVideoEncodeH264SessionParametersAddInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264SessionParametersCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	maxSpsStdCount: uint32_t
-	maxPpsStdCount: uint32_t
-	pParametersAddInfo: VkVideoEncodeH264SessionParametersAddInfoEXT
+	sType: VkStructureType,
+	pNext: void,
+	maxSpsStdCount: uint32_t,
+	maxPpsStdCount: uint32_t,
+	pParametersAddInfo: VkVideoEncodeH264SessionParametersAddInfoEXT,
 }
 impl VkVideoEncodeH264SessionParametersCreateInfoEXT
 {
@@ -14252,12 +15814,14 @@ impl VkVideoEncodeH264SessionParametersCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264DpbSlotInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	slotIndex: int8_t
-	pStdPictureInfo: StdVideoEncodeH264PictureInfo
+	sType: VkStructureType,
+	pNext: void,
+	slotIndex: int8_t,
+	pStdPictureInfo: StdVideoEncodeH264PictureInfo,
 }
 impl VkVideoEncodeH264DpbSlotInfoEXT
 {
@@ -14270,17 +15834,19 @@ impl VkVideoEncodeH264DpbSlotInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264VclFrameInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	refDefaultFinalList0EntryCount: uint8_t
-	pRefDefaultFinalList0Entries: VkVideoEncodeH264DpbSlotInfoEXT
-	refDefaultFinalList1EntryCount: uint8_t
-	pRefDefaultFinalList1Entries: VkVideoEncodeH264DpbSlotInfoEXT
-	naluSliceEntryCount: uint32_t
-	pNaluSliceEntries: VkVideoEncodeH264NaluSliceEXT
-	pCurrentPictureInfo: VkVideoEncodeH264DpbSlotInfoEXT
+	sType: VkStructureType,
+	pNext: void,
+	refDefaultFinalList0EntryCount: uint8_t,
+	pRefDefaultFinalList0Entries: VkVideoEncodeH264DpbSlotInfoEXT,
+	refDefaultFinalList1EntryCount: uint8_t,
+	pRefDefaultFinalList1Entries: VkVideoEncodeH264DpbSlotInfoEXT,
+	naluSliceEntryCount: uint32_t,
+	pNaluSliceEntries: VkVideoEncodeH264NaluSliceEXT,
+	pCurrentPictureInfo: VkVideoEncodeH264DpbSlotInfoEXT,
 }
 impl VkVideoEncodeH264VclFrameInfoEXT
 {
@@ -14293,14 +15859,16 @@ impl VkVideoEncodeH264VclFrameInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264EmitPictureParametersEXT
 {
-	sType: VkStructureType
-	pNext: void
-	spsId: uint8_t
-	emitSpsEnable: VkBool32
-	ppsIdEntryCount: uint32_t
-	ppsIdEntries: uint8_t
+	sType: VkStructureType,
+	pNext: void,
+	spsId: uint8_t,
+	emitSpsEnable: VkBool32,
+	ppsIdEntryCount: uint32_t,
+	ppsIdEntries: uint8_t,
 }
 impl VkVideoEncodeH264EmitPictureParametersEXT
 {
@@ -14313,11 +15881,13 @@ impl VkVideoEncodeH264EmitPictureParametersEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264ProfileEXT
 {
-	sType: VkStructureType
-	pNext: void
-	stdProfileIdc: StdVideoH264ProfileIdc
+	sType: VkStructureType,
+	pNext: void,
+	stdProfileIdc: StdVideoH264ProfileIdc,
 }
 impl VkVideoEncodeH264ProfileEXT
 {
@@ -14330,19 +15900,21 @@ impl VkVideoEncodeH264ProfileEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkVideoEncodeH264NaluSliceEXT
 {
-	sType: VkStructureType
-	pNext: void
-	pSliceHeaderStd: StdVideoEncodeH264SliceHeader
-	mbCount: uint32_t
-	refFinalList0EntryCount: uint8_t
-	pRefFinalList0Entries: VkVideoEncodeH264DpbSlotInfoEXT
-	refFinalList1EntryCount: uint8_t
-	pRefFinalList1Entries: VkVideoEncodeH264DpbSlotInfoEXT
-	precedingNaluBytes: uint32_t
-	minQp: uint8_t
-	maxQp: uint8_t
+	sType: VkStructureType,
+	pNext: void,
+	pSliceHeaderStd: StdVideoEncodeH264SliceHeader,
+	mbCount: uint32_t,
+	refFinalList0EntryCount: uint8_t,
+	pRefFinalList0Entries: VkVideoEncodeH264DpbSlotInfoEXT,
+	refFinalList1EntryCount: uint8_t,
+	pRefFinalList1Entries: VkVideoEncodeH264DpbSlotInfoEXT,
+	precedingNaluBytes: uint32_t,
+	minQp: uint8_t,
+	maxQp: uint8_t,
 }
 impl VkVideoEncodeH264NaluSliceEXT
 {
@@ -14355,11 +15927,13 @@ impl VkVideoEncodeH264NaluSliceEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceInheritedViewportScissorFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	inheritedViewportScissor2D: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	inheritedViewportScissor2D: VkBool32,
 }
 impl VkPhysicalDeviceInheritedViewportScissorFeaturesNV
 {
@@ -14372,13 +15946,15 @@ impl VkPhysicalDeviceInheritedViewportScissorFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCommandBufferInheritanceViewportScissorInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	viewportScissor2D: VkBool32
-	viewportDepthCount: uint32_t
-	pViewportDepths: VkViewport
+	sType: VkStructureType,
+	pNext: void,
+	viewportScissor2D: VkBool32,
+	viewportDepthCount: uint32_t,
+	pViewportDepths: VkViewport,
 }
 impl VkCommandBufferInheritanceViewportScissorInfoNV
 {
@@ -14391,11 +15967,13 @@ impl VkCommandBufferInheritanceViewportScissorInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	ycbcr2plane444Formats: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	ycbcr2plane444Formats: VkBool32,
 }
 impl VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT
 {
@@ -14408,12 +15986,14 @@ impl VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProvokingVertexFeaturesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	provokingVertexLast: VkBool32
-	transformFeedbackPreservesProvokingVertex: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	provokingVertexLast: VkBool32,
+	transformFeedbackPreservesProvokingVertex: VkBool32,
 }
 impl VkPhysicalDeviceProvokingVertexFeaturesEXT
 {
@@ -14426,12 +16006,14 @@ impl VkPhysicalDeviceProvokingVertexFeaturesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProvokingVertexPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	provokingVertexModePerPipeline: VkBool32
-	transformFeedbackPreservesTriangleFanProvokingVertex: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	provokingVertexModePerPipeline: VkBool32,
+	transformFeedbackPreservesTriangleFanProvokingVertex: VkBool32,
 }
 impl VkPhysicalDeviceProvokingVertexPropertiesEXT
 {
@@ -14444,11 +16026,13 @@ impl VkPhysicalDeviceProvokingVertexPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationProvokingVertexStateCreateInfoEXT
 {
-	sType: VkStructureType
-	pNext: void
-	provokingVertexMode: VkProvokingVertexModeEXT
+	sType: VkStructureType,
+	pNext: void,
+	provokingVertexMode: VkProvokingVertexModeEXT,
 }
 impl VkPipelineRasterizationProvokingVertexStateCreateInfoEXT
 {
@@ -14461,12 +16045,14 @@ impl VkPipelineRasterizationProvokingVertexStateCreateInfoEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCuModuleCreateInfoNVX
 {
-	sType: VkStructureType
-	pNext: void
-	dataSize: size_t
-	pData: void
+	sType: VkStructureType,
+	pNext: void,
+	dataSize: size_t,
+	pData: void,
 }
 impl VkCuModuleCreateInfoNVX
 {
@@ -14479,12 +16065,14 @@ impl VkCuModuleCreateInfoNVX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCuFunctionCreateInfoNVX
 {
-	sType: VkStructureType
-	pNext: void
-	module: VkCuModuleNVX
-	pName: char
+	sType: VkStructureType,
+	pNext: void,
+	module: VkCuModuleNVX,
+	pName: char,
 }
 impl VkCuFunctionCreateInfoNVX
 {
@@ -14497,22 +16085,24 @@ impl VkCuFunctionCreateInfoNVX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkCuLaunchInfoNVX
 {
-	sType: VkStructureType
-	pNext: void
-	function: VkCuFunctionNVX
-	gridDimX: uint32_t
-	gridDimY: uint32_t
-	gridDimZ: uint32_t
-	blockDimX: uint32_t
-	blockDimY: uint32_t
-	blockDimZ: uint32_t
-	sharedMemBytes: uint32_t
-	paramCount: size_t
-	pParams: void
-	extraCount: size_t
-	pExtras: void
+	sType: VkStructureType,
+	pNext: void,
+	function: VkCuFunctionNVX,
+	gridDimX: uint32_t,
+	gridDimY: uint32_t,
+	gridDimZ: uint32_t,
+	blockDimX: uint32_t,
+	blockDimY: uint32_t,
+	blockDimZ: uint32_t,
+	sharedMemBytes: uint32_t,
+	paramCount: size_t,
+	pParams: void,
+	extraCount: size_t,
+	pExtras: void,
 }
 impl VkCuLaunchInfoNVX
 {
@@ -14525,11 +16115,13 @@ impl VkCuLaunchInfoNVX
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	shaderIntegerDotProduct: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	shaderIntegerDotProduct: VkBool32,
 }
 impl VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR
 {
@@ -14542,40 +16134,42 @@ impl VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR
 {
-	sType: VkStructureType
-	pNext: void
-	integerDotProduct8BitUnsignedAccelerated: VkBool32
-	integerDotProduct8BitSignedAccelerated: VkBool32
-	integerDotProduct8BitMixedSignednessAccelerated: VkBool32
-	integerDotProduct4x8BitPackedUnsignedAccelerated: VkBool32
-	integerDotProduct4x8BitPackedSignedAccelerated: VkBool32
-	integerDotProduct4x8BitPackedMixedSignednessAccelerated: VkBool32
-	integerDotProduct16BitUnsignedAccelerated: VkBool32
-	integerDotProduct16BitSignedAccelerated: VkBool32
-	integerDotProduct16BitMixedSignednessAccelerated: VkBool32
-	integerDotProduct32BitUnsignedAccelerated: VkBool32
-	integerDotProduct32BitSignedAccelerated: VkBool32
-	integerDotProduct32BitMixedSignednessAccelerated: VkBool32
-	integerDotProduct64BitUnsignedAccelerated: VkBool32
-	integerDotProduct64BitSignedAccelerated: VkBool32
-	integerDotProduct64BitMixedSignednessAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating8BitSignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating16BitSignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating32BitSignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating64BitSignedAccelerated: VkBool32
-	integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	integerDotProduct8BitUnsignedAccelerated: VkBool32,
+	integerDotProduct8BitSignedAccelerated: VkBool32,
+	integerDotProduct8BitMixedSignednessAccelerated: VkBool32,
+	integerDotProduct4x8BitPackedUnsignedAccelerated: VkBool32,
+	integerDotProduct4x8BitPackedSignedAccelerated: VkBool32,
+	integerDotProduct4x8BitPackedMixedSignednessAccelerated: VkBool32,
+	integerDotProduct16BitUnsignedAccelerated: VkBool32,
+	integerDotProduct16BitSignedAccelerated: VkBool32,
+	integerDotProduct16BitMixedSignednessAccelerated: VkBool32,
+	integerDotProduct32BitUnsignedAccelerated: VkBool32,
+	integerDotProduct32BitSignedAccelerated: VkBool32,
+	integerDotProduct32BitMixedSignednessAccelerated: VkBool32,
+	integerDotProduct64BitUnsignedAccelerated: VkBool32,
+	integerDotProduct64BitSignedAccelerated: VkBool32,
+	integerDotProduct64BitMixedSignednessAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating8BitSignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating16BitSignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating32BitSignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating64BitSignedAccelerated: VkBool32,
+	integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: VkBool32,
 }
 impl VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR
 {
@@ -14588,16 +16182,18 @@ impl VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDrmPropertiesEXT
 {
-	sType: VkStructureType
-	pNext: void
-	hasPrimary: VkBool32
-	hasRender: VkBool32
-	primaryMajor: int64_t
-	primaryMinor: int64_t
-	renderMajor: int64_t
-	renderMinor: int64_t
+	sType: VkStructureType,
+	pNext: void,
+	hasPrimary: VkBool32,
+	hasRender: VkBool32,
+	primaryMajor: int64_t,
+	primaryMinor: int64_t,
+	renderMajor: int64_t,
+	renderMinor: int64_t,
 }
 impl VkPhysicalDeviceDrmPropertiesEXT
 {
@@ -14610,12 +16206,14 @@ impl VkPhysicalDeviceDrmPropertiesEXT
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceRayTracingMotionBlurFeaturesNV
 {
-	sType: VkStructureType
-	pNext: void
-	rayTracingMotionBlur: VkBool32
-	rayTracingMotionBlurPipelineTraceRaysIndirect: VkBool32
+	sType: VkStructureType,
+	pNext: void,
+	rayTracingMotionBlur: VkBool32,
+	rayTracingMotionBlurPipelineTraceRaysIndirect: VkBool32,
 }
 impl VkPhysicalDeviceRayTracingMotionBlurFeaturesNV
 {
@@ -14628,11 +16226,13 @@ impl VkPhysicalDeviceRayTracingMotionBlurFeaturesNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureGeometryMotionTrianglesDataNV
 {
-	sType: VkStructureType
-	pNext: void
-	vertexData: VkDeviceOrHostAddressConstKHR
+	sType: VkStructureType,
+	pNext: void,
+	vertexData: VkDeviceOrHostAddressConstKHR,
 }
 impl VkAccelerationStructureGeometryMotionTrianglesDataNV
 {
@@ -14645,12 +16245,14 @@ impl VkAccelerationStructureGeometryMotionTrianglesDataNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureMotionInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	maxInstances: uint32_t
-	flags: VkAccelerationStructureMotionInfoFlagsNV
+	sType: VkStructureType,
+	pNext: void,
+	maxInstances: uint32_t,
+	flags: VkAccelerationStructureMotionInfoFlagsNV,
 }
 impl VkAccelerationStructureMotionInfoNV
 {
@@ -14663,24 +16265,26 @@ impl VkAccelerationStructureMotionInfoNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkSRTDataNV
 {
-	sx: float
-	a: float
-	b: float
-	pvx: float
-	sy: float
-	c: float
-	pvy: float
-	sz: float
-	pvz: float
-	qx: float
-	qy: float
-	qz: float
-	qw: float
-	tx: float
-	ty: float
-	tz: float
+	sx: float,
+	a: float,
+	b: float,
+	pvx: float,
+	sy: float,
+	c: float,
+	pvy: float,
+	sz: float,
+	pvz: float,
+	qx: float,
+	qy: float,
+	qz: float,
+	qw: float,
+	tx: float,
+	ty: float,
+	tz: float,
 }
 impl VkSRTDataNV
 {
@@ -14692,15 +16296,17 @@ impl VkSRTDataNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureSRTMotionInstanceNV
 {
-	transformT0: VkSRTDataNV
-	transformT1: VkSRTDataNV
-	instanceCustomIndex: uint32_t
-	mask: uint32_t
-	instanceShaderBindingTableRecordOffset: uint32_t
-	flags: VkGeometryInstanceFlagsKHR
-	accelerationStructureReference: uint64_t
+	transformT0: VkSRTDataNV,
+	transformT1: VkSRTDataNV,
+	instanceCustomIndex: uint32_t,
+	mask: uint32_t,
+	instanceShaderBindingTableRecordOffset: uint32_t,
+	flags: VkGeometryInstanceFlagsKHR,
+	accelerationStructureReference: uint64_t,
 }
 impl VkAccelerationStructureSRTMotionInstanceNV
 {
@@ -14712,15 +16318,17 @@ impl VkAccelerationStructureSRTMotionInstanceNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureMatrixMotionInstanceNV
 {
-	transformT0: VkTransformMatrixKHR
-	transformT1: VkTransformMatrixKHR
-	instanceCustomIndex: uint32_t
-	mask: uint32_t
-	instanceShaderBindingTableRecordOffset: uint32_t
-	flags: VkGeometryInstanceFlagsKHR
-	accelerationStructureReference: uint64_t
+	transformT0: VkTransformMatrixKHR,
+	transformT1: VkTransformMatrixKHR,
+	instanceCustomIndex: uint32_t,
+	mask: uint32_t,
+	instanceShaderBindingTableRecordOffset: uint32_t,
+	flags: VkGeometryInstanceFlagsKHR,
+	accelerationStructureReference: uint64_t,
 }
 impl VkAccelerationStructureMatrixMotionInstanceNV
 {
@@ -14732,11 +16340,13 @@ impl VkAccelerationStructureMatrixMotionInstanceNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkAccelerationStructureMotionInstanceNV
 {
-	type: VkAccelerationStructureMotionInstanceTypeNV
-	flags: VkAccelerationStructureMotionInstanceFlagsNV
-	data: VkAccelerationStructureMotionInstanceDataNV
+	type: VkAccelerationStructureMotionInstanceTypeNV,
+	flags: VkAccelerationStructureMotionInstanceFlagsNV,
+	data: VkAccelerationStructureMotionInstanceDataNV,
 }
 impl VkAccelerationStructureMotionInstanceNV
 {
@@ -14748,12 +16358,14 @@ impl VkAccelerationStructureMotionInstanceNV
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone)]
 pub struct VkMemoryGetRemoteAddressInfoNV
 {
-	sType: VkStructureType
-	pNext: void
-	memory: VkDeviceMemory
-	handleType: VkExternalMemoryHandleTypeFlagBits
+	sType: VkStructureType,
+	pNext: void,
+	memory: VkDeviceMemory,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkMemoryGetRemoteAddressInfoNV
 {
