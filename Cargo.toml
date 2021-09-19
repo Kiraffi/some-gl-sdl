@@ -8,7 +8,8 @@ members = [
 	#"vulkan",
 	"macrotest",
 	"carp_sdl",
-	"carp_sdl_parser"
+	"carp_sdl_parser",
+	"carp_vk_parser",
 ]
 
 [profile.dev]

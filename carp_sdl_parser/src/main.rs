@@ -1,7 +1,6 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
 
-use std::fs::File;
 use std::io::Read;
 
 use regex::Regex;
@@ -438,7 +437,7 @@ fn parse_functions(files: &Vec<[String; 2]>) -> String
 
 fn read_file_to_string(filename: &str) -> Result<String, std::io::Error>
 {
-    let mut file = File::open(filename)?;
+    let mut file = std::fs::File::open(filename)?;
     let mut file_content = String::new();
     file.read_to_string(&mut file_content)?;
     return Ok(file_content);
