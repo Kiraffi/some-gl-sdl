@@ -1,10 +1,8 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::os::raw::*;
+use std::{intrinsics::transmute, mem::transmute_copy, os::raw::*};
 pub mod fn_test;
 use fn_test::*;
-
-type SDL_GLContext = *const c_void;
 
 fn get_usize_from_keycode(keycode: u32) -> usize
 {
@@ -208,7 +206,16 @@ fn update() -> bool
                         {
                             unsafe 
                             {
+                                let kb_event : SDL_KeyboardEvent = transmute_copy(&sdl_event);
+                                match kb_event.keysym.scancode
+                                {
 
+                                    SDL_Scancode::SDL_SCANCODE_Q | SDL_Scancode::SDL_SCANCODE_ESCAPE =>
+                                    {
+                                        return false;
+                                    },
+                                    _ => ()
+                                }
                             }
                         },
 /*

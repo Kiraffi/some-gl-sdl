@@ -70,13 +70,15 @@ const FILE_NAMES: &'static [&'static str] = &
 const TYPEDEF_NAMES: &'static [&'static str] = &
 [
     "SDL_Keycode",
+    "SDL_JoystickID",
+    "SDL_GLContext",
 ];
 
 const DEFINE_NAMES: &'static [&'static str] = &
 [
     "SDL_INIT_VIDEO",
     "SDL_INIT_TIMER",
-    "SDL_INIT_EVENTS"
+    "SDL_INIT_EVENTS",
 ];
 
 
@@ -84,7 +86,8 @@ const ENUM_NAMES: &'static [&'static str] = &
 [
     "SDL_GLattr",
     "SDL_WindowFlags",
-    "SDL_EventType"
+    "SDL_EventType",
+    "SDL_Scancode",
 ];
 
 const STRUCT_NAMES: &'static [&'static str] = &
@@ -114,7 +117,7 @@ const FUNC_NAMES: &'static [&'static str] = &
     "SDL_PumpEvents",
     "SDL_GL_GetProcAddress",
 
-    "SDL_GetError"
+    "SDL_GetError",
 ];
 
 fn get_type_or_mutable_type(f: fn(s: &str) -> &str, type_str: &str, ptr_str: &str, ptr_mutable: &str) -> String
@@ -145,19 +148,48 @@ fn main()
     let enums = parse_enums(&parsed);
     let funcs = parse_functions(&parsed);
     let defines = parse_defines(&parsed);
+    let typedefs = parse_typedefs(&parsed);
 
     let mut all_types = String::new();
-    all_types.push_str(&format!(" {}\r\n{}\r\n{}\r\n{}\r\n", &defines, &enums, &structs, &funcs)[..]);
+    all_types.push_str(&format!("use std::os::raw::*;\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n", &typedefs, &defines, &enums, &structs, &funcs)[..]);
 
     std::fs::write("carp_sdl_parser/structs.rs", &structs).expect("Unable to write file");
     std::fs::write("carp_sdl_parser/enums.rs", &enums).expect("Unable to write file");
     std::fs::write("carp_sdl_parser/funcs.rs", &funcs).expect("Unable to write file");
     std::fs::write("carp_sdl_parser/defines.rs", &defines).expect("Unable to write file");
+    std::fs::write("carp_sdl_parser/typedefs.rs", &typedefs).expect("Unable to write file");
 
     std::fs::write("carp_sdl_parser/combined.rs", &all_types).expect("Unable to write file");
 
     std::fs::write("carp_sdl_parser/stripped_funcs.rs", &write_str).expect("Unable to write file");
 
+}
+
+fn parse_typedefs(files: &Vec<[String; 2]>) -> String
+{
+    let mut out_typedefs = String::new();
+    out_typedefs.push_str("//Typedefs \r\n");
+
+    let re = Regex::new(r"typedef\s+(?P<type>[\w_]+)\s*(?P<ptr_type>\*?)\s*(?P<name>[\w_\.]+);").unwrap();
+   // let re_fn = Regex::new(r"#define (?P<define>[\w_]+)\((?P<params>.+?)\)\s+(?P<value>.+)").unwrap();
+
+    for file_data in files
+    {
+        let file_string = &file_data[1];
+        out_typedefs.push_str(&format!("//File: {}\r\n", &file_data[0])[..]);
+        for caps in re.captures_iter(&file_string[..])
+        {
+            //println!("{}", &caps[0]);
+            if !TYPEDEF_NAMES.contains(&&caps["name"])
+            {
+                continue;
+            }
+            let ptr_str = if caps["ptr_type"].len() > 0 { "*const " } else { "" };
+
+            out_typedefs.push_str(&format!("pub type {} = {}{};\r\n", &caps["name"], ptr_str, get_type_as_rust_type(&caps["type"]))[..]);
+        }
+    }
+    return out_typedefs;
 }
 
 fn parse_defines(files: &Vec<[String; 2]>) -> String
