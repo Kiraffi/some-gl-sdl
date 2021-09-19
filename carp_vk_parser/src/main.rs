@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::{any::Any, io::Read};
 
 fn read_file_to_string(filename: &str) -> Result<String, std::io::Error>
 {
@@ -17,10 +17,11 @@ fn print_attributes(elem: &xmltree::Element)
     }
 }
 
-// The most awkward lambda, having to pass arrays for looking what attributes it contains, and setting possible filter value....
+// The most awkward lambda, having to pass arrays for looking what attributes it contains, and setting possible filter value,
+// and returning array of the type.
 fn node_children<T>(elem: &xmltree::Element, filter_name: &str, attr_contains: &Vec<(&str, &str)>, f: fn(&xmltree::Element) -> Vec<T>) -> Vec<T>
 {
-    let mut out_string: Vec<T> = Vec::new();
+    let mut out_vec: Vec<T> = Vec::new();
     for child in &elem.children
     {
         'check_filter:
@@ -37,77 +38,127 @@ fn node_children<T>(elem: &xmltree::Element, filter_name: &str, attr_contains: &
                         continue 'check_filter;
                     }
                 }
-                out_string.extend(f(child2));
+                out_vec.extend(f(child2));
             }
         }
     }
-    return out_string;
+    return out_vec;
 }
 
 
 
 
+struct StructType
+{
+    struct_name: String,
+    s_type_name: String,
+    param_names: Vec<String>,
+    type_names: Vec<String>,
+}
 
-
-
+impl StructType
+{
+    pub fn new() -> Self
+    {
+        Self{ struct_name: String::new(), s_type_name: String::new(), param_names: Vec::new(), type_names: Vec::new() }
+    }
+}
 
 
 
 
 fn parse_vk_structs(root: &xmltree::Element) -> String
 {
-    let mut s = String::new();
-    let mut s_vec: Vec<String> = Vec::new();
+    let mut string_out = String::new();
+    let mut s_vec: Vec<StructType> = Vec::new();
     s_vec.extend(node_children(&root, "types", &Vec::new(), |child|
     {
         node_children(&child, "type",&vec![("category", "struct"), ("name", "")],  |child2|
         {
-            let mut s_vec: Vec<String> = Vec::new();
-            s_vec.push(format!("pub struct {}\r\n{{\r\n", child2.attributes["name"]));
+            let mut new_struct = StructType::new();
+            new_struct.struct_name = child2.attributes["name"].clone();
             
-            s_vec.extend(node_children(&child2, "member",&Vec::new(),  |child3|
+            let s_vec: Vec<StructType> = node_children(&child2, "member",&Vec::new(),  |child3|
             {
+                let mut new_struct = StructType::new();
                 if child3.attributes.contains_key("values")
                 {
-                    println!("Values: {}", child3.attributes["values"]);
+                    new_struct.s_type_name = child3.attributes["values"].to_string();
                 }
-                let mut s_vec: Vec<String> = Vec::new();
-                s_vec.push("    ".to_string());
-                s_vec.extend(node_children::<String>(&child3, "name",&Vec::new(),  |child4|
+                let mut s_vec: Vec<StructType> = Vec::new();
+                s_vec.extend(node_children(&child3, "name",&Vec::new(),  |child4|
                 {
-                    match child4.get_text()
+                    let mut new_struct = StructType::new();
+                    let s= match child4.get_text()
                     {
-                        Some(v) => vec![v.to_string()],
-                        None => vec![String::new()]
-                    }
+                        Some(v) => v.to_string(),
+                        None => "".to_string()
+                    };
+                    new_struct.param_names.push(s);
+                    return vec![new_struct];
                 }));
 
-                s_vec.push(": ".to_string());
 
-                s_vec.extend(node_children::<String>(&child3, "type",&Vec::new(),  |child4|
+                s_vec.extend(node_children(&child3, "type",&Vec::new(),  |child4|
                 {
-                    match child4.get_text()
+                    let mut new_struct = StructType::new();
+                    let s= match child4.get_text()
                     {
-                        Some(v) => vec![v.to_string()],
-                        None => vec![String::new()]
-                    }
+                        Some(v) => v.to_string(),
+                        None => "".to_string()
+                    };
+                    new_struct.type_names.push(s);
+                    return vec![new_struct];
                 }));
-                s_vec.push((";\r\n").to_string());
-                return s_vec;
-            }));
-
-
-            s_vec.push(("}\r\n\r\n").to_string());
-            return s_vec;
+                new_struct.param_names.push(s_vec[0].param_names[0].clone());
+                new_struct.type_names.push(s_vec[1].type_names[0].clone());
+                return vec![new_struct];
+            });
+            
+            for struct_type in &s_vec
+            {
+                new_struct.param_names.push(struct_type.param_names[0].clone());
+                new_struct.type_names.push(struct_type.type_names[0].clone());
+                if struct_type.s_type_name.len() > 0
+                {
+                    new_struct.s_type_name = struct_type.s_type_name.clone();
+                }          
+            }
+            return vec![new_struct];
         })
     }));
 
     
-    for strings in &s_vec
+    for struct_type in &s_vec
     {
-        s.push_str(&strings[..]);
+        string_out.push_str(&format!("pub struct {}\r\n{{\r\n", struct_type.struct_name)[..]);
+        assert!(struct_type.param_names.len() == struct_type.type_names.len());
+        for i in 0..struct_type.param_names.len()
+        {
+            string_out.push_str(&format!("\t{}: {}\r\n", struct_type.param_names[i], struct_type.type_names[i])[..]);
+        }
+        let mut s_type_str = String::new();
+        if struct_type.s_type_name.len() > 0
+        {
+            s_type_str.push_str(&format!("s.sType = VkStructureType::{};\r\n", struct_type.s_type_name)[..]);
+        }
+        string_out.push_str("}\r\n");
+
+        string_out.push_str(&format!(
+r"impl {}
+{{
+    fn new() -> Self
+    {{
+        let mut s: Self = unsafe {{ mem::zeroed() }};
+        {}
+        return s;
+    }}
+}}
+
+", struct_type.struct_name, s_type_str)[..] );       
     }
-    return s;
+    
+    return string_out;
 }
 
 
@@ -123,7 +174,7 @@ fn parse_vk_enums(root: &xmltree::Element) -> String
         s_vec.push(format!("pub enum {}\r\n{{\r\n", child.attributes["name"]));
         s_vec.extend(node_children(&child, "enum",&vec![("value", ""), ("name", "")],  |child2|
         {
-            return vec![format!("    {}: i32 = {},\r\n", child2.attributes["name"], child2.attributes["value"])];
+            return vec![format!("\t{}: i32 = {},\r\n", child2.attributes["name"], child2.attributes["value"])];
         }));
         s_vec.push(("}\r\n\r\n").to_string());
         return s_vec;

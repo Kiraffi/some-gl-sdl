@@ -341,17 +341,17 @@ fn parse_structs(files: &Vec<[String; 2]>) -> String
                     //println!("full: {} - name: {}: type: {}", &sub_cap[0], &sub_cap["param_name"], &sub_cap["param_type"]);
                     if sub_cap.name("param_ptr") != None && sub_cap["param_ptr"].len() > 0
                     {
-                        out_structs.push_str(&format!("\t pub {}: {}mut {},\r\n", param_name2, &sub_cap["param_ptr"], get_type_as_rust_type(&sub_cap["param_type"]))[..]);
+                        out_structs.push_str(&format!("\tpub {}: {}mut {},\r\n", param_name2, &sub_cap["param_ptr"], get_type_as_rust_type(&sub_cap["param_type"]))[..]);
                     }
                     else 
                     {
-                        out_structs.push_str(&format!("\t pub {}: {},\r\n", param_name2, get_type_as_rust_type(&sub_cap["param_type"]))[..]);
+                        out_structs.push_str(&format!("\tpub {}: {},\r\n", param_name2, get_type_as_rust_type(&sub_cap["param_type"]))[..]);
                     }
                 }
             }
             else
             {
-                out_structs.push_str(&format!("\t pub _something: [u8; 0]\r\n")[..]);
+                out_structs.push_str(&format!("\tpub _something: [u8; 0]\r\n")[..]);
             }
             out_structs.push_str("}\r\n\r\n");
         }
