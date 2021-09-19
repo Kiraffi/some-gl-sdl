@@ -62,19 +62,36 @@ const FILE_NAMES: &'static [&'static str] = &
     "include/SDL_keyboard.h",
     "include/SDL_joystick.h",
     "include/SDL_scancode.h",
-    //"include/SDL_keycode.h",
+    "include/SDL_keycode.h",
+    "include/SDL_error.h",
 
 ];
+
+const TYPEDEF_NAMES: &'static [&'static str] = &
+[
+    "SDL_Keycode",
+];
+
+const DEFINE_NAMES: &'static [&'static str] = &
+[
+    "SDL_INIT_VIDEO",
+    "SDL_INIT_TIMER",
+    "SDL_INIT_EVENTS"
+];
+
 
 const ENUM_NAMES: &'static [&'static str] = &
 [
     "SDL_GLattr",
+    "SDL_WindowFlags",
+    "SDL_EventType"
 ];
 
 const STRUCT_NAMES: &'static [&'static str] = &
 [
     "SDL_Window",
-
+    "SDL_KeyboardEvent",
+    "SDL_Keysym",
 ];
 
 const FUNC_NAMES: &'static [&'static str] = &
@@ -96,6 +113,8 @@ const FUNC_NAMES: &'static [&'static str] = &
     "SDL_GL_SwapWindow",
     "SDL_PumpEvents",
     "SDL_GL_GetProcAddress",
+
+    "SDL_GetError"
 ];
 
 fn get_type_or_mutable_type(f: fn(s: &str) -> &str, type_str: &str, ptr_str: &str, ptr_mutable: &str) -> String
@@ -125,13 +144,15 @@ fn main()
     let structs = parse_structs(&parsed);
     let enums = parse_enums(&parsed);
     let funcs = parse_functions(&parsed);
+    let defines = parse_defines(&parsed);
 
     let mut all_types = String::new();
-    all_types.push_str(&format!("#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]\r\n{}\r\n{}\r\n{}\r\n", &enums, &structs, &funcs)[..]);
+    all_types.push_str(&format!(" {}\r\n{}\r\n{}\r\n{}\r\n", &defines, &enums, &structs, &funcs)[..]);
 
     std::fs::write("carp_sdl_parser/structs.rs", &structs).expect("Unable to write file");
     std::fs::write("carp_sdl_parser/enums.rs", &enums).expect("Unable to write file");
     std::fs::write("carp_sdl_parser/funcs.rs", &funcs).expect("Unable to write file");
+    std::fs::write("carp_sdl_parser/defines.rs", &defines).expect("Unable to write file");
 
     std::fs::write("carp_sdl_parser/combined.rs", &all_types).expect("Unable to write file");
 
@@ -139,6 +160,39 @@ fn main()
 
 }
 
+fn parse_defines(files: &Vec<[String; 2]>) -> String
+{
+    let mut out_defines = String::new();
+    out_defines.push_str("//Defines \r\n");
+
+    let re = Regex::new(r"#define (?P<define>[\w_]+)\s+(?P<value>[\dxa-fA-F.*]*)").unwrap();
+   // let re_fn = Regex::new(r"#define (?P<define>[\w_]+)\((?P<params>.+?)\)\s+(?P<value>.+)").unwrap();
+
+    for file_data in files
+    {
+        let file_string = &file_data[1];
+        out_defines.push_str(&format!("//File: {}\r\n", &file_data[0])[..]);
+        for caps in re.captures_iter(&file_string[..])
+        {
+            if !DEFINE_NAMES.contains(&&caps["define"])
+            {
+                continue;
+            }
+            out_defines.push_str(&format!("pub const {}: u32 = {} as u32;\r\n", &caps["define"], &caps["value"])[..]);
+        }
+        /*
+        for caps in re_fn.captures_iter(&file_string[..])
+        {
+            if !DEFINE_NAMES.contains(&&caps["define"])
+            {
+                continue;
+            }
+            out_defines.push_str(&format!("pub const fn {}({})) {{ {}; }}\r\n", &caps["define"], &caps["params"], &caps["value"])[..]);
+        }
+        */
+    }
+    return out_defines;
+}
 
 fn strip_comments() -> Vec<[String; 2]>
 {
@@ -189,7 +243,8 @@ fn parse_enums(files: &Vec<[String; 2]>) -> String
     let mut out_enums = String::new();
 
     let re = Regex::new(r"(?s)typedef\s+enum\s*(\w)*\s*\{(?P<inside_enum>.*?\})\s*(?P<enum_name>\w*);").unwrap();
-    let re3 = Regex::new(r"(?s)\s*(?P<enum_in>.*?)(,\s+|\s+\})").unwrap();
+    //let re3 = Regex::new(r"(?s)\s*(?P<enum_in>.*?)(,\s+|\s+\})").unwrap();
+    let re3 = Regex::new(r"(?s)\n\s*(?P<enum_in>SDL_(\w+|\w+\s*=\s*[\d\.xA-Fa-f]+))(,|\s+\})").unwrap();
 
     out_enums.push_str("//Enums \r\n");
     for file_data in files
@@ -198,11 +253,13 @@ fn parse_enums(files: &Vec<[String; 2]>) -> String
         out_enums.push_str(&format!("//File: {}\r\n", &file_data[0])[..]);
         for caps in re.captures_iter(&file_string[..])
         {
+            
             //println!("Found:{}\r\nenum:{}", &caps[0], &caps["enum_name"]);
             if !ENUM_NAMES.contains(&&caps["enum_name"])
             {
                 continue;
             }
+            
             out_enums.push_str(&format!("#[repr(i32)]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", &caps["enum_name"])[..]);
             for sub_cap in re3.captures_iter(&caps["inside_enum"])
             {
@@ -222,14 +279,13 @@ fn parse_structs(files: &Vec<[String; 2]>) -> String
 {
     let mut out_structs = String::new();
 
-    let re = Regex::new(r"(?s)typedef\s+struct\s*(\w)*\s*\{(?P<inside_struct>.*?)\}\s*(?P<struct_name>\w*);").unwrap();
+    let re = Regex::new(r"(?s)typedef\s+struct\s*(\w)*\s*(\{(?P<inside_struct>.*?)\})?\s*(?P<struct_name>\w*);").unwrap();
     let re2 = Regex::new(r"\s*(?P<param_type>.+?)\s*(?P<param_ptr>\**)?\s*(?P<param_name>\w+);").unwrap();
 
     out_structs.push_str("//Structs \r\n");
 
     // Special case? 64bytes?
-    out_structs.push_str("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct SDL_Event\r\n{\r\n    sdl_type: u32,\r\n    sdl_timestamp: u32,\r\n    _padding: [u8; 56]\r\n}\r\n\r\n");
-    out_structs.push_str("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct SDL_Window { _something: [u8; 0] }\r\n\r\n");
+    out_structs.push_str("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct SDL_Event\r\n{\r\n    pub sdl_type: SDL_EventType,\r\n    pub sdl_timestamp: u32,\r\n    pub _padding: [u8; 56]\r\n}\r\n\r\n");
 
     for file_data in files
     {
@@ -242,21 +298,29 @@ fn parse_structs(files: &Vec<[String; 2]>) -> String
             {
                 continue;
             }
+            
             //println!("Found:{}\r\nstruct:{}", &caps[0], &caps["struct_name"]);
             out_structs.push_str(&format!("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct {}\r\n{{\r\n", &caps["struct_name"])[..]);
-            for sub_cap in re2.captures_iter(&caps["inside_struct"])
+            if caps.name("inside_struct") != None && caps["inside_struct"].len() > 0
             {
-                let param_name = if &sub_cap["param_name"] == "type" { "type_name" } else { &sub_cap["param_name"] };
-                let param_name2 = if param_name == "mod" { "mod_name" } else { param_name };
-                //println!("full: {} - name: {}: type: {}", &sub_cap[0], &sub_cap["param_name"], &sub_cap["param_type"]);
-                if sub_cap.name("param_ptr") != None && sub_cap["param_ptr"].len() > 0
+                for sub_cap in re2.captures_iter(&caps["inside_struct"])
                 {
-                    out_structs.push_str(&format!("\t{}: {}mut {},\r\n", param_name2, &sub_cap["param_ptr"], get_type_as_rust_type(&sub_cap["param_type"]))[..]);
+                    let param_name = if &sub_cap["param_name"] == "type" { "type_name" } else { &sub_cap["param_name"] };
+                    let param_name2 = if param_name == "mod" { "mod_name" } else { param_name };
+                    //println!("full: {} - name: {}: type: {}", &sub_cap[0], &sub_cap["param_name"], &sub_cap["param_type"]);
+                    if sub_cap.name("param_ptr") != None && sub_cap["param_ptr"].len() > 0
+                    {
+                        out_structs.push_str(&format!("\t pub {}: {}mut {},\r\n", param_name2, &sub_cap["param_ptr"], get_type_as_rust_type(&sub_cap["param_type"]))[..]);
+                    }
+                    else 
+                    {
+                        out_structs.push_str(&format!("\t pub {}: {},\r\n", param_name2, get_type_as_rust_type(&sub_cap["param_type"]))[..]);
+                    }
                 }
-                else 
-                {
-                    out_structs.push_str(&format!("\t{}: {},\r\n", param_name2, get_type_as_rust_type(&sub_cap["param_type"]))[..]);
-                }
+            }
+            else
+            {
+                out_structs.push_str(&format!("\t pub _something: [u8; 0]\r\n")[..]);
             }
             out_structs.push_str("}\r\n\r\n");
         }

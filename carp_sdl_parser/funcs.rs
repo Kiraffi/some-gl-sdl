@@ -32,4 +32,9 @@ extern "C"
 
 	//File: include/SDL_scancode.h
 
+	//File: include/SDL_keycode.h
+
+	//File: include/SDL_error.h
+	pub fn SDL_GetError(	) -> *const c_char;
+
 }
