@@ -18,9 +18,9 @@ fn print_attributes(elem: &xmltree::Element)
 }
 
 // The most awkward lambda, having to pass arrays for looking what attributes it contains, and setting possible filter value....
-fn node_children(elem: &xmltree::Element, filter_name: &str, attr_contains: &Vec<(&str, &str)>, f: fn(&xmltree::Element) -> String) -> String
+fn node_children<T>(elem: &xmltree::Element, filter_name: &str, attr_contains: &Vec<(&str, &str)>, f: fn(&xmltree::Element) -> Vec<T>) -> Vec<T>
 {
-    let mut out_string = String::new();
+    let mut out_string: Vec<T> = Vec::new();
     for child in &elem.children
     {
         'check_filter:
@@ -37,7 +37,7 @@ fn node_children(elem: &xmltree::Element, filter_name: &str, attr_contains: &Vec
                         continue 'check_filter;
                     }
                 }
-                out_string.push_str(&f(&child2)[..]);
+                out_string.extend(f(child2));
             }
         }
     }
@@ -56,70 +56,84 @@ fn node_children(elem: &xmltree::Element, filter_name: &str, attr_contains: &Vec
 
 fn parse_vk_structs(root: &xmltree::Element) -> String
 {
-    
-    node_children(&root, "types", &Vec::new(), |child|
+    let mut s = String::new();
+    let mut s_vec: Vec<String> = Vec::new();
+    s_vec.extend(node_children(&root, "types", &Vec::new(), |child|
+    {
+        node_children(&child, "type",&vec![("category", "struct"), ("name", "")],  |child2|
         {
-            node_children(&child, "type",&vec![("category", "struct"), ("name", "")],  |child2|
+            let mut s_vec: Vec<String> = Vec::new();
+            s_vec.push(format!("pub struct {}\r\n{{\r\n", child2.attributes["name"]));
+            
+            s_vec.extend(node_children(&child2, "member",&Vec::new(),  |child3|
+            {
+                if child3.attributes.contains_key("values")
                 {
-                    let mut out_string = String::new();
-                    out_string.push_str(&format!("pub struct {}\r\n{{\r\n", child2.attributes["name"])[..]);
-                    
-                    out_string.push_str(&
-                        node_children(&child2, "member",&Vec::new(),  |child3|
-                        {
-                            if child3.attributes.contains_key("values")
-                            {
-                                println!("Values: {}", child3.attributes["values"]);
-                            }
+                    println!("Values: {}", child3.attributes["values"]);
+                }
+                let mut s_vec: Vec<String> = Vec::new();
+                s_vec.push("    ".to_string());
+                s_vec.extend(node_children::<String>(&child3, "name",&Vec::new(),  |child4|
+                {
+                    match child4.get_text()
+                    {
+                        Some(v) => vec![v.to_string()],
+                        None => vec![String::new()]
+                    }
+                }));
 
-                            let mut out_string = "    ".to_string();
-                            out_string.push_str(&node_children(&child3, "name",&Vec::new(),  |child4|
-                            {
-                                match child4.get_text()
-                                {
-                                    Some(v) => v.to_string(),
-                                    None => "".to_string()
-                                }
-                            })[..]);
+                s_vec.push(": ".to_string());
 
-                            out_string.push_str(": ");
-
-                            out_string.push_str(&node_children(&child3, "type",&Vec::new(),  |child4|
-                            {
-                                match child4.get_text()
-                                {
-                                    Some(v) => v.to_string(),
-                                    None => "".to_string()
-                                }
-                            })[..]);
-                            out_string.push_str(";\r\n");
-                            return out_string;
-                        })[..]);
+                s_vec.extend(node_children::<String>(&child3, "type",&Vec::new(),  |child4|
+                {
+                    match child4.get_text()
+                    {
+                        Some(v) => vec![v.to_string()],
+                        None => vec![String::new()]
+                    }
+                }));
+                s_vec.push((";\r\n").to_string());
+                return s_vec;
+            }));
 
 
-                    out_string.push_str("}\r\n");
-                    return out_string;
-                })
+            s_vec.push(("}\r\n\r\n").to_string());
+            return s_vec;
         })
-    
+    }));
 
+    
+    for strings in &s_vec
+    {
+        s.push_str(&strings[..]);
+    }
+    return s;
 }
 
 
 
 fn parse_vk_enums(root: &xmltree::Element) -> String
 {
-    return node_children(&root, "enums", &vec![("type", "enum"), ("name", "")], |child|
+    let mut s = String::new();
+    let mut s_vec: Vec<String> = Vec::new();
+    
+    s_vec.extend(node_children(&root, "enums", &vec![("type", "enum"), ("name", "")], |child|
     {
-        let mut out_string = String::new();
-        out_string.push_str(&format!("pub enum {}\r\n{{\r\n", child.attributes["name"])[..]);
-        out_string.push_str(&node_children(&child, "enum",&vec![("value", ""), ("name", "")],  |child2|
-            {
-                return format!("    {}: i32 = {},\r\n", child2.attributes["name"], child2.attributes["value"]);
-            })[..]);
-        out_string.push_str("}\r\n\r\n");
-        return out_string;
-    });
+        let mut s_vec: Vec<String> = Vec::new();
+        s_vec.push(format!("pub enum {}\r\n{{\r\n", child.attributes["name"]));
+        s_vec.extend(node_children(&child, "enum",&vec![("value", ""), ("name", "")],  |child2|
+        {
+            return vec![format!("    {}: i32 = {},\r\n", child2.attributes["name"], child2.attributes["value"])];
+        }));
+        s_vec.push(("}\r\n\r\n").to_string());
+        return s_vec;
+    }));
+
+    for strings in &s_vec
+    {
+        s.push_str(&strings[..]);
+    }
+    return s;
 }
 
 
