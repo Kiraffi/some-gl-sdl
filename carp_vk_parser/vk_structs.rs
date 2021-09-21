@@ -287,7 +287,7 @@ pub struct VkDeviceQueueCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDeviceQueueCreateFlags,
+	flags: VkDeviceQueueCreateFlagBits,
 	queueFamilyIndex: u32,
 	queueCount: u32,
 	pQueuePriorities: * const f32,
@@ -309,7 +309,7 @@ pub struct VkDeviceCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDeviceCreateFlags,
+	flags: VkDeviceCreateFlagBits,
 	queueCreateInfoCount: u32,
 	pQueueCreateInfos: * const VkDeviceQueueCreateInfo,
 	enabledLayerCount: u32,
@@ -335,7 +335,7 @@ pub struct VkInstanceCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkInstanceCreateFlags,
+	flags: VkInstanceCreateFlagBits,
 	pApplicationInfo: * const VkApplicationInfo,
 	enabledLayerCount: u32,
 	ppEnabledLayerNames: * const * const c_char,
@@ -357,7 +357,7 @@ impl VkInstanceCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties
 {
-	queueFlags: VkQueueFlags,
+	queueFlags: VkQueueFlagBits,
 	queueCount: u32,
 	timestampValidBits: u32,
 	minImageTransferGranularity: VkExtent3D,
@@ -433,9 +433,9 @@ impl VkMemoryRequirements
 #[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties
 {
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 	imageGranularity: VkExtent3D,
-	flags: VkSparseImageFormatFlags,
+	flags: VkSparseImageFormatFlagBits,
 }
 impl VkSparseImageFormatProperties
 {
@@ -471,7 +471,7 @@ impl VkSparseImageMemoryRequirements
 #[derive(Copy, Clone)]
 pub struct VkMemoryType
 {
-	propertyFlags: VkMemoryPropertyFlags,
+	propertyFlags: VkMemoryPropertyFlagBits,
 	heapIndex: u32,
 }
 impl VkMemoryType
@@ -489,7 +489,7 @@ impl VkMemoryType
 pub struct VkMemoryHeap
 {
 	size: VkDeviceSize,
-	flags: VkMemoryHeapFlags,
+	flags: VkMemoryHeapFlagBits,
 }
 impl VkMemoryHeap
 {
@@ -526,9 +526,9 @@ impl VkMappedMemoryRange
 #[derive(Copy, Clone)]
 pub struct VkFormatProperties
 {
-	linearTilingFeatures: VkFormatFeatureFlags,
-	optimalTilingFeatures: VkFormatFeatureFlags,
-	bufferFeatures: VkFormatFeatureFlags,
+	linearTilingFeatures: VkFormatFeatureFlagBits,
+	optimalTilingFeatures: VkFormatFeatureFlagBits,
+	bufferFeatures: VkFormatFeatureFlagBits,
 }
 impl VkFormatProperties
 {
@@ -547,7 +547,7 @@ pub struct VkImageFormatProperties
 	maxExtent: VkExtent3D,
 	maxMipLevels: u32,
 	maxArrayLayers: u32,
-	sampleCounts: VkSampleCountFlags,
+	sampleCounts: VkSampleCountFlagBits,
 	maxResourceSize: VkDeviceSize,
 }
 impl VkImageFormatProperties
@@ -653,9 +653,9 @@ pub struct VkBufferCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkBufferCreateFlags,
+	flags: VkBufferCreateFlagBits,
 	size: VkDeviceSize,
-	usage: VkBufferUsageFlags,
+	usage: VkBufferUsageFlagBits,
 	sharingMode: VkSharingMode,
 	queueFamilyIndexCount: u32,
 	pQueueFamilyIndices: * const u32,
@@ -677,7 +677,7 @@ pub struct VkBufferViewCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkBufferViewCreateFlags,
+	flags: VkBufferViewCreateFlagBits,
 	buffer: VkBuffer,
 	format: VkFormat,
 	offset: VkDeviceSize,
@@ -698,7 +698,7 @@ impl VkBufferViewCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkImageSubresource
 {
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 	mipLevel: u32,
 	arrayLayer: u32,
 }
@@ -716,7 +716,7 @@ impl VkImageSubresource
 #[derive(Copy, Clone)]
 pub struct VkImageSubresourceLayers
 {
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 	mipLevel: u32,
 	baseArrayLayer: u32,
 	layerCount: u32,
@@ -735,7 +735,7 @@ impl VkImageSubresourceLayers
 #[derive(Copy, Clone)]
 pub struct VkImageSubresourceRange
 {
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 	baseMipLevel: u32,
 	levelCount: u32,
 	baseArrayLayer: u32,
@@ -757,8 +757,8 @@ pub struct VkMemoryBarrier
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
+	srcAccessMask: VkAccessFlagBits,
+	dstAccessMask: VkAccessFlagBits,
 }
 impl VkMemoryBarrier
 {
@@ -777,8 +777,8 @@ pub struct VkBufferMemoryBarrier
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
+	srcAccessMask: VkAccessFlagBits,
+	dstAccessMask: VkAccessFlagBits,
 	srcQueueFamilyIndex: u32,
 	dstQueueFamilyIndex: u32,
 	buffer: VkBuffer,
@@ -802,8 +802,8 @@ pub struct VkImageMemoryBarrier
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
+	srcAccessMask: VkAccessFlagBits,
+	dstAccessMask: VkAccessFlagBits,
 	oldLayout: VkImageLayout,
 	newLayout: VkImageLayout,
 	srcQueueFamilyIndex: u32,
@@ -828,7 +828,7 @@ pub struct VkImageCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkImageCreateFlags,
+	flags: VkImageCreateFlagBits,
 	imageType: VkImageType,
 	format: VkFormat,
 	extent: VkExtent3D,
@@ -836,7 +836,7 @@ pub struct VkImageCreateInfo
 	arrayLayers: u32,
 	samples: VkSampleCountFlagBits,
 	tiling: VkImageTiling,
-	usage: VkImageUsageFlags,
+	usage: VkImageUsageFlagBits,
 	sharingMode: VkSharingMode,
 	queueFamilyIndexCount: u32,
 	pQueueFamilyIndices: * const u32,
@@ -879,7 +879,7 @@ pub struct VkImageViewCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkImageViewCreateFlags,
+	flags: VkImageViewCreateFlagBits,
 	image: VkImage,
 	viewType: VkImageViewType,
 	format: VkFormat,
@@ -923,7 +923,7 @@ pub struct VkSparseMemoryBind
 	size: VkDeviceSize,
 	memory: VkDeviceMemory,
 	memoryOffset: VkDeviceSize,
-	flags: VkSparseMemoryBindFlags,
+	flags: VkSparseMemoryBindFlagBits,
 }
 impl VkSparseMemoryBind
 {
@@ -944,7 +944,7 @@ pub struct VkSparseImageMemoryBind
 	extent: VkExtent3D,
 	memory: VkDeviceMemory,
 	memoryOffset: VkDeviceSize,
-	flags: VkSparseMemoryBindFlags,
+	flags: VkSparseMemoryBindFlagBits,
 }
 impl VkSparseImageMemoryBind
 {
@@ -1124,7 +1124,7 @@ pub struct VkShaderModuleCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkShaderModuleCreateFlags,
+	flags: VkShaderModuleCreateFlagBits,
 	codeSize: size_t,
 	pCode: * const u32,
 }
@@ -1146,7 +1146,7 @@ pub struct VkDescriptorSetLayoutBinding
 	binding: u32,
 	descriptorType: VkDescriptorType,
 	descriptorCount: u32,
-	stageFlags: VkShaderStageFlags,
+	stageFlags: VkShaderStageFlagBits,
 	pImmutableSamplers: * const VkSampler,
 }
 impl VkDescriptorSetLayoutBinding
@@ -1165,7 +1165,7 @@ pub struct VkDescriptorSetLayoutCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDescriptorSetLayoutCreateFlags,
+	flags: VkDescriptorSetLayoutCreateFlagBits,
 	bindingCount: u32,
 	pBindings: * const VkDescriptorSetLayoutBinding,
 }
@@ -1203,7 +1203,7 @@ pub struct VkDescriptorPoolCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDescriptorPoolCreateFlags,
+	flags: VkDescriptorPoolCreateFlagBits,
 	maxSets: u32,
 	poolSizeCount: u32,
 	pPoolSizes: * const VkDescriptorPoolSize,
@@ -1283,7 +1283,7 @@ pub struct VkPipelineShaderStageCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineShaderStageCreateFlags,
+	flags: VkPipelineShaderStageCreateFlagBits,
 	stage: VkShaderStageFlagBits,
 	module: VkShaderModule,
 	pName: * const c_char,
@@ -1306,7 +1306,7 @@ pub struct VkComputePipelineCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineCreateFlags,
+	flags: VkPipelineCreateFlagBits,
 	stage: VkPipelineShaderStageCreateInfo,
 	layout: VkPipelineLayout,
 	basePipelineHandle: VkPipeline,
@@ -1366,7 +1366,7 @@ pub struct VkPipelineVertexInputStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineVertexInputStateCreateFlags,
+	flags: VkPipelineVertexInputStateCreateFlagBits,
 	vertexBindingDescriptionCount: u32,
 	pVertexBindingDescriptions: * const VkVertexInputBindingDescription,
 	vertexAttributeDescriptionCount: u32,
@@ -1389,7 +1389,7 @@ pub struct VkPipelineInputAssemblyStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineInputAssemblyStateCreateFlags,
+	flags: VkPipelineInputAssemblyStateCreateFlagBits,
 	topology: VkPrimitiveTopology,
 	primitiveRestartEnable: VkBool32,
 }
@@ -1410,7 +1410,7 @@ pub struct VkPipelineTessellationStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineTessellationStateCreateFlags,
+	flags: VkPipelineTessellationStateCreateFlagBits,
 	patchControlPoints: u32,
 }
 impl VkPipelineTessellationStateCreateInfo
@@ -1430,7 +1430,7 @@ pub struct VkPipelineViewportStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineViewportStateCreateFlags,
+	flags: VkPipelineViewportStateCreateFlagBits,
 	viewportCount: u32,
 	pViewports: * const VkViewport,
 	scissorCount: u32,
@@ -1453,11 +1453,11 @@ pub struct VkPipelineRasterizationStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineRasterizationStateCreateFlags,
+	flags: VkPipelineRasterizationStateCreateFlagBits,
 	depthClampEnable: VkBool32,
 	rasterizerDiscardEnable: VkBool32,
 	polygonMode: VkPolygonMode,
-	cullMode: VkCullModeFlags,
+	cullMode: VkCullModeFlagBits,
 	frontFace: VkFrontFace,
 	depthBiasEnable: VkBool32,
 	depthBiasConstantFactor: f32,
@@ -1482,7 +1482,7 @@ pub struct VkPipelineMultisampleStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineMultisampleStateCreateFlags,
+	flags: VkPipelineMultisampleStateCreateFlagBits,
 	rasterizationSamples: VkSampleCountFlagBits,
 	sampleShadingEnable: VkBool32,
 	minSampleShading: f32,
@@ -1512,7 +1512,7 @@ pub struct VkPipelineColorBlendAttachmentState
 	srcAlphaBlendFactor: VkBlendFactor,
 	dstAlphaBlendFactor: VkBlendFactor,
 	alphaBlendOp: VkBlendOp,
-	colorWriteMask: VkColorComponentFlags,
+	colorWriteMask: VkColorComponentFlagBits,
 }
 impl VkPipelineColorBlendAttachmentState
 {
@@ -1530,7 +1530,7 @@ pub struct VkPipelineColorBlendStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineColorBlendStateCreateFlags,
+	flags: VkPipelineColorBlendStateCreateFlagBits,
 	logicOpEnable: VkBool32,
 	logicOp: VkLogicOp,
 	attachmentCount: u32,
@@ -1554,7 +1554,7 @@ pub struct VkPipelineDynamicStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineDynamicStateCreateFlags,
+	flags: VkPipelineDynamicStateCreateFlagBits,
 	dynamicStateCount: u32,
 	pDynamicStates: * const VkDynamicState,
 }
@@ -1597,7 +1597,7 @@ pub struct VkPipelineDepthStencilStateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineDepthStencilStateCreateFlags,
+	flags: VkPipelineDepthStencilStateCreateFlagBits,
 	depthTestEnable: VkBool32,
 	depthWriteEnable: VkBool32,
 	depthCompareOp: VkCompareOp,
@@ -1625,7 +1625,7 @@ pub struct VkGraphicsPipelineCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineCreateFlags,
+	flags: VkPipelineCreateFlagBits,
 	stageCount: u32,
 	pStages: * const VkPipelineShaderStageCreateInfo,
 	pVertexInputState: * const VkPipelineVertexInputStateCreateInfo,
@@ -1660,7 +1660,7 @@ pub struct VkPipelineCacheCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineCacheCreateFlags,
+	flags: VkPipelineCacheCreateFlagBits,
 	initialDataSize: size_t,
 	pInitialData: * const c_void,
 }
@@ -1699,7 +1699,7 @@ impl VkPipelineCacheHeaderVersionOne
 #[derive(Copy, Clone)]
 pub struct VkPushConstantRange
 {
-	stageFlags: VkShaderStageFlags,
+	stageFlags: VkShaderStageFlagBits,
 	offset: u32,
 	size: u32,
 }
@@ -1719,7 +1719,7 @@ pub struct VkPipelineLayoutCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineLayoutCreateFlags,
+	flags: VkPipelineLayoutCreateFlagBits,
 	setLayoutCount: u32,
 	pSetLayouts: * const VkDescriptorSetLayout,
 	pushConstantRangeCount: u32,
@@ -1742,7 +1742,7 @@ pub struct VkSamplerCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkSamplerCreateFlags,
+	flags: VkSamplerCreateFlagBits,
 	magFilter: VkFilter,
 	minFilter: VkFilter,
 	mipmapMode: VkSamplerMipmapMode,
@@ -1776,7 +1776,7 @@ pub struct VkCommandPoolCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkCommandPoolCreateFlags,
+	flags: VkCommandPoolCreateFlagBits,
 	queueFamilyIndex: u32,
 }
 impl VkCommandPoolCreateInfo
@@ -1821,8 +1821,8 @@ pub struct VkCommandBufferInheritanceInfo
 	subpass: u32,
 	framebuffer: VkFramebuffer,
 	occlusionQueryEnable: VkBool32,
-	queryFlags: VkQueryControlFlags,
-	pipelineStatistics: VkQueryPipelineStatisticFlags,
+	queryFlags: VkQueryControlFlagBits,
+	pipelineStatistics: VkQueryPipelineStatisticFlagBits,
 }
 impl VkCommandBufferInheritanceInfo
 {
@@ -1841,7 +1841,7 @@ pub struct VkCommandBufferBeginInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkCommandBufferUsageFlags,
+	flags: VkCommandBufferUsageFlagBits,
 	pInheritanceInfo: * const VkCommandBufferInheritanceInfo,
 }
 impl VkCommandBufferBeginInfo
@@ -1899,7 +1899,7 @@ impl VkClearDepthStencilValue
 #[derive(Copy, Clone)]
 pub struct VkClearAttachment
 {
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 	colorAttachment: u32,
 	clearValue: VkClearValue,
 }
@@ -1917,7 +1917,7 @@ impl VkClearAttachment
 #[derive(Copy, Clone)]
 pub struct VkAttachmentDescription
 {
-	flags: VkAttachmentDescriptionFlags,
+	flags: VkAttachmentDescriptionFlagBits,
 	format: VkFormat,
 	samples: VkSampleCountFlagBits,
 	loadOp: VkAttachmentLoadOp,
@@ -1958,7 +1958,7 @@ impl VkAttachmentReference
 #[derive(Copy, Clone)]
 pub struct VkSubpassDescription
 {
-	flags: VkSubpassDescriptionFlags,
+	flags: VkSubpassDescriptionFlagBits,
 	pipelineBindPoint: VkPipelineBindPoint,
 	inputAttachmentCount: u32,
 	pInputAttachments: * const VkAttachmentReference,
@@ -1985,11 +1985,11 @@ pub struct VkSubpassDependency
 {
 	srcSubpass: u32,
 	dstSubpass: u32,
-	srcStageMask: VkPipelineStageFlags,
-	dstStageMask: VkPipelineStageFlags,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
-	dependencyFlags: VkDependencyFlags,
+	srcStageMask: VkPipelineStageFlagBits,
+	dstStageMask: VkPipelineStageFlagBits,
+	srcAccessMask: VkAccessFlagBits,
+	dstAccessMask: VkAccessFlagBits,
+	dependencyFlags: VkDependencyFlagBits,
 }
 impl VkSubpassDependency
 {
@@ -2007,7 +2007,7 @@ pub struct VkRenderPassCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkRenderPassCreateFlags,
+	flags: VkRenderPassCreateFlagBits,
 	attachmentCount: u32,
 	pAttachments: * const VkAttachmentDescription,
 	subpassCount: u32,
@@ -2032,7 +2032,7 @@ pub struct VkEventCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkEventCreateFlags,
+	flags: VkEventCreateFlagBits,
 }
 impl VkEventCreateInfo
 {
@@ -2051,7 +2051,7 @@ pub struct VkFenceCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkFenceCreateFlags,
+	flags: VkFenceCreateFlagBits,
 }
 impl VkFenceCreateInfo
 {
@@ -2238,16 +2238,16 @@ pub struct VkPhysicalDeviceLimits
 	maxFramebufferWidth: u32,
 	maxFramebufferHeight: u32,
 	maxFramebufferLayers: u32,
-	framebufferColorSampleCounts: VkSampleCountFlags,
-	framebufferDepthSampleCounts: VkSampleCountFlags,
-	framebufferStencilSampleCounts: VkSampleCountFlags,
-	framebufferNoAttachmentsSampleCounts: VkSampleCountFlags,
+	framebufferColorSampleCounts: VkSampleCountFlagBits,
+	framebufferDepthSampleCounts: VkSampleCountFlagBits,
+	framebufferStencilSampleCounts: VkSampleCountFlagBits,
+	framebufferNoAttachmentsSampleCounts: VkSampleCountFlagBits,
 	maxColorAttachments: u32,
-	sampledImageColorSampleCounts: VkSampleCountFlags,
-	sampledImageIntegerSampleCounts: VkSampleCountFlags,
-	sampledImageDepthSampleCounts: VkSampleCountFlags,
-	sampledImageStencilSampleCounts: VkSampleCountFlags,
-	storageImageSampleCounts: VkSampleCountFlags,
+	sampledImageColorSampleCounts: VkSampleCountFlagBits,
+	sampledImageIntegerSampleCounts: VkSampleCountFlagBits,
+	sampledImageDepthSampleCounts: VkSampleCountFlagBits,
+	sampledImageStencilSampleCounts: VkSampleCountFlagBits,
+	storageImageSampleCounts: VkSampleCountFlagBits,
 	maxSampleMaskWords: u32,
 	timestampComputeAndGraphics: VkBool32,
 	timestampPeriod: f32,
@@ -2281,7 +2281,7 @@ pub struct VkSemaphoreCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkSemaphoreCreateFlags,
+	flags: VkSemaphoreCreateFlagBits,
 }
 impl VkSemaphoreCreateInfo
 {
@@ -2300,10 +2300,10 @@ pub struct VkQueryPoolCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkQueryPoolCreateFlags,
+	flags: VkQueryPoolCreateFlagBits,
 	queryType: VkQueryType,
 	queryCount: u32,
-	pipelineStatistics: VkQueryPipelineStatisticFlags,
+	pipelineStatistics: VkQueryPipelineStatisticFlagBits,
 }
 impl VkQueryPoolCreateInfo
 {
@@ -2322,7 +2322,7 @@ pub struct VkFramebufferCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkFramebufferCreateFlags,
+	flags: VkFramebufferCreateFlagBits,
 	renderPass: VkRenderPass,
 	attachmentCount: u32,
 	pAttachments: * const VkImageView,
@@ -2441,7 +2441,7 @@ pub struct VkSubmitInfo
 	pNext: * const c_void,
 	waitSemaphoreCount: u32,
 	pWaitSemaphores: * const VkSemaphore,
-	pWaitDstStageMask: * const VkPipelineStageFlags,
+	pWaitDstStageMask: * const VkPipelineStageFlagBits,
 	commandBufferCount: u32,
 	pCommandBuffers: * const VkCommandBuffer,
 	signalSemaphoreCount: u32,
@@ -2466,7 +2466,7 @@ pub struct VkDisplayPropertiesKHR
 	displayName: * const c_char,
 	physicalDimensions: VkExtent2D,
 	physicalResolution: VkExtent2D,
-	supportedTransforms: VkSurfaceTransformFlagsKHR,
+	supportedTransforms: VkSurfaceTransformFlagBitsKHR,
 	planeReorderPossible: VkBool32,
 	persistentContent: VkBool32,
 }
@@ -2537,7 +2537,7 @@ pub struct VkDisplayModeCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDisplayModeCreateFlagsKHR,
+	flags: VkDisplayModeCreateFlagBitsKHR,
 	parameters: VkDisplayModeParametersKHR,
 }
 impl VkDisplayModeCreateInfoKHR
@@ -2555,7 +2555,7 @@ impl VkDisplayModeCreateInfoKHR
 #[derive(Copy, Clone)]
 pub struct VkDisplayPlaneCapabilitiesKHR
 {
-	supportedAlpha: VkDisplayPlaneAlphaFlagsKHR,
+	supportedAlpha: VkDisplayPlaneAlphaFlagBitsKHR,
 	minSrcPosition: VkOffset2D,
 	maxSrcPosition: VkOffset2D,
 	minSrcExtent: VkExtent2D,
@@ -2581,7 +2581,7 @@ pub struct VkDisplaySurfaceCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDisplaySurfaceCreateFlagsKHR,
+	flags: VkDisplaySurfaceCreateFlagBitsKHR,
 	displayMode: VkDisplayModeKHR,
 	planeIndex: u32,
 	planeStackIndex: u32,
@@ -2611,10 +2611,10 @@ pub struct VkSurfaceCapabilitiesKHR
 	minImageExtent: VkExtent2D,
 	maxImageExtent: VkExtent2D,
 	maxImageArrayLayers: u32,
-	supportedTransforms: VkSurfaceTransformFlagsKHR,
+	supportedTransforms: VkSurfaceTransformFlagBitsKHR,
 	currentTransform: VkSurfaceTransformFlagBitsKHR,
-	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
-	supportedUsageFlags: VkImageUsageFlags,
+	supportedCompositeAlpha: VkCompositeAlphaFlagBitsKHR,
+	supportedUsageFlags: VkImageUsageFlagBits,
 }
 impl VkSurfaceCapabilitiesKHR
 {
@@ -2632,7 +2632,7 @@ pub struct VkAndroidSurfaceCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkAndroidSurfaceCreateFlagsKHR,
+	flags: VkAndroidSurfaceCreateFlagBitsKHR,
 	window: * const ANativeWindow,
 }
 impl VkAndroidSurfaceCreateInfoKHR
@@ -2652,7 +2652,7 @@ pub struct VkViSurfaceCreateInfoNN
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkViSurfaceCreateFlagsNN,
+	flags: VkViSurfaceCreateFlagBitsNN,
 	window: * const c_void,
 }
 impl VkViSurfaceCreateInfoNN
@@ -2672,7 +2672,7 @@ pub struct VkWaylandSurfaceCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkWaylandSurfaceCreateFlagsKHR,
+	flags: VkWaylandSurfaceCreateFlagBitsKHR,
 	display: * const wl_display,
 	surface: * const wl_surface,
 }
@@ -2693,7 +2693,7 @@ pub struct VkWin32SurfaceCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkWin32SurfaceCreateFlagsKHR,
+	flags: VkWin32SurfaceCreateFlagBitsKHR,
 	hinstance: HINSTANCE,
 	hwnd: HWND,
 }
@@ -2714,7 +2714,7 @@ pub struct VkXlibSurfaceCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkXlibSurfaceCreateFlagsKHR,
+	flags: VkXlibSurfaceCreateFlagBitsKHR,
 	dpy: * const Display,
 	window: Window,
 }
@@ -2735,7 +2735,7 @@ pub struct VkXcbSurfaceCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkXcbSurfaceCreateFlagsKHR,
+	flags: VkXcbSurfaceCreateFlagBitsKHR,
 	connection: * const xcb_connection_t,
 	window: xcb_window_t,
 }
@@ -2756,7 +2756,7 @@ pub struct VkDirectFBSurfaceCreateInfoEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDirectFBSurfaceCreateFlagsEXT,
+	flags: VkDirectFBSurfaceCreateFlagBitsEXT,
 	dfb: * const IDirectFB,
 	surface: * const IDirectFBSurface,
 }
@@ -2777,7 +2777,7 @@ pub struct VkImagePipeSurfaceCreateInfoFUCHSIA
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkImagePipeSurfaceCreateFlagsFUCHSIA,
+	flags: VkImagePipeSurfaceCreateFlagBitsFUCHSIA,
 	imagePipeHandle: zx_handle_t,
 }
 impl VkImagePipeSurfaceCreateInfoFUCHSIA
@@ -2797,7 +2797,7 @@ pub struct VkStreamDescriptorSurfaceCreateInfoGGP
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkStreamDescriptorSurfaceCreateFlagsGGP,
+	flags: VkStreamDescriptorSurfaceCreateFlagBitsGGP,
 	streamDescriptor: GgpStreamDescriptor,
 }
 impl VkStreamDescriptorSurfaceCreateInfoGGP
@@ -2817,7 +2817,7 @@ pub struct VkScreenSurfaceCreateInfoQNX
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkScreenSurfaceCreateFlagsQNX,
+	flags: VkScreenSurfaceCreateFlagBitsQNX,
 	context: * const _screen_context,
 	window: * const _screen_window,
 }
@@ -2855,14 +2855,14 @@ pub struct VkSwapchainCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkSwapchainCreateFlagsKHR,
+	flags: VkSwapchainCreateFlagBitsKHR,
 	surface: VkSurfaceKHR,
 	minImageCount: u32,
 	imageFormat: VkFormat,
 	imageColorSpace: VkColorSpaceKHR,
 	imageExtent: VkExtent2D,
 	imageArrayLayers: u32,
-	imageUsage: VkImageUsageFlags,
+	imageUsage: VkImageUsageFlagBits,
 	imageSharingMode: VkSharingMode,
 	queueFamilyIndexCount: u32,
 	pQueueFamilyIndices: * const u32,
@@ -2914,7 +2914,7 @@ pub struct VkDebugMarkerObjectNameInfoEXT
 	sType: VkStructureType,
 	pNext: * const c_void,
 	objectType: VkDebugReportObjectTypeEXT,
-	object: uint64_t,
+	object: u64,
 	pObjectName: * const c_char,
 }
 impl VkDebugMarkerObjectNameInfoEXT
@@ -2935,8 +2935,8 @@ pub struct VkDebugMarkerObjectTagInfoEXT
 	sType: VkStructureType,
 	pNext: * const c_void,
 	objectType: VkDebugReportObjectTypeEXT,
-	object: uint64_t,
-	tagName: uint64_t,
+	object: u64,
+	tagName: u64,
 	tagSize: size_t,
 	pTag: * const c_void,
 }
@@ -2976,9 +2976,9 @@ impl VkDebugMarkerMarkerInfoEXT
 pub struct VkExternalImageFormatPropertiesNV
 {
 	imageFormatProperties: VkImageFormatProperties,
-	externalMemoryFeatures: VkExternalMemoryFeatureFlagsNV,
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagsNV,
+	externalMemoryFeatures: VkExternalMemoryFeatureFlagBitsNV,
+	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagBitsNV,
+	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagBitsNV,
 }
 impl VkExternalImageFormatPropertiesNV
 {
@@ -2996,7 +2996,7 @@ pub struct VkPrivateDataSlotCreateInfoEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPrivateDataSlotCreateFlagsEXT,
+	flags: VkPrivateDataSlotCreateFlagBitsEXT,
 }
 impl VkPrivateDataSlotCreateInfoEXT
 {
@@ -3128,10 +3128,10 @@ pub struct VkIndirectCommandsLayoutTokenNV
 	vertexBindingUnit: u32,
 	vertexDynamicStride: VkBool32,
 	pushconstantPipelineLayout: VkPipelineLayout,
-	pushconstantShaderStageFlags: VkShaderStageFlags,
+	pushconstantShaderStageFlags: VkShaderStageFlagBits,
 	pushconstantOffset: u32,
 	pushconstantSize: u32,
-	indirectStateFlags: VkIndirectStateFlagsNV,
+	indirectStateFlags: VkIndirectStateFlagBitsNV,
 	indexTypeCount: u32,
 	pIndexTypes: * const VkIndexType,
 	pIndexTypeValues: * const u32,
@@ -3153,7 +3153,7 @@ pub struct VkIndirectCommandsLayoutCreateInfoNV
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkIndirectCommandsLayoutUsageFlagsNV,
+	flags: VkIndirectCommandsLayoutUsageFlagBitsNV,
 	pipelineBindPoint: VkPipelineBindPoint,
 	tokenCount: u32,
 	pTokens: * const VkIndirectCommandsLayoutTokenNV,
@@ -3350,8 +3350,8 @@ pub struct VkPhysicalDeviceImageFormatInfo2
 	format: VkFormat,
 	type: VkImageType,
 	tiling: VkImageTiling,
-	usage: VkImageUsageFlags,
-	flags: VkImageCreateFlags,
+	usage: VkImageUsageFlagBits,
+	flags: VkImageCreateFlagBits,
 }
 impl VkPhysicalDeviceImageFormatInfo2
 {
@@ -3490,7 +3490,7 @@ pub struct VkPhysicalDeviceSparseImageFormatInfo2
 	format: VkFormat,
 	type: VkImageType,
 	samples: VkSampleCountFlagBits,
-	usage: VkImageUsageFlags,
+	usage: VkImageUsageFlagBits,
 	tiling: VkImageTiling,
 }
 impl VkPhysicalDeviceSparseImageFormatInfo2
@@ -3652,9 +3652,9 @@ impl VkPhysicalDeviceVariablePointerFeatures
 #[derive(Copy, Clone)]
 pub struct VkExternalMemoryProperties
 {
-	externalMemoryFeatures: VkExternalMemoryFeatureFlags,
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlags,
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlags,
+	externalMemoryFeatures: VkExternalMemoryFeatureFlagBits,
+	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagBits,
+	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkExternalMemoryProperties
 {
@@ -3717,8 +3717,8 @@ pub struct VkPhysicalDeviceExternalBufferInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkBufferCreateFlags,
-	usage: VkBufferUsageFlags,
+	flags: VkBufferCreateFlagBits,
+	usage: VkBufferUsageFlagBits,
 	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalBufferInfo
@@ -3998,9 +3998,9 @@ pub struct VkExternalSemaphoreProperties
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlags,
-	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlags,
-	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlags,
+	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
+	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
+	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlagBits,
 }
 impl VkExternalSemaphoreProperties
 {
@@ -4050,7 +4050,7 @@ pub struct VkImportSemaphoreWin32HandleInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlags,
+	flags: VkSemaphoreImportFlagBits,
 	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 	handle: HANDLE,
 	name: LPCWSTR,
@@ -4093,7 +4093,7 @@ pub struct VkImportSemaphoreFdInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlags,
+	flags: VkSemaphoreImportFlagBits,
 	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 	fd: int,
 }
@@ -4135,7 +4135,7 @@ pub struct VkImportSemaphoreZirconHandleInfoFUCHSIA
 	sType: VkStructureType,
 	pNext: * const c_void,
 	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlags,
+	flags: VkSemaphoreImportFlagBits,
 	handleType: VkExternalSemaphoreHandleTypeFlagBits,
 	zirconHandle: zx_handle_t,
 }
@@ -4210,9 +4210,9 @@ pub struct VkExternalFenceProperties
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlags,
-	compatibleHandleTypes: VkExternalFenceHandleTypeFlags,
-	externalFenceFeatures: VkExternalFenceFeatureFlags,
+	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlagBits,
+	compatibleHandleTypes: VkExternalFenceHandleTypeFlagBits,
+	externalFenceFeatures: VkExternalFenceFeatureFlagBits,
 }
 impl VkExternalFenceProperties
 {
@@ -4262,7 +4262,7 @@ pub struct VkImportFenceWin32HandleInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	fence: VkFence,
-	flags: VkFenceImportFlags,
+	flags: VkFenceImportFlagBits,
 	handleType: VkExternalFenceHandleTypeFlagBits,
 	handle: HANDLE,
 	name: LPCWSTR,
@@ -4305,7 +4305,7 @@ pub struct VkImportFenceFdInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	fence: VkFence,
-	flags: VkFenceImportFlags,
+	flags: VkFenceImportFlagBits,
 	handleType: VkExternalFenceHandleTypeFlagBits,
 	fd: int,
 }
@@ -4397,11 +4397,11 @@ pub struct VkSurfaceCapabilities2EXT
 	minImageExtent: VkExtent2D,
 	maxImageExtent: VkExtent2D,
 	maxImageArrayLayers: u32,
-	supportedTransforms: VkSurfaceTransformFlagsKHR,
+	supportedTransforms: VkSurfaceTransformFlagBitsKHR,
 	currentTransform: VkSurfaceTransformFlagBitsKHR,
-	supportedCompositeAlpha: VkCompositeAlphaFlagsKHR,
-	supportedUsageFlags: VkImageUsageFlags,
-	supportedSurfaceCounters: VkSurfaceCounterFlagsEXT,
+	supportedCompositeAlpha: VkCompositeAlphaFlagBitsKHR,
+	supportedUsageFlags: VkImageUsageFlagBits,
+	supportedSurfaceCounters: VkSurfaceCounterFlagBitsEXT,
 }
 impl VkSurfaceCapabilities2EXT
 {
@@ -4691,7 +4691,7 @@ pub struct VkDeviceGroupPresentCapabilitiesKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	presentMask: u32,
-	modes: VkDeviceGroupPresentModeFlagsKHR,
+	modes: VkDeviceGroupPresentModeFlagBitsKHR,
 }
 impl VkDeviceGroupPresentCapabilitiesKHR
 {
@@ -4711,7 +4711,7 @@ pub struct VkAcquireNextImageInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	swapchain: VkSwapchainKHR,
-	timeout: uint64_t,
+	timeout: u64,
 	semaphore: VkSemaphore,
 	fence: VkFence,
 	deviceMask: u32,
@@ -4784,7 +4784,7 @@ pub struct VkDescriptorUpdateTemplateCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDescriptorUpdateTemplateCreateFlags,
+	flags: VkDescriptorUpdateTemplateCreateFlagBits,
 	descriptorUpdateEntryCount: u32,
 	pDescriptorUpdateEntries: * const VkDescriptorUpdateTemplateEntry,
 	templateType: VkDescriptorUpdateTemplateType,
@@ -4866,7 +4866,7 @@ impl VkHdrMetadataEXT
 #[derive(Copy, Clone)]
 pub struct VkRefreshCycleDurationGOOGLE
 {
-	refreshDuration: uint64_t,
+	refreshDuration: u64,
 }
 impl VkRefreshCycleDurationGOOGLE
 {
@@ -4883,10 +4883,10 @@ impl VkRefreshCycleDurationGOOGLE
 pub struct VkPastPresentationTimingGOOGLE
 {
 	presentID: u32,
-	desiredPresentTime: uint64_t,
-	actualPresentTime: uint64_t,
-	earliestPresentTime: uint64_t,
-	presentMargin: uint64_t,
+	desiredPresentTime: u64,
+	actualPresentTime: u64,
+	earliestPresentTime: u64,
+	presentMargin: u64,
 }
 impl VkPastPresentationTimingGOOGLE
 {
@@ -4903,7 +4903,7 @@ impl VkPastPresentationTimingGOOGLE
 pub struct VkPresentTimeGOOGLE
 {
 	presentID: u32,
-	desiredPresentTime: uint64_t,
+	desiredPresentTime: u64,
 }
 impl VkPresentTimeGOOGLE
 {
@@ -4921,7 +4921,7 @@ pub struct VkIOSSurfaceCreateInfoMVK
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkIOSSurfaceCreateFlagsMVK,
+	flags: VkIOSSurfaceCreateFlagBitsMVK,
 	pView: * const c_void,
 }
 impl VkIOSSurfaceCreateInfoMVK
@@ -4941,7 +4941,7 @@ pub struct VkMacOSSurfaceCreateInfoMVK
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkMacOSSurfaceCreateFlagsMVK,
+	flags: VkMacOSSurfaceCreateFlagBitsMVK,
 	pView: * const c_void,
 }
 impl VkMacOSSurfaceCreateInfoMVK
@@ -4961,7 +4961,7 @@ pub struct VkMetalSurfaceCreateInfoEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkMetalSurfaceCreateFlagsEXT,
+	flags: VkMetalSurfaceCreateFlagBitsEXT,
 	pLayer: * const CAMetalLayer,
 }
 impl VkMetalSurfaceCreateInfoEXT
@@ -5017,7 +5017,7 @@ pub struct VkInputAttachmentAspectReference
 {
 	subpass: u32,
 	inputAttachmentIndex: u32,
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 }
 impl VkInputAttachmentAspectReference
 {
@@ -5611,7 +5611,7 @@ pub struct VkConditionalRenderingBeginInfoEXT
 	pNext: * const c_void,
 	buffer: VkBuffer,
 	offset: VkDeviceSize,
-	flags: VkConditionalRenderingFlagsEXT,
+	flags: VkConditionalRenderingFlagBitsEXT,
 }
 impl VkConditionalRenderingBeginInfoEXT
 {
@@ -5630,7 +5630,7 @@ pub struct VkDeviceQueueInfo2
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDeviceQueueCreateFlags,
+	flags: VkDeviceQueueCreateFlagBits,
 	queueFamilyIndex: u32,
 	queueIndex: u32,
 }
@@ -5766,7 +5766,7 @@ pub struct VkValidationCacheCreateInfoEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkValidationCacheCreateFlagsEXT,
+	flags: VkValidationCacheCreateFlagBitsEXT,
 	initialDataSize: size_t,
 	pInitialData: * const c_void,
 }
@@ -5909,8 +5909,8 @@ impl VkPhysicalDeviceHostQueryResetFeaturesEXT
 #[derive(Copy, Clone)]
 pub struct VkNativeBufferUsage2ANDROID
 {
-	consumer: uint64_t,
-	producer: uint64_t,
+	consumer: u64,
+	producer: u64,
 }
 impl VkNativeBufferUsage2ANDROID
 {
@@ -5951,7 +5951,7 @@ pub struct VkSwapchainImageCreateInfoANDROID
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	usage: VkSwapchainImageUsageFlagsANDROID,
+	usage: VkSwapchainImageUsageFlagBitsANDROID,
 }
 impl VkSwapchainImageCreateInfoANDROID
 {
@@ -6007,7 +6007,7 @@ impl VkShaderResourceUsageAMD
 #[derive(Copy, Clone)]
 pub struct VkShaderStatisticsInfoAMD
 {
-	shaderStageMask: VkShaderStageFlags,
+	shaderStageMask: VkShaderStageFlagBits,
 	resourceUsage: VkShaderResourceUsageAMD,
 	numPhysicalVgprs: u32,
 	numPhysicalSgprs: u32,
@@ -6032,7 +6032,7 @@ pub struct VkDebugUtilsObjectNameInfoEXT
 	sType: VkStructureType,
 	pNext: * const c_void,
 	objectType: VkObjectType,
-	objectHandle: uint64_t,
+	objectHandle: u64,
 	pObjectName: * const c_char,
 }
 impl VkDebugUtilsObjectNameInfoEXT
@@ -6053,8 +6053,8 @@ pub struct VkDebugUtilsObjectTagInfoEXT
 	sType: VkStructureType,
 	pNext: * const c_void,
 	objectType: VkObjectType,
-	objectHandle: uint64_t,
-	tagName: uint64_t,
+	objectHandle: u64,
+	tagName: u64,
 	tagSize: size_t,
 	pTag: * const c_void,
 }
@@ -6095,7 +6095,7 @@ pub struct VkDebugUtilsMessengerCallbackDataEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDebugUtilsMessengerCallbackDataFlagsEXT,
+	flags: VkDebugUtilsMessengerCallbackDataFlagBitsEXT,
 	pMessageIdName: * const c_char,
 	messageIdNumber: i32,
 	pMessage: * const c_char,
@@ -6123,12 +6123,12 @@ pub struct VkDeviceMemoryReportCallbackDataEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkDeviceMemoryReportFlagsEXT,
+	flags: VkDeviceMemoryReportFlagBitsEXT,
 	type: VkDeviceMemoryReportEventTypeEXT,
-	memoryObjectId: uint64_t,
+	memoryObjectId: u64,
 	size: VkDeviceSize,
 	objectType: VkObjectType,
-	objectHandle: uint64_t,
+	objectHandle: u64,
 	heapIndex: u32,
 }
 impl VkDeviceMemoryReportCallbackDataEXT
@@ -6261,7 +6261,7 @@ pub struct VkAttachmentDescription2
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkAttachmentDescriptionFlags,
+	flags: VkAttachmentDescriptionFlagBits,
 	format: VkFormat,
 	samples: VkSampleCountFlagBits,
 	loadOp: VkAttachmentLoadOp,
@@ -6305,7 +6305,7 @@ pub struct VkAttachmentReference2
 	pNext: * const c_void,
 	attachment: u32,
 	layout: VkImageLayout,
-	aspectMask: VkImageAspectFlags,
+	aspectMask: VkImageAspectFlagBits,
 }
 impl VkAttachmentReference2
 {
@@ -6339,7 +6339,7 @@ pub struct VkSubpassDescription2
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkSubpassDescriptionFlags,
+	flags: VkSubpassDescriptionFlagBits,
 	pipelineBindPoint: VkPipelineBindPoint,
 	viewMask: u32,
 	inputAttachmentCount: u32,
@@ -6385,11 +6385,11 @@ pub struct VkSubpassDependency2
 	pNext: * const c_void,
 	srcSubpass: u32,
 	dstSubpass: u32,
-	srcStageMask: VkPipelineStageFlags,
-	dstStageMask: VkPipelineStageFlags,
-	srcAccessMask: VkAccessFlags,
-	dstAccessMask: VkAccessFlags,
-	dependencyFlags: VkDependencyFlags,
+	srcStageMask: VkPipelineStageFlagBits,
+	dstStageMask: VkPipelineStageFlagBits,
+	srcAccessMask: VkAccessFlagBits,
+	dstAccessMask: VkAccessFlagBits,
+	dependencyFlags: VkDependencyFlagBits,
 	viewOffset: i32,
 }
 impl VkSubpassDependency2
@@ -6424,7 +6424,7 @@ pub struct VkRenderPassCreateInfo2
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkRenderPassCreateFlags,
+	flags: VkRenderPassCreateFlagBits,
 	attachmentCount: u32,
 	pAttachments: * const VkAttachmentDescription2,
 	subpassCount: u32,
@@ -6593,10 +6593,10 @@ pub struct VkSemaphoreWaitInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkSemaphoreWaitFlags,
+	flags: VkSemaphoreWaitFlagBits,
 	semaphoreCount: u32,
 	pSemaphores: * const VkSemaphore,
-	pValues: * const uint64_t,
+	pValues: * const u64,
 }
 impl VkSemaphoreWaitInfo
 {
@@ -6631,7 +6631,7 @@ pub struct VkSemaphoreSignalInfo
 	sType: VkStructureType,
 	pNext: * const c_void,
 	semaphore: VkSemaphore,
-	value: uint64_t,
+	value: u64,
 }
 impl VkSemaphoreSignalInfo
 {
@@ -6934,7 +6934,7 @@ pub struct VkRayTracingPipelineCreateInfoNV
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineCreateFlags,
+	flags: VkPipelineCreateFlagBits,
 	stageCount: u32,
 	pStages: * const VkPipelineShaderStageCreateInfo,
 	groupCount: u32,
@@ -6961,7 +6961,7 @@ pub struct VkRayTracingPipelineCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPipelineCreateFlags,
+	flags: VkPipelineCreateFlagBits,
 	stageCount: u32,
 	pStages: * const VkPipelineShaderStageCreateInfo,
 	groupCount: u32,
@@ -7061,7 +7061,7 @@ pub struct VkGeometryNV
 	pNext: * const c_void,
 	geometryType: VkGeometryTypeKHR,
 	geometry: VkGeometryDataNV,
-	flags: VkGeometryFlagsKHR,
+	flags: VkGeometryFlagBitsKHR,
 }
 impl VkGeometryNV
 {
@@ -7081,7 +7081,7 @@ pub struct VkAccelerationStructureInfoNV
 	sType: VkStructureType,
 	pNext: * const c_void,
 	type: VkAccelerationStructureTypeNV,
-	flags: VkBuildAccelerationStructureFlagsNV,
+	flags: VkBuildAccelerationStructureFlagBitsNV,
 	instanceCount: u32,
 	geometryCount: u32,
 	pGeometries: * const VkGeometryNV,
@@ -7200,9 +7200,9 @@ impl VkTraceRaysIndirectCommandKHR
 #[derive(Copy, Clone)]
 pub struct VkDrmFormatModifierPropertiesEXT
 {
-	drmFormatModifier: uint64_t,
+	drmFormatModifier: u64,
 	drmFormatModifierPlaneCount: u32,
-	drmFormatModifierTilingFeatures: VkFormatFeatureFlags,
+	drmFormatModifierTilingFeatures: VkFormatFeatureFlagBits,
 }
 impl VkDrmFormatModifierPropertiesEXT
 {
@@ -7220,7 +7220,7 @@ pub struct VkImageDrmFormatModifierPropertiesEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	drmFormatModifier: uint64_t,
+	drmFormatModifier: u64,
 }
 impl VkImageDrmFormatModifierPropertiesEXT
 {
@@ -7408,8 +7408,8 @@ pub struct VkFramebufferAttachmentImageInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkImageCreateFlags,
-	usage: VkImageUsageFlags,
+	flags: VkImageCreateFlagBits,
+	usage: VkImageUsageFlagBits,
 	width: u32,
 	height: u32,
 	layerCount: u32,
@@ -7528,8 +7528,8 @@ impl VkImageViewAddressPropertiesNVX
 #[derive(Copy, Clone)]
 pub struct VkPipelineCreationFeedbackEXT
 {
-	flags: VkPipelineCreationFeedbackFlagsEXT,
-	duration: uint64_t,
+	flags: VkPipelineCreationFeedbackFlagBitsEXT,
+	duration: u64,
 }
 impl VkPipelineCreationFeedbackEXT
 {
@@ -7569,7 +7569,7 @@ pub struct VkPerformanceCounterDescriptionKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkPerformanceCounterDescriptionFlagsKHR,
+	flags: VkPerformanceCounterDescriptionFlagBitsKHR,
 	name: c_char,
 	category: c_char,
 	description: c_char,
@@ -7591,8 +7591,8 @@ pub struct VkAcquireProfilingLockInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkAcquireProfilingLockFlagsKHR,
-	timeout: uint64_t,
+	flags: VkAcquireProfilingLockFlagBitsKHR,
+	timeout: u64,
 }
 impl VkAcquireProfilingLockInfoKHR
 {
@@ -7611,7 +7611,7 @@ pub struct VkHeadlessSurfaceCreateInfoEXT
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkHeadlessSurfaceCreateFlagsEXT,
+	flags: VkHeadlessSurfaceCreateFlagBitsEXT,
 }
 impl VkHeadlessSurfaceCreateInfoEXT
 {
@@ -7632,8 +7632,8 @@ pub struct VkFramebufferMixedSamplesCombinationNV
 	pNext: * const c_void,
 	coverageReductionMode: VkCoverageReductionModeNV,
 	rasterizationSamples: VkSampleCountFlagBits,
-	depthStencilSamples: VkSampleCountFlags,
-	colorSamples: VkSampleCountFlags,
+	depthStencilSamples: VkSampleCountFlagBits,
+	colorSamples: VkSampleCountFlagBits,
 }
 impl VkFramebufferMixedSamplesCombinationNV
 {
@@ -7703,7 +7703,7 @@ pub struct VkPerformanceMarkerInfoINTEL
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	marker: uint64_t,
+	marker: u64,
 }
 impl VkPerformanceMarkerInfoINTEL
 {
@@ -7743,7 +7743,7 @@ pub struct VkPerformanceOverrideInfoINTEL
 	pNext: * const c_void,
 	type: VkPerformanceOverrideTypeINTEL,
 	enable: VkBool32,
-	parameter: uint64_t,
+	parameter: u64,
 }
 impl VkPerformanceOverrideInfoINTEL
 {
@@ -7845,7 +7845,7 @@ pub struct VkPipelineExecutablePropertiesKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	stages: VkShaderStageFlags,
+	stages: VkShaderStageFlagBits,
 	name: c_char,
 	description: c_char,
 	subgroupSize: u32,
@@ -7983,7 +7983,7 @@ pub struct VkPhysicalDeviceToolPropertiesEXT
 	pNext: * const c_void,
 	name: c_char,
 	version: c_char,
-	purposes: VkToolPurposeFlagsEXT,
+	purposes: VkToolPurposeFlagBitsEXT,
 	description: c_char,
 	layer: c_char,
 }
@@ -8071,7 +8071,7 @@ pub struct VkAccelerationStructureGeometryKHR
 	pNext: * const c_void,
 	geometryType: VkGeometryTypeKHR,
 	geometry: VkAccelerationStructureGeometryDataKHR,
-	flags: VkGeometryFlagsKHR,
+	flags: VkGeometryFlagBitsKHR,
 }
 impl VkAccelerationStructureGeometryKHR
 {
@@ -8091,7 +8091,7 @@ pub struct VkAccelerationStructureBuildGeometryInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	type: VkAccelerationStructureTypeKHR,
-	flags: VkBuildAccelerationStructureFlagsKHR,
+	flags: VkBuildAccelerationStructureFlagBitsKHR,
 	mode: VkBuildAccelerationStructureModeKHR,
 	srcAccelerationStructure: VkAccelerationStructureKHR,
 	dstAccelerationStructure: VkAccelerationStructureKHR,
@@ -8136,7 +8136,7 @@ pub struct VkAccelerationStructureCreateInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	createFlags: VkAccelerationStructureCreateFlagsKHR,
+	createFlags: VkAccelerationStructureCreateFlagBitsKHR,
 	buffer: VkBuffer,
 	offset: VkDeviceSize,
 	size: VkDeviceSize,
@@ -8229,8 +8229,8 @@ pub struct VkAccelerationStructureInstanceKHR
 	instanceCustomIndex: u32,
 	mask: u32,
 	instanceShaderBindingTableRecordOffset: u32,
-	flags: VkGeometryInstanceFlagsKHR,
-	accelerationStructureReference: uint64_t,
+	flags: VkGeometryInstanceFlagBitsKHR,
+	accelerationStructureReference: u64,
 }
 impl VkAccelerationStructureInstanceKHR
 {
@@ -8658,7 +8658,7 @@ pub struct VkPhysicalDeviceFragmentShadingRateKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	sampleCounts: VkSampleCountFlags,
+	sampleCounts: VkSampleCountFlagBits,
 	fragmentSize: VkExtent2D,
 }
 impl VkPhysicalDeviceFragmentShadingRateKHR
@@ -8760,10 +8760,10 @@ pub struct VkImageMemoryBarrier2KHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	srcStageMask: VkPipelineStageFlags2KHR,
-	srcAccessMask: VkAccessFlags2KHR,
-	dstStageMask: VkPipelineStageFlags2KHR,
-	dstAccessMask: VkAccessFlags2KHR,
+	srcStageMask: VkPipelineStageFlagBits2KHR,
+	srcAccessMask: VkAccessFlagBits2KHR,
+	dstStageMask: VkPipelineStageFlagBits2KHR,
+	dstAccessMask: VkAccessFlagBits2KHR,
 	oldLayout: VkImageLayout,
 	newLayout: VkImageLayout,
 	srcQueueFamilyIndex: u32,
@@ -8788,10 +8788,10 @@ pub struct VkBufferMemoryBarrier2KHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	srcStageMask: VkPipelineStageFlags2KHR,
-	srcAccessMask: VkAccessFlags2KHR,
-	dstStageMask: VkPipelineStageFlags2KHR,
-	dstAccessMask: VkAccessFlags2KHR,
+	srcStageMask: VkPipelineStageFlagBits2KHR,
+	srcAccessMask: VkAccessFlagBits2KHR,
+	dstStageMask: VkPipelineStageFlagBits2KHR,
+	dstAccessMask: VkAccessFlagBits2KHR,
 	srcQueueFamilyIndex: u32,
 	dstQueueFamilyIndex: u32,
 	buffer: VkBuffer,
@@ -8815,7 +8815,7 @@ pub struct VkDependencyInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	dependencyFlags: VkDependencyFlags,
+	dependencyFlags: VkDependencyFlagBits,
 	memoryBarrierCount: u32,
 	pMemoryBarriers: * const VkMemoryBarrier2KHR,
 	bufferMemoryBarrierCount: u32,
@@ -8841,8 +8841,8 @@ pub struct VkSemaphoreSubmitInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	semaphore: VkSemaphore,
-	value: uint64_t,
-	stageMask: VkPipelineStageFlags2KHR,
+	value: u64,
+	stageMask: VkPipelineStageFlagBits2KHR,
 	deviceIndex: u32,
 }
 impl VkSemaphoreSubmitInfoKHR
@@ -8882,7 +8882,7 @@ pub struct VkSubmitInfo2KHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkSubmitFlagsKHR,
+	flags: VkSubmitFlagBitsKHR,
 	waitSemaphoreInfoCount: u32,
 	pWaitSemaphoreInfos: * const VkSemaphoreSubmitInfoKHR,
 	commandBufferInfoCount: u32,
@@ -8907,7 +8907,7 @@ pub struct VkCheckpointData2NV
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	stage: VkPipelineStageFlags2KHR,
+	stage: VkPipelineStageFlagBits2KHR,
 	pCheckpointMarker: * const c_void,
 }
 impl VkCheckpointData2NV
@@ -8927,7 +8927,7 @@ pub struct VkPhysicalDeviceVideoFormatInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	imageUsage: VkImageUsageFlags,
+	imageUsage: VkImageUsageFlagBits,
 	pVideoProfiles: * const VkVideoProfilesKHR,
 }
 impl VkPhysicalDeviceVideoFormatInfoKHR
@@ -8966,7 +8966,7 @@ pub struct VkVideoCapabilitiesKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	capabilityFlags: VkVideoCapabilityFlagsKHR,
+	capabilityFlags: VkVideoCapabilityFlagBitsKHR,
 	minBitstreamBufferOffsetAlignment: VkDeviceSize,
 	minBitstreamBufferSizeAlignment: VkDeviceSize,
 	videoPictureExtentGranularity: VkExtent2D,
@@ -9076,7 +9076,7 @@ pub struct VkVideoDecodeInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkVideoDecodeFlagsKHR,
+	flags: VkVideoDecodeFlagBitsKHR,
 	codedOffset: VkOffset2D,
 	codedExtent: VkExtent2D,
 	srcBuffer: VkBuffer,
@@ -9105,7 +9105,7 @@ pub struct VkVideoSessionCreateInfoKHR
 	sType: VkStructureType,
 	pNext: * const c_void,
 	queueFamilyIndex: u32,
-	flags: VkVideoSessionCreateFlagsKHR,
+	flags: VkVideoSessionCreateFlagBitsKHR,
 	pVideoProfile: * const VkVideoProfileKHR,
 	pictureFormat: VkFormat,
 	maxCodedExtent: VkExtent2D,
@@ -9169,8 +9169,8 @@ pub struct VkVideoBeginCodingInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkVideoBeginCodingFlagsKHR,
-	codecQualityPreset: VkVideoCodingQualityPresetFlagsKHR,
+	flags: VkVideoBeginCodingFlagBitsKHR,
+	codecQualityPreset: VkVideoCodingQualityPresetFlagBitsKHR,
 	videoSession: VkVideoSessionKHR,
 	videoSessionParameters: VkVideoSessionParametersKHR,
 	referenceSlotCount: u32,
@@ -9193,7 +9193,7 @@ pub struct VkVideoEndCodingInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkVideoEndCodingFlagsKHR,
+	flags: VkVideoEndCodingFlagBitsKHR,
 }
 impl VkVideoEndCodingInfoKHR
 {
@@ -9212,7 +9212,7 @@ pub struct VkVideoCodingControlInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkVideoCodingControlFlagsKHR,
+	flags: VkVideoCodingControlFlagBitsKHR,
 }
 impl VkVideoCodingControlInfoKHR
 {
@@ -9231,7 +9231,7 @@ pub struct VkVideoEncodeInfoKHR
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkVideoEncodeFlagsKHR,
+	flags: VkVideoEncodeFlagBitsKHR,
 	qualityLevel: u32,
 	codedExtent: VkExtent2D,
 	dstBitstreamBuffer: VkBuffer,
@@ -9410,8 +9410,8 @@ pub struct VkAccelerationStructureSRTMotionInstanceNV
 	instanceCustomIndex: u32,
 	mask: u32,
 	instanceShaderBindingTableRecordOffset: u32,
-	flags: VkGeometryInstanceFlagsKHR,
-	accelerationStructureReference: uint64_t,
+	flags: VkGeometryInstanceFlagBitsKHR,
+	accelerationStructureReference: u64,
 }
 impl VkAccelerationStructureSRTMotionInstanceNV
 {
@@ -9432,8 +9432,8 @@ pub struct VkAccelerationStructureMatrixMotionInstanceNV
 	instanceCustomIndex: u32,
 	mask: u32,
 	instanceShaderBindingTableRecordOffset: u32,
-	flags: VkGeometryInstanceFlagsKHR,
-	accelerationStructureReference: uint64_t,
+	flags: VkGeometryInstanceFlagBitsKHR,
+	accelerationStructureReference: u64,
 }
 impl VkAccelerationStructureMatrixMotionInstanceNV
 {
@@ -9450,7 +9450,7 @@ impl VkAccelerationStructureMatrixMotionInstanceNV
 pub struct VkAccelerationStructureMotionInstanceNV
 {
 	type: VkAccelerationStructureMotionInstanceTypeNV,
-	flags: VkAccelerationStructureMotionInstanceFlagsNV,
+	flags: VkAccelerationStructureMotionInstanceFlagBitsNV,
 	data: VkAccelerationStructureMotionInstanceDataNV,
 }
 impl VkAccelerationStructureMotionInstanceNV
