@@ -1,13 +1,156 @@
-#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
+#![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
+use std::ptr::null;
 use std::{io::Read};
-
-
+use std::os::raw::*;
 
 mod vk_all;
 
+use vk_all::*;
+
+pub type PFN_vkVoidFunction = extern "system" fn() -> ();
+pub const VK_NULL_HANDLE: u64 = 0u64;
 
 
+
+
+
+extern "system"
+{
+    pub fn vkGetDeviceProcAddr(device: VkDevice, pName: * const c_char, ) -> PFN_vkVoidFunction;
+    pub fn vkGetInstanceProcAddr(instance: VkInstance, pName: * const c_char, ) -> PFN_vkVoidFunction;
+}
+
+
+
+
+
+macro_rules! gl_macro_func_generator 
+{
+    ( $( $fn:ident ( $($arg:ident : $t:ty),* ) -> $res:ty ),* ) => 
+    {
+        mod __temp_funcs 
+        {
+            use super::*;
+
+            $(
+                pub static mut $fn: Option<extern "C" fn ($($arg: $t),*) -> $res> = None;
+            )*
+        }
+
+        $(
+            pub unsafe fn $fn($($arg: $t),*) -> $res 
+            {
+                __temp_funcs::$fn.unwrap()( $($arg),* )
+            }
+        )*
+
+        pub fn load_with<F>(mut loadfn: F, instance: *const VkInstance ) -> bool  where F: FnMut(VkInstance, *const u8) -> *const c_void
+        {
+            $(
+                unsafe 
+                {
+                    println!("tyeing!");
+                    let fn_name = stringify!($fn);
+                    println!("{}", fn_name);
+                    let proc_ptr = loadfn(instance, fn_name.as_ptr());
+                    if proc_ptr.is_null()
+                    {
+                        println!("Load vk func {:?} failed.", fn_name);
+                        return false;
+                    }
+                    __temp_funcs::$fn = Some(std::mem::transmute(proc_ptr));
+                }
+            )*
+            return true;
+        }
+    };
+}
+
+
+
+
+
+gl_macro_func_generator!
+(
+    vkCreateInstance(pCreateInfo: * const VkInstanceCreateInfo, pAllocator: * const c_void, pInstance: * mut VkInstance) -> VkResult,
+    vkDestroyInstance(instance: VkInstance, pAllocator: * const c_void) -> ()
+);
+
+
+/*
+fn load_funcs()
+{
+    //pub fn vkCreateInstance(pCreateInfo: * const VkInstanceCreateInfo, pAllocator: * const VkAllocationCallbacks, pInstance: * mut VkInstance,) -> VkResult;
+    //pub fn vkDestroyInstance(instance: VkInstance, pAllocator: * const VkAllocationCallbacks,) -> ();
+
+
+    pub fn vkCreateInstance(pCreateInfo: * const VkInstanceCreateInfo, pAllocator: * const c_void, pInstance: * mut VkInstance,) -> VkResult;
+    pub fn vkDestroyInstance(instance: VkInstance, pAllocator: * const c_void,) -> ();
+    pub fn vkGetDeviceProcAddr(device: VkDevice, pName: * const c_char, ) -> PFN_vkVoidFunction;
+    pub fn vkGetInstanceProcAddr(instance: VkInstance, pName: * const c_char, ) -> PFN_vkVoidFunction;
+}
+*/
+
+
+
+
+#[cfg(target_os = "linux")]
+const VULKAN_LIB: &str = "libvulkan.so.1";
+
+#[cfg(windows)]
+const VULKAN_LIB: &str = "vulkan-1.dll";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pub struct Vulkan 
+{
+    lib: libloading::Library,
+    instance_caller: fn(*const VkInstance, *const u8) -> *const c_void,
+}
+
+impl Vulkan {
+    pub fn new() -> Result<Self, libloading::Error> 
+    {
+        println!("hmm!");
+        let maybe_lib = unsafe { libloading::Library::new(VULKAN_LIB) }?;
+        println!("tyeing!");
+
+        let func: libloading::Symbol<unsafe extern fn(*const c_void, * const u8) -> fn(*const VkInstance, *const u8) -> *const c_void > = unsafe { maybe_lib.get(b"vkGetInstanceProcAddr\0") }?;
+        println!("tyeing!");
+        let instance_caller = unsafe{ func(null(), "vkGetInstanceProcAddr".as_ptr()) };
+        println!("tyeing!");
+        
+        let _gl = load_with(&|s| instance_caller(null(), s) as *const c_void);
+        
+        Ok(
+        Vulkan {
+            lib: maybe_lib,
+            instance_caller
+            //GetInstanceProcAddr: func as *const c_void,
+        })
+    }
+}
+
+
+
+
+
+
+//4-5 - 8pm nap
+//10pm- 1am nap
 //
 //type void = std::os::raw::c_void;
 //type uint32_t = u32;
@@ -226,6 +369,11 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
                     return;
                 }
             }
+
+            if child2.attributes["name"].eq("VkAllocationCallbacks")
+            {
+                return;
+            }
             //println!("Normal struct: {}", child2.attributes["name"]);
 
             let mut new_struct = StructType::new();
@@ -310,9 +458,12 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
         {
             string_out.push_str(&format!("\t{}: {},\r\n", struct_type.param_names[i], struct_type.type_names[i]));
         }
+
+        let mut s_type_mut_string = "let s";
         let mut s_type_str = String::new();
         if struct_type.s_type_name.len() > 0
         {
+            s_type_mut_string = "let mut s";
             s_type_str.push_str(&format!("s.sType = VkStructureType::{};\r\n", struct_type.s_type_name));
         }
         string_out.push_str("}\r\n");
@@ -322,13 +473,13 @@ r"impl {}
 {{
     fn new() -> Self
     {{
-        let mut s: Self = unsafe {{ mem::zeroed() }};
+        {}: Self = unsafe {{ mem::zeroed() }};
         {}
         return s;
     }}
 }}
 
-", struct_type.struct_name, s_type_str));       
+", struct_type.struct_name, s_type_mut_string, s_type_str));       
     }
     
     return string_out;
@@ -556,12 +707,69 @@ fn parse_handles(root: &xmltree::Element) -> String
         {
             node_children2(&child2, string, "name", &Vec::new(), |child3, string|
             {
-                string.push_str(&format!("type {} = *mut c_void;\r\n", child3.get_text().unwrap()));
+                string.push_str(&format!("pub type {} = u64;\r\n", child3.get_text().unwrap()));
             });
         });
     });
     string.push_str("\r\n\r\n");
     return string;
+}
+
+
+struct CommandStruct
+{
+    command_string: String,
+    command_string_return: String,
+
+    command_parms: Vec<String>,
+}
+
+fn parse_commands(root: &xmltree::Element) -> String
+{
+    //let t = enum_types;
+    let mut commands: Vec<CommandStruct> = Vec::new();
+
+    node_children2(&root, &mut commands, "commands", &Vec::new(), |child, commands|
+    {
+        node_children2(&child, commands, "command", &Vec::new(),  |child2, commands|
+        {
+            let mut command_struct = CommandStruct{command_string: String::new(), command_string_return: String::new(), command_parms: Vec::new() };
+            node_children2(&child2, &mut command_struct, "", &Vec::new(), |child3, command_struct|
+            {
+                if child3.name.eq("proto")
+                {
+                    let ans = parse_type_name(child3);
+                    command_struct.command_string = ans.0;
+                    command_struct.command_string_return = ans.1;
+                    //println!("fn {}, ret: {}", ans.0, ans.1);
+                }
+                else if child3.name.eq("param")
+                {
+                    let ans = parse_type_name(child3);
+                    //println!("\tparam: {}: {}", ans.0, ans.1);
+                    command_struct.command_parms.push(format!("{}: {}, ", ans.0, ans.1));
+                }
+            });
+            if command_struct.command_string.len() > 0
+            {
+                commands.push(command_struct);
+            }
+        });
+    });
+
+    for command in &commands
+    {
+
+        print!("fn {}(", &command.command_string);
+        for params in &command.command_parms
+        {
+            print!("{}", &params);
+        }
+        println!(") -> {};", &command.command_string_return);
+    }
+
+
+    return "\r\n".to_string();
 }
 
 
@@ -582,6 +790,9 @@ fn main()
     let vk_structs = parse_vk_structs(&root, &mut vk_enums);
 
     let handles_str = parse_handles(&root);
+    let command_str = parse_commands(&root);
+
+
 
     let mut vk_enum_str = String::new();
     for enum_type in vk_enums
@@ -604,19 +815,21 @@ fn main()
     parse_type_types(&root);
 
     let mut vk_all = 
-r"use std::mem;
+r"#!#![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
+
+use std::mem;
 use std::os::raw::*;
 
-type VkSampleMask = u32;
-type VkBool32 = u32;
-type VkFlags = u32;
-type VkFlags64 = u64;
-type VkDeviceSize = u64;
-type VkDeviceAddress = u64;
+pub type VkSampleMask = u32;
+pub type VkBool32 = u32;
+pub type VkFlags = u32;
+pub type VkFlags64 = u64;
+pub type VkDeviceSize = u64;
+pub type VkDeviceAddress = u64;
 
-type VkClearValue = f32;
+pub type VkClearValue = f32;
 
-fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
+pub fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
 {
     return (variant << 29) | (major << 22) | (minor << 12) | patch; 
 }     
@@ -625,11 +838,16 @@ fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
     vk_all.push_str(&handles_str);
     vk_all.push_str(&vk_enum_str);
     vk_all.push_str(&vk_structs);
-    
+
+
     std::fs::write("carp_vk_parser/vk_handles.rs", &handles_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_enums.rs", &vk_enum_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_structs.rs", &vk_structs).expect("Unable to write file");
     std::fs::write("carp_vk_parser/src/vk_all.rs", &vk_all).expect("Unable to write file");
+    
+    
+    Vulkan::new().unwrap();
+
 }
 
 
