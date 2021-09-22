@@ -215,7 +215,7 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
                 return;
             }
 */
-            let check_list = ["EXT", "KHR", "NV", "NVX", "NN", "AMD", "AMDX", "INTEL", "FB", 
+            let check_list = ["EXT", "NV", "NVX", "NN", "AMD", "AMDX", "INTEL", "FB", "KHR", 
                 "FUCHSIA", "QCOM", "HUAWEI", "VALVE", "GGP", "ANDROID", "GOOGLE", "MKV", "QNX",
                 "MVK"];
 
@@ -613,6 +613,8 @@ type VkFlags = u32;
 type VkFlags64 = u64;
 type VkDeviceSize = u64;
 type VkDeviceAddress = u64;
+
+type VkClearValue = f32;
 
 fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
 {
