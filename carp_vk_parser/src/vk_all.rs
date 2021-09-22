@@ -1,4 +1,4 @@
-use std::{io::Read, mem};
+use std::mem;
 use std::os::raw::*;
 
 type VkSampleMask = u32;
@@ -7,6 +7,57 @@ type VkFlags = u32;
 type VkFlags64 = u64;
 type VkDeviceSize = u64;
 type VkDeviceAddress = u64;
+
+fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
+{
+    return (variant << 29) | (major << 22) | (minor << 12) | patch; 
+}     
+
+type VkInstance = *mut c_void;
+type VkPhysicalDevice = *mut c_void;
+type VkDevice = *mut c_void;
+type VkQueue = *mut c_void;
+type VkCommandBuffer = *mut c_void;
+type VkDeviceMemory = *mut c_void;
+type VkCommandPool = *mut c_void;
+type VkBuffer = *mut c_void;
+type VkBufferView = *mut c_void;
+type VkImage = *mut c_void;
+type VkImageView = *mut c_void;
+type VkShaderModule = *mut c_void;
+type VkPipeline = *mut c_void;
+type VkPipelineLayout = *mut c_void;
+type VkSampler = *mut c_void;
+type VkDescriptorSet = *mut c_void;
+type VkDescriptorSetLayout = *mut c_void;
+type VkDescriptorPool = *mut c_void;
+type VkFence = *mut c_void;
+type VkSemaphore = *mut c_void;
+type VkEvent = *mut c_void;
+type VkQueryPool = *mut c_void;
+type VkFramebuffer = *mut c_void;
+type VkRenderPass = *mut c_void;
+type VkPipelineCache = *mut c_void;
+type VkIndirectCommandsLayoutNV = *mut c_void;
+type VkDescriptorUpdateTemplate = *mut c_void;
+type VkSamplerYcbcrConversion = *mut c_void;
+type VkValidationCacheEXT = *mut c_void;
+type VkAccelerationStructureKHR = *mut c_void;
+type VkAccelerationStructureNV = *mut c_void;
+type VkPerformanceConfigurationINTEL = *mut c_void;
+type VkDeferredOperationKHR = *mut c_void;
+type VkPrivateDataSlotEXT = *mut c_void;
+type VkCuModuleNVX = *mut c_void;
+type VkCuFunctionNVX = *mut c_void;
+type VkDisplayKHR = *mut c_void;
+type VkDisplayModeKHR = *mut c_void;
+type VkSurfaceKHR = *mut c_void;
+type VkSwapchainKHR = *mut c_void;
+type VkDebugReportCallbackEXT = *mut c_void;
+type VkDebugUtilsMessengerEXT = *mut c_void;
+type VkVideoSessionKHR = *mut c_void;
+type VkVideoSessionParametersKHR = *mut c_void;
+
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -154,11 +205,7 @@ pub enum VkPipelineCacheHeaderVersion
 	VK_PIPELINE_CACHE_HEADER_VERSION_ONE = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineCacheCreateFlagBits
-{
-}
+type VkPipelineCacheCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -218,6 +265,7 @@ pub enum VkSamplerAddressMode
 	VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1,
 	VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2,
 	VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3,
+	VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4,
 }
 
 #[repr(i32)]
@@ -747,6 +795,10 @@ pub enum VkStructureType
 	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000,
 	VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = 1000168001,
 	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES = 49,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES = 50,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES = 51,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES = 52,
 	VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO = 1000147000,
 	VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = 1000109000,
 	VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = 1000109001,
@@ -861,6 +913,7 @@ pub enum VkDynamicState
 pub enum VkDescriptorUpdateTemplateType
 {
 	VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0,
+	VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = 1,
 }
 
 #[repr(i32)]
@@ -917,17 +970,9 @@ pub enum VkCullModeFlagBits
 	VK_CULL_MODE_FRONT_AND_BACK = 0x00000003,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkRenderPassCreateFlagBits
-{
-}
+type VkRenderPassCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkDeviceQueueCreateFlagBits
-{
-}
+type VkDeviceQueueCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -968,6 +1013,7 @@ pub enum VkAccessFlagBits
 	VK_ACCESS_HOST_WRITE_BIT = 16384,
 	VK_ACCESS_MEMORY_READ_BIT = 32768,
 	VK_ACCESS_MEMORY_WRITE_BIT = 65536,
+	VK_ACCESS_NONE_KHR = 0,
 }
 
 #[repr(i32)]
@@ -1033,17 +1079,9 @@ pub enum VkImageCreateFlagBits
 	VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 16,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkImageViewCreateFlagBits
-{
-}
+type VkImageViewCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSamplerCreateFlagBits
-{
-}
+type VkSamplerCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1054,11 +1092,7 @@ pub enum VkPipelineCreateFlagBits
 	VK_PIPELINE_CREATE_DERIVATIVE_BIT = 4,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineShaderStageCreateFlagBits
-{
-}
+type VkPipelineShaderStageCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1077,11 +1111,7 @@ pub enum VkFenceCreateFlagBits
 	VK_FENCE_CREATE_SIGNALED_BIT = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSemaphoreCreateFlagBits
-{
-}
+type VkSemaphoreCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1192,6 +1222,7 @@ pub enum VkPipelineStageFlagBits
 	VK_PIPELINE_STAGE_HOST_BIT = 16384,
 	VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = 32768,
 	VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = 65536,
+	VK_PIPELINE_STAGE_NONE_KHR = 0,
 }
 
 #[repr(i32)]
@@ -1509,17 +1540,9 @@ pub enum VkIndirectCommandsTokenTypeNV
 	VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = 7,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPrivateDataSlotCreateFlagBitsEXT
-{
-}
+type VkPrivateDataSlotCreateFlagBitsEXT = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkDescriptorSetLayoutCreateFlagBits
-{
-}
+type VkDescriptorSetLayoutCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1651,11 +1674,7 @@ pub enum VkDeviceGroupPresentModeFlagBitsKHR
 	VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 8,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSwapchainCreateFlagBitsKHR
-{
-}
+type VkSwapchainCreateFlagBitsKHR = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1679,11 +1698,7 @@ pub enum VkDiscardRectangleModeEXT
 	VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSubpassDescriptionFlagBits
-{
-}
+type VkSubpassDescriptionFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2035,11 +2050,7 @@ pub enum VkMemoryOverallocationBehaviorAMD
 	VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = 2,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkFramebufferCreateFlagBits
-{
-}
+type VkFramebufferCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2142,17 +2153,9 @@ pub enum VkPerformanceCounterDescriptionFlagBitsKHR
 	VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = 2,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkAcquireProfilingLockFlagBitsKHR
-{
-}
+type VkAcquireProfilingLockFlagBitsKHR = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkShaderCorePropertiesFlagBitsAMD
-{
-}
+type VkShaderCorePropertiesFlagBitsAMD = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2224,17 +2227,9 @@ pub enum VkLineRasterizationModeEXT
 	VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = 3,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkShaderModuleCreateFlagBits
-{
-}
+type VkShaderModuleCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineCompilerControlFlagBitsAMD
-{
-}
+type VkPipelineCompilerControlFlagBitsAMD = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2349,17 +2344,9 @@ pub enum VkSubmitFlagBitsKHR
 	VK_SUBMIT_PROTECTED_BIT_KHR = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkEventCreateFlagBits
-{
-}
+type VkEventCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineLayoutCreateFlagBits
-{
-}
+type VkPipelineLayoutCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2533,12 +2520,40 @@ pub enum VkVideoEncodeH264CreateFlagBitsEXT
 	VK_VIDEO_ENCODE_H264_CREATE_RESERVED_0_BIT_EXT = 1,
 }
 
+type VkPipelineViewportStateCreateFlagBits = u32;
+
+type VkPipelineTessellationStateCreateFlagBits = u32;
+
+type VkInstanceCreateFlagBits = u32;
+
+type VkDeviceCreateFlagBits = u32;
+
+type VkPipelineRasterizationStateCreateFlagBits = u32;
+
+type VkPipelineDynamicStateCreateFlagBits = u32;
+
+type VkPipelineInputAssemblyStateCreateFlagBits = u32;
+
+type VkPipelineColorBlendStateCreateFlagBits = u32;
+
+type VkDescriptorUpdateTemplateCreateFlagBits = u32;
+
+type VkBufferViewCreateFlagBits = u32;
+
+type VkQueryPoolCreateFlagBits = u32;
+
+type VkPipelineDepthStencilStateCreateFlagBits = u32;
+
+type VkPipelineMultisampleStateCreateFlagBits = u32;
+
+type VkPipelineVertexInputStateCreateFlagBits = u32;
+
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct VkBaseOutStructure
 {
 	sType: VkStructureType,
-	pNext: * const VkBaseOutStructure,
+	pNext: * mut VkBaseOutStructure,
 }
 impl VkBaseOutStructure
 {
@@ -2799,7 +2814,7 @@ impl VkApplicationInfo
 #[derive(Copy, Clone)]
 pub struct VkAllocationCallbacks
 {
-	pUserData: * const c_void,
+	pUserData: * mut c_void,
 	pfnAllocation: PFN_vkAllocationFunction,
 	pfnReallocation: PFN_vkReallocationFunction,
 	pfnFree: PFN_vkFreeFunction,
@@ -3660,7 +3675,7 @@ pub struct VkShaderModuleCreateInfo
 	sType: VkStructureType,
 	pNext: * const c_void,
 	flags: VkShaderModuleCreateFlagBits,
-	codeSize: size_t,
+	codeSize: usize,
 	pCode: * const u32,
 }
 impl VkShaderModuleCreateInfo
@@ -3719,7 +3734,7 @@ impl VkDescriptorSetLayoutCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorPoolSize
 {
-	type: VkDescriptorType,
+	type_type: VkDescriptorType,
 	descriptorCount: u32,
 }
 impl VkDescriptorPoolSize
@@ -3781,7 +3796,7 @@ pub struct VkSpecializationMapEntry
 {
 	constantID: u32,
 	offset: u32,
-	size: size_t,
+	size: usize,
 }
 impl VkSpecializationMapEntry
 {
@@ -3799,7 +3814,7 @@ pub struct VkSpecializationInfo
 {
 	mapEntryCount: u32,
 	pMapEntries: * const VkSpecializationMapEntry,
-	dataSize: size_t,
+	dataSize: usize,
 	pData: * const c_void,
 }
 impl VkSpecializationInfo
@@ -4196,7 +4211,7 @@ pub struct VkPipelineCacheCreateInfo
 	sType: VkStructureType,
 	pNext: * const c_void,
 	flags: VkPipelineCacheCreateFlagBits,
-	initialDataSize: size_t,
+	initialDataSize: usize,
 	pInitialData: * const c_void,
 }
 impl VkPipelineCacheCreateInfo
@@ -4759,7 +4774,7 @@ pub struct VkPhysicalDeviceLimits
 	maxViewportDimensions: u32,
 	viewportBoundsRange: f32,
 	viewportSubPixelBits: u32,
-	minMemoryMapAlignment: size_t,
+	minMemoryMapAlignment: usize,
 	minTexelBufferOffsetAlignment: VkDeviceSize,
 	minUniformBufferOffsetAlignment: VkDeviceSize,
 	minStorageBufferOffsetAlignment: VkDeviceSize,
@@ -4935,41 +4950,6 @@ impl VkDispatchIndirectCommand
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMultiDrawInfoEXT
-{
-	firstVertex: u32,
-	vertexCount: u32,
-}
-impl VkMultiDrawInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMultiDrawIndexedInfoEXT
-{
-	firstIndex: u32,
-	indexCount: u32,
-	vertexOffset: i32,
-}
-impl VkMultiDrawIndexedInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkSubmitInfo
 {
 	sType: VkStructureType,
@@ -4995,781 +4975,19 @@ impl VkSubmitInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkDisplayPropertiesKHR
-{
-	display: VkDisplayKHR,
-	displayName: * const c_char,
-	physicalDimensions: VkExtent2D,
-	physicalResolution: VkExtent2D,
-	supportedTransforms: VkSurfaceTransformFlagBitsKHR,
-	planeReorderPossible: VkBool32,
-	persistentContent: VkBool32,
-}
-impl VkDisplayPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayPlanePropertiesKHR
-{
-	currentDisplay: VkDisplayKHR,
-	currentStackIndex: u32,
-}
-impl VkDisplayPlanePropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayModeParametersKHR
-{
-	visibleRegion: VkExtent2D,
-	refreshRate: u32,
-}
-impl VkDisplayModeParametersKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayModePropertiesKHR
-{
-	displayMode: VkDisplayModeKHR,
-	parameters: VkDisplayModeParametersKHR,
-}
-impl VkDisplayModePropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayModeCreateInfoKHR
+pub struct VkPhysicalDeviceFeatures2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDisplayModeCreateFlagBitsKHR,
-	parameters: VkDisplayModeParametersKHR,
+	pNext: * mut c_void,
+	features: VkPhysicalDeviceFeatures,
 }
-impl VkDisplayModeCreateInfoKHR
+impl VkPhysicalDeviceFeatures2
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayPlaneCapabilitiesKHR
-{
-	supportedAlpha: VkDisplayPlaneAlphaFlagBitsKHR,
-	minSrcPosition: VkOffset2D,
-	maxSrcPosition: VkOffset2D,
-	minSrcExtent: VkExtent2D,
-	maxSrcExtent: VkExtent2D,
-	minDstPosition: VkOffset2D,
-	maxDstPosition: VkOffset2D,
-	minDstExtent: VkExtent2D,
-	maxDstExtent: VkExtent2D,
-}
-impl VkDisplayPlaneCapabilitiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplaySurfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDisplaySurfaceCreateFlagBitsKHR,
-	displayMode: VkDisplayModeKHR,
-	planeIndex: u32,
-	planeStackIndex: u32,
-	transform: VkSurfaceTransformFlagBitsKHR,
-	globalAlpha: f32,
-	alphaMode: VkDisplayPlaneAlphaFlagBitsKHR,
-	imageExtent: VkExtent2D,
-}
-impl VkDisplaySurfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSurfaceCapabilitiesKHR
-{
-	minImageCount: u32,
-	maxImageCount: u32,
-	currentExtent: VkExtent2D,
-	minImageExtent: VkExtent2D,
-	maxImageExtent: VkExtent2D,
-	maxImageArrayLayers: u32,
-	supportedTransforms: VkSurfaceTransformFlagBitsKHR,
-	currentTransform: VkSurfaceTransformFlagBitsKHR,
-	supportedCompositeAlpha: VkCompositeAlphaFlagBitsKHR,
-	supportedUsageFlags: VkImageUsageFlagBits,
-}
-impl VkSurfaceCapabilitiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAndroidSurfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkAndroidSurfaceCreateFlagBitsKHR,
-	window: * const ANativeWindow,
-}
-impl VkAndroidSurfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkViSurfaceCreateInfoNN
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkViSurfaceCreateFlagBitsNN,
-	window: * const c_void,
-}
-impl VkViSurfaceCreateInfoNN
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkWaylandSurfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkWaylandSurfaceCreateFlagBitsKHR,
-	display: * const wl_display,
-	surface: * const wl_surface,
-}
-impl VkWaylandSurfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkWin32SurfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkWin32SurfaceCreateFlagBitsKHR,
-	hinstance: HINSTANCE,
-	hwnd: HWND,
-}
-impl VkWin32SurfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkXlibSurfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkXlibSurfaceCreateFlagBitsKHR,
-	dpy: * const Display,
-	window: Window,
-}
-impl VkXlibSurfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkXcbSurfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkXcbSurfaceCreateFlagBitsKHR,
-	connection: * const xcb_connection_t,
-	window: xcb_window_t,
-}
-impl VkXcbSurfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDirectFBSurfaceCreateInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDirectFBSurfaceCreateFlagBitsEXT,
-	dfb: * const IDirectFB,
-	surface: * const IDirectFBSurface,
-}
-impl VkDirectFBSurfaceCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImagePipeSurfaceCreateInfoFUCHSIA
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkImagePipeSurfaceCreateFlagBitsFUCHSIA,
-	imagePipeHandle: zx_handle_t,
-}
-impl VkImagePipeSurfaceCreateInfoFUCHSIA
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkStreamDescriptorSurfaceCreateInfoGGP
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkStreamDescriptorSurfaceCreateFlagBitsGGP,
-	streamDescriptor: GgpStreamDescriptor,
-}
-impl VkStreamDescriptorSurfaceCreateInfoGGP
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkScreenSurfaceCreateInfoQNX
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkScreenSurfaceCreateFlagBitsQNX,
-	context: * const _screen_context,
-	window: * const _screen_window,
-}
-impl VkScreenSurfaceCreateInfoQNX
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SCREEN_SURFACE_CREATE_INFO_QNX;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSurfaceFormatKHR
-{
-	format: VkFormat,
-	colorSpace: VkColorSpaceKHR,
-}
-impl VkSurfaceFormatKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSwapchainCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkSwapchainCreateFlagBitsKHR,
-	surface: VkSurfaceKHR,
-	minImageCount: u32,
-	imageFormat: VkFormat,
-	imageColorSpace: VkColorSpaceKHR,
-	imageExtent: VkExtent2D,
-	imageArrayLayers: u32,
-	imageUsage: VkImageUsageFlagBits,
-	imageSharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: * const u32,
-	preTransform: VkSurfaceTransformFlagBitsKHR,
-	compositeAlpha: VkCompositeAlphaFlagBitsKHR,
-	presentMode: VkPresentModeKHR,
-	clipped: VkBool32,
-	oldSwapchain: VkSwapchainKHR,
-}
-impl VkSwapchainCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPresentInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphores: * const VkSemaphore,
-	swapchainCount: u32,
-	pSwapchains: * const VkSwapchainKHR,
-	pImageIndices: * const u32,
-	pResults: * const VkResult,
-}
-impl VkPresentInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugMarkerObjectNameInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	objectType: VkDebugReportObjectTypeEXT,
-	object: u64,
-	pObjectName: * const c_char,
-}
-impl VkDebugMarkerObjectNameInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugMarkerObjectTagInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	objectType: VkDebugReportObjectTypeEXT,
-	object: u64,
-	tagName: u64,
-	tagSize: size_t,
-	pTag: * const c_void,
-}
-impl VkDebugMarkerObjectTagInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugMarkerMarkerInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pMarkerName: * const c_char,
-	color: f32,
-}
-impl VkDebugMarkerMarkerInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExternalImageFormatPropertiesNV
-{
-	imageFormatProperties: VkImageFormatProperties,
-	externalMemoryFeatures: VkExternalMemoryFeatureFlagBitsNV,
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagBitsNV,
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagBitsNV,
-}
-impl VkExternalImageFormatPropertiesNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPrivateDataSlotCreateInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPrivateDataSlotCreateFlagBitsEXT,
-}
-impl VkPrivateDataSlotCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGraphicsShaderGroupCreateInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	stageCount: u32,
-	pStages: * const VkPipelineShaderStageCreateInfo,
-	pVertexInputState: * const VkPipelineVertexInputStateCreateInfo,
-	pTessellationState: * const VkPipelineTessellationStateCreateInfo,
-}
-impl VkGraphicsShaderGroupCreateInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_GRAPHICS_SHADER_GROUP_CREATE_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindShaderGroupIndirectCommandNV
-{
-	groupIndex: u32,
-}
-impl VkBindShaderGroupIndirectCommandNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindIndexBufferIndirectCommandNV
-{
-	bufferAddress: VkDeviceAddress,
-	size: u32,
-	indexType: VkIndexType,
-}
-impl VkBindIndexBufferIndirectCommandNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindVertexBufferIndirectCommandNV
-{
-	bufferAddress: VkDeviceAddress,
-	size: u32,
-	stride: u32,
-}
-impl VkBindVertexBufferIndirectCommandNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSetStateFlagsIndirectCommandNV
-{
-	data: u32,
-}
-impl VkSetStateFlagsIndirectCommandNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkIndirectCommandsStreamNV
-{
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-}
-impl VkIndirectCommandsStreamNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkIndirectCommandsLayoutTokenNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	tokenType: VkIndirectCommandsTokenTypeNV,
-	stream: u32,
-	offset: u32,
-	vertexBindingUnit: u32,
-	vertexDynamicStride: VkBool32,
-	pushconstantPipelineLayout: VkPipelineLayout,
-	pushconstantShaderStageFlags: VkShaderStageFlagBits,
-	pushconstantOffset: u32,
-	pushconstantSize: u32,
-	indirectStateFlags: VkIndirectStateFlagBitsNV,
-	indexTypeCount: u32,
-	pIndexTypes: * const VkIndexType,
-	pIndexTypeValues: * const u32,
-}
-impl VkIndirectCommandsLayoutTokenNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkIndirectCommandsLayoutCreateInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkIndirectCommandsLayoutUsageFlagBitsNV,
-	pipelineBindPoint: VkPipelineBindPoint,
-	tokenCount: u32,
-	pTokens: * const VkIndirectCommandsLayoutTokenNV,
-	streamCount: u32,
-	pStreamStrides: * const u32,
-}
-impl VkIndirectCommandsLayoutCreateInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGeneratedCommandsInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipeline: VkPipeline,
-	indirectCommandsLayout: VkIndirectCommandsLayoutNV,
-	streamCount: u32,
-	pStreams: * const VkIndirectCommandsStreamNV,
-	sequencesCount: u32,
-	preprocessBuffer: VkBuffer,
-	preprocessOffset: VkDeviceSize,
-	preprocessSize: VkDeviceSize,
-	sequencesCountBuffer: VkBuffer,
-	sequencesCountOffset: VkDeviceSize,
-	sequencesIndexBuffer: VkBuffer,
-	sequencesIndexOffset: VkDeviceSize,
-}
-impl VkGeneratedCommandsInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_GENERATED_COMMANDS_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGeneratedCommandsMemoryRequirementsInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipeline: VkPipeline,
-	indirectCommandsLayout: VkIndirectCommandsLayoutNV,
-	maxSequencesCount: u32,
-}
-impl VkGeneratedCommandsMemoryRequirementsInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_GENERATED_COMMANDS_MEMORY_REQUIREMENTS_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceFeatures2KHR
-{
-}
-impl VkPhysicalDeviceFeatures2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -5779,7 +4997,7 @@ impl VkPhysicalDeviceFeatures2KHR
 pub struct VkPhysicalDeviceProperties2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	properties: VkPhysicalDeviceProperties,
 }
 impl VkPhysicalDeviceProperties2
@@ -5795,25 +5013,10 @@ impl VkPhysicalDeviceProperties2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceProperties2KHR
-{
-}
-impl VkPhysicalDeviceProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkFormatProperties2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	formatProperties: VkFormatProperties,
 }
 impl VkFormatProperties2
@@ -5829,25 +5032,10 @@ impl VkFormatProperties2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkFormatProperties2KHR
-{
-}
-impl VkFormatProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkImageFormatProperties2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	imageFormatProperties: VkImageFormatProperties,
 }
 impl VkImageFormatProperties2
@@ -5863,27 +5051,12 @@ impl VkImageFormatProperties2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkImageFormatProperties2KHR
-{
-}
-impl VkImageFormatProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageFormatInfo2
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
 	format: VkFormat,
-	type: VkImageType,
+	type_type: VkImageType,
 	tiling: VkImageTiling,
 	usage: VkImageUsageFlagBits,
 	flags: VkImageCreateFlagBits,
@@ -5901,25 +5074,10 @@ impl VkPhysicalDeviceImageFormatInfo2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceImageFormatInfo2KHR
-{
-}
-impl VkPhysicalDeviceImageFormatInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	queueFamilyProperties: VkQueueFamilyProperties,
 }
 impl VkQueueFamilyProperties2
@@ -5935,25 +5093,10 @@ impl VkQueueFamilyProperties2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkQueueFamilyProperties2KHR
-{
-}
-impl VkQueueFamilyProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryProperties2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	memoryProperties: VkPhysicalDeviceMemoryProperties,
 }
 impl VkPhysicalDeviceMemoryProperties2
@@ -5969,25 +5112,10 @@ impl VkPhysicalDeviceMemoryProperties2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceMemoryProperties2KHR
-{
-}
-impl VkPhysicalDeviceMemoryProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	properties: VkSparseImageFormatProperties,
 }
 impl VkSparseImageFormatProperties2
@@ -6003,27 +5131,12 @@ impl VkSparseImageFormatProperties2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSparseImageFormatProperties2KHR
-{
-}
-impl VkSparseImageFormatProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSparseImageFormatInfo2
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
 	format: VkFormat,
-	type: VkImageType,
+	type_type: VkImageType,
 	samples: VkSampleCountFlagBits,
 	usage: VkImageUsageFlagBits,
 	tiling: VkImageTiling,
@@ -6035,21 +5148,6 @@ impl VkPhysicalDeviceSparseImageFormatInfo2
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceSparseImageFormatInfo2KHR
-{
-}
-impl VkPhysicalDeviceSparseImageFormatInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -6075,95 +5173,42 @@ impl VkConformanceVersion
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkConformanceVersionKHR
+pub struct VkPhysicalDeviceDriverProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	driverID: VkDriverId,
+	driverName: c_char,
+	driverInfo: c_char,
+	conformanceVersion: VkConformanceVersion,
 }
-impl VkConformanceVersionKHR
+impl VkPhysicalDeviceDriverProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceDriverPropertiesKHR
+pub struct VkPhysicalDeviceVariablePointersFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	variablePointersStorageBuffer: VkBool32,
+	variablePointers: VkBool32,
 }
-impl VkPhysicalDeviceDriverPropertiesKHR
+impl VkPhysicalDeviceVariablePointersFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPresentRegionKHR
-{
-	rectangleCount: u32,
-	pRectangles: * const VkRectLayerKHR,
-}
-impl VkPresentRegionKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRectLayerKHR
-{
-	offset: VkOffset2D,
-	extent: VkExtent2D,
-	layer: u32,
-}
-impl VkRectLayerKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceVariablePointersFeaturesKHR
-{
-}
-impl VkPhysicalDeviceVariablePointersFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceVariablePointerFeaturesKHR
-{
-}
-impl VkPhysicalDeviceVariablePointerFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -6203,45 +5248,38 @@ impl VkExternalMemoryProperties
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkExternalMemoryPropertiesKHR
+pub struct VkPhysicalDeviceExternalImageFormatInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	handleType: VkExternalMemoryHandleTypeFlagBits,
 }
-impl VkExternalMemoryPropertiesKHR
+impl VkPhysicalDeviceExternalImageFormatInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceExternalImageFormatInfoKHR
+pub struct VkExternalImageFormatProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	externalMemoryProperties: VkExternalMemoryProperties,
 }
-impl VkPhysicalDeviceExternalImageFormatInfoKHR
+impl VkExternalImageFormatProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExternalImageFormatPropertiesKHR
-{
-}
-impl VkExternalImageFormatPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -6269,25 +5307,10 @@ impl VkPhysicalDeviceExternalBufferInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceExternalBufferInfoKHR
-{
-}
-impl VkPhysicalDeviceExternalBufferInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkExternalBufferProperties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	externalMemoryProperties: VkExternalMemoryProperties,
 }
 impl VkExternalBufferProperties
@@ -6303,93 +5326,41 @@ impl VkExternalBufferProperties
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkExternalBufferPropertiesKHR
+pub struct VkPhysicalDeviceIDProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	deviceUUID: u8,
+	driverUUID: u8,
+	deviceLUID: u8,
+	deviceNodeMask: u32,
+	deviceLUIDValid: VkBool32,
 }
-impl VkExternalBufferPropertiesKHR
+impl VkPhysicalDeviceIDProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceIDPropertiesKHR
-{
-}
-impl VkPhysicalDeviceIDPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExternalMemoryImageCreateInfoKHR
-{
-}
-impl VkExternalMemoryImageCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExternalMemoryBufferCreateInfoKHR
-{
-}
-impl VkExternalMemoryBufferCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExportMemoryAllocateInfoKHR
-{
-}
-impl VkExportMemoryAllocateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryZirconHandlePropertiesFUCHSIA
+pub struct VkExternalMemoryImageCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	memoryTypeBits: u32,
+	handleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
-impl VkMemoryZirconHandlePropertiesFUCHSIA
+impl VkExternalMemoryImageCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_ZIRCON_HANDLE_PROPERTIES_FUCHSIA;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
 
         return s;
     }
@@ -6397,19 +5368,18 @@ impl VkMemoryZirconHandlePropertiesFUCHSIA
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMemoryGetZirconHandleInfoFUCHSIA
+pub struct VkExternalMemoryBufferCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	memory: VkDeviceMemory,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	handleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
-impl VkMemoryGetZirconHandleInfoFUCHSIA
+impl VkExternalMemoryBufferCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_GET_ZIRCON_HANDLE_INFO_FUCHSIA;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO;
 
         return s;
     }
@@ -6417,77 +5387,18 @@ impl VkMemoryGetZirconHandleInfoFUCHSIA
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMemoryWin32HandlePropertiesKHR
+pub struct VkExportMemoryAllocateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	memoryTypeBits: u32,
+	handleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
-impl VkMemoryWin32HandlePropertiesKHR
+impl VkExportMemoryAllocateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryGetWin32HandleInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memory: VkDeviceMemory,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
-}
-impl VkMemoryGetWin32HandleInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryFdPropertiesKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memoryTypeBits: u32,
-}
-impl VkMemoryFdPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryGetFdInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memory: VkDeviceMemory,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
-}
-impl VkMemoryGetFdInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
 
         return s;
     }
@@ -6514,25 +5425,10 @@ impl VkPhysicalDeviceExternalSemaphoreInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceExternalSemaphoreInfoKHR
-{
-}
-impl VkPhysicalDeviceExternalSemaphoreInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkExternalSemaphoreProperties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
 	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
 	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlagBits,
@@ -6550,156 +5446,18 @@ impl VkExternalSemaphoreProperties
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkExternalSemaphorePropertiesKHR
-{
-}
-impl VkExternalSemaphorePropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExportSemaphoreCreateInfoKHR
-{
-}
-impl VkExportSemaphoreCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImportSemaphoreWin32HandleInfoKHR
+pub struct VkExportSemaphoreCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlagBits,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-	handle: HANDLE,
-	name: LPCWSTR,
+	handleTypes: VkExternalSemaphoreHandleTypeFlagBits,
 }
-impl VkImportSemaphoreWin32HandleInfoKHR
+impl VkExportSemaphoreCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSemaphoreGetWin32HandleInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-}
-impl VkSemaphoreGetWin32HandleInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImportSemaphoreFdInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlagBits,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-	fd: int,
-}
-impl VkImportSemaphoreFdInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSemaphoreGetFdInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-}
-impl VkSemaphoreGetFdInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImportSemaphoreZirconHandleInfoFUCHSIA
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	flags: VkSemaphoreImportFlagBits,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-	zirconHandle: zx_handle_t,
-}
-impl VkImportSemaphoreZirconHandleInfoFUCHSIA
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_ZIRCON_HANDLE_INFO_FUCHSIA;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSemaphoreGetZirconHandleInfoFUCHSIA
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
-}
-impl VkSemaphoreGetZirconHandleInfoFUCHSIA
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_GET_ZIRCON_HANDLE_INFO_FUCHSIA;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO;
 
         return s;
     }
@@ -6726,25 +5484,10 @@ impl VkPhysicalDeviceExternalFenceInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceExternalFenceInfoKHR
-{
-}
-impl VkPhysicalDeviceExternalFenceInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkExternalFenceProperties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlagBits,
 	compatibleHandleTypes: VkExternalFenceHandleTypeFlagBits,
 	externalFenceFeatures: VkExternalFenceFeatureFlagBits,
@@ -6762,52 +5505,18 @@ impl VkExternalFenceProperties
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkExternalFencePropertiesKHR
-{
-}
-impl VkExternalFencePropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkExportFenceCreateInfoKHR
-{
-}
-impl VkExportFenceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImportFenceWin32HandleInfoKHR
+pub struct VkExportFenceCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	fence: VkFence,
-	flags: VkFenceImportFlagBits,
-	handleType: VkExternalFenceHandleTypeFlagBits,
-	handle: HANDLE,
-	name: LPCWSTR,
+	handleTypes: VkExternalFenceHandleTypeFlagBits,
 }
-impl VkImportFenceWin32HandleInfoKHR
+impl VkExportFenceCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO;
 
         return s;
     }
@@ -6815,192 +5524,64 @@ impl VkImportFenceWin32HandleInfoKHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkFenceGetWin32HandleInfoKHR
+pub struct VkPhysicalDeviceMultiviewFeatures
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	multiview: VkBool32,
+	multiviewGeometryShader: VkBool32,
+	multiviewTessellationShader: VkBool32,
+}
+impl VkPhysicalDeviceMultiviewFeatures
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkPhysicalDeviceMultiviewProperties
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	maxMultiviewViewCount: u32,
+	maxMultiviewInstanceIndex: u32,
+}
+impl VkPhysicalDeviceMultiviewProperties
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkRenderPassMultiviewCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	fence: VkFence,
-	handleType: VkExternalFenceHandleTypeFlagBits,
+	subpassCount: u32,
+	pViewMasks: * const u32,
+	dependencyCount: u32,
+	pViewOffsets: * const i32,
+	correlationMaskCount: u32,
+	pCorrelationMasks: * const u32,
 }
-impl VkFenceGetWin32HandleInfoKHR
+impl VkRenderPassMultiviewCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImportFenceFdInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	fence: VkFence,
-	flags: VkFenceImportFlagBits,
-	handleType: VkExternalFenceHandleTypeFlagBits,
-	fd: int,
-}
-impl VkImportFenceFdInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkFenceGetFdInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	fence: VkFence,
-	handleType: VkExternalFenceHandleTypeFlagBits,
-}
-impl VkFenceGetFdInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceMultiviewFeaturesKHR
-{
-}
-impl VkPhysicalDeviceMultiviewFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceMultiviewPropertiesKHR
-{
-}
-impl VkPhysicalDeviceMultiviewPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRenderPassMultiviewCreateInfoKHR
-{
-}
-impl VkRenderPassMultiviewCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSurfaceCapabilities2EXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	minImageCount: u32,
-	maxImageCount: u32,
-	currentExtent: VkExtent2D,
-	minImageExtent: VkExtent2D,
-	maxImageExtent: VkExtent2D,
-	maxImageArrayLayers: u32,
-	supportedTransforms: VkSurfaceTransformFlagBitsKHR,
-	currentTransform: VkSurfaceTransformFlagBitsKHR,
-	supportedCompositeAlpha: VkCompositeAlphaFlagBitsKHR,
-	supportedUsageFlags: VkImageUsageFlagBits,
-	supportedSurfaceCounters: VkSurfaceCounterFlagBitsEXT,
-}
-impl VkSurfaceCapabilities2EXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayPowerInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	powerState: VkDisplayPowerStateEXT,
-}
-impl VkDisplayPowerInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceEventInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	deviceEvent: VkDeviceEventTypeEXT,
-}
-impl VkDeviceEventInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayEventInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	displayEvent: VkDisplayEventTypeEXT,
-}
-impl VkDisplayEventInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO;
 
         return s;
     }
@@ -7011,7 +5592,7 @@ impl VkDisplayEventInfoEXT
 pub struct VkPhysicalDeviceGroupProperties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	physicalDeviceCount: u32,
 	physicalDevices: VkPhysicalDevice,
 	subsetAllocation: VkBool32,
@@ -7029,30 +5610,20 @@ impl VkPhysicalDeviceGroupProperties
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceGroupPropertiesKHR
+pub struct VkMemoryAllocateFlagsInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	flags: VkMemoryAllocateFlagBits,
+	deviceMask: u32,
 }
-impl VkPhysicalDeviceGroupPropertiesKHR
+impl VkMemoryAllocateFlagsInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryAllocateFlagsInfoKHR
-{
-}
-impl VkMemoryAllocateFlagsInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -7080,30 +5651,20 @@ impl VkBindBufferMemoryInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkBindBufferMemoryInfoKHR
+pub struct VkBindBufferMemoryDeviceGroupInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	deviceIndexCount: u32,
+	pDeviceIndices: * const u32,
 }
-impl VkBindBufferMemoryInfoKHR
+impl VkBindBufferMemoryDeviceGroupInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindBufferMemoryDeviceGroupInfoKHR
-{
-}
-impl VkBindBufferMemoryDeviceGroupInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -7131,109 +5692,21 @@ impl VkBindImageMemoryInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkBindImageMemoryInfoKHR
-{
-}
-impl VkBindImageMemoryInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindImageMemoryDeviceGroupInfoKHR
-{
-}
-impl VkBindImageMemoryDeviceGroupInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceGroupRenderPassBeginInfoKHR
-{
-}
-impl VkDeviceGroupRenderPassBeginInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceGroupCommandBufferBeginInfoKHR
-{
-}
-impl VkDeviceGroupCommandBufferBeginInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceGroupSubmitInfoKHR
-{
-}
-impl VkDeviceGroupSubmitInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceGroupBindSparseInfoKHR
-{
-}
-impl VkDeviceGroupBindSparseInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceGroupPresentCapabilitiesKHR
+pub struct VkBindImageMemoryDeviceGroupInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	presentMask: u32,
-	modes: VkDeviceGroupPresentModeFlagBitsKHR,
+	deviceIndexCount: u32,
+	pDeviceIndices: * const u32,
+	splitInstanceBindRegionCount: u32,
+	pSplitInstanceBindRegions: * const VkRect2D,
 }
-impl VkDeviceGroupPresentCapabilitiesKHR
+impl VkBindImageMemoryDeviceGroupInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO;
 
         return s;
     }
@@ -7241,22 +5714,39 @@ impl VkDeviceGroupPresentCapabilitiesKHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkAcquireNextImageInfoKHR
+pub struct VkDeviceGroupRenderPassBeginInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	swapchain: VkSwapchainKHR,
-	timeout: u64,
-	semaphore: VkSemaphore,
-	fence: VkFence,
+	deviceMask: u32,
+	deviceRenderAreaCount: u32,
+	pDeviceRenderAreas: * const VkRect2D,
+}
+impl VkDeviceGroupRenderPassBeginInfo
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkDeviceGroupCommandBufferBeginInfo
+{
+	sType: VkStructureType,
+	pNext: * const c_void,
 	deviceMask: u32,
 }
-impl VkAcquireNextImageInfoKHR
+impl VkDeviceGroupCommandBufferBeginInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO;
 
         return s;
     }
@@ -7264,15 +5754,64 @@ impl VkAcquireNextImageInfoKHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkDeviceGroupDeviceCreateInfoKHR
+pub struct VkDeviceGroupSubmitInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	waitSemaphoreCount: u32,
+	pWaitSemaphoreDeviceIndices: * const u32,
+	commandBufferCount: u32,
+	pCommandBufferDeviceMasks: * const u32,
+	signalSemaphoreCount: u32,
+	pSignalSemaphoreDeviceIndices: * const u32,
 }
-impl VkDeviceGroupDeviceCreateInfoKHR
+impl VkDeviceGroupSubmitInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkDeviceGroupBindSparseInfo
+{
+	sType: VkStructureType,
+	pNext: * const c_void,
+	resourceDeviceIndex: u32,
+	memoryDeviceIndex: u32,
+}
+impl VkDeviceGroupBindSparseInfo
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkDeviceGroupDeviceCreateInfo
+{
+	sType: VkStructureType,
+	pNext: * const c_void,
+	physicalDeviceCount: u32,
+	pPhysicalDevices: * const VkPhysicalDevice,
+}
+impl VkDeviceGroupDeviceCreateInfo
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO;
+
         return s;
     }
 }
@@ -7285,25 +5824,10 @@ pub struct VkDescriptorUpdateTemplateEntry
 	dstArrayElement: u32,
 	descriptorCount: u32,
 	descriptorType: VkDescriptorType,
-	offset: size_t,
-	stride: size_t,
+	offset: usize,
+	stride: usize,
 }
 impl VkDescriptorUpdateTemplateEntry
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDescriptorUpdateTemplateEntryKHR
-{
-}
-impl VkDescriptorUpdateTemplateEntryKHR
 {
     fn new() -> Self
     {
@@ -7341,213 +5865,6 @@ impl VkDescriptorUpdateTemplateCreateInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkDescriptorUpdateTemplateCreateInfoKHR
-{
-}
-impl VkDescriptorUpdateTemplateCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkXYColorEXT
-{
-	x: f32,
-	y: f32,
-}
-impl VkXYColorEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkHdrMetadataEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	displayPrimaryRed: VkXYColorEXT,
-	displayPrimaryGreen: VkXYColorEXT,
-	displayPrimaryBlue: VkXYColorEXT,
-	whitePoint: VkXYColorEXT,
-	maxLuminance: f32,
-	minLuminance: f32,
-	maxContentLightLevel: f32,
-	maxFrameAverageLightLevel: f32,
-}
-impl VkHdrMetadataEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_HDR_METADATA_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRefreshCycleDurationGOOGLE
-{
-	refreshDuration: u64,
-}
-impl VkRefreshCycleDurationGOOGLE
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPastPresentationTimingGOOGLE
-{
-	presentID: u32,
-	desiredPresentTime: u64,
-	actualPresentTime: u64,
-	earliestPresentTime: u64,
-	presentMargin: u64,
-}
-impl VkPastPresentationTimingGOOGLE
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPresentTimeGOOGLE
-{
-	presentID: u32,
-	desiredPresentTime: u64,
-}
-impl VkPresentTimeGOOGLE
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkIOSSurfaceCreateInfoMVK
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkIOSSurfaceCreateFlagBitsMVK,
-	pView: * const c_void,
-}
-impl VkIOSSurfaceCreateInfoMVK
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMacOSSurfaceCreateInfoMVK
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkMacOSSurfaceCreateFlagBitsMVK,
-	pView: * const c_void,
-}
-impl VkMacOSSurfaceCreateInfoMVK
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMetalSurfaceCreateInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkMetalSurfaceCreateFlagBitsEXT,
-	pLayer: * const CAMetalLayer,
-}
-impl VkMetalSurfaceCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkViewportWScalingNV
-{
-	xcoeff: f32,
-	ycoeff: f32,
-}
-impl VkViewportWScalingNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkViewportSwizzleNV
-{
-	x: VkViewportCoordinateSwizzleNV,
-	y: VkViewportCoordinateSwizzleNV,
-	z: VkViewportCoordinateSwizzleNV,
-	w: VkViewportCoordinateSwizzleNV,
-}
-impl VkViewportSwizzleNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkInputAttachmentAspectReference
 {
 	subpass: u32,
@@ -7566,48 +5883,19 @@ impl VkInputAttachmentAspectReference
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkInputAttachmentAspectReferenceKHR
-{
-}
-impl VkInputAttachmentAspectReferenceKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRenderPassInputAttachmentAspectCreateInfoKHR
-{
-}
-impl VkRenderPassInputAttachmentAspectCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceSurfaceInfo2KHR
+pub struct VkRenderPassInputAttachmentAspectCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	surface: VkSurfaceKHR,
+	aspectReferenceCount: u32,
+	pAspectReferences: * const VkInputAttachmentAspectReference,
 }
-impl VkPhysicalDeviceSurfaceInfo2KHR
+impl VkRenderPassInputAttachmentAspectCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO;
 
         return s;
     }
@@ -7615,18 +5903,21 @@ impl VkPhysicalDeviceSurfaceInfo2KHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSurfaceCapabilities2KHR
+pub struct VkPhysicalDevice16BitStorageFeatures
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	surfaceCapabilities: VkSurfaceCapabilitiesKHR,
+	pNext: * mut c_void,
+	storageBuffer16BitAccess: VkBool32,
+	uniformAndStorageBuffer16BitAccess: VkBool32,
+	storagePushConstant16: VkBool32,
+	storageInputOutput16: VkBool32,
 }
-impl VkSurfaceCapabilities2KHR
+impl VkPhysicalDevice16BitStorageFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES;
 
         return s;
     }
@@ -7634,18 +5925,21 @@ impl VkSurfaceCapabilities2KHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSurfaceFormat2KHR
+pub struct VkPhysicalDeviceSubgroupProperties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	surfaceFormat: VkSurfaceFormatKHR,
+	pNext: * mut c_void,
+	subgroupSize: u32,
+	supportedStages: VkShaderStageFlagBits,
+	supportedOperations: VkSubgroupFeatureFlagBits,
+	quadOperationsInAllStages: VkBool32,
 }
-impl VkSurfaceFormat2KHR
+impl VkPhysicalDeviceSubgroupProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
 
         return s;
     }
@@ -7653,126 +5947,19 @@ impl VkSurfaceFormat2KHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkDisplayProperties2KHR
+pub struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	displayProperties: VkDisplayPropertiesKHR,
+	pNext: * mut c_void,
+	shaderSubgroupExtendedTypes: VkBool32,
 }
-impl VkDisplayProperties2KHR
+impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayPlaneProperties2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	displayPlaneProperties: VkDisplayPlanePropertiesKHR,
-}
-impl VkDisplayPlaneProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayModeProperties2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	displayModeProperties: VkDisplayModePropertiesKHR,
-}
-impl VkDisplayModeProperties2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayPlaneInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	mode: VkDisplayModeKHR,
-	planeIndex: u32,
-}
-impl VkDisplayPlaneInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDisplayPlaneCapabilities2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	capabilities: VkDisplayPlaneCapabilitiesKHR,
-}
-impl VkDisplayPlaneCapabilities2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDevice16BitStorageFeaturesKHR
-{
-}
-impl VkPhysicalDevice16BitStorageFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR
-{
-}
-impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -7798,21 +5985,6 @@ impl VkBufferMemoryRequirementsInfo2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkBufferMemoryRequirementsInfo2KHR
-{
-}
-impl VkBufferMemoryRequirementsInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkImageMemoryRequirementsInfo2
 {
 	sType: VkStructureType,
@@ -7826,21 +5998,6 @@ impl VkImageMemoryRequirementsInfo2
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageMemoryRequirementsInfo2KHR
-{
-}
-impl VkImageMemoryRequirementsInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -7866,25 +6023,10 @@ impl VkImageSparseMemoryRequirementsInfo2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkImageSparseMemoryRequirementsInfo2KHR
-{
-}
-impl VkImageSparseMemoryRequirementsInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkMemoryRequirements2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	memoryRequirements: VkMemoryRequirements,
 }
 impl VkMemoryRequirements2
@@ -7900,25 +6042,10 @@ impl VkMemoryRequirements2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMemoryRequirements2KHR
-{
-}
-impl VkMemoryRequirements2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryRequirements2
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	memoryRequirements: VkSparseImageMemoryRequirements,
 }
 impl VkSparseImageMemoryRequirements2
@@ -7934,105 +6061,116 @@ impl VkSparseImageMemoryRequirements2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSparseImageMemoryRequirements2KHR
+pub struct VkPhysicalDevicePointClippingProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	pointClippingBehavior: VkPointClippingBehavior,
 }
-impl VkSparseImageMemoryRequirements2KHR
+impl VkPhysicalDevicePointClippingProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDevicePointClippingPropertiesKHR
+pub struct VkMemoryDedicatedRequirements
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	prefersDedicatedAllocation: VkBool32,
+	requiresDedicatedAllocation: VkBool32,
 }
-impl VkPhysicalDevicePointClippingPropertiesKHR
+impl VkMemoryDedicatedRequirements
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMemoryDedicatedRequirementsKHR
+pub struct VkMemoryDedicatedAllocateInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	image: VkImage,
+	buffer: VkBuffer,
 }
-impl VkMemoryDedicatedRequirementsKHR
+impl VkMemoryDedicatedAllocateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMemoryDedicatedAllocateInfoKHR
+pub struct VkImageViewUsageCreateInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	usage: VkImageUsageFlagBits,
 }
-impl VkMemoryDedicatedAllocateInfoKHR
+impl VkImageViewUsageCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkImageViewUsageCreateInfoKHR
+pub struct VkPipelineTessellationDomainOriginStateCreateInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	domainOrigin: VkTessellationDomainOrigin,
 }
-impl VkImageViewUsageCreateInfoKHR
+impl VkPipelineTessellationDomainOriginStateCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPipelineTessellationDomainOriginStateCreateInfoKHR
+pub struct VkSamplerYcbcrConversionInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	conversion: VkSamplerYcbcrConversion,
 }
-impl VkPipelineTessellationDomainOriginStateCreateInfoKHR
+impl VkSamplerYcbcrConversionInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSamplerYcbcrConversionInfoKHR
-{
-}
-impl VkSamplerYcbcrConversionInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -8065,95 +6203,132 @@ impl VkSamplerYcbcrConversionCreateInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSamplerYcbcrConversionCreateInfoKHR
-{
-}
-impl VkSamplerYcbcrConversionCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindImagePlaneMemoryInfoKHR
-{
-}
-impl VkBindImagePlaneMemoryInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImagePlaneMemoryRequirementsInfoKHR
-{
-}
-impl VkImagePlaneMemoryRequirementsInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR
-{
-}
-impl VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSamplerYcbcrConversionImageFormatPropertiesKHR
-{
-}
-impl VkSamplerYcbcrConversionImageFormatPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkConditionalRenderingBeginInfoEXT
+pub struct VkBindImagePlaneMemoryInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	flags: VkConditionalRenderingFlagBitsEXT,
+	planeAspect: VkImageAspectFlagBits,
 }
-impl VkConditionalRenderingBeginInfoEXT
+impl VkBindImagePlaneMemoryInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkImagePlaneMemoryRequirementsInfo
+{
+	sType: VkStructureType,
+	pNext: * const c_void,
+	planeAspect: VkImageAspectFlagBits,
+}
+impl VkImagePlaneMemoryRequirementsInfo
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkPhysicalDeviceSamplerYcbcrConversionFeatures
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	samplerYcbcrConversion: VkBool32,
+}
+impl VkPhysicalDeviceSamplerYcbcrConversionFeatures
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkSamplerYcbcrConversionImageFormatProperties
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	combinedImageSamplerDescriptorCount: u32,
+}
+impl VkSamplerYcbcrConversionImageFormatProperties
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkProtectedSubmitInfo
+{
+	sType: VkStructureType,
+	pNext: * const c_void,
+	protectedSubmit: VkBool32,
+}
+impl VkProtectedSubmitInfo
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkPhysicalDeviceProtectedMemoryFeatures
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	protectedMemory: VkBool32,
+}
+impl VkPhysicalDeviceProtectedMemoryFeatures
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkPhysicalDeviceProtectedMemoryProperties
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	protectedNoFault: VkBool32,
+}
+impl VkPhysicalDeviceProtectedMemoryProperties
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES;
 
         return s;
     }
@@ -8182,84 +6357,38 @@ impl VkDeviceQueueInfo2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
+pub struct VkPhysicalDeviceSamplerFilterMinmaxProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	filterMinmaxSingleComponentFormats: VkBool32,
+	filterMinmaxImageComponentMapping: VkBool32,
 }
-impl VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
+impl VkPhysicalDeviceSamplerFilterMinmaxProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSampleLocationEXT
-{
-	x: f32,
-	y: f32,
-}
-impl VkSampleLocationEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAttachmentSampleLocationsEXT
-{
-	attachmentIndex: u32,
-	sampleLocationsInfo: VkSampleLocationsInfoEXT,
-}
-impl VkAttachmentSampleLocationsEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSubpassSampleLocationsEXT
-{
-	subpassIndex: u32,
-	sampleLocationsInfo: VkSampleLocationsInfoEXT,
-}
-impl VkSubpassSampleLocationsEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMultisamplePropertiesEXT
+pub struct VkSamplerReductionModeCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	maxSampleLocationGridSize: VkExtent2D,
+	reductionMode: VkSamplerReductionMode,
 }
-impl VkMultisamplePropertiesEXT
+impl VkSamplerReductionModeCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO;
 
         return s;
     }
@@ -8267,50 +6396,19 @@ impl VkMultisamplePropertiesEXT
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSamplerReductionModeCreateInfoEXT
-{
-}
-impl VkSamplerReductionModeCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageFormatListCreateInfoKHR
-{
-}
-impl VkImageFormatListCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkValidationCacheCreateInfoEXT
+pub struct VkImageFormatListCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	flags: VkValidationCacheCreateFlagBitsEXT,
-	initialDataSize: size_t,
-	pInitialData: * const c_void,
+	viewFormatCount: u32,
+	pViewFormats: * const VkFormat,
 }
-impl VkValidationCacheCreateInfoEXT
+impl VkImageFormatListCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO;
 
         return s;
     }
@@ -8318,15 +6416,20 @@ impl VkValidationCacheCreateInfoEXT
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceMaintenance3PropertiesKHR
+pub struct VkPhysicalDeviceMaintenance3Properties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	maxPerSetDescriptors: u32,
+	maxMemoryAllocationSize: VkDeviceSize,
 }
-impl VkPhysicalDeviceMaintenance3PropertiesKHR
+impl VkPhysicalDeviceMaintenance3Properties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES;
+
         return s;
     }
 }
@@ -8336,7 +6439,7 @@ impl VkPhysicalDeviceMaintenance3PropertiesKHR
 pub struct VkDescriptorSetLayoutSupport
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
+	pNext: * mut c_void,
 	supported: VkBool32,
 }
 impl VkDescriptorSetLayoutSupport
@@ -8352,15 +6455,19 @@ impl VkDescriptorSetLayoutSupport
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkDescriptorSetLayoutSupportKHR
+pub struct VkPhysicalDeviceShaderDrawParametersFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	shaderDrawParameters: VkBool32,
 }
-impl VkDescriptorSetLayoutSupportKHR
+impl VkPhysicalDeviceShaderDrawParametersFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES;
+
         return s;
     }
 }
@@ -8382,99 +6489,172 @@ impl VkPhysicalDeviceShaderDrawParameterFeatures
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceShaderFloat16Int8FeaturesKHR
+pub struct VkPhysicalDeviceShaderFloat16Int8Features
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	shaderFloat16: VkBool32,
+	shaderInt8: VkBool32,
 }
-impl VkPhysicalDeviceShaderFloat16Int8FeaturesKHR
+impl VkPhysicalDeviceShaderFloat16Int8Features
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceFloat16Int8FeaturesKHR
+pub struct VkPhysicalDeviceFloatControlsProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	roundingModeIndependence: VkShaderFloatControlsIndependence,
+	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	shaderDenormPreserveFloat16: VkBool32,
+	shaderDenormPreserveFloat32: VkBool32,
+	shaderDenormPreserveFloat64: VkBool32,
+	shaderDenormFlushToZeroFloat16: VkBool32,
+	shaderDenormFlushToZeroFloat32: VkBool32,
+	shaderDenormFlushToZeroFloat64: VkBool32,
+	shaderRoundingModeRTEFloat16: VkBool32,
+	shaderRoundingModeRTEFloat32: VkBool32,
+	shaderRoundingModeRTEFloat64: VkBool32,
+	shaderRoundingModeRTZFloat16: VkBool32,
+	shaderRoundingModeRTZFloat32: VkBool32,
+	shaderRoundingModeRTZFloat64: VkBool32,
 }
-impl VkPhysicalDeviceFloat16Int8FeaturesKHR
+impl VkPhysicalDeviceFloatControlsProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceFloatControlsPropertiesKHR
+pub struct VkPhysicalDeviceHostQueryResetFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	hostQueryReset: VkBool32,
 }
-impl VkPhysicalDeviceFloatControlsPropertiesKHR
+impl VkPhysicalDeviceHostQueryResetFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceHostQueryResetFeaturesEXT
+pub struct VkPhysicalDeviceDescriptorIndexingFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	descriptorBindingPartiallyBound: VkBool32,
+	descriptorBindingVariableDescriptorCount: VkBool32,
+	runtimeDescriptorArray: VkBool32,
 }
-impl VkPhysicalDeviceHostQueryResetFeaturesEXT
+impl VkPhysicalDeviceDescriptorIndexingFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkNativeBufferUsage2ANDROID
+pub struct VkPhysicalDeviceDescriptorIndexingProperties
 {
-	consumer: u64,
-	producer: u64,
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	maxUpdateAfterBindDescriptorsInAllPools: u32,
+	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	robustBufferAccessUpdateAfterBind: VkBool32,
+	quadDivergentImplicitLod: VkBool32,
+	maxPerStageDescriptorUpdateAfterBindSamplers: u32,
+	maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
+	maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
+	maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
+	maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
+	maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
+	maxPerStageUpdateAfterBindResources: u32,
+	maxDescriptorSetUpdateAfterBindSamplers: u32,
+	maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
+	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
+	maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
+	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
+	maxDescriptorSetUpdateAfterBindSampledImages: u32,
+	maxDescriptorSetUpdateAfterBindStorageImages: u32,
+	maxDescriptorSetUpdateAfterBindInputAttachments: u32,
 }
-impl VkNativeBufferUsage2ANDROID
+impl VkPhysicalDeviceDescriptorIndexingProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkNativeBufferANDROID
+pub struct VkDescriptorSetLayoutBindingFlagsCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	handle: * const c_void,
-	stride: int,
-	format: int,
-	usage: int,
-	usage2: VkNativeBufferUsage2ANDROID,
+	bindingCount: u32,
+	pBindingFlags: * const VkDescriptorBindingFlagBits,
 }
-impl VkNativeBufferANDROID
+impl VkDescriptorSetLayoutBindingFlagsCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
 
         return s;
     }
@@ -8482,18 +6662,19 @@ impl VkNativeBufferANDROID
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSwapchainImageCreateInfoANDROID
+pub struct VkDescriptorSetVariableDescriptorCountAllocateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	usage: VkSwapchainImageUsageFlagBitsANDROID,
+	descriptorSetCount: u32,
+	pDescriptorCounts: * const u32,
 }
-impl VkSwapchainImageCreateInfoANDROID
+impl VkDescriptorSetVariableDescriptorCountAllocateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SWAPCHAIN_IMAGE_CREATE_INFO_ANDROID;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO;
 
         return s;
     }
@@ -8501,291 +6682,19 @@ impl VkSwapchainImageCreateInfoANDROID
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDevicePresentationPropertiesANDROID
+pub struct VkDescriptorSetVariableDescriptorCountLayoutSupport
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	sharedImage: VkBool32,
+	pNext: * mut c_void,
+	maxVariableDescriptorCount: u32,
 }
-impl VkPhysicalDevicePresentationPropertiesANDROID
+impl VkDescriptorSetVariableDescriptorCountLayoutSupport
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENTATION_PROPERTIES_ANDROID;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkShaderResourceUsageAMD
-{
-	numUsedVgprs: u32,
-	numUsedSgprs: u32,
-	ldsSizePerLocalWorkGroup: u32,
-	ldsUsageSizeInBytes: size_t,
-	scratchMemUsageInBytes: size_t,
-}
-impl VkShaderResourceUsageAMD
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkShaderStatisticsInfoAMD
-{
-	shaderStageMask: VkShaderStageFlagBits,
-	resourceUsage: VkShaderResourceUsageAMD,
-	numPhysicalVgprs: u32,
-	numPhysicalSgprs: u32,
-	numAvailableVgprs: u32,
-	numAvailableSgprs: u32,
-	computeWorkGroupSize: u32,
-}
-impl VkShaderStatisticsInfoAMD
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugUtilsObjectNameInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	objectType: VkObjectType,
-	objectHandle: u64,
-	pObjectName: * const c_char,
-}
-impl VkDebugUtilsObjectNameInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugUtilsObjectTagInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	objectType: VkObjectType,
-	objectHandle: u64,
-	tagName: u64,
-	tagSize: size_t,
-	pTag: * const c_void,
-}
-impl VkDebugUtilsObjectTagInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugUtilsLabelEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pLabelName: * const c_char,
-	color: f32,
-}
-impl VkDebugUtilsLabelEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDebugUtilsMessengerCallbackDataEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDebugUtilsMessengerCallbackDataFlagBitsEXT,
-	pMessageIdName: * const c_char,
-	messageIdNumber: i32,
-	pMessage: * const c_char,
-	queueLabelCount: u32,
-	pQueueLabels: * const VkDebugUtilsLabelEXT,
-	cmdBufLabelCount: u32,
-	pCmdBufLabels: * const VkDebugUtilsLabelEXT,
-	objectCount: u32,
-	pObjects: * const VkDebugUtilsObjectNameInfoEXT,
-}
-impl VkDebugUtilsMessengerCallbackDataEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDeviceMemoryReportCallbackDataEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDeviceMemoryReportFlagBitsEXT,
-	type: VkDeviceMemoryReportEventTypeEXT,
-	memoryObjectId: u64,
-	size: VkDeviceSize,
-	objectType: VkObjectType,
-	objectHandle: u64,
-	heapIndex: u32,
-}
-impl VkDeviceMemoryReportCallbackDataEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_MEMORY_REPORT_CALLBACK_DATA_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryHostPointerPropertiesEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memoryTypeBits: u32,
-}
-impl VkMemoryHostPointerPropertiesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCalibratedTimestampInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	timeDomain: VkTimeDomainEXT,
-}
-impl VkCalibratedTimestampInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceDescriptorIndexingFeaturesEXT
-{
-}
-impl VkPhysicalDeviceDescriptorIndexingFeaturesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceDescriptorIndexingPropertiesEXT
-{
-}
-impl VkPhysicalDeviceDescriptorIndexingPropertiesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDescriptorSetLayoutBindingFlagsCreateInfoEXT
-{
-}
-impl VkDescriptorSetLayoutBindingFlagsCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDescriptorSetVariableDescriptorCountAllocateInfoEXT
-{
-}
-impl VkDescriptorSetVariableDescriptorCountAllocateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDescriptorSetVariableDescriptorCountLayoutSupportEXT
-{
-}
-impl VkDescriptorSetVariableDescriptorCountLayoutSupportEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -8819,21 +6728,6 @@ impl VkAttachmentDescription2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkAttachmentDescription2KHR
-{
-}
-impl VkAttachmentDescription2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkAttachmentReference2
 {
 	sType: VkStructureType,
@@ -8849,21 +6743,6 @@ impl VkAttachmentReference2
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAttachmentReference2KHR
-{
-}
-impl VkAttachmentReference2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -8899,21 +6778,6 @@ impl VkSubpassDescription2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSubpassDescription2KHR
-{
-}
-impl VkSubpassDescription2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkSubpassDependency2
 {
 	sType: VkStructureType,
@@ -8934,21 +6798,6 @@ impl VkSubpassDependency2
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSubpassDependency2KHR
-{
-}
-impl VkSubpassDependency2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -8982,21 +6831,6 @@ impl VkRenderPassCreateInfo2
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkRenderPassCreateInfo2KHR
-{
-}
-impl VkRenderPassCreateInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkSubpassBeginInfo
 {
 	sType: VkStructureType,
@@ -9010,21 +6844,6 @@ impl VkSubpassBeginInfo
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSubpassBeginInfoKHR
-{
-}
-impl VkSubpassBeginInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -9049,75 +6868,80 @@ impl VkSubpassEndInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSubpassEndInfoKHR
+pub struct VkPhysicalDeviceTimelineSemaphoreFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	timelineSemaphore: VkBool32,
 }
-impl VkSubpassEndInfoKHR
+impl VkPhysicalDeviceTimelineSemaphoreFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceTimelineSemaphoreFeaturesKHR
+pub struct VkPhysicalDeviceTimelineSemaphoreProperties
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	maxTimelineSemaphoreValueDifference: u64,
 }
-impl VkPhysicalDeviceTimelineSemaphoreFeaturesKHR
+impl VkPhysicalDeviceTimelineSemaphoreProperties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceTimelineSemaphorePropertiesKHR
+pub struct VkSemaphoreTypeCreateInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	semaphoreType: VkSemaphoreType,
+	initialValue: u64,
 }
-impl VkPhysicalDeviceTimelineSemaphorePropertiesKHR
+impl VkSemaphoreTypeCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSemaphoreTypeCreateInfoKHR
+pub struct VkTimelineSemaphoreSubmitInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	waitSemaphoreValueCount: u32,
+	pWaitSemaphoreValues: * const u64,
+	signalSemaphoreValueCount: u32,
+	pSignalSemaphoreValues: * const u64,
 }
-impl VkSemaphoreTypeCreateInfoKHR
+impl VkTimelineSemaphoreSubmitInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkTimelineSemaphoreSubmitInfoKHR
-{
-}
-impl VkTimelineSemaphoreSubmitInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -9146,21 +6970,6 @@ impl VkSemaphoreWaitInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSemaphoreWaitInfoKHR
-{
-}
-impl VkSemaphoreWaitInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
 pub struct VkSemaphoreSignalInfo
 {
 	sType: VkStructureType,
@@ -9181,51 +6990,104 @@ impl VkSemaphoreSignalInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkSemaphoreSignalInfoKHR
+pub struct VkPhysicalDevice8BitStorageFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	storageBuffer8BitAccess: VkBool32,
+	uniformAndStorageBuffer8BitAccess: VkBool32,
+	storagePushConstant8: VkBool32,
 }
-impl VkSemaphoreSignalInfoKHR
+impl VkPhysicalDevice8BitStorageFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkVertexInputBindingDivisorDescriptionEXT
+pub struct VkPhysicalDeviceVulkanMemoryModelFeatures
 {
-	binding: u32,
-	divisor: u32,
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	vulkanMemoryModel: VkBool32,
+	vulkanMemoryModelDeviceScope: VkBool32,
+	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
 }
-impl VkVertexInputBindingDivisorDescriptionEXT
+impl VkPhysicalDeviceVulkanMemoryModelFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkAndroidHardwareBufferPropertiesANDROID
+pub struct VkPhysicalDeviceShaderAtomicInt64Features
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	shaderBufferInt64Atomics: VkBool32,
+	shaderSharedInt64Atomics: VkBool32,
+}
+impl VkPhysicalDeviceShaderAtomicInt64Features
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkPhysicalDeviceDepthStencilResolveProperties
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	supportedDepthResolveModes: VkResolveModeFlagBits,
+	supportedStencilResolveModes: VkResolveModeFlagBits,
+	independentResolveNone: VkBool32,
+	independentResolve: VkBool32,
+}
+impl VkPhysicalDeviceDepthStencilResolveProperties
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkSubpassDescriptionDepthStencilResolve
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	allocationSize: VkDeviceSize,
-	memoryTypeBits: u32,
+	depthResolveMode: VkResolveModeFlagBits,
+	stencilResolveMode: VkResolveModeFlagBits,
+	pDepthStencilResolveAttachment: * const VkAttachmentReference2,
 }
-impl VkAndroidHardwareBufferPropertiesANDROID
+impl VkSubpassDescriptionDepthStencilResolve
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE;
 
         return s;
     }
@@ -9233,18 +7095,18 @@ impl VkAndroidHardwareBufferPropertiesANDROID
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkMemoryGetAndroidHardwareBufferInfoANDROID
+pub struct VkImageStencilUsageCreateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	memory: VkDeviceMemory,
+	stencilUsage: VkImageUsageFlagBits,
 }
-impl VkMemoryGetAndroidHardwareBufferInfoANDROID
+impl VkImageStencilUsageCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO;
 
         return s;
     }
@@ -9252,64 +7114,18 @@ impl VkMemoryGetAndroidHardwareBufferInfoANDROID
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDevice8BitStorageFeaturesKHR
-{
-}
-impl VkPhysicalDevice8BitStorageFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceVulkanMemoryModelFeaturesKHR
-{
-}
-impl VkPhysicalDeviceVulkanMemoryModelFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceShaderAtomicInt64FeaturesKHR
-{
-}
-impl VkPhysicalDeviceShaderAtomicInt64FeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCheckpointDataNV
+pub struct VkPhysicalDeviceScalarBlockLayoutFeatures
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	stage: VkPipelineStageFlagBits,
-	pCheckpointMarker: * const c_void,
+	pNext: * mut c_void,
+	scalarBlockLayout: VkBool32,
 }
-impl VkCheckpointDataNV
+impl VkPhysicalDeviceScalarBlockLayoutFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES;
 
         return s;
     }
@@ -9317,123 +7133,18 @@ impl VkCheckpointDataNV
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceDepthStencilResolvePropertiesKHR
-{
-}
-impl VkPhysicalDeviceDepthStencilResolvePropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSubpassDescriptionDepthStencilResolveKHR
-{
-}
-impl VkSubpassDescriptionDepthStencilResolveKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkShadingRatePaletteNV
-{
-	shadingRatePaletteEntryCount: u32,
-	pShadingRatePaletteEntries: * const VkShadingRatePaletteEntryNV,
-}
-impl VkShadingRatePaletteNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCoarseSampleLocationNV
-{
-	pixelX: u32,
-	pixelY: u32,
-	sample: u32,
-}
-impl VkCoarseSampleLocationNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCoarseSampleOrderCustomNV
-{
-	shadingRate: VkShadingRatePaletteEntryNV,
-	sampleCount: u32,
-	sampleLocationCount: u32,
-	pSampleLocations: * const VkCoarseSampleLocationNV,
-}
-impl VkCoarseSampleOrderCustomNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDrawMeshTasksIndirectCommandNV
-{
-	taskCount: u32,
-	firstTask: u32,
-}
-impl VkDrawMeshTasksIndirectCommandNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRayTracingShaderGroupCreateInfoNV
+pub struct VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkRayTracingShaderGroupTypeKHR,
-	generalShader: u32,
-	closestHitShader: u32,
-	anyHitShader: u32,
-	intersectionShader: u32,
+	pNext: * mut c_void,
+	uniformBufferStandardLayout: VkBool32,
 }
-impl VkRayTracingShaderGroupCreateInfoNV
+impl VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES;
 
         return s;
     }
@@ -9441,404 +7152,21 @@ impl VkRayTracingShaderGroupCreateInfoNV
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkRayTracingShaderGroupCreateInfoKHR
+pub struct VkPhysicalDeviceBufferDeviceAddressFeatures
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkRayTracingShaderGroupTypeKHR,
-	generalShader: u32,
-	closestHitShader: u32,
-	anyHitShader: u32,
-	intersectionShader: u32,
-	pShaderGroupCaptureReplayHandle: * const c_void,
+	pNext: * mut c_void,
+	bufferDeviceAddress: VkBool32,
+	bufferDeviceAddressCaptureReplay: VkBool32,
+	bufferDeviceAddressMultiDevice: VkBool32,
 }
-impl VkRayTracingShaderGroupCreateInfoKHR
+impl VkPhysicalDeviceBufferDeviceAddressFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRayTracingPipelineCreateInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineCreateFlagBits,
-	stageCount: u32,
-	pStages: * const VkPipelineShaderStageCreateInfo,
-	groupCount: u32,
-	pGroups: * const VkRayTracingShaderGroupCreateInfoNV,
-	maxRecursionDepth: u32,
-	layout: VkPipelineLayout,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
-}
-impl VkRayTracingPipelineCreateInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRayTracingPipelineCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineCreateFlagBits,
-	stageCount: u32,
-	pStages: * const VkPipelineShaderStageCreateInfo,
-	groupCount: u32,
-	pGroups: * const VkRayTracingShaderGroupCreateInfoKHR,
-	maxPipelineRayRecursionDepth: u32,
-	pLibraryInfo: * const VkPipelineLibraryCreateInfoKHR,
-	pLibraryInterface: * const VkRayTracingPipelineInterfaceCreateInfoKHR,
-	pDynamicState: * const VkPipelineDynamicStateCreateInfo,
-	layout: VkPipelineLayout,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
-}
-impl VkRayTracingPipelineCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGeometryTrianglesNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	vertexData: VkBuffer,
-	vertexOffset: VkDeviceSize,
-	vertexCount: u32,
-	vertexStride: VkDeviceSize,
-	vertexFormat: VkFormat,
-	indexData: VkBuffer,
-	indexOffset: VkDeviceSize,
-	indexCount: u32,
-	indexType: VkIndexType,
-	transformData: VkBuffer,
-	transformOffset: VkDeviceSize,
-}
-impl VkGeometryTrianglesNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGeometryAABBNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	aabbData: VkBuffer,
-	numAABBs: u32,
-	stride: u32,
-	offset: VkDeviceSize,
-}
-impl VkGeometryAABBNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGeometryDataNV
-{
-	triangles: VkGeometryTrianglesNV,
-	aabbs: VkGeometryAABBNV,
-}
-impl VkGeometryDataNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkGeometryNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	geometryType: VkGeometryTypeKHR,
-	geometry: VkGeometryDataNV,
-	flags: VkGeometryFlagBitsKHR,
-}
-impl VkGeometryNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_GEOMETRY_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkAccelerationStructureTypeNV,
-	flags: VkBuildAccelerationStructureFlagBitsNV,
-	instanceCount: u32,
-	geometryCount: u32,
-	pGeometries: * const VkGeometryNV,
-}
-impl VkAccelerationStructureInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureCreateInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	compactedSize: VkDeviceSize,
-	info: VkAccelerationStructureInfoNV,
-}
-impl VkAccelerationStructureCreateInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBindAccelerationStructureMemoryInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	accelerationStructure: VkAccelerationStructureNV,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	deviceIndexCount: u32,
-	pDeviceIndices: * const u32,
-}
-impl VkBindAccelerationStructureMemoryInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureMemoryRequirementsInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkAccelerationStructureMemoryRequirementsTypeNV,
-	accelerationStructure: VkAccelerationStructureNV,
-}
-impl VkAccelerationStructureMemoryRequirementsInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkStridedDeviceAddressRegionKHR
-{
-	deviceAddress: VkDeviceAddress,
-	stride: VkDeviceSize,
-	size: VkDeviceSize,
-}
-impl VkStridedDeviceAddressRegionKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkTraceRaysIndirectCommandKHR
-{
-	width: u32,
-	height: u32,
-	depth: u32,
-}
-impl VkTraceRaysIndirectCommandKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDrmFormatModifierPropertiesEXT
-{
-	drmFormatModifier: u64,
-	drmFormatModifierPlaneCount: u32,
-	drmFormatModifierTilingFeatures: VkFormatFeatureFlagBits,
-}
-impl VkDrmFormatModifierPropertiesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageDrmFormatModifierPropertiesEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	drmFormatModifier: u64,
-}
-impl VkImageDrmFormatModifierPropertiesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageStencilUsageCreateInfoEXT
-{
-}
-impl VkImageStencilUsageCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceScalarBlockLayoutFeaturesEXT
-{
-}
-impl VkPhysicalDeviceScalarBlockLayoutFeaturesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR
-{
-}
-impl VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceBufferDeviceAddressFeaturesKHR
-{
-}
-impl VkPhysicalDeviceBufferDeviceAddressFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceBufferAddressFeaturesEXT
-{
-}
-impl VkPhysicalDeviceBufferAddressFeaturesEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -9864,75 +7192,58 @@ impl VkBufferDeviceAddressInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkBufferDeviceAddressInfoKHR
+pub struct VkBufferOpaqueCaptureAddressCreateInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	opaqueCaptureAddress: u64,
 }
-impl VkBufferDeviceAddressInfoKHR
+impl VkBufferOpaqueCaptureAddressCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkBufferDeviceAddressInfoEXT
+pub struct VkPhysicalDeviceImagelessFramebufferFeatures
 {
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	imagelessFramebuffer: VkBool32,
 }
-impl VkBufferDeviceAddressInfoEXT
+impl VkPhysicalDeviceImagelessFramebufferFeatures
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES;
+
         return s;
     }
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkBufferOpaqueCaptureAddressCreateInfoKHR
+pub struct VkFramebufferAttachmentsCreateInfo
 {
+	sType: VkStructureType,
+	pNext: * const c_void,
+	attachmentImageInfoCount: u32,
+	pAttachmentImageInfos: * const VkFramebufferAttachmentImageInfo,
 }
-impl VkBufferOpaqueCaptureAddressCreateInfoKHR
+impl VkFramebufferAttachmentsCreateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceImagelessFramebufferFeaturesKHR
-{
-}
-impl VkPhysicalDeviceImagelessFramebufferFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkFramebufferAttachmentsCreateInfoKHR
-{
-}
-impl VkFramebufferAttachmentsCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -9964,55 +7275,19 @@ impl VkFramebufferAttachmentImageInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkFramebufferAttachmentImageInfoKHR
-{
-}
-impl VkFramebufferAttachmentImageInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRenderPassAttachmentBeginInfoKHR
-{
-}
-impl VkRenderPassAttachmentBeginInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCooperativeMatrixPropertiesNV
+pub struct VkRenderPassAttachmentBeginInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	MSize: u32,
-	NSize: u32,
-	KSize: u32,
-	AType: VkComponentTypeNV,
-	BType: VkComponentTypeNV,
-	CType: VkComponentTypeNV,
-	DType: VkComponentTypeNV,
-	scope: VkScopeNV,
+	attachmentCount: u32,
+	pAttachments: * const VkImageView,
 }
-impl VkCooperativeMatrixPropertiesNV
+impl VkRenderPassAttachmentBeginInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO;
 
         return s;
     }
@@ -10020,458 +7295,77 @@ impl VkCooperativeMatrixPropertiesNV
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkImageViewHandleInfoNVX
+pub struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	separateDepthStencilLayouts: VkBool32,
+}
+impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkAttachmentReferenceStencilLayout
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	stencilLayout: VkImageLayout,
+}
+impl VkAttachmentReferenceStencilLayout
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkAttachmentDescriptionStencilLayout
+{
+	sType: VkStructureType,
+	pNext: * mut c_void,
+	stencilInitialLayout: VkImageLayout,
+	stencilFinalLayout: VkImageLayout,
+}
+impl VkAttachmentDescriptionStencilLayout
+{
+    fn new() -> Self
+    {
+        let mut s: Self = unsafe { mem::zeroed() };
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT;
+
+        return s;
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct VkMemoryOpaqueCaptureAddressAllocateInfo
 {
 	sType: VkStructureType,
 	pNext: * const c_void,
-	imageView: VkImageView,
-	descriptorType: VkDescriptorType,
-	sampler: VkSampler,
+	opaqueCaptureAddress: u64,
 }
-impl VkImageViewHandleInfoNVX
+impl VkMemoryOpaqueCaptureAddressAllocateInfo
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageViewAddressPropertiesNVX
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	deviceAddress: VkDeviceAddress,
-	size: VkDeviceSize,
-}
-impl VkImageViewAddressPropertiesNVX
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_VIEW_ADDRESS_PROPERTIES_NVX;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineCreationFeedbackEXT
-{
-	flags: VkPipelineCreationFeedbackFlagBitsEXT,
-	duration: u64,
-}
-impl VkPipelineCreationFeedbackEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceCounterKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	unit: VkPerformanceCounterUnitKHR,
-	scope: VkPerformanceCounterScopeKHR,
-	storage: VkPerformanceCounterStorageKHR,
-	uuid: u8,
-}
-impl VkPerformanceCounterKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PERFORMANCE_COUNTER_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceCounterDescriptionKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPerformanceCounterDescriptionFlagBitsKHR,
-	name: c_char,
-	category: c_char,
-	description: c_char,
-}
-impl VkPerformanceCounterDescriptionKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAcquireProfilingLockInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkAcquireProfilingLockFlagBitsKHR,
-	timeout: u64,
-}
-impl VkAcquireProfilingLockInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACQUIRE_PROFILING_LOCK_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkHeadlessSurfaceCreateInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkHeadlessSurfaceCreateFlagBitsEXT,
-}
-impl VkHeadlessSurfaceCreateInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkFramebufferMixedSamplesCombinationNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	coverageReductionMode: VkCoverageReductionModeNV,
-	rasterizationSamples: VkSampleCountFlagBits,
-	depthStencilSamples: VkSampleCountFlagBits,
-	colorSamples: VkSampleCountFlagBits,
-}
-impl VkFramebufferMixedSamplesCombinationNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_FRAMEBUFFER_MIXED_SAMPLES_COMBINATION_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceValueINTEL
-{
-	type: VkPerformanceValueTypeINTEL,
-	data: VkPerformanceValueDataINTEL,
-}
-impl VkPerformanceValueINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkInitializePerformanceApiInfoINTEL
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pUserData: * const c_void,
-}
-impl VkInitializePerformanceApiInfoINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_INITIALIZE_PERFORMANCE_API_INFO_INTEL;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkQueryPoolCreateInfoINTEL
-{
-}
-impl VkQueryPoolCreateInfoINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceMarkerInfoINTEL
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	marker: u64,
-}
-impl VkPerformanceMarkerInfoINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PERFORMANCE_MARKER_INFO_INTEL;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceStreamMarkerInfoINTEL
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	marker: u32,
-}
-impl VkPerformanceStreamMarkerInfoINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PERFORMANCE_STREAM_MARKER_INFO_INTEL;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceOverrideInfoINTEL
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkPerformanceOverrideTypeINTEL,
-	enable: VkBool32,
-	parameter: u64,
-}
-impl VkPerformanceOverrideInfoINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PERFORMANCE_OVERRIDE_INFO_INTEL;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPerformanceConfigurationAcquireInfoINTEL
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkPerformanceConfigurationTypeINTEL,
-}
-impl VkPerformanceConfigurationAcquireInfoINTEL
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PERFORMANCE_CONFIGURATION_ACQUIRE_INFO_INTEL;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR
-{
-}
-impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAttachmentReferenceStencilLayoutKHR
-{
-}
-impl VkAttachmentReferenceStencilLayoutKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAttachmentDescriptionStencilLayoutKHR
-{
-}
-impl VkAttachmentDescriptionStencilLayoutKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pipeline: VkPipeline,
-}
-impl VkPipelineInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineExecutablePropertiesKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	stages: VkShaderStageFlagBits,
-	name: c_char,
-	description: c_char,
-	subgroupSize: u32,
-}
-impl VkPipelineExecutablePropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineExecutableInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pipeline: VkPipeline,
-	executableIndex: u32,
-}
-impl VkPipelineExecutableInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineExecutableStatisticKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	name: c_char,
-	description: c_char,
-	format: VkPipelineExecutableStatisticFormatKHR,
-	value: VkPipelineExecutableStatisticValueKHR,
-}
-impl VkPipelineExecutableStatisticKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_STATISTIC_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineExecutableInternalRepresentationKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	name: c_char,
-	description: c_char,
-	isText: VkBool32,
-	dataSize: size_t,
-	pData: * const c_void,
-}
-impl VkPipelineExecutableInternalRepresentationKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryOpaqueCaptureAddressAllocateInfoKHR
-{
-}
-impl VkMemoryOpaqueCaptureAddressAllocateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -10497,37 +7391,29 @@ impl VkDeviceMemoryOpaqueCaptureAddressInfo
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkDeviceMemoryOpaqueCaptureAddressInfoKHR
-{
-}
-impl VkDeviceMemoryOpaqueCaptureAddressInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceToolPropertiesEXT
+pub struct VkPhysicalDeviceVulkan11Features
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	name: c_char,
-	version: c_char,
-	purposes: VkToolPurposeFlagBitsEXT,
-	description: c_char,
-	layer: c_char,
+	pNext: * mut c_void,
+	storageBuffer16BitAccess: VkBool32,
+	uniformAndStorageBuffer16BitAccess: VkBool32,
+	storagePushConstant16: VkBool32,
+	storageInputOutput16: VkBool32,
+	multiview: VkBool32,
+	multiviewGeometryShader: VkBool32,
+	multiviewTessellationShader: VkBool32,
+	variablePointersStorageBuffer: VkBool32,
+	variablePointers: VkBool32,
+	protectedMemory: VkBool32,
+	samplerYcbcrConversion: VkBool32,
+	shaderDrawParameters: VkBool32,
 }
-impl VkPhysicalDeviceToolPropertiesEXT
+impl VkPhysicalDeviceVulkan11Features
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES_EXT;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
 
         return s;
     }
@@ -10535,44 +7421,32 @@ impl VkPhysicalDeviceToolPropertiesEXT
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkAccelerationStructureGeometryTrianglesDataKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	vertexFormat: VkFormat,
-	vertexData: VkDeviceOrHostAddressConstKHR,
-	vertexStride: VkDeviceSize,
-	maxVertex: u32,
-	indexType: VkIndexType,
-	indexData: VkDeviceOrHostAddressConstKHR,
-	transformData: VkDeviceOrHostAddressConstKHR,
-}
-impl VkAccelerationStructureGeometryTrianglesDataKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureGeometryAabbsDataKHR
+pub struct VkPhysicalDeviceVulkan11Properties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	data: VkDeviceOrHostAddressConstKHR,
-	stride: VkDeviceSize,
+	pNext: * mut c_void,
+	deviceUUID: u8,
+	driverUUID: u8,
+	deviceLUID: u8,
+	deviceNodeMask: u32,
+	deviceLUIDValid: VkBool32,
+	subgroupSize: u32,
+	subgroupSupportedStages: VkShaderStageFlagBits,
+	subgroupSupportedOperations: VkSubgroupFeatureFlagBits,
+	subgroupQuadOperationsInAllStages: VkBool32,
+	pointClippingBehavior: VkPointClippingBehavior,
+	maxMultiviewViewCount: u32,
+	maxMultiviewInstanceIndex: u32,
+	protectedNoFault: VkBool32,
+	maxPerSetDescriptors: u32,
+	maxMemoryAllocationSize: VkDeviceSize,
 }
-impl VkAccelerationStructureGeometryAabbsDataKHR
+impl VkPhysicalDeviceVulkan11Properties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES;
 
         return s;
     }
@@ -10580,40 +7454,64 @@ impl VkAccelerationStructureGeometryAabbsDataKHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkAccelerationStructureGeometryInstancesDataKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	arrayOfPointers: VkBool32,
-	data: VkDeviceOrHostAddressConstKHR,
-}
-impl VkAccelerationStructureGeometryInstancesDataKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureGeometryKHR
+pub struct VkPhysicalDeviceVulkan12Features
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	geometryType: VkGeometryTypeKHR,
-	geometry: VkAccelerationStructureGeometryDataKHR,
-	flags: VkGeometryFlagBitsKHR,
+	pNext: * mut c_void,
+	samplerMirrorClampToEdge: VkBool32,
+	drawIndirectCount: VkBool32,
+	storageBuffer8BitAccess: VkBool32,
+	uniformAndStorageBuffer8BitAccess: VkBool32,
+	storagePushConstant8: VkBool32,
+	shaderBufferInt64Atomics: VkBool32,
+	shaderSharedInt64Atomics: VkBool32,
+	shaderFloat16: VkBool32,
+	shaderInt8: VkBool32,
+	descriptorIndexing: VkBool32,
+	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	descriptorBindingPartiallyBound: VkBool32,
+	descriptorBindingVariableDescriptorCount: VkBool32,
+	runtimeDescriptorArray: VkBool32,
+	samplerFilterMinmax: VkBool32,
+	scalarBlockLayout: VkBool32,
+	imagelessFramebuffer: VkBool32,
+	uniformBufferStandardLayout: VkBool32,
+	shaderSubgroupExtendedTypes: VkBool32,
+	separateDepthStencilLayouts: VkBool32,
+	hostQueryReset: VkBool32,
+	timelineSemaphore: VkBool32,
+	bufferDeviceAddress: VkBool32,
+	bufferDeviceAddressCaptureReplay: VkBool32,
+	bufferDeviceAddressMultiDevice: VkBool32,
+	vulkanMemoryModel: VkBool32,
+	vulkanMemoryModelDeviceScope: VkBool32,
+	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
+	shaderOutputViewportIndex: VkBool32,
+	shaderOutputLayer: VkBool32,
+	subgroupBroadcastDynamicId: VkBool32,
 }
-impl VkAccelerationStructureGeometryKHR
+impl VkPhysicalDeviceVulkan12Features
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 
         return s;
     }
@@ -10621,1398 +7519,69 @@ impl VkAccelerationStructureGeometryKHR
 
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct VkAccelerationStructureBuildGeometryInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	type: VkAccelerationStructureTypeKHR,
-	flags: VkBuildAccelerationStructureFlagBitsKHR,
-	mode: VkBuildAccelerationStructureModeKHR,
-	srcAccelerationStructure: VkAccelerationStructureKHR,
-	dstAccelerationStructure: VkAccelerationStructureKHR,
-	geometryCount: u32,
-	pGeometries: * const VkAccelerationStructureGeometryKHR,
-	ppGeometries: * const * const VkAccelerationStructureGeometryKHR,
-	scratchData: VkDeviceOrHostAddressKHR,
-}
-impl VkAccelerationStructureBuildGeometryInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureBuildRangeInfoKHR
-{
-	primitiveCount: u32,
-	primitiveOffset: u32,
-	firstVertex: u32,
-	transformOffset: u32,
-}
-impl VkAccelerationStructureBuildRangeInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureCreateInfoKHR
+pub struct VkPhysicalDeviceVulkan12Properties
 {
 	sType: VkStructureType,
-	pNext: * const c_void,
-	createFlags: VkAccelerationStructureCreateFlagBitsKHR,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
-	type: VkAccelerationStructureTypeKHR,
-	deviceAddress: VkDeviceAddress,
+	pNext: * mut c_void,
+	driverID: VkDriverId,
+	driverName: c_char,
+	driverInfo: c_char,
+	conformanceVersion: VkConformanceVersion,
+	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	roundingModeIndependence: VkShaderFloatControlsIndependence,
+	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	shaderDenormPreserveFloat16: VkBool32,
+	shaderDenormPreserveFloat32: VkBool32,
+	shaderDenormPreserveFloat64: VkBool32,
+	shaderDenormFlushToZeroFloat16: VkBool32,
+	shaderDenormFlushToZeroFloat32: VkBool32,
+	shaderDenormFlushToZeroFloat64: VkBool32,
+	shaderRoundingModeRTEFloat16: VkBool32,
+	shaderRoundingModeRTEFloat32: VkBool32,
+	shaderRoundingModeRTEFloat64: VkBool32,
+	shaderRoundingModeRTZFloat16: VkBool32,
+	shaderRoundingModeRTZFloat32: VkBool32,
+	shaderRoundingModeRTZFloat64: VkBool32,
+	maxUpdateAfterBindDescriptorsInAllPools: u32,
+	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	robustBufferAccessUpdateAfterBind: VkBool32,
+	quadDivergentImplicitLod: VkBool32,
+	maxPerStageDescriptorUpdateAfterBindSamplers: u32,
+	maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
+	maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
+	maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
+	maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
+	maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
+	maxPerStageUpdateAfterBindResources: u32,
+	maxDescriptorSetUpdateAfterBindSamplers: u32,
+	maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
+	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
+	maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
+	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
+	maxDescriptorSetUpdateAfterBindSampledImages: u32,
+	maxDescriptorSetUpdateAfterBindStorageImages: u32,
+	maxDescriptorSetUpdateAfterBindInputAttachments: u32,
+	supportedDepthResolveModes: VkResolveModeFlagBits,
+	supportedStencilResolveModes: VkResolveModeFlagBits,
+	independentResolveNone: VkBool32,
+	independentResolve: VkBool32,
+	filterMinmaxSingleComponentFormats: VkBool32,
+	filterMinmaxImageComponentMapping: VkBool32,
+	maxTimelineSemaphoreValueDifference: u64,
+	framebufferIntegerColorSampleCounts: VkSampleCountFlagBits,
 }
-impl VkAccelerationStructureCreateInfoKHR
+impl VkPhysicalDeviceVulkan12Properties
 {
     fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAabbPositionsKHR
-{
-	minX: f32,
-	minY: f32,
-	minZ: f32,
-	maxX: f32,
-	maxY: f32,
-	maxZ: f32,
-}
-impl VkAabbPositionsKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAabbPositionsNV
-{
-}
-impl VkAabbPositionsNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkTransformMatrixKHR
-{
-	matrix: f32,
-}
-impl VkTransformMatrixKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkTransformMatrixNV
-{
-}
-impl VkTransformMatrixNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureInstanceKHR
-{
-	transform: VkTransformMatrixKHR,
-	instanceCustomIndex: u32,
-	mask: u32,
-	instanceShaderBindingTableRecordOffset: u32,
-	flags: VkGeometryInstanceFlagBitsKHR,
-	accelerationStructureReference: u64,
-}
-impl VkAccelerationStructureInstanceKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureInstanceNV
-{
-}
-impl VkAccelerationStructureInstanceNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureDeviceAddressInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	accelerationStructure: VkAccelerationStructureKHR,
-}
-impl VkAccelerationStructureDeviceAddressInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureVersionInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pVersionData: * const u8,
-}
-impl VkAccelerationStructureVersionInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyAccelerationStructureInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	src: VkAccelerationStructureKHR,
-	dst: VkAccelerationStructureKHR,
-	mode: VkCopyAccelerationStructureModeKHR,
-}
-impl VkCopyAccelerationStructureInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyAccelerationStructureToMemoryInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	src: VkAccelerationStructureKHR,
-	dst: VkDeviceOrHostAddressKHR,
-	mode: VkCopyAccelerationStructureModeKHR,
-}
-impl VkCopyAccelerationStructureToMemoryInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyMemoryToAccelerationStructureInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	src: VkDeviceOrHostAddressConstKHR,
-	dst: VkAccelerationStructureKHR,
-	mode: VkCopyAccelerationStructureModeKHR,
-}
-impl VkCopyMemoryToAccelerationStructureInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkRayTracingPipelineInterfaceCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	maxPipelineRayPayloadSize: u32,
-	maxPipelineRayHitAttributeSize: u32,
-}
-impl VkRayTracingPipelineInterfaceCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPipelineLibraryCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	libraryCount: u32,
-	pLibraries: * const VkPipeline,
-}
-impl VkPipelineLibraryCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBufferCopy2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcOffset: VkDeviceSize,
-	dstOffset: VkDeviceSize,
-	size: VkDeviceSize,
-}
-impl VkBufferCopy2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_COPY_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageCopy2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
-}
-impl VkImageCopy2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_COPY_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageBlit2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffsets: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffsets: VkOffset3D,
-}
-impl VkImageBlit2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_BLIT_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBufferImageCopy2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	bufferOffset: VkDeviceSize,
-	bufferRowLength: u32,
-	bufferImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
-}
-impl VkBufferImageCopy2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageResolve2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
-}
-impl VkImageResolve2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyBufferInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcBuffer: VkBuffer,
-	dstBuffer: VkBuffer,
-	regionCount: u32,
-	pRegions: * const VkBufferCopy2KHR,
-}
-impl VkCopyBufferInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyImageInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: * const VkImageCopy2KHR,
-}
-impl VkCopyImageInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_IMAGE_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBlitImageInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: * const VkImageBlit2KHR,
-	filter: VkFilter,
-}
-impl VkBlitImageInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyBufferToImageInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcBuffer: VkBuffer,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: * const VkBufferImageCopy2KHR,
-}
-impl VkCopyBufferToImageInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_BUFFER_TO_IMAGE_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCopyImageToBufferInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstBuffer: VkBuffer,
-	regionCount: u32,
-	pRegions: * const VkBufferImageCopy2KHR,
-}
-impl VkCopyImageToBufferInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkResolveImageInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcImage: VkImage,
-	srcImageLayout: VkImageLayout,
-	dstImage: VkImage,
-	dstImageLayout: VkImageLayout,
-	regionCount: u32,
-	pRegions: * const VkImageResolve2KHR,
-}
-impl VkResolveImageInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceFragmentShadingRateKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	sampleCounts: VkSampleCountFlagBits,
-	fragmentSize: VkExtent2D,
-}
-impl VkPhysicalDeviceFragmentShadingRateKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureBuildSizesInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	accelerationStructureSize: VkDeviceSize,
-	updateScratchSize: VkDeviceSize,
-	buildScratchSize: VkDeviceSize,
-}
-impl VkAccelerationStructureBuildSizesInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMutableDescriptorTypeListVALVE
-{
-	descriptorTypeCount: u32,
-	pDescriptorTypes: * const VkDescriptorType,
-}
-impl VkMutableDescriptorTypeListVALVE
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVertexInputBindingDescription2EXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	binding: u32,
-	stride: u32,
-	inputRate: VkVertexInputRate,
-	divisor: u32,
-}
-impl VkVertexInputBindingDescription2EXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVertexInputAttributeDescription2EXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	location: u32,
-	binding: u32,
-	format: VkFormat,
-	offset: u32,
-}
-impl VkVertexInputAttributeDescription2EXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkImageMemoryBarrier2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcStageMask: VkPipelineStageFlagBits2KHR,
-	srcAccessMask: VkAccessFlagBits2KHR,
-	dstStageMask: VkPipelineStageFlagBits2KHR,
-	dstAccessMask: VkAccessFlagBits2KHR,
-	oldLayout: VkImageLayout,
-	newLayout: VkImageLayout,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	image: VkImage,
-	subresourceRange: VkImageSubresourceRange,
-}
-impl VkImageMemoryBarrier2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkBufferMemoryBarrier2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcStageMask: VkPipelineStageFlagBits2KHR,
-	srcAccessMask: VkAccessFlagBits2KHR,
-	dstStageMask: VkPipelineStageFlagBits2KHR,
-	dstAccessMask: VkAccessFlagBits2KHR,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
-}
-impl VkBufferMemoryBarrier2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkDependencyInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	dependencyFlags: VkDependencyFlagBits,
-	memoryBarrierCount: u32,
-	pMemoryBarriers: * const VkMemoryBarrier2KHR,
-	bufferMemoryBarrierCount: u32,
-	pBufferMemoryBarriers: * const VkBufferMemoryBarrier2KHR,
-	imageMemoryBarrierCount: u32,
-	pImageMemoryBarriers: * const VkImageMemoryBarrier2KHR,
-}
-impl VkDependencyInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSemaphoreSubmitInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	value: u64,
-	stageMask: VkPipelineStageFlagBits2KHR,
-	deviceIndex: u32,
-}
-impl VkSemaphoreSubmitInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCommandBufferSubmitInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	commandBuffer: VkCommandBuffer,
-	deviceMask: u32,
-}
-impl VkCommandBufferSubmitInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSubmitInfo2KHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkSubmitFlagBitsKHR,
-	waitSemaphoreInfoCount: u32,
-	pWaitSemaphoreInfos: * const VkSemaphoreSubmitInfoKHR,
-	commandBufferInfoCount: u32,
-	pCommandBufferInfos: * const VkCommandBufferSubmitInfoKHR,
-	signalSemaphoreInfoCount: u32,
-	pSignalSemaphoreInfos: * const VkSemaphoreSubmitInfoKHR,
-}
-impl VkSubmitInfo2KHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCheckpointData2NV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	stage: VkPipelineStageFlagBits2KHR,
-	pCheckpointMarker: * const c_void,
-}
-impl VkCheckpointData2NV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkPhysicalDeviceVideoFormatInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	imageUsage: VkImageUsageFlagBits,
-	pVideoProfiles: * const VkVideoProfilesKHR,
-}
-impl VkPhysicalDeviceVideoFormatInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_FORMAT_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoFormatPropertiesKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	format: VkFormat,
-}
-impl VkVideoFormatPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_FORMAT_PROPERTIES_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoCapabilitiesKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	capabilityFlags: VkVideoCapabilityFlagBitsKHR,
-	minBitstreamBufferOffsetAlignment: VkDeviceSize,
-	minBitstreamBufferSizeAlignment: VkDeviceSize,
-	videoPictureExtentGranularity: VkExtent2D,
-	minExtent: VkExtent2D,
-	maxExtent: VkExtent2D,
-	maxReferencePicturesSlotsCount: u32,
-	maxReferencePicturesActiveCount: u32,
-}
-impl VkVideoCapabilitiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_CAPABILITIES_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoGetMemoryPropertiesKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memoryBindIndex: u32,
-	pMemoryRequirements: * const VkMemoryRequirements2,
-}
-impl VkVideoGetMemoryPropertiesKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_GET_MEMORY_PROPERTIES_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoBindMemoryKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memoryBindIndex: u32,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	memorySize: VkDeviceSize,
-}
-impl VkVideoBindMemoryKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_BIND_MEMORY_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoPictureResourceKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	codedOffset: VkOffset2D,
-	codedExtent: VkExtent2D,
-	baseArrayLayer: u32,
-	imageViewBinding: VkImageView,
-}
-impl VkVideoPictureResourceKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_PICTURE_RESOURCE_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoReferenceSlotKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	slotIndex: i8,
-	pPictureResource: * const VkVideoPictureResourceKHR,
-}
-impl VkVideoReferenceSlotKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_REFERENCE_SLOT_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoDecodeInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkVideoDecodeFlagBitsKHR,
-	codedOffset: VkOffset2D,
-	codedExtent: VkExtent2D,
-	srcBuffer: VkBuffer,
-	srcBufferOffset: VkDeviceSize,
-	srcBufferRange: VkDeviceSize,
-	dstPictureResource: VkVideoPictureResourceKHR,
-	pSetupReferenceSlot: * const VkVideoReferenceSlotKHR,
-	referenceSlotCount: u32,
-	pReferenceSlots: * const VkVideoReferenceSlotKHR,
-}
-impl VkVideoDecodeInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_DECODE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoSessionCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	queueFamilyIndex: u32,
-	flags: VkVideoSessionCreateFlagBitsKHR,
-	pVideoProfile: * const VkVideoProfileKHR,
-	pictureFormat: VkFormat,
-	maxCodedExtent: VkExtent2D,
-	referencePicturesFormat: VkFormat,
-	maxReferencePicturesSlotsCount: u32,
-	maxReferencePicturesActiveCount: u32,
-}
-impl VkVideoSessionCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_SESSION_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoSessionParametersCreateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	videoSessionParametersTemplate: VkVideoSessionParametersKHR,
-	videoSession: VkVideoSessionKHR,
-}
-impl VkVideoSessionParametersCreateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_SESSION_PARAMETERS_CREATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoSessionParametersUpdateInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	updateSequenceCount: u32,
-}
-impl VkVideoSessionParametersUpdateInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_SESSION_PARAMETERS_UPDATE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoBeginCodingInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkVideoBeginCodingFlagBitsKHR,
-	codecQualityPreset: VkVideoCodingQualityPresetFlagBitsKHR,
-	videoSession: VkVideoSessionKHR,
-	videoSessionParameters: VkVideoSessionParametersKHR,
-	referenceSlotCount: u32,
-	pReferenceSlots: * const VkVideoReferenceSlotKHR,
-}
-impl VkVideoBeginCodingInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_BEGIN_CODING_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoEndCodingInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkVideoEndCodingFlagBitsKHR,
-}
-impl VkVideoEndCodingInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_END_CODING_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoCodingControlInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkVideoCodingControlFlagBitsKHR,
-}
-impl VkVideoCodingControlInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_CODING_CONTROL_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoEncodeInfoKHR
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkVideoEncodeFlagBitsKHR,
-	qualityLevel: u32,
-	codedExtent: VkExtent2D,
-	dstBitstreamBuffer: VkBuffer,
-	dstBitstreamBufferOffset: VkDeviceSize,
-	dstBitstreamBufferMaxRange: VkDeviceSize,
-	srcPictureResource: VkVideoPictureResourceKHR,
-	pSetupReferenceSlot: * const VkVideoReferenceSlotKHR,
-	referenceSlotCount: u32,
-	pReferenceSlots: * const VkVideoReferenceSlotKHR,
-}
-impl VkVideoEncodeInfoKHR
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_ENCODE_INFO_KHR;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoEncodeH264DpbSlotInfoEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	slotIndex: i8,
-	pStdPictureInfo: * const StdVideoEncodeH264PictureInfo,
-}
-impl VkVideoEncodeH264DpbSlotInfoEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_DPB_SLOT_INFO_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkVideoEncodeH264NaluSliceEXT
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pSliceHeaderStd: * const StdVideoEncodeH264SliceHeader,
-	mbCount: u32,
-	refFinalList0EntryCount: u8,
-	pRefFinalList0Entries: * const VkVideoEncodeH264DpbSlotInfoEXT,
-	refFinalList1EntryCount: u8,
-	pRefFinalList1Entries: * const VkVideoEncodeH264DpbSlotInfoEXT,
-	precedingNaluBytes: u32,
-	minQp: u8,
-	maxQp: u8,
-}
-impl VkVideoEncodeH264NaluSliceEXT
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_NALU_SLICE_EXT;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCuModuleCreateInfoNVX
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	dataSize: size_t,
-	pData: * const c_void,
-}
-impl VkCuModuleCreateInfoNVX
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CU_MODULE_CREATE_INFO_NVX;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCuFunctionCreateInfoNVX
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	module: VkCuModuleNVX,
-	pName: * const c_char,
-}
-impl VkCuFunctionCreateInfoNVX
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CU_FUNCTION_CREATE_INFO_NVX;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkCuLaunchInfoNVX
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	function: VkCuFunctionNVX,
-	gridDimX: u32,
-	gridDimY: u32,
-	gridDimZ: u32,
-	blockDimX: u32,
-	blockDimY: u32,
-	blockDimZ: u32,
-	sharedMemBytes: u32,
-	paramCount: size_t,
-	pParams: * const * const c_void,
-	extraCount: size_t,
-	pExtras: * const * const c_void,
-}
-impl VkCuLaunchInfoNVX
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_CU_LAUNCH_INFO_NVX;
-
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkSRTDataNV
-{
-	sx: f32,
-	a: f32,
-	b: f32,
-	pvx: f32,
-	sy: f32,
-	c: f32,
-	pvy: f32,
-	sz: f32,
-	pvz: f32,
-	qx: f32,
-	qy: f32,
-	qz: f32,
-	qw: f32,
-	tx: f32,
-	ty: f32,
-	tz: f32,
-}
-impl VkSRTDataNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureSRTMotionInstanceNV
-{
-	transformT0: VkSRTDataNV,
-	transformT1: VkSRTDataNV,
-	instanceCustomIndex: u32,
-	mask: u32,
-	instanceShaderBindingTableRecordOffset: u32,
-	flags: VkGeometryInstanceFlagBitsKHR,
-	accelerationStructureReference: u64,
-}
-impl VkAccelerationStructureSRTMotionInstanceNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureMatrixMotionInstanceNV
-{
-	transformT0: VkTransformMatrixKHR,
-	transformT1: VkTransformMatrixKHR,
-	instanceCustomIndex: u32,
-	mask: u32,
-	instanceShaderBindingTableRecordOffset: u32,
-	flags: VkGeometryInstanceFlagBitsKHR,
-	accelerationStructureReference: u64,
-}
-impl VkAccelerationStructureMatrixMotionInstanceNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAccelerationStructureMotionInstanceNV
-{
-	type: VkAccelerationStructureMotionInstanceTypeNV,
-	flags: VkAccelerationStructureMotionInstanceFlagBitsNV,
-	data: VkAccelerationStructureMotionInstanceDataNV,
-}
-impl VkAccelerationStructureMotionInstanceNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkMemoryGetRemoteAddressInfoNV
-{
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memory: VkDeviceMemory,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
-}
-impl VkMemoryGetRemoteAddressInfoNV
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_GET_REMOTE_ADDRESS_INFO_NV;
+        s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES;
 
         return s;
     }

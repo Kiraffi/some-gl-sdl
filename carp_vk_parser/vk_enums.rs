@@ -144,11 +144,7 @@ pub enum VkPipelineCacheHeaderVersion
 	VK_PIPELINE_CACHE_HEADER_VERSION_ONE = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineCacheCreateFlagBits
-{
-}
+type VkPipelineCacheCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -208,6 +204,7 @@ pub enum VkSamplerAddressMode
 	VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1,
 	VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2,
 	VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3,
+	VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4,
 }
 
 #[repr(i32)]
@@ -737,6 +734,10 @@ pub enum VkStructureType
 	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000,
 	VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = 1000168001,
 	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = 1000063000,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES = 49,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES = 50,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES = 51,
+	VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES = 52,
 	VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO = 1000147000,
 	VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = 1000109000,
 	VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = 1000109001,
@@ -851,6 +852,7 @@ pub enum VkDynamicState
 pub enum VkDescriptorUpdateTemplateType
 {
 	VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = 0,
+	VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = 1,
 }
 
 #[repr(i32)]
@@ -907,17 +909,9 @@ pub enum VkCullModeFlagBits
 	VK_CULL_MODE_FRONT_AND_BACK = 0x00000003,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkRenderPassCreateFlagBits
-{
-}
+type VkRenderPassCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkDeviceQueueCreateFlagBits
-{
-}
+type VkDeviceQueueCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -958,6 +952,7 @@ pub enum VkAccessFlagBits
 	VK_ACCESS_HOST_WRITE_BIT = 16384,
 	VK_ACCESS_MEMORY_READ_BIT = 32768,
 	VK_ACCESS_MEMORY_WRITE_BIT = 65536,
+	VK_ACCESS_NONE_KHR = 0,
 }
 
 #[repr(i32)]
@@ -1023,17 +1018,9 @@ pub enum VkImageCreateFlagBits
 	VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = 16,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkImageViewCreateFlagBits
-{
-}
+type VkImageViewCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSamplerCreateFlagBits
-{
-}
+type VkSamplerCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1044,11 +1031,7 @@ pub enum VkPipelineCreateFlagBits
 	VK_PIPELINE_CREATE_DERIVATIVE_BIT = 4,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineShaderStageCreateFlagBits
-{
-}
+type VkPipelineShaderStageCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1067,11 +1050,7 @@ pub enum VkFenceCreateFlagBits
 	VK_FENCE_CREATE_SIGNALED_BIT = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSemaphoreCreateFlagBits
-{
-}
+type VkSemaphoreCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1182,6 +1161,7 @@ pub enum VkPipelineStageFlagBits
 	VK_PIPELINE_STAGE_HOST_BIT = 16384,
 	VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = 32768,
 	VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = 65536,
+	VK_PIPELINE_STAGE_NONE_KHR = 0,
 }
 
 #[repr(i32)]
@@ -1499,17 +1479,9 @@ pub enum VkIndirectCommandsTokenTypeNV
 	VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = 7,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPrivateDataSlotCreateFlagBitsEXT
-{
-}
+type VkPrivateDataSlotCreateFlagBitsEXT = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkDescriptorSetLayoutCreateFlagBits
-{
-}
+type VkDescriptorSetLayoutCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1641,11 +1613,7 @@ pub enum VkDeviceGroupPresentModeFlagBitsKHR
 	VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR = 8,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSwapchainCreateFlagBitsKHR
-{
-}
+type VkSwapchainCreateFlagBitsKHR = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -1669,11 +1637,7 @@ pub enum VkDiscardRectangleModeEXT
 	VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkSubpassDescriptionFlagBits
-{
-}
+type VkSubpassDescriptionFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2025,11 +1989,7 @@ pub enum VkMemoryOverallocationBehaviorAMD
 	VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = 2,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkFramebufferCreateFlagBits
-{
-}
+type VkFramebufferCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2132,17 +2092,9 @@ pub enum VkPerformanceCounterDescriptionFlagBitsKHR
 	VK_PERFORMANCE_COUNTER_DESCRIPTION_CONCURRENTLY_IMPACTED_BIT_KHR = 2,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkAcquireProfilingLockFlagBitsKHR
-{
-}
+type VkAcquireProfilingLockFlagBitsKHR = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkShaderCorePropertiesFlagBitsAMD
-{
-}
+type VkShaderCorePropertiesFlagBitsAMD = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2214,17 +2166,9 @@ pub enum VkLineRasterizationModeEXT
 	VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT = 3,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkShaderModuleCreateFlagBits
-{
-}
+type VkShaderModuleCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineCompilerControlFlagBitsAMD
-{
-}
+type VkPipelineCompilerControlFlagBitsAMD = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2339,17 +2283,9 @@ pub enum VkSubmitFlagBitsKHR
 	VK_SUBMIT_PROTECTED_BIT_KHR = 1,
 }
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkEventCreateFlagBits
-{
-}
+type VkEventCreateFlagBits = u32;
 
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum VkPipelineLayoutCreateFlagBits
-{
-}
+type VkPipelineLayoutCreateFlagBits = u32;
 
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -2522,4 +2458,32 @@ pub enum VkVideoEncodeH264CreateFlagBitsEXT
 	VK_VIDEO_ENCODE_H264_CREATE_DEFAULT_EXT = 0,
 	VK_VIDEO_ENCODE_H264_CREATE_RESERVED_0_BIT_EXT = 1,
 }
+
+type VkPipelineViewportStateCreateFlagBits = u32;
+
+type VkPipelineTessellationStateCreateFlagBits = u32;
+
+type VkInstanceCreateFlagBits = u32;
+
+type VkDeviceCreateFlagBits = u32;
+
+type VkPipelineRasterizationStateCreateFlagBits = u32;
+
+type VkPipelineDynamicStateCreateFlagBits = u32;
+
+type VkPipelineInputAssemblyStateCreateFlagBits = u32;
+
+type VkPipelineColorBlendStateCreateFlagBits = u32;
+
+type VkDescriptorUpdateTemplateCreateFlagBits = u32;
+
+type VkBufferViewCreateFlagBits = u32;
+
+type VkQueryPoolCreateFlagBits = u32;
+
+type VkPipelineDepthStencilStateCreateFlagBits = u32;
+
+type VkPipelineMultisampleStateCreateFlagBits = u32;
+
+type VkPipelineVertexInputStateCreateFlagBits = u32;
 

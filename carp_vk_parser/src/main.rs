@@ -1,9 +1,10 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::{io::Read, mem};
+use std::{io::Read};
 
 
-//mod vk_all;
+
+mod vk_all;
 
 
 
@@ -23,6 +24,7 @@ fn get_type_as_rust_type(s: &str) -> &str
 {
     let result: &str = match s 
     {
+        "size_t" => "usize",
         "uint64_t" => "u64",
         "uint32_t" => "u32",
         "uint16_t" => "u16",
@@ -90,9 +92,8 @@ fn node_children<T>(elem: &xmltree::Element, filter_name: &str, attr_contains: &
 
 // The most awkward lambda, having to pass arrays for looking what attributes it contains, and setting possible filter value,
 // and returning array of the type.
-fn node_children2<T, U>(elem: &xmltree::Element, u: &mut U, filter_name: &str, attr_contains: &Vec<(&str, &str)>, f: fn(&xmltree::Element, &mut U) -> Vec<T>) -> Vec<T>
+fn node_children2<U>(elem: &xmltree::Element, u: &mut U, filter_name: &str, attr_contains: &Vec<(&str, &str)>, f: fn(&xmltree::Element, &mut U))
 {
-    let mut out_vec: Vec<T> = Vec::new();
     for child in &elem.children
     {
         'check_filter:
@@ -109,11 +110,10 @@ fn node_children2<T, U>(elem: &xmltree::Element, u: &mut U, filter_name: &str, a
                         continue 'check_filter;
                     }
                 }
-                out_vec.extend(f(child2, u));
+                f(child2, u);
             }
         }
     }
-    return out_vec;
 }
 
 
@@ -137,28 +137,25 @@ impl StructType
 
 fn parse_type_name(elem: &xmltree::Element) -> (String, String)
 {
-    let name_str;
+    let mut name_str = String::new();
     let mut type_str = String::new();
     
-    let mut s_vec: Vec<String> = Vec::new();
-    s_vec.extend(node_children(&elem, "name",&Vec::new(),  |child|
+    node_children2(&elem, &mut name_str, "name",&Vec::new(),  |child, name_str|
     {
-        let s= match child.get_text()
+        name_str.push_str( &match child.get_text()
         {
             Some(v) => v.to_string(),
             None => "".to_string()
-        };
-        return vec![s];
-    }));
-    s_vec.extend(node_children(&elem, "type",&Vec::new(),  |child|
+        });        
+    });
+    node_children2(&elem, &mut type_str, "type",&Vec::new(),  |child, type_str|
     {
-        let s= match child.get_text()
+        type_str.push_str(&match child.get_text()
         {
             Some(v) => v.to_string(),
             None => "".to_string()
-        };
-        return vec![s];
-    }));
+        });
+    });
     let mut consts = 0;
     let mut ptrs = 0;
     // Counting consts and ptrs.
@@ -183,42 +180,58 @@ fn parse_type_name(elem: &xmltree::Element) -> (String, String)
             }   
         }
     }
+
+    let mut const_mut_ptr_string = String::new();
     let c = core::cmp::max(consts, ptrs);
     for _ in 0..c
     {
-        //if i < ptrs
+        if consts > 0
         {
-            type_str.push_str("* ");
+            const_mut_ptr_string.push_str("* const ");
         }
-        //if i < consts
+        else 
         {
-            type_str.push_str("const ");                    
+            const_mut_ptr_string.push_str("* mut ");
         }
     }
-
-    name_str = s_vec[0].clone();
-    type_str.push_str(&get_type_as_rust_type(&s_vec[1])[0..]);
-    return (name_str, type_str);
+    const_mut_ptr_string.push_str(get_type_as_rust_type(&type_str));
+    
+    return (name_str, const_mut_ptr_string);
 }
 
 
-fn parse_vk_structs(root: &xmltree::Element) -> String
+fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> String
 {
     let mut string_out = String::new();
-    let mut s_vec: Vec<StructType> = Vec::new();
-    s_vec.extend(node_children(&root, "types", &Vec::new(), |child|
+    let mut struct_vec: Vec<StructType> = Vec::new();
+    node_children2(&root, &mut struct_vec, "types", &Vec::new(), |child, struct_vec|
     {
-        node_children(&child, "type",&vec![("category", "struct"), ("name", "")],  |child2|
+        node_children2(&child, struct_vec, "type",&vec![("category", "struct"), ("name", "")],  |child2, struct_vec|
         {
+            /*
             if child2.attributes.contains_key("structextends")
             {
-                return Vec::new();
+                println!("Struct name: {}, extends: {}", child2.attributes["name"], child2.attributes["structextends"]);
+                return;
             }
+*/
+            let check_list = ["EXT", "KHR", "NV", "NVX", "NN", "AMD", "AMDX", "INTEL", "FB", 
+                "FUCHSIA", "QCOM", "HUAWEI", "VALVE", "GGP", "ANDROID", "GOOGLE", "MKV", "QNX",
+                "MVK"];
+
+            for extension in check_list
+            {
+                if child2.attributes["name"].ends_with(extension)
+                {
+                    return;
+                }
+            }
+            //println!("Normal struct: {}", child2.attributes["name"]);
+
             let mut new_struct = StructType::new();
             new_struct.struct_name = child2.attributes["name"].clone();
-            let s_vec: Vec<StructType> = node_children(&child2, "member",&Vec::new(),  |child3|
+            node_children2(&child2, &mut new_struct, "member",&Vec::new(),  |child3, new_struct|
             {
-                let mut new_struct = StructType::new();
                 if child3.attributes.contains_key("values")
                 {
                     new_struct.s_type_name = child3.attributes["values"].to_string();
@@ -229,44 +242,78 @@ fn parse_vk_structs(root: &xmltree::Element) -> String
 
                 new_struct.param_names.push(ans.0.clone());
                 new_struct.type_names.push(ans.1.clone());
-                return vec![new_struct];
+                return;
             });
             
-            // Adding names, and changing Flags to FlagBits to match enum name, maybe should do this other way around.
-            // And name the enum as Flags like 
-            for struct_type in &s_vec
-            {
-                new_struct.param_names.push(struct_type.param_names[0].clone());
-                if struct_type.type_names[0].contains("Flags")
-                {
-                    new_struct.type_names.push(struct_type.type_names[0].replace("Flags", "FlagBits"));
-                }
-                else
-                {
-                    new_struct.type_names.push(struct_type.type_names[0].clone());
-                }
-                if struct_type.s_type_name.len() > 0
-                {
-                    new_struct.s_type_name = struct_type.s_type_name.clone();
-                }          
-            }
-            return vec![new_struct];
+            struct_vec.push(new_struct);
+            return;
         })
-    }));
+    });
 
-    
-    for struct_type in &s_vec
+    let mut hset: std::collections::HashSet<String> = std::collections::HashSet::new();
+
+    // Adding names, and changing Flags to FlagBits to match enum name, maybe should do this other way around.
+    // And name the enum as Flags like 
+    for struct_type in &mut struct_vec
     {
-        string_out.push_str(&format!("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct {}\r\n{{\r\n", struct_type.struct_name)[..]);
+        for i in 0..struct_type.type_names.len()
+        {
+            if struct_type.type_names[i].find("Flags") != None
+            {
+                struct_type.type_names[i] = struct_type.type_names[i].replace("Flags", "FlagBits");
+                hset.insert(struct_type.type_names[i].clone());
+            }
+            
+
+        }
+        for i in 0..struct_type.type_names.len()
+        {
+            if struct_type.param_names[i].eq("type")
+            {
+                struct_type.param_names[i] = "type_type".to_string();
+            }
+        }
+    }
+
+    for value in &hset
+    {
+        let mut last_space = 0;
+        for i in 0..value.len()
+        {
+            if value[i..i+1].eq(" ")
+            {
+                last_space = i + 1;
+            }
+        }
+        let value_str = &value[last_space..];
+        let mut found = false;
+        for enum_type in &*enum_types // ???????????????????????????wtf....
+        {
+            if enum_type.enum_name.eq(value_str)
+            {
+                found = true;
+                break;
+            }
+        }
+    
+        if !found
+        {
+            enum_types.push(EnumType{enum_name: value.to_string(), bit_width: "32".to_string(), param_type_names: Vec::new()});
+        }
+    }
+
+    for struct_type in &struct_vec
+    {
+        string_out.push_str(&format!("#[repr(C)]\r\n#[derive(Copy, Clone)]\r\npub struct {}\r\n{{\r\n", struct_type.struct_name));
         assert!(struct_type.param_names.len() == struct_type.type_names.len());
         for i in 0..struct_type.param_names.len()
         {
-            string_out.push_str(&format!("\t{}: {},\r\n", struct_type.param_names[i], struct_type.type_names[i])[..]);
+            string_out.push_str(&format!("\t{}: {},\r\n", struct_type.param_names[i], struct_type.type_names[i]));
         }
         let mut s_type_str = String::new();
         if struct_type.s_type_name.len() > 0
         {
-            s_type_str.push_str(&format!("s.sType = VkStructureType::{};\r\n", struct_type.s_type_name)[..]);
+            s_type_str.push_str(&format!("s.sType = VkStructureType::{};\r\n", struct_type.s_type_name));
         }
         string_out.push_str("}\r\n");
 
@@ -281,7 +328,7 @@ r"impl {}
     }}
 }}
 
-", struct_type.struct_name, s_type_str)[..] );       
+", struct_type.struct_name, s_type_str));       
     }
     
     return string_out;
@@ -299,11 +346,11 @@ fn parse_vk_enums(root: &xmltree::Element) -> Vec<EnumType>
 {
     let mut enums: Vec<EnumType> = Vec::new();
 
-    enums.extend(node_children(&root, "enums", &vec![("type", ""), ("name", "")], |child|
+    node_children2(&root, &mut enums, "enums", &vec![("type", ""), ("name", "")], |child, enums|
     {
         if !(child.attributes["type"] == "bitmask" || child.attributes["type"] == "enum")
         {
-            return Vec::new();
+            return;
         }
 
         let mut bit_width = "32"; 
@@ -315,24 +362,26 @@ fn parse_vk_enums(root: &xmltree::Element) -> Vec<EnumType>
         
         let mut enum_type = EnumType{enum_name: child.attributes["name"].to_string(), bit_width: bit_width.to_string(), param_type_names: Vec::new()};
         //s_vec.push(format!("#[repr(i{})]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", bit_width, child.attributes["name"]));
-        enum_type.param_type_names.extend(node_children(&child, "enum",&vec![("name", "")],  |child2|
+        node_children2(&child, &mut enum_type.param_type_names, "enum",&vec![("name", "")],  |child2, params|
         {
             if child2.attributes.contains_key("bitpos")
             {
                 let bitpos:u64 = child2.attributes["bitpos"].parse().unwrap();
                 let bitvalue:u64 = 1 << bitpos;
-                return vec![format!("\t{} = {},\r\n", child2.attributes["name"], bitvalue)];
+                params.push(format!("\t{} = {},\r\n", child2.attributes["name"], bitvalue));
+                return;
             }
             else if child2.attributes.contains_key("value")
             {
-                return vec![format!("\t{} = {},\r\n", child2.attributes["name"], child2.attributes["value"])];
+                params.push(format!("\t{} = {},\r\n", child2.attributes["name"], child2.attributes["value"]));
+                return;
             }
-            return vec!["".to_string()];
-            
-        }));
+            params.push("".to_string());
+            return;            
+        });
        
-        return vec!(enum_type);
-    }));
+        enums.push(enum_type);
+    });
 
 
     return enums;
@@ -344,9 +393,6 @@ fn parse_vk_enums(root: &xmltree::Element) -> Vec<EnumType>
 
 fn parse_type_types(root: &xmltree::Element) -> &str
 {
-    //let mut result = HashMap<String, String>::new();
-
-    let mut string_out = String::new();
     let mut s_vec: Vec<(String, String)> = Vec::new();
     s_vec.extend(node_children(&root, "types", &Vec::new(), |child|
     {
@@ -370,7 +416,7 @@ fn parse_type_types(root: &xmltree::Element) -> &str
 
                         for child5 in &child4.as_text()
                         {
-                            txt.push_str(&child5[..]);
+                            txt.push_str(&child5);
                         }
                     }
 
@@ -387,36 +433,6 @@ fn parse_type_types(root: &xmltree::Element) -> &str
         })
     }));
 
-    let mut s_vec_unique: Vec<String> = Vec::new();
-
-    let mut s_vec2: Vec<(String, String)> = Vec::new();
-
-/*
-    for s in &s_vec
-    {
-        if !s_vec_unique.contains(&s.1)
-        {
-            println!("{}", &s.1);
-            s_vec_unique.push(s.1.to_string());
-
-        }
-    }
-    for s in &s_vec
-    {
-        let mut c = 0;
-        for t in &s_vec
-        {
-            if s.0 == t.0
-            {
-                c = c + 1;
-            }
-        }
-//        if c > 1
-        {
-            println!("{}: {} count: {}", &s.0, &s.1, c);
-        }
-    }
-*/
     return "";
 
 }
@@ -427,25 +443,29 @@ fn parse_vk_enum_extensions_helper(child: &xmltree::Element, enum_types: &mut Ve
     node_children2(&child, enum_types,"", &Vec::new(), |child2, enum_types|
     {
 
-
+/*
         print!("{}", child2.name);
         for attr in &child2.attributes
         {
             print!(", {} = {}", attr.0, attr.1);
         }
         println!("");
-
+*/
         node_children2(&child2, enum_types,"", &Vec::new(), |child3, enum_types|
         {
+            /*
             print!("\t{}", child3.name);
             for attr in &child3.attributes
             {
                 print!(", {} = {}", attr.0, attr.1);
             }
             println!("");
-
+*/
             if child3.name == "enum"
             {
+                let mut find_string = child3.attributes["name"].to_string();
+                find_string.push_str(" ");
+    
                 if child3.attributes.contains_key("extends") && child3.attributes.contains_key("offset") &&
                  child3.attributes.contains_key("extnumber") && child3.attributes.contains_key("name")
                 {
@@ -453,6 +473,13 @@ fn parse_vk_enum_extensions_helper(child: &xmltree::Element, enum_types: &mut Ve
                     {
                         if s.enum_name == child3.attributes["extends"]
                         {
+                            for t in &s.param_type_names
+                            {
+                                if t.find(&find_string) != None
+                                {
+                                    return;
+                                }
+                            }
                             let mut v = 1_000_000_000u64;
                             let mut ext_num: u64 = child3.attributes["extnumber"].parse::<u64>().unwrap();
                             if ext_num > 1
@@ -463,16 +490,32 @@ fn parse_vk_enum_extensions_helper(child: &xmltree::Element, enum_types: &mut Ve
                             v = v + ext_num * 1000;
 
                             s.param_type_names.push(format!("\t{} = {},\r\n", child3.attributes["name"], v));
-                            //s.enum_name.push_str("aaaaa");
-                            break;
+                            return;
                         }
                     }
                 }
+                else if child3.attributes.contains_key("extends") && child3.attributes.contains_key("value") &&
+                    child3.attributes.contains_key("name")
+               {
+                   for s in enum_types
+                   {
+                       if s.enum_name == child3.attributes["extends"]
+                       {
+                            for t in &s.param_type_names
+                            {
+                                if t.find(&find_string) != None
+                                {
+                                    return;
+                                }
+                            }
+                            
+                           let v = child3.attributes["value"].parse::<u64>().unwrap();
+                           s.param_type_names.push(format!("\t{} = {},\r\n", child3.attributes["name"], v));
+                           return;
+                       }
+                   }
+               }
             }
-
-            vec!["a"]
-
-            
         })
     });
 }
@@ -494,15 +537,33 @@ fn parse_vk_enum_extensions(root: &xmltree::Element, enum_types: &mut Vec<EnumTy
             node_children2(&child,  enum_types, "", &Vec::new(), |child2, enum_types |
             {
                 parse_vk_enum_extensions_helper(child2, enum_types);
-                vec!["a"]
             });
         }
         //println!("api: {}, namme: {}, number: {}, comment: {}", child.attributes["api"], child.attributes["name"], child.attributes["number"], child.attributes["comment"]);
-        vec!["a"]
         
     });
 
 }
+
+fn parse_handles(root: &xmltree::Element) -> String
+{
+    //let t = enum_types;
+    let mut string = String::new();
+
+    node_children2(&root, &mut string, "types", &Vec::new(), |child, string|
+    {
+        node_children2(&child, string, "type", &vec![("category", "handle")],  |child2, string|
+        {
+            node_children2(&child2, string, "name", &Vec::new(), |child3, string|
+            {
+                string.push_str(&format!("type {} = *mut c_void;\r\n", child3.get_text().unwrap()));
+            });
+        });
+    });
+    string.push_str("\r\n\r\n");
+    return string;
+}
+
 
 
 fn main() 
@@ -513,30 +574,37 @@ fn main()
         Ok(v) => v,
         Err(_) => { println!("Failed to load vk.xml"); return; }
     };
-    let root = xmltree::Element::parse((&vk_xml[..]).as_bytes()).unwrap();
+    let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
 
     //parse_vk_structs2(&root);
     let mut vk_enums = parse_vk_enums(&root);
     parse_vk_enum_extensions(&root, &mut vk_enums);
-    let vk_structs = parse_vk_structs(&root);
+    let vk_structs = parse_vk_structs(&root, &mut vk_enums);
+
+    let handles_str = parse_handles(&root);
 
     let mut vk_enum_str = String::new();
     for enum_type in vk_enums
     {
-        vk_enum_str.push_str(&format!("#[repr(i{})]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", enum_type.bit_width, enum_type.enum_name)[..]);
+        if enum_type.param_type_names.len() == 0
+        {
+            vk_enum_str.push_str(&format!("type {} = u{};\r\n\r\n", enum_type.enum_name, enum_type.bit_width));
+            continue;
+        }
+        vk_enum_str.push_str(&format!("#[repr(i{})]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", enum_type.bit_width, enum_type.enum_name));
         for enum_type_param_type_names in enum_type.param_type_names
         {
-            vk_enum_str.push_str(&format!("{}", enum_type_param_type_names)[..]);
+            vk_enum_str.push_str(&format!("{}", enum_type_param_type_names));
         }
         vk_enum_str.push_str("}\r\n\r\n");
     }
-
+    
 
 
     parse_type_types(&root);
 
     let mut vk_all = 
-r"use std::{io::Read, mem};
+r"use std::mem;
 use std::os::raw::*;
 
 type VkSampleMask = u32;
@@ -546,10 +614,17 @@ type VkFlags64 = u64;
 type VkDeviceSize = u64;
 type VkDeviceAddress = u64;
 
+fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
+{
+    return (variant << 29) | (major << 22) | (minor << 12) | patch; 
+}     
+
 ".to_string();
-    vk_all.push_str(&vk_enum_str[..]);
-    vk_all.push_str(&vk_structs[..]);
+    vk_all.push_str(&handles_str);
+    vk_all.push_str(&vk_enum_str);
+    vk_all.push_str(&vk_structs);
     
+    std::fs::write("carp_vk_parser/vk_handles.rs", &handles_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_enums.rs", &vk_enum_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_structs.rs", &vk_structs).expect("Unable to write file");
     std::fs::write("carp_vk_parser/src/vk_all.rs", &vk_all).expect("Unable to write file");
