@@ -4,6 +4,8 @@ use std::ptr::null;
 use std::{io::Read};
 use std::os::raw::*;
 
+use carp_lib_loader::*;
+
 mod vk_all;
 
 use vk_all::*;
@@ -23,7 +25,7 @@ extern "system"
 
 
 
-
+/*
 
 macro_rules! gl_macro_func_generator 
 {
@@ -45,7 +47,7 @@ macro_rules! gl_macro_func_generator
             }
         )*
 
-        pub fn load_with<F>(mut loadfn: F, instance: *const VkInstance ) -> bool  where F: FnMut(VkInstance, *const u8) -> *const c_void
+        pub fn load_with<F>(mut loadfn: F, instance: *const c_void ) -> bool  where F: FnMut(*const c_void, *const u8) -> PFN_vkVoidFunction
         {
             $(
                 unsafe 
@@ -77,7 +79,7 @@ gl_macro_func_generator!
     vkDestroyInstance(instance: VkInstance, pAllocator: * const c_void) -> ()
 );
 
-
+*/
 /*
 fn load_funcs()
 {
@@ -104,41 +106,25 @@ const VULKAN_LIB: &str = "vulkan-1.dll";
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 pub struct Vulkan 
 {
-    lib: libloading::Library,
-    instance_caller: fn(*const VkInstance, *const u8) -> *const c_void,
+    vulkan_lib: *mut c_void,
+    vk_proc: *mut c_void,
 }
 
 impl Vulkan {
-    pub fn new() -> Result<Self, libloading::Error> 
+    pub fn new(carp_lib_loader: &mut CarpLibLoader) -> Result<Self, String> 
     {
-        println!("hmm!");
-        let maybe_lib = unsafe { libloading::Library::new(VULKAN_LIB) }?;
-        println!("tyeing!");
+        let vulkan_lib = carp_lib_loader.load_lib(VULKAN_LIB)?;
 
-        let func: libloading::Symbol<unsafe extern fn(*const c_void, * const u8) -> fn(*const VkInstance, *const u8) -> *const c_void > = unsafe { maybe_lib.get(b"vkGetInstanceProcAddr\0") }?;
-        println!("tyeing!");
-        let instance_caller = unsafe{ func(null(), "vkGetInstanceProcAddr".as_ptr()) };
-        println!("tyeing!");
+        let vk_proc = unsafe{ GetProcAddress(vulkan_lib, b"vkGetInstanceProcAddr\0".as_ptr() as *const i8) } ;
         
-        let _gl = load_with(&|s| instance_caller(null(), s) as *const c_void);
+        //let _gl = load_with(&|s| vk_proc(null(), s) as PFN_vkVoidFunction);
         
         Ok(
         Vulkan {
-            lib: maybe_lib,
-            instance_caller
+            vulkan_lib,
+            vk_proc
             //GetInstanceProcAddr: func as *const c_void,
         })
     }
@@ -845,8 +831,12 @@ pub fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
     std::fs::write("carp_vk_parser/vk_structs.rs", &vk_structs).expect("Unable to write file");
     std::fs::write("carp_vk_parser/src/vk_all.rs", &vk_all).expect("Unable to write file");
     
-    
-    Vulkan::new().unwrap();
+    let mut carp_lib_loader = CarpLibLoader::new();
+    match Vulkan::new(&mut carp_lib_loader)
+    {
+        Ok(_) => (),
+        Err(err) => println!("Loader error: {}", &err)
+    };
 
 }
 

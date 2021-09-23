@@ -1,11 +1,8 @@
 [package]
-name = "carp_vk_parser"
+name = "carp_lib_loader"
 version = "0.1.0"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-xmltree = "0.10.3"
-libloading = "0.7.0"
-carp_lib_loader = {path = "../lib/carp_lib_loader" }

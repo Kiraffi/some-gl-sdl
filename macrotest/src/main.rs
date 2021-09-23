@@ -1,7 +1,6 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-
-use std::ffi::{CString, CStr};
+use carp_lib_loader::*;
 
 
 pub type GLenum = ::std::os::raw::c_uint;
@@ -300,21 +299,6 @@ pub const ERROR_INVALID_PROFILE_ARB: u32 = 0x2096;
 pub const ERROR_INCOMPATIBLE_DEVICE_CONTEXTS_ARB: u32 = 0x2054;
 
 
-pub enum empty_enum_type {}
-pub type HINSTANCE = *mut empty_enum_type;
-pub type FARPROC = HINSTANCE;
-pub type HMODULE = HINSTANCE;
-pub type LPCSTR = *const std::os::raw::c_char;
-pub type BOOL = std::os::raw::c_int;
-
-extern "system" 
-{
-    pub fn GetProcAddress(hModule: HMODULE, lpProcName: LPCSTR) -> FARPROC;
-    pub fn LoadLibraryA(lpFileName: LPCSTR) -> HMODULE;
-    pub fn FreeLibrary(hLibModule: HMODULE) -> BOOL;
-}
-
-
 // `find_min!` will calculate the minimum of any number of arguments.
 macro_rules! find_min {
     // Base case:
@@ -327,12 +311,12 @@ macro_rules! find_min {
 }
 
 
-static mut _sapp_opengl32: HINSTANCE = std::ptr::null_mut();
-static mut _sapp_wglGetProcAddress: Option<extern "system" fn(_: LPCSTR) -> FARPROC> = None;
+static mut _sapp_opengl32: HANDLE = std::ptr::null_mut();
+static mut _sapp_wglGetProcAddress: Option<extern "system" fn(CHARSTRING) -> HANDLE> = None;
 
 
 
-unsafe fn get_proc_address<T>(lib: HINSTANCE, proc: &[u8]) -> Option<T> {
+unsafe fn get_proc_address<T>(lib: HANDLE, proc: &[u8]) -> Option<T> {
     let proc = GetProcAddress(lib, proc.as_ptr() as *const _);
 
     if proc.is_null() {
@@ -343,7 +327,7 @@ unsafe fn get_proc_address<T>(lib: HINSTANCE, proc: &[u8]) -> Option<T> {
 
 pub unsafe fn load_gl_func<T>(name: &str)  -> Option<T>
 {
-    match &CString::new(name)
+    match &std::ffi::CString::new(name)
     {
         Ok(v) => {
             let fn_name = v.as_ptr();
@@ -410,12 +394,12 @@ fn test_fn() -> Result<(), String>
     let _gl_context = window.gl_create_context()?;
 
 
-
-
+    let mut carp_loader = CarpLibLoader::new();
+    
 
     unsafe 
     {
-        _sapp_opengl32 = LoadLibraryA(b"opengl32.dll\0".as_ptr() as *const _);
+        _sapp_opengl32 = carp_loader.load_lib("opengl32.dll")?;
         if _sapp_opengl32.is_null() 
         {
             panic!("Failed to load opengl32.dll");
@@ -437,7 +421,7 @@ fn test_fn() -> Result<(), String>
     let version;
 	match unsafe
 	{
-		let data = CStr::from_ptr( glGetString(GL_VERSION) as *const _)
+		let data = std::ffi::CStr::from_ptr( glGetString(GL_VERSION) as *const _)
 			.to_bytes()
 			.to_vec();
 		String::from_utf8(data)
@@ -455,10 +439,7 @@ fn test_fn() -> Result<(), String>
 	}
 
 	println!("OpenGL version {}", version);
-    unsafe
-    {
-        FreeLibrary(_sapp_opengl32);
-    }
+
     Ok(())
 }
 
@@ -500,6 +481,6 @@ fn main() {
     match test_fn()
     {
         Ok(_) => (),
-        Err(_) => ()
-    }
+        Err(err) => (println!("Error {}", &err))
+    };
 }

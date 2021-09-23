@@ -9,7 +9,7 @@ impl VkBaseOutStructure
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -26,7 +26,7 @@ impl VkBaseInStructure
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -43,7 +43,7 @@ impl VkOffset2D
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -61,7 +61,7 @@ impl VkOffset3D
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -78,7 +78,7 @@ impl VkExtent2D
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -96,7 +96,7 @@ impl VkExtent3D
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -117,7 +117,7 @@ impl VkViewport
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -134,7 +134,7 @@ impl VkRect2D
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -152,7 +152,7 @@ impl VkClearRect
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -171,7 +171,7 @@ impl VkComponentMapping
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -195,7 +195,7 @@ impl VkPhysicalDeviceProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -212,7 +212,7 @@ impl VkExtensionProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -231,7 +231,7 @@ impl VkLayerProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -256,27 +256,6 @@ impl VkApplicationInfo
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_APPLICATION_INFO;
 
-        return s;
-    }
-}
-
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct VkAllocationCallbacks
-{
-	pUserData: * mut c_void,
-	pfnAllocation: PFN_vkAllocationFunction,
-	pfnReallocation: PFN_vkReallocationFunction,
-	pfnFree: PFN_vkFreeFunction,
-	pfnInternalAllocation: PFN_vkInternalAllocationNotification,
-	pfnInternalFree: PFN_vkInternalFreeNotification,
-}
-impl VkAllocationCallbacks
-{
-    fn new() -> Self
-    {
-        let mut s: Self = unsafe { mem::zeroed() };
-        
         return s;
     }
 }
@@ -366,7 +345,7 @@ impl VkQueueFamilyProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -385,7 +364,7 @@ impl VkPhysicalDeviceMemoryProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -423,7 +402,7 @@ impl VkMemoryRequirements
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -441,7 +420,7 @@ impl VkSparseImageFormatProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -461,7 +440,7 @@ impl VkSparseImageMemoryRequirements
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -478,7 +457,7 @@ impl VkMemoryType
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -495,7 +474,7 @@ impl VkMemoryHeap
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -534,7 +513,7 @@ impl VkFormatProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -554,7 +533,7 @@ impl VkImageFormatProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -572,7 +551,7 @@ impl VkDescriptorBufferInfo
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -590,7 +569,7 @@ impl VkDescriptorImageInfo
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -706,7 +685,7 @@ impl VkImageSubresource
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -725,7 +704,7 @@ impl VkImageSubresourceLayers
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -745,7 +724,7 @@ impl VkImageSubresourceRange
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -867,7 +846,7 @@ impl VkSubresourceLayout
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -909,7 +888,7 @@ impl VkBufferCopy
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -929,7 +908,7 @@ impl VkSparseMemoryBind
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -950,7 +929,7 @@ impl VkSparseImageMemoryBind
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -968,7 +947,7 @@ impl VkSparseBufferMemoryBindInfo
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -986,7 +965,7 @@ impl VkSparseImageOpaqueMemoryBindInfo
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1004,7 +983,7 @@ impl VkSparseImageMemoryBindInfo
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1052,7 +1031,7 @@ impl VkImageCopy
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1071,7 +1050,7 @@ impl VkImageBlit
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1092,7 +1071,7 @@ impl VkBufferImageCopy
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1112,7 +1091,7 @@ impl VkImageResolve
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1153,7 +1132,7 @@ impl VkDescriptorSetLayoutBinding
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1191,7 +1170,7 @@ impl VkDescriptorPoolSize
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1252,7 +1231,7 @@ impl VkSpecializationMapEntry
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1271,7 +1250,7 @@ impl VkSpecializationInfo
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1335,7 +1314,7 @@ impl VkVertexInputBindingDescription
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1354,7 +1333,7 @@ impl VkVertexInputAttributeDescription
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1518,7 +1497,7 @@ impl VkPipelineColorBlendAttachmentState
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1585,7 +1564,7 @@ impl VkStencilOpState
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1689,7 +1668,7 @@ impl VkPipelineCacheHeaderVersionOne
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1707,7 +1686,7 @@ impl VkPushConstantRange
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1889,7 +1868,7 @@ impl VkClearDepthStencilValue
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1907,7 +1886,7 @@ impl VkClearAttachment
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1931,7 +1910,7 @@ impl VkAttachmentDescription
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1948,7 +1927,7 @@ impl VkAttachmentReference
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1973,7 +1952,7 @@ impl VkSubpassDescription
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -1995,7 +1974,7 @@ impl VkSubpassDependency
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2128,7 +2107,7 @@ impl VkPhysicalDeviceFeatures
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2148,7 +2127,7 @@ impl VkPhysicalDeviceSparseProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2269,7 +2248,7 @@ impl VkPhysicalDeviceLimits
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2354,7 +2333,7 @@ impl VkDrawIndirectCommand
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2374,7 +2353,7 @@ impl VkDrawIndexedIndirectCommand
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2392,7 +2371,7 @@ impl VkDispatchIndirectCommand
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2615,7 +2594,7 @@ impl VkConformanceVersion
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2672,7 +2651,7 @@ impl VkPhysicalDeviceVariablePointerFeatures
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -2690,7 +2669,7 @@ impl VkExternalMemoryProperties
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -3281,7 +3260,7 @@ impl VkDescriptorUpdateTemplateEntry
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -3325,7 +3304,7 @@ impl VkInputAttachmentAspectReference
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
@@ -3931,7 +3910,7 @@ impl VkPhysicalDeviceShaderDrawParameterFeatures
 {
     fn new() -> Self
     {
-        let mut s: Self = unsafe { mem::zeroed() };
+        let s: Self = unsafe { mem::zeroed() };
         
         return s;
     }
