@@ -151,12 +151,12 @@ impl Vulkan {
             unsafe {  std::mem::transmute(ext_query_ptr)  };       
         println!("load success6?");
  
-/*
+
 
         let mut app_info = VkApplicationInfo::new();
-        app_info.pApplicationName = b"Hello Triangle\0".as_ptr() as *const i8;
+        app_info.pApplicationName = b"Hello Triangle\0".as_ptr();
         app_info.applicationVersion = vk_make_version(0, 1, 2, 0);
-        app_info.pEngineName = b"No Engine\0".as_ptr() as *const i8;
+        app_info.pEngineName = b"No Engine\0".as_ptr();
         app_info.engineVersion = vk_make_version(0, 1, 0, 0);
         app_info.apiVersion = vk_make_version(0, 1, 2, 0);
 
@@ -187,7 +187,7 @@ impl Vulkan {
             let s = std::str::from_utf8(&prop.extensionName).unwrap();
             println!("Extension: {:?}", s);
         }
-*/
+
         Ok(
         Vulkan {
             vulkan_lib,
@@ -198,21 +198,6 @@ impl Vulkan {
 }
 
 
-
-
-
-
-//4-5 - 8pm nap
-//10pm- 1am nap
-//
-//type void = std::os::raw::c_void;
-//type uint32_t = u32;
-//type uint16_t = u16;
-//type uint8_t = u8;
-//
-//type int32_t = i32;
-//type int16_t = i16;
-//type int8_t = i8;
 
 
 
@@ -229,12 +214,14 @@ fn get_type_as_rust_type(s: &str) -> &str
         "int32_t" =>  "i32",
         "int16_t" =>  "i16",
         "int8_t" =>    "i8",
-        "char" =>  "c_char",
+        "char" => "c_uchar",
         "float" =>    "f32",
         "double" =>   "f64",
         "void" =>  "c_void",
         _ => s// panic!("unknown type: {}", s)
     };
+
+
     return result;
 }
 
@@ -330,6 +317,28 @@ impl StructType
         Self{ struct_name: String::new(), s_type_name: String::new(), param_names: Vec::new(), type_names: Vec::new() }
     }
 }
+fn count_sub_strings_from_str(count_from: &str, what_to_count: &str) -> u32
+{
+    let mut count = 0u32;
+    let count_len = what_to_count.len();
+    let count_from_len = count_from.len();
+    
+    if count_from_len < count_len
+    {
+        return 0u32;
+    }
+    let end_ind = count_from_len - count_len; 
+
+    for i in 0..end_ind
+    {
+        if count_from[i..i + count_len].eq(what_to_count)
+        {
+            count = count + 1;
+        }
+    } 
+
+    return count;
+}
 
 fn parse_type_name(elem: &xmltree::Element) -> (String, String)
 {
@@ -352,46 +361,80 @@ fn parse_type_name(elem: &xmltree::Element) -> (String, String)
             None => "".to_string()
         });
     });
-    let mut consts = 0;
-    let mut ptrs = 0;
-    // Counting consts and ptrs.
+
+
+    type_str = get_type_as_rust_type(&type_str).to_string();
+
+
+    let mut text = String::new();
     for child in &elem.children
     {
+        
         for &child2 in &child.as_text()
         {
-            for i in 0..child2.len()
-            {
-                if i < child2.len()
-                {
-                    if i + 5 < child2.len() && child2[i..i + 5].eq("const") 
-                    { 
-                        consts = consts + 1;
-                    }
-                }
-
-                if child2[i..i + 1].eq("*") 
-                { 
-                    ptrs = ptrs + 1;
-                }
-            }   
+            text.push_str(child2);
         }
+        for &child2 in &child.as_element()
+        {
+            if child2.name == "name" || child2.name == "type" || child2.name == "comment"
+            {
+                continue;
+            }
+
+            for child3 in &child2.children
+            {
+                for &child4 in &child3.as_text()
+                {
+                    text.push_str(child4);
+                }
+            }
+
+        }
+
     }
+
+    // Counting consts and ptrs.
+    let consts = count_sub_strings_from_str(&text, "const");
+    let ptrs = count_sub_strings_from_str(&text, "*");
+
 
     let mut const_mut_ptr_string = String::new();
     let c = core::cmp::max(consts, ptrs);
-    for _ in 0..c
+    let found = text.contains("[") && text.contains("]");
+    if ptrs > 0
     {
-        if consts > 0
+        if found { println!("[] ptr found"); }
+        for _ in 0..c
         {
-            const_mut_ptr_string.push_str("* const ");
-        }
-        else 
-        {
-            const_mut_ptr_string.push_str("* mut ");
+            if consts > 0
+            {
+                const_mut_ptr_string.push_str("* const ");
+            }
+            else 
+            {
+                const_mut_ptr_string.push_str("* mut ");
+            }
         }
     }
-    const_mut_ptr_string.push_str(get_type_as_rust_type(&type_str));
-    
+    else if consts > 0
+    {
+        if found { println!("[] const found"); }
+        const_mut_ptr_string.push_str("const ");
+
+    }
+    else
+    {
+        if found 
+        { println!("[] found");
+            text = text.replace("[", "");
+            text = text.replace("]", "");
+            type_str = format!("[{}; {}]", &type_str, &text);
+        }
+    }    
+
+    const_mut_ptr_string.push_str(&type_str);
+    if found { println!("[] found {}: {}  - text: {}", &name_str, &const_mut_ptr_string, &text); }
+
     return (name_str, const_mut_ptr_string);
 }
 
@@ -912,7 +955,7 @@ fn main()
 
                 else
                 {
-                    s = s.replace(" = ", ":u32 = ");
+                    s = s.replace(" = ", ":usize = ");
 
                 }
 

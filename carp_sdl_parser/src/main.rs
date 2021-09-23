@@ -19,7 +19,7 @@ fn get_type_as_rust_type(s: &str) -> &str
         "Uint32" => "u32",
         "Uint8" => "u8",
         "Uint16" => "u16",
-        "char" => "c_char",
+        "char" => "c_uchar",
         "float" => "f32",
         "double" => "f64",
         "void" => "c_void",
