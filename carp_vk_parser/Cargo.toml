@@ -7,5 +7,4 @@ edition = "2018"
 
 [dependencies]
 xmltree = "0.10.3"
-libloading = "0.7.0"
 carp_lib_loader = {path = "../lib/carp_lib_loader" }
