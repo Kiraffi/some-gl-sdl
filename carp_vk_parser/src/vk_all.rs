@@ -2550,33 +2550,33 @@ pub enum VkVideoEncodeH264CreateFlagBitsEXT
 	VK_VIDEO_ENCODE_H264_CREATE_RESERVED_0_BIT_EXT = 1,
 }
 
-type VkPipelineTessellationStateCreateFlagBits = u32;
-
-type VkPipelineDepthStencilStateCreateFlagBits = u32;
-
-type VkDeviceCreateFlagBits = u32;
-
-type VkPipelineViewportStateCreateFlagBits = u32;
-
-type VkPipelineInputAssemblyStateCreateFlagBits = u32;
-
 type VkQueryPoolCreateFlagBits = u32;
-
-type VkBufferViewCreateFlagBits = u32;
 
 type VkDescriptorUpdateTemplateCreateFlagBits = u32;
 
+type VkPipelineDepthStencilStateCreateFlagBits = u32;
+
 type VkPipelineDynamicStateCreateFlagBits = u32;
 
+type VkBufferViewCreateFlagBits = u32;
+
+type VkPipelineViewportStateCreateFlagBits = u32;
+
 type VkPipelineRasterizationStateCreateFlagBits = u32;
+
+type VkPipelineColorBlendStateCreateFlagBits = u32;
+
+type VkPipelineVertexInputStateCreateFlagBits = u32;
+
+type VkPipelineTessellationStateCreateFlagBits = u32;
+
+type VkPipelineInputAssemblyStateCreateFlagBits = u32;
 
 type VkPipelineMultisampleStateCreateFlagBits = u32;
 
 type VkInstanceCreateFlagBits = u32;
 
-type VkPipelineVertexInputStateCreateFlagBits = u32;
-
-type VkPipelineColorBlendStateCreateFlagBits = u32;
+type VkDeviceCreateFlagBits = u32;
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -3743,7 +3743,7 @@ impl VkDescriptorSetLayoutCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorPoolSize
 {
-	pub type_type: VkDescriptorType,
+	pub name_type: VkDescriptorType,
 	pub descriptorCount: u32,
 }
 impl VkDescriptorPoolSize
@@ -5065,7 +5065,7 @@ pub struct VkPhysicalDeviceImageFormatInfo2
 	pub sType: VkStructureType,
 	pub pNext: * const c_void,
 	pub format: VkFormat,
-	pub type_type: VkImageType,
+	pub name_type: VkImageType,
 	pub tiling: VkImageTiling,
 	pub usage: VkImageUsageFlagBits,
 	pub flags: VkImageCreateFlagBits,
@@ -5145,7 +5145,7 @@ pub struct VkPhysicalDeviceSparseImageFormatInfo2
 	pub sType: VkStructureType,
 	pub pNext: * const c_void,
 	pub format: VkFormat,
-	pub type_type: VkImageType,
+	pub name_type: VkImageType,
 	pub samples: VkSampleCountFlagBits,
 	pub usage: VkImageUsageFlagBits,
 	pub tiling: VkImageTiling,

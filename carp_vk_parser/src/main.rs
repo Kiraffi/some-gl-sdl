@@ -166,7 +166,10 @@ fn parse_type_name(elem: &xmltree::Element) -> (String, String)
         });
     });
 
-
+    if name_str.eq("type")
+    {
+        name_str = "name_type".to_string();
+    }
     type_str = get_type_as_rust_type(&type_str).to_string();
 
 
@@ -315,7 +318,7 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
         {
             if struct_type.param_names[i].eq("type")
             {
-                struct_type.param_names[i] = "type_type".to_string();
+                struct_type.param_names[i] = "name_type".to_string();
             }
         }
     }

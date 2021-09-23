@@ -1163,7 +1163,7 @@ impl VkDescriptorSetLayoutCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorPoolSize
 {
-	pub type_type: VkDescriptorType,
+	pub name_type: VkDescriptorType,
 	pub descriptorCount: u32,
 }
 impl VkDescriptorPoolSize
@@ -2485,7 +2485,7 @@ pub struct VkPhysicalDeviceImageFormatInfo2
 	pub sType: VkStructureType,
 	pub pNext: * const c_void,
 	pub format: VkFormat,
-	pub type_type: VkImageType,
+	pub name_type: VkImageType,
 	pub tiling: VkImageTiling,
 	pub usage: VkImageUsageFlagBits,
 	pub flags: VkImageCreateFlagBits,
@@ -2565,7 +2565,7 @@ pub struct VkPhysicalDeviceSparseImageFormatInfo2
 	pub sType: VkStructureType,
 	pub pNext: * const c_void,
 	pub format: VkFormat,
-	pub type_type: VkImageType,
+	pub name_type: VkImageType,
 	pub samples: VkSampleCountFlagBits,
 	pub usage: VkImageUsageFlagBits,
 	pub tiling: VkImageTiling,

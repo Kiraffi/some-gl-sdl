@@ -8,7 +8,7 @@ fn vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice: VkPhysicalDevice, pQ
 fn vkGetPhysicalDeviceMemoryProperties(physicalDevice: VkPhysicalDevice, pMemoryProperties: * mut VkPhysicalDeviceMemoryProperties, ) -> c_void;
 fn vkGetPhysicalDeviceFeatures(physicalDevice: VkPhysicalDevice, pFeatures: * mut VkPhysicalDeviceFeatures, ) -> c_void;
 fn vkGetPhysicalDeviceFormatProperties(physicalDevice: VkPhysicalDevice, format: VkFormat, pFormatProperties: * mut VkFormatProperties, ) -> c_void;
-fn vkGetPhysicalDeviceImageFormatProperties(physicalDevice: VkPhysicalDevice, format: VkFormat, type: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: * mut VkImageFormatProperties, ) -> VkResult;
+fn vkGetPhysicalDeviceImageFormatProperties(physicalDevice: VkPhysicalDevice, format: VkFormat, name_type: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, pImageFormatProperties: * mut VkImageFormatProperties, ) -> VkResult;
 fn vkCreateDevice(physicalDevice: VkPhysicalDevice, pCreateInfo: * const VkDeviceCreateInfo, pAllocator: * const VkAllocationCallbacks, pDevice: * mut VkDevice, ) -> VkResult;
 fn vkDestroyDevice(device: VkDevice, pAllocator: * const VkAllocationCallbacks, ) -> c_void;
 fn vkEnumerateInstanceVersion(pApiVersion: * mut u32, ) -> VkResult;
@@ -32,7 +32,7 @@ fn vkBindBufferMemory(device: VkDevice, buffer: VkBuffer, memory: VkDeviceMemory
 fn vkGetImageMemoryRequirements(device: VkDevice, image: VkImage, pMemoryRequirements: * mut VkMemoryRequirements, ) -> c_void;
 fn vkBindImageMemory(device: VkDevice, image: VkImage, memory: VkDeviceMemory, memoryOffset: VkDeviceSize, ) -> VkResult;
 fn vkGetImageSparseMemoryRequirements(device: VkDevice, image: VkImage, pSparseMemoryRequirementCount: * mut u32, pSparseMemoryRequirements: * mut VkSparseImageMemoryRequirements, ) -> c_void;
-fn vkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice: VkPhysicalDevice, format: VkFormat, type: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: * mut u32, pProperties: * mut VkSparseImageFormatProperties, ) -> c_void;
+fn vkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice: VkPhysicalDevice, format: VkFormat, name_type: VkImageType, samples: VkSampleCountFlagBits, usage: VkImageUsageFlags, tiling: VkImageTiling, pPropertyCount: * mut u32, pProperties: * mut VkSparseImageFormatProperties, ) -> c_void;
 fn vkQueueBindSparse(queue: VkQueue, bindInfoCount: u32, pBindInfo: * const VkBindSparseInfo, fence: VkFence, ) -> VkResult;
 fn vkCreateFence(device: VkDevice, pCreateInfo: * const VkFenceCreateInfo, pAllocator: * const VkAllocationCallbacks, pFence: * mut VkFence, ) -> VkResult;
 fn vkDestroyFence(device: VkDevice, fence: VkFence, pAllocator: * const VkAllocationCallbacks, ) -> c_void;
@@ -185,7 +185,7 @@ fn vkDebugMarkerSetObjectTagEXT(device: VkDevice, pTagInfo: * const VkDebugMarke
 fn vkCmdDebugMarkerBeginEXT(commandBuffer: VkCommandBuffer, pMarkerInfo: * const VkDebugMarkerMarkerInfoEXT, ) -> c_void;
 fn vkCmdDebugMarkerEndEXT(commandBuffer: VkCommandBuffer, ) -> c_void;
 fn vkCmdDebugMarkerInsertEXT(commandBuffer: VkCommandBuffer, pMarkerInfo: * const VkDebugMarkerMarkerInfoEXT, ) -> c_void;
-fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice: VkPhysicalDevice, format: VkFormat, type: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: * mut VkExternalImageFormatPropertiesNV, ) -> VkResult;
+fn vkGetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice: VkPhysicalDevice, format: VkFormat, name_type: VkImageType, tiling: VkImageTiling, usage: VkImageUsageFlags, flags: VkImageCreateFlags, externalHandleType: VkExternalMemoryHandleTypeFlagsNV, pExternalImageFormatProperties: * mut VkExternalImageFormatPropertiesNV, ) -> VkResult;
 fn vkGetMemoryWin32HandleNV(device: VkDevice, memory: VkDeviceMemory, handleType: VkExternalMemoryHandleTypeFlagsNV, pHandle: * mut HANDLE, ) -> VkResult;
 fn vkCmdExecuteGeneratedCommandsNV(commandBuffer: VkCommandBuffer, isPreprocessed: VkBool32, pGeneratedCommandsInfo: * const VkGeneratedCommandsInfoNV, ) -> c_void;
 fn vkCmdPreprocessGeneratedCommandsNV(commandBuffer: VkCommandBuffer, pGeneratedCommandsInfo: * const VkGeneratedCommandsInfoNV, ) -> c_void;
