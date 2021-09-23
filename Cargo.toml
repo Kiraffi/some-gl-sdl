@@ -3,7 +3,7 @@ members = [
 	"rustris",
 	"paint",
 	"compute",
-	"dyn_link_test",
+	"dyn_func_test",
 
 	#"vulkan",
 	"macrotest",
