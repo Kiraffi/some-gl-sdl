@@ -316,8 +316,8 @@ static mut _sapp_wglGetProcAddress: Option<extern "system" fn(CHARSTRING) -> HAN
 
 
 
-unsafe fn get_proc_address<T>(lib: HANDLE, proc: &[u8]) -> Option<T> {
-    let proc = GetProcAddress(lib, proc.as_ptr() as *const _);
+unsafe fn get_proc_ad<T>(lib: HANDLE, proc: &[u8]) -> Option<T> {
+    let proc = get_proc_address(lib, proc.as_ptr() as *const _);
 
     if proc.is_null() {
         return None;
@@ -335,7 +335,7 @@ pub unsafe fn load_gl_func<T>(name: &str)  -> Option<T>
             let mut proc_ptr = _sapp_wglGetProcAddress.unwrap()(fn_name);
             if proc_ptr.is_null() 
             {
-                proc_ptr = GetProcAddress(_sapp_opengl32, fn_name);
+                proc_ptr = get_proc_address(_sapp_opengl32, fn_name);
             }
             assert!(proc_ptr.is_null() == false, "Load GL func {} failed.", name);
             Some(std::mem::transmute_copy(&proc_ptr))
@@ -397,20 +397,26 @@ fn test_fn() -> Result<(), String>
     let mut carp_loader = CarpLibLoader::new();
     
 
+    #[cfg(windows)]
+    let ogl_lib_name = "opengl32.dll";
+    #[cfg(target_os = "linux")]
+    let ogl_lib_name = "libopengl.so";
+
+
     unsafe 
     {
-        _sapp_opengl32 = carp_loader.load_lib("opengl32.dll")?;
+        _sapp_opengl32 = carp_loader.load_lib(ogl_lib_name)?;
         if _sapp_opengl32.is_null() 
         {
-            panic!("Failed to load opengl32.dll");
+            return Err(format!("Failed to load {}", ogl_lib_name));
         }
-        _sapp_wglGetProcAddress = get_proc_address(_sapp_opengl32, b"wglGetProcAddress\0");
+        _sapp_wglGetProcAddress = get_proc_ad(_sapp_opengl32, b"wglGetProcAddress\0");
         if _sapp_wglGetProcAddress.is_none() 
         {
             panic!("Failed to load wglGetProcAddress");
         }
 
-        funcs::glGetString = get_proc_address(_sapp_opengl32, b"glGetString\0");
+        funcs::glGetString = get_proc_ad(_sapp_opengl32, b"glGetString\0");
         if funcs::glGetString.is_none()
         {
             return Err("failed to load glGetString".to_string());

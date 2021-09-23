@@ -117,10 +117,14 @@ impl Vulkan {
     {
         let vulkan_lib = carp_lib_loader.load_lib(VULKAN_LIB)?;
 
-        let vk_proc = unsafe{ GetProcAddress(vulkan_lib, b"vkGetInstanceProcAddr\0".as_ptr() as *const i8) } ;
-        
+        let vk_proc = unsafe{ get_proc_address(vulkan_lib, b"vkGetInstanceProcAddr\0".as_ptr() as *const i8) } ;
+        if vk_proc.is_null()
+        {
+            return Err("Failed to get instanceprocaddress".to_string());
+        }
         //let _gl = load_with(&|s| vk_proc(null(), s) as PFN_vkVoidFunction);
-        
+        println!("load success?");
+
         Ok(
         Vulkan {
             vulkan_lib,
@@ -763,7 +767,7 @@ fn parse_commands(root: &xmltree::Element) -> String
 fn main() 
 {
 
-    let vk_xml = match read_file_to_string("carp_vk_parser/vk.xml") 
+    let vk_xml = match read_file_to_string("../vk.xml") 
     {
         Ok(v) => v,
         Err(_) => { println!("Failed to load vk.xml"); return; }

@@ -16,15 +16,26 @@ extern "system"
 extern "system" 
 {
     pub fn dlsym(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE;
-    pub fn dlopen(file_name: CHARSTRING, flags: i32) -> HANDLE;
+    pub fn dlopen(file_name: CHARSTRING, flags: c_int) -> HANDLE;
     pub fn dlclose(lib_module_handle: HANDLE) -> BOOL;
 }
+
+
+#[cfg(windows)]
+pub fn get_proc_address(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { unsafe { GetProcAddress(lib_module_handle, proc_name ) } }
+#[cfg(windows)]
+pub fn load_library(file_name: CHARSTRING) -> HANDLE { unsafe { LoadLibraryA(file_name) } }
+#[cfg(windows)]
+ pub fn free_library(lib_module_handle: HANDLE) -> BOOL { unsafe { FreeLibrary(lib_module_handle) } }
+
+
+
 #[cfg(target_os = "linux")]
-pub fn GetProcAddress(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { dlsym(lib_module_handle, proc_name ) }
+pub fn get_proc_address(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { unsafe { dlsym(lib_module_handle, proc_name ) } }
 #[cfg(target_os = "linux")]
-pub fn LoadLibraryA(file_name: CHARSTRING) -> HANDLE { dlopen(file_name, RTLD_LAZY ) }
+pub fn load_library(file_name: CHARSTRING) -> HANDLE { unsafe { dlopen(file_name, 1 ) } }
 #[cfg(target_os = "linux")]
- pub fn FreeLibrary(lib_module_handle: HANDLE) -> BOOL { dlclose(lib_module_handle) }
+ pub fn free_library(lib_module_handle: HANDLE) -> BOOL { unsafe { dlclose(lib_module_handle) } }
 
 
 
@@ -45,7 +56,7 @@ impl CarpLibLoader
         {
             Ok(lib_name) => unsafe 
             {
-                LoadLibraryA(lib_name.as_ptr())
+                load_library(lib_name.as_ptr())
             },
             Err(_) => std::ptr::null_mut(),
         };
@@ -69,8 +80,7 @@ impl Drop for CarpLibLoader
 		{
 			for lib in &self.loaded_libs
             {
-                #[cfg(windows)]
-                FreeLibrary(lib.0);
+                free_library(lib.0);
             }
             self.loaded_libs.clear();
 		}
