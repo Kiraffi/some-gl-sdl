@@ -37,7 +37,7 @@ pub fn sdl_proc_address(procname: &str) -> *const ()
     {
 		Ok(procname) => unsafe 
         {
-			SDL_GL_GetProcAddress(procname.as_ptr() as *const std::os::raw::c_char) as *const ()
+			SDL_GL_GetProcAddress(procname.as_ptr()) as *const ()
 		},
 		// string contains a nul byte - it won't match anything.
 		Err(_) => std::ptr::null(),

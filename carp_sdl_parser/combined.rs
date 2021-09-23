@@ -477,9 +477,9 @@ extern "C"
 	pub fn SDL_Quit(	) -> ();
 
 	//File: include/SDL_video.h
-	pub fn SDL_CreateWindow(title: *const c_char, x: i32, y: i32, w: i32, h: i32, flags: u32, 	) -> *mut SDL_Window;
+	pub fn SDL_CreateWindow(title: *const c_uchar, x: i32, y: i32, w: i32, h: i32, flags: u32, 	) -> *mut SDL_Window;
 	pub fn SDL_DestroyWindow(window: *mut SDL_Window, 	) -> ();
-	pub fn SDL_GL_GetProcAddress(proc: *const c_char, 	) -> *mut ();
+	pub fn SDL_GL_GetProcAddress(proc: *const c_uchar, 	) -> *mut ();
 	pub fn SDL_GL_SetAttribute(attr: SDL_GLattr, value: i32, 	) -> i32;
 	pub fn SDL_GL_CreateContext(window: *mut SDL_Window, 	) -> SDL_GLContext;
 	pub fn SDL_GL_SetSwapInterval(interval: i32, 	) -> i32;
