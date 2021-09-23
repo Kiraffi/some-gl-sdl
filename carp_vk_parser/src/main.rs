@@ -1,12 +1,12 @@
 #![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::ptr::null;
+use std::ptr::{null, null_mut};
 use std::{io::Read};
 use std::os::raw::*;
 
 use carp_lib_loader::*;
 
-mod vk_all;
+pub mod vk_all;
 
 use vk_all::*;
 
@@ -125,6 +125,69 @@ impl Vulkan {
         //let _gl = load_with(&|s| vk_proc(null(), s) as PFN_vkVoidFunction);
         println!("load success?");
 
+
+       // __temp_funcs::$fn = Some(std::mem::transmute(proc_ptr));
+
+        let mut fn_inst_loader: fn(*const c_void, *const u8) -> PFN_vkVoidFunction = unsafe {  std::mem::transmute(vk_proc)  };
+        println!("load success2?");
+        let mut create_ptr = fn_inst_loader(null(), b"vkCreateInstance\0".as_ptr() );
+        println!("load success3?");
+        let mut crateInstanceFn: 
+            fn(pCreateInfo: * const VkInstanceCreateInfo, pAllocator: * const c_void, pInstance: * mut VkInstance) -> VkResult =
+            unsafe {  std::mem::transmute(create_ptr)  };
+        
+        println!("load success4?");
+ 
+        
+
+        //fn vkEnumerateInstanceExtensionProperties(pLayerName: * const c_char, pPropertyCount: * mut u32, pProperties: * mut VkExtensionProperties, ) -> VkResult;
+
+
+
+        let mut ext_query_ptr = fn_inst_loader(null(), b"vkEnumerateInstanceExtensionProperties\0".as_ptr() );
+        println!("load success5?");
+        let mut ext_query_fn: 
+            fn(pLayerName: * const c_char, pPropertyCount: * mut u32, pProperties: * mut VkExtensionProperties) -> VkResult =
+            unsafe {  std::mem::transmute(ext_query_ptr)  };       
+        println!("load success6?");
+ 
+/*
+
+        let mut app_info = VkApplicationInfo::new();
+        app_info.pApplicationName = b"Hello Triangle\0".as_ptr() as *const i8;
+        app_info.applicationVersion = vk_make_version(0, 1, 2, 0);
+        app_info.pEngineName = b"No Engine\0".as_ptr() as *const i8;
+        app_info.engineVersion = vk_make_version(0, 1, 0, 0);
+        app_info.apiVersion = vk_make_version(0, 1, 2, 0);
+
+        let mut create_info = VkInstanceCreateInfo::new();
+        create_info.pApplicationInfo = &app_info;
+
+        let mut instance: VkInstance = 0;
+        let result  = crateInstanceFn(&create_info, null(), &mut instance);
+
+
+
+
+        let mut extensionCount = 0u32;
+        let null_ext_mut = null_mut();
+        let result = ext_query_fn(null(), &mut extensionCount, null_ext_mut);
+        
+        print!("result {}, ext count: {} \r\n", result as i32, extensionCount);
+
+
+        let mut props: Vec<VkExtensionProperties> = Vec::new();
+        props.resize(extensionCount as usize, VkExtensionProperties::new());
+
+        let result = ext_query_fn(null(), &mut extensionCount, &mut props[0]);
+        print!("result {}, ext count: {} \r\n", result as i32, extensionCount);
+        
+        for prop in &props
+        {
+            let s = std::str::from_utf8(&prop.extensionName).unwrap();
+            println!("Extension: {:?}", s);
+        }
+*/
         Ok(
         Vulkan {
             vulkan_lib,
@@ -425,7 +488,7 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
         }
         let value_str = &value[last_space..];
         let mut found = false;
-        for enum_type in &*enum_types // ???????????????????????????wtf....
+        for enum_type in &*enum_types // mutable dereference-borrow to get reference not move
         {
             if enum_type.enum_name.eq(value_str)
             {
@@ -436,7 +499,7 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
     
         if !found
         {
-            enum_types.push(EnumType{enum_name: value.to_string(), bit_width: "32".to_string(), param_type_names: Vec::new()});
+            enum_types.push(EnumType{enum_name: value.to_string(), bit_width: "32".to_string(), param_type_names: Vec::new(), is_enum: true});
         }
     }
 
@@ -446,7 +509,7 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
         assert!(struct_type.param_names.len() == struct_type.type_names.len());
         for i in 0..struct_type.param_names.len()
         {
-            string_out.push_str(&format!("\t{}: {},\r\n", struct_type.param_names[i], struct_type.type_names[i]));
+            string_out.push_str(&format!("\tpub {}: {},\r\n", struct_type.param_names[i], struct_type.type_names[i]));
         }
 
         let mut s_type_mut_string = "let s";
@@ -461,7 +524,7 @@ fn parse_vk_structs(root: &xmltree::Element, enum_types: &mut Vec<EnumType>) -> 
         string_out.push_str(&format!(
 r"impl {}
 {{
-    fn new() -> Self
+    pub fn new() -> Self
     {{
         {}: Self = unsafe {{ mem::zeroed() }};
         {}
@@ -480,6 +543,7 @@ struct EnumType
     enum_name: String,
     bit_width: String,
     param_type_names: Vec<String>,
+    is_enum: bool,
 }
 
 
@@ -487,9 +551,16 @@ fn parse_vk_enums(root: &xmltree::Element) -> Vec<EnumType>
 {
     let mut enums: Vec<EnumType> = Vec::new();
 
-    node_children2(&root, &mut enums, "enums", &vec![("type", ""), ("name", "")], |child, enums|
+    node_children2(&root, &mut enums, "enums", &vec![("name", "")], |child, enums|
     {
-        if !(child.attributes["type"] == "bitmask" || child.attributes["type"] == "enum")
+        let mut name_string = child.attributes["name"].to_string();
+        let mut is_enum = true;
+        if child.attributes["name"] == "API Constants"
+        {
+            name_string = "APIConstants".to_string();
+            is_enum = false;
+        }
+        else if !(child.attributes.contains_key("type") && (child.attributes["type"] == "bitmask" || child.attributes["type"] == "enum"))
         {
             return;
         }
@@ -501,7 +572,8 @@ fn parse_vk_enums(root: &xmltree::Element) -> Vec<EnumType>
         }
         
         
-        let mut enum_type = EnumType{enum_name: child.attributes["name"].to_string(), bit_width: bit_width.to_string(), param_type_names: Vec::new()};
+        let mut enum_type = EnumType{enum_name: name_string, bit_width: bit_width.to_string(),
+            param_type_names: Vec::new(), is_enum};
         //s_vec.push(format!("#[repr(i{})]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", bit_width, child.attributes["name"]));
         node_children2(&child, &mut enum_type.param_type_names, "enum",&vec![("name", "")],  |child2, params|
         {
@@ -737,7 +809,7 @@ fn parse_commands(root: &xmltree::Element) -> String
                 {
                     let ans = parse_type_name(child3);
                     //println!("\tparam: {}: {}", ans.0, ans.1);
-                    command_struct.command_parms.push(format!("{}: {}, ", ans.0, ans.1));
+                    command_struct.command_parms.push(format!("{}: {}", ans.0, ans.1));
                 }
             });
             if command_struct.command_string.len() > 0
@@ -747,19 +819,20 @@ fn parse_commands(root: &xmltree::Element) -> String
         });
     });
 
+    let mut string = String::new();
+
     for command in &commands
     {
-
-        print!("fn {}(", &command.command_string);
+        string.push_str(&format!("fn {}(", &command.command_string));
         for params in &command.command_parms
         {
-            print!("{}", &params);
+            string.push_str(&format!("{}, ", &params));
         }
-        println!(") -> {};", &command.command_string_return);
+        string.push_str(&format!(") -> {};\r\n", &command.command_string_return));
     }
+    string.push_str("\r\n");
 
-
-    return "\r\n".to_string();
+    return string;
 }
 
 
@@ -785,19 +858,70 @@ fn main()
 
 
     let mut vk_enum_str = String::new();
-    for enum_type in vk_enums
+    for enum_type in &vk_enums
     {
         if enum_type.param_type_names.len() == 0
         {
             vk_enum_str.push_str(&format!("type {} = u{};\r\n\r\n", enum_type.enum_name, enum_type.bit_width));
             continue;
         }
-        vk_enum_str.push_str(&format!("#[repr(i{})]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", enum_type.bit_width, enum_type.enum_name));
-        for enum_type_param_type_names in enum_type.param_type_names
+        else if enum_type.is_enum
         {
-            vk_enum_str.push_str(&format!("{}", enum_type_param_type_names));
+            vk_enum_str.push_str(&format!("#[repr(i{})]\r\n#[derive(Debug, Copy, Clone, PartialEq, Eq)]\r\npub enum {}\r\n{{\r\n", enum_type.bit_width, enum_type.enum_name));
+            for enum_type_param_type_names in &enum_type.param_type_names
+            {
+                vk_enum_str.push_str(&format!("{}", enum_type_param_type_names));
+            }
+            vk_enum_str.push_str("}\r\n\r\n");
         }
-        vk_enum_str.push_str("}\r\n\r\n");
+        else 
+        {
+            for enum_type_param_type_names in &enum_type.param_type_names
+            {
+                
+                // wrong way....
+                let eq_len = enum_type_param_type_names.len();
+                if eq_len == 0
+                {
+                    continue;
+                }
+                let mut s = enum_type_param_type_names.clone(); 
+                s = s.trim().to_string();
+                s = s.replace("(", "");
+                s = s.replace(")", "");
+                s = s.replace("~", "!");
+                s = s.replace(",", ";");
+
+                if s.ends_with("F;")
+                {
+                    s = s.replace("F;", "f32;");
+                    s = s.replace(" = ", ":f32 = ");
+                }
+                else if s.ends_with("U;")
+                {
+                    s = s.replace("U;", "u32;");
+                    s = s.replace(" = ", ":u32 = ");
+
+                }
+                else if s.ends_with("ULL;")
+                {
+                    s = s.replace("ULL;", "u64;");
+                    s = s.replace(" = ", ":u64 = ");
+
+                }
+
+                else
+                {
+                    s = s.replace(" = ", ":u32 = ");
+
+                }
+
+
+
+                println!("s: {}", &s);
+                vk_enum_str.push_str(&format!("pub const {}\n", s));
+            }
+        }
     }
     
 
@@ -834,6 +958,7 @@ pub fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
     std::fs::write("carp_vk_parser/vk_enums.rs", &vk_enum_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_structs.rs", &vk_structs).expect("Unable to write file");
     std::fs::write("carp_vk_parser/src/vk_all.rs", &vk_all).expect("Unable to write file");
+    std::fs::write("carp_vk_parser/commands.rs", &command_str).expect("Unable to write file");
     
     let mut carp_lib_loader = CarpLibLoader::new();
     match Vulkan::new(&mut carp_lib_loader)
