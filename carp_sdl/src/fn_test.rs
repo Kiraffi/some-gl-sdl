@@ -467,6 +467,7 @@ pub struct SDL_Keysym
 //File: include/SDL_error.h
 
 //Classes 
+#[link(name = "SDL2")]
 extern "C"
 {
 	//File: include/SDL.h
