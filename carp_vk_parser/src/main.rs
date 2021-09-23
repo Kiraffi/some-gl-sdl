@@ -1,5 +1,6 @@
 #![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
+use std::ffi::CString;
 use std::ptr::{null, null_mut};
 use std::{io::Read};
 use std::os::raw::*;
@@ -184,8 +185,18 @@ impl Vulkan {
         
         for prop in &props
         {
-            let s = std::str::from_utf8(&prop.extensionName).unwrap();
-            println!("Extension: {:?}", s);
+            let mut s = String::new();
+            for i in 0..prop.extensionName.len()
+            {
+                if prop.extensionName[i] == '\0' as c_uchar
+                {
+                    break;
+                }
+                s.push(prop.extensionName[i] as char);
+            }
+            
+            
+            println!("Extension: {}", &s);
         }
 
         Ok(
@@ -403,7 +414,6 @@ fn parse_type_name(elem: &xmltree::Element) -> (String, String)
     let found = text.contains("[") && text.contains("]");
     if ptrs > 0
     {
-        if found { println!("[] ptr found"); }
         for _ in 0..c
         {
             if consts > 0
@@ -418,14 +428,13 @@ fn parse_type_name(elem: &xmltree::Element) -> (String, String)
     }
     else if consts > 0
     {
-        if found { println!("[] const found"); }
         const_mut_ptr_string.push_str("const ");
 
     }
     else
     {
         if found 
-        { println!("[] found");
+        {
             text = text.replace("[", "");
             text = text.replace("]", "");
             type_str = format!("[{}; {}]", &type_str, &text);
@@ -433,7 +442,6 @@ fn parse_type_name(elem: &xmltree::Element) -> (String, String)
     }    
 
     const_mut_ptr_string.push_str(&type_str);
-    if found { println!("[] found {}: {}  - text: {}", &name_str, &const_mut_ptr_string, &text); }
 
     return (name_str, const_mut_ptr_string);
 }
@@ -878,30 +886,10 @@ fn parse_commands(root: &xmltree::Element) -> String
     return string;
 }
 
-
-
-fn main() 
+fn get_enums_as_string(enum_types: &Vec<EnumType>) -> String
 {
-
-    let vk_xml = match read_file_to_string("../vk.xml") 
-    {
-        Ok(v) => v,
-        Err(_) => { println!("Failed to load vk.xml"); return; }
-    };
-    let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
-
-    //parse_vk_structs2(&root);
-    let mut vk_enums = parse_vk_enums(&root);
-    parse_vk_enum_extensions(&root, &mut vk_enums);
-    let vk_structs = parse_vk_structs(&root, &mut vk_enums);
-
-    let handles_str = parse_handles(&root);
-    let command_str = parse_commands(&root);
-
-
-
     let mut vk_enum_str = String::new();
-    for enum_type in &vk_enums
+    for enum_type in &*enum_types
     {
         if enum_type.param_type_names.len() == 0
         {
@@ -960,12 +948,35 @@ fn main()
                 }
 
 
-
-                println!("s: {}", &s);
                 vk_enum_str.push_str(&format!("pub const {}\n", s));
             }
         }
     }
+    return vk_enum_str;
+}
+
+
+fn main() 
+{
+
+    let vk_xml = match read_file_to_string("../vk.xml") 
+    {
+        Ok(v) => v,
+        Err(_) => { println!("Failed to load vk.xml"); return; }
+    };
+    let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
+
+    //parse_vk_structs2(&root);
+    let mut vk_enums = parse_vk_enums(&root);
+    parse_vk_enum_extensions(&root, &mut vk_enums);
+    let vk_structs = parse_vk_structs(&root, &mut vk_enums);
+
+    let handles_str = parse_handles(&root);
+    let command_str = parse_commands(&root);
+
+    let vk_enum_str = get_enums_as_string(&vk_enums);
+
+
     
 
 

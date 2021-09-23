@@ -1903,9 +1903,6 @@ pub enum VkDriverId
 	VK_DRIVER_ID_COREAVI_PROPRIETARY = 15,
 	VK_DRIVER_ID_JUICE_PROPRIETARY = 16,
 	VK_DRIVER_ID_VERISILICON_PROPRIETARY = 17,
-	VK_DRIVER_ID_MESA_TURNIP = 18,
-	VK_DRIVER_ID_MESA_V3DV = 19,
-	VK_DRIVER_ID_MESA_PANVK = 20,
 }
 
 #[repr(i32)]
@@ -2550,33 +2547,33 @@ pub enum VkVideoEncodeH264CreateFlagBitsEXT
 	VK_VIDEO_ENCODE_H264_CREATE_RESERVED_0_BIT_EXT = 1,
 }
 
-type VkPipelineColorBlendStateCreateFlagBits = u32;
-
-type VkDescriptorUpdateTemplateCreateFlagBits = u32;
-
-type VkPipelineMultisampleStateCreateFlagBits = u32;
-
 type VkQueryPoolCreateFlagBits = u32;
-
-type VkPipelineDynamicStateCreateFlagBits = u32;
-
-type VkBufferViewCreateFlagBits = u32;
-
-type VkPipelineRasterizationStateCreateFlagBits = u32;
 
 type VkPipelineVertexInputStateCreateFlagBits = u32;
 
-type VkDeviceCreateFlagBits = u32;
-
 type VkPipelineInputAssemblyStateCreateFlagBits = u32;
 
-type VkInstanceCreateFlagBits = u32;
+type VkPipelineMultisampleStateCreateFlagBits = u32;
+
+type VkDeviceCreateFlagBits = u32;
 
 type VkPipelineViewportStateCreateFlagBits = u32;
 
+type VkBufferViewCreateFlagBits = u32;
+
+type VkInstanceCreateFlagBits = u32;
+
 type VkPipelineDepthStencilStateCreateFlagBits = u32;
 
+type VkDescriptorUpdateTemplateCreateFlagBits = u32;
+
+type VkPipelineDynamicStateCreateFlagBits = u32;
+
+type VkPipelineRasterizationStateCreateFlagBits = u32;
+
 type VkPipelineTessellationStateCreateFlagBits = u32;
+
+type VkPipelineColorBlendStateCreateFlagBits = u32;
 
 #[repr(C)]
 #[derive(Copy, Clone)]

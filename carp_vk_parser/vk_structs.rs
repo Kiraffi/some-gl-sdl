@@ -2,12 +2,12 @@
 #[derive(Copy, Clone)]
 pub struct VkBaseOutStructure
 {
-	sType: VkStructureType,
-	pNext: * mut VkBaseOutStructure,
+	pub sType: VkStructureType,
+	pub pNext: * mut VkBaseOutStructure,
 }
 impl VkBaseOutStructure
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -19,12 +19,12 @@ impl VkBaseOutStructure
 #[derive(Copy, Clone)]
 pub struct VkBaseInStructure
 {
-	sType: VkStructureType,
-	pNext: * const VkBaseInStructure,
+	pub sType: VkStructureType,
+	pub pNext: * const VkBaseInStructure,
 }
 impl VkBaseInStructure
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -36,12 +36,12 @@ impl VkBaseInStructure
 #[derive(Copy, Clone)]
 pub struct VkOffset2D
 {
-	x: i32,
-	y: i32,
+	pub x: i32,
+	pub y: i32,
 }
 impl VkOffset2D
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -53,13 +53,13 @@ impl VkOffset2D
 #[derive(Copy, Clone)]
 pub struct VkOffset3D
 {
-	x: i32,
-	y: i32,
-	z: i32,
+	pub x: i32,
+	pub y: i32,
+	pub z: i32,
 }
 impl VkOffset3D
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -71,12 +71,12 @@ impl VkOffset3D
 #[derive(Copy, Clone)]
 pub struct VkExtent2D
 {
-	width: u32,
-	height: u32,
+	pub width: u32,
+	pub height: u32,
 }
 impl VkExtent2D
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -88,13 +88,13 @@ impl VkExtent2D
 #[derive(Copy, Clone)]
 pub struct VkExtent3D
 {
-	width: u32,
-	height: u32,
-	depth: u32,
+	pub width: u32,
+	pub height: u32,
+	pub depth: u32,
 }
 impl VkExtent3D
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -106,16 +106,16 @@ impl VkExtent3D
 #[derive(Copy, Clone)]
 pub struct VkViewport
 {
-	x: f32,
-	y: f32,
-	width: f32,
-	height: f32,
-	minDepth: f32,
-	maxDepth: f32,
+	pub x: f32,
+	pub y: f32,
+	pub width: f32,
+	pub height: f32,
+	pub minDepth: f32,
+	pub maxDepth: f32,
 }
 impl VkViewport
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -127,12 +127,12 @@ impl VkViewport
 #[derive(Copy, Clone)]
 pub struct VkRect2D
 {
-	offset: VkOffset2D,
-	extent: VkExtent2D,
+	pub offset: VkOffset2D,
+	pub extent: VkExtent2D,
 }
 impl VkRect2D
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -144,13 +144,13 @@ impl VkRect2D
 #[derive(Copy, Clone)]
 pub struct VkClearRect
 {
-	rect: VkRect2D,
-	baseArrayLayer: u32,
-	layerCount: u32,
+	pub rect: VkRect2D,
+	pub baseArrayLayer: u32,
+	pub layerCount: u32,
 }
 impl VkClearRect
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -162,14 +162,14 @@ impl VkClearRect
 #[derive(Copy, Clone)]
 pub struct VkComponentMapping
 {
-	r: VkComponentSwizzle,
-	g: VkComponentSwizzle,
-	b: VkComponentSwizzle,
-	a: VkComponentSwizzle,
+	pub r: VkComponentSwizzle,
+	pub g: VkComponentSwizzle,
+	pub b: VkComponentSwizzle,
+	pub a: VkComponentSwizzle,
 }
 impl VkComponentMapping
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -181,19 +181,19 @@ impl VkComponentMapping
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProperties
 {
-	apiVersion: u32,
-	driverVersion: u32,
-	vendorID: u32,
-	deviceID: u32,
-	deviceType: VkPhysicalDeviceType,
-	deviceName: c_char,
-	pipelineCacheUUID: u8,
-	limits: VkPhysicalDeviceLimits,
-	sparseProperties: VkPhysicalDeviceSparseProperties,
+	pub apiVersion: u32,
+	pub driverVersion: u32,
+	pub vendorID: u32,
+	pub deviceID: u32,
+	pub deviceType: VkPhysicalDeviceType,
+	pub deviceName: [c_uchar; VK_MAX_PHYSICAL_DEVICE_NAME_SIZE],
+	pub pipelineCacheUUID: [u8; VK_UUID_SIZE],
+	pub limits: VkPhysicalDeviceLimits,
+	pub sparseProperties: VkPhysicalDeviceSparseProperties,
 }
 impl VkPhysicalDeviceProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -205,12 +205,12 @@ impl VkPhysicalDeviceProperties
 #[derive(Copy, Clone)]
 pub struct VkExtensionProperties
 {
-	extensionName: c_char,
-	specVersion: u32,
+	pub extensionName: [c_uchar; VK_MAX_EXTENSION_NAME_SIZE],
+	pub specVersion: u32,
 }
 impl VkExtensionProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -222,14 +222,14 @@ impl VkExtensionProperties
 #[derive(Copy, Clone)]
 pub struct VkLayerProperties
 {
-	layerName: c_char,
-	specVersion: u32,
-	implementationVersion: u32,
-	description: c_char,
+	pub layerName: [c_uchar; VK_MAX_EXTENSION_NAME_SIZE],
+	pub specVersion: u32,
+	pub implementationVersion: u32,
+	pub description: [c_uchar; VK_MAX_DESCRIPTION_SIZE],
 }
 impl VkLayerProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -241,17 +241,17 @@ impl VkLayerProperties
 #[derive(Copy, Clone)]
 pub struct VkApplicationInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	pApplicationName: * const c_char,
-	applicationVersion: u32,
-	pEngineName: * const c_char,
-	engineVersion: u32,
-	apiVersion: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub pApplicationName: * const c_uchar,
+	pub applicationVersion: u32,
+	pub pEngineName: * const c_uchar,
+	pub engineVersion: u32,
+	pub apiVersion: u32,
 }
 impl VkApplicationInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -264,16 +264,16 @@ impl VkApplicationInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceQueueCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDeviceQueueCreateFlagBits,
-	queueFamilyIndex: u32,
-	queueCount: u32,
-	pQueuePriorities: * const f32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkDeviceQueueCreateFlagBits,
+	pub queueFamilyIndex: u32,
+	pub queueCount: u32,
+	pub pQueuePriorities: * const f32,
 }
 impl VkDeviceQueueCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -286,20 +286,20 @@ impl VkDeviceQueueCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDeviceCreateFlagBits,
-	queueCreateInfoCount: u32,
-	pQueueCreateInfos: * const VkDeviceQueueCreateInfo,
-	enabledLayerCount: u32,
-	ppEnabledLayerNames: * const * const c_char,
-	enabledExtensionCount: u32,
-	ppEnabledExtensionNames: * const * const c_char,
-	pEnabledFeatures: * const VkPhysicalDeviceFeatures,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkDeviceCreateFlagBits,
+	pub queueCreateInfoCount: u32,
+	pub pQueueCreateInfos: * const VkDeviceQueueCreateInfo,
+	pub enabledLayerCount: u32,
+	pub ppEnabledLayerNames: * const * const c_uchar,
+	pub enabledExtensionCount: u32,
+	pub ppEnabledExtensionNames: * const * const c_uchar,
+	pub pEnabledFeatures: * const VkPhysicalDeviceFeatures,
 }
 impl VkDeviceCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -312,18 +312,18 @@ impl VkDeviceCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkInstanceCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkInstanceCreateFlagBits,
-	pApplicationInfo: * const VkApplicationInfo,
-	enabledLayerCount: u32,
-	ppEnabledLayerNames: * const * const c_char,
-	enabledExtensionCount: u32,
-	ppEnabledExtensionNames: * const * const c_char,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkInstanceCreateFlagBits,
+	pub pApplicationInfo: * const VkApplicationInfo,
+	pub enabledLayerCount: u32,
+	pub ppEnabledLayerNames: * const * const c_uchar,
+	pub enabledExtensionCount: u32,
+	pub ppEnabledExtensionNames: * const * const c_uchar,
 }
 impl VkInstanceCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -336,14 +336,14 @@ impl VkInstanceCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties
 {
-	queueFlags: VkQueueFlagBits,
-	queueCount: u32,
-	timestampValidBits: u32,
-	minImageTransferGranularity: VkExtent3D,
+	pub queueFlags: VkQueueFlagBits,
+	pub queueCount: u32,
+	pub timestampValidBits: u32,
+	pub minImageTransferGranularity: VkExtent3D,
 }
 impl VkQueueFamilyProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -355,14 +355,14 @@ impl VkQueueFamilyProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryProperties
 {
-	memoryTypeCount: u32,
-	memoryTypes: VkMemoryType,
-	memoryHeapCount: u32,
-	memoryHeaps: VkMemoryHeap,
+	pub memoryTypeCount: u32,
+	pub memoryTypes: [VkMemoryType; VK_MAX_MEMORY_TYPES],
+	pub memoryHeapCount: u32,
+	pub memoryHeaps: [VkMemoryHeap; VK_MAX_MEMORY_HEAPS],
 }
 impl VkPhysicalDeviceMemoryProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -374,14 +374,14 @@ impl VkPhysicalDeviceMemoryProperties
 #[derive(Copy, Clone)]
 pub struct VkMemoryAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	allocationSize: VkDeviceSize,
-	memoryTypeIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub allocationSize: VkDeviceSize,
+	pub memoryTypeIndex: u32,
 }
 impl VkMemoryAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -394,13 +394,13 @@ impl VkMemoryAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkMemoryRequirements
 {
-	size: VkDeviceSize,
-	alignment: VkDeviceSize,
-	memoryTypeBits: u32,
+	pub size: VkDeviceSize,
+	pub alignment: VkDeviceSize,
+	pub memoryTypeBits: u32,
 }
 impl VkMemoryRequirements
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -412,13 +412,13 @@ impl VkMemoryRequirements
 #[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties
 {
-	aspectMask: VkImageAspectFlagBits,
-	imageGranularity: VkExtent3D,
-	flags: VkSparseImageFormatFlagBits,
+	pub aspectMask: VkImageAspectFlagBits,
+	pub imageGranularity: VkExtent3D,
+	pub flags: VkSparseImageFormatFlagBits,
 }
 impl VkSparseImageFormatProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -430,15 +430,15 @@ impl VkSparseImageFormatProperties
 #[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryRequirements
 {
-	formatProperties: VkSparseImageFormatProperties,
-	imageMipTailFirstLod: u32,
-	imageMipTailSize: VkDeviceSize,
-	imageMipTailOffset: VkDeviceSize,
-	imageMipTailStride: VkDeviceSize,
+	pub formatProperties: VkSparseImageFormatProperties,
+	pub imageMipTailFirstLod: u32,
+	pub imageMipTailSize: VkDeviceSize,
+	pub imageMipTailOffset: VkDeviceSize,
+	pub imageMipTailStride: VkDeviceSize,
 }
 impl VkSparseImageMemoryRequirements
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -450,12 +450,12 @@ impl VkSparseImageMemoryRequirements
 #[derive(Copy, Clone)]
 pub struct VkMemoryType
 {
-	propertyFlags: VkMemoryPropertyFlagBits,
-	heapIndex: u32,
+	pub propertyFlags: VkMemoryPropertyFlagBits,
+	pub heapIndex: u32,
 }
 impl VkMemoryType
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -467,12 +467,12 @@ impl VkMemoryType
 #[derive(Copy, Clone)]
 pub struct VkMemoryHeap
 {
-	size: VkDeviceSize,
-	flags: VkMemoryHeapFlagBits,
+	pub size: VkDeviceSize,
+	pub flags: VkMemoryHeapFlagBits,
 }
 impl VkMemoryHeap
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -484,15 +484,15 @@ impl VkMemoryHeap
 #[derive(Copy, Clone)]
 pub struct VkMappedMemoryRange
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memory: VkDeviceMemory,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub memory: VkDeviceMemory,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 impl VkMappedMemoryRange
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -505,13 +505,13 @@ impl VkMappedMemoryRange
 #[derive(Copy, Clone)]
 pub struct VkFormatProperties
 {
-	linearTilingFeatures: VkFormatFeatureFlagBits,
-	optimalTilingFeatures: VkFormatFeatureFlagBits,
-	bufferFeatures: VkFormatFeatureFlagBits,
+	pub linearTilingFeatures: VkFormatFeatureFlagBits,
+	pub optimalTilingFeatures: VkFormatFeatureFlagBits,
+	pub bufferFeatures: VkFormatFeatureFlagBits,
 }
 impl VkFormatProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -523,15 +523,15 @@ impl VkFormatProperties
 #[derive(Copy, Clone)]
 pub struct VkImageFormatProperties
 {
-	maxExtent: VkExtent3D,
-	maxMipLevels: u32,
-	maxArrayLayers: u32,
-	sampleCounts: VkSampleCountFlagBits,
-	maxResourceSize: VkDeviceSize,
+	pub maxExtent: VkExtent3D,
+	pub maxMipLevels: u32,
+	pub maxArrayLayers: u32,
+	pub sampleCounts: VkSampleCountFlagBits,
+	pub maxResourceSize: VkDeviceSize,
 }
 impl VkImageFormatProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -543,13 +543,13 @@ impl VkImageFormatProperties
 #[derive(Copy, Clone)]
 pub struct VkDescriptorBufferInfo
 {
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	range: VkDeviceSize,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub range: VkDeviceSize,
 }
 impl VkDescriptorBufferInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -561,13 +561,13 @@ impl VkDescriptorBufferInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorImageInfo
 {
-	sampler: VkSampler,
-	imageView: VkImageView,
-	imageLayout: VkImageLayout,
+	pub sampler: VkSampler,
+	pub imageView: VkImageView,
+	pub imageLayout: VkImageLayout,
 }
 impl VkDescriptorImageInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -579,20 +579,20 @@ impl VkDescriptorImageInfo
 #[derive(Copy, Clone)]
 pub struct VkWriteDescriptorSet
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	dstSet: VkDescriptorSet,
-	dstBinding: u32,
-	dstArrayElement: u32,
-	descriptorCount: u32,
-	descriptorType: VkDescriptorType,
-	pImageInfo: * const VkDescriptorImageInfo,
-	pBufferInfo: * const VkDescriptorBufferInfo,
-	pTexelBufferView: * const VkBufferView,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub dstSet: VkDescriptorSet,
+	pub dstBinding: u32,
+	pub dstArrayElement: u32,
+	pub descriptorCount: u32,
+	pub descriptorType: VkDescriptorType,
+	pub pImageInfo: * const VkDescriptorImageInfo,
+	pub pBufferInfo: * const VkDescriptorBufferInfo,
+	pub pTexelBufferView: * const VkBufferView,
 }
 impl VkWriteDescriptorSet
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -605,19 +605,19 @@ impl VkWriteDescriptorSet
 #[derive(Copy, Clone)]
 pub struct VkCopyDescriptorSet
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcSet: VkDescriptorSet,
-	srcBinding: u32,
-	srcArrayElement: u32,
-	dstSet: VkDescriptorSet,
-	dstBinding: u32,
-	dstArrayElement: u32,
-	descriptorCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub srcSet: VkDescriptorSet,
+	pub srcBinding: u32,
+	pub srcArrayElement: u32,
+	pub dstSet: VkDescriptorSet,
+	pub dstBinding: u32,
+	pub dstArrayElement: u32,
+	pub descriptorCount: u32,
 }
 impl VkCopyDescriptorSet
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET;
@@ -630,18 +630,18 @@ impl VkCopyDescriptorSet
 #[derive(Copy, Clone)]
 pub struct VkBufferCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkBufferCreateFlagBits,
-	size: VkDeviceSize,
-	usage: VkBufferUsageFlagBits,
-	sharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkBufferCreateFlagBits,
+	pub size: VkDeviceSize,
+	pub usage: VkBufferUsageFlagBits,
+	pub sharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: * const u32,
 }
 impl VkBufferCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -654,17 +654,17 @@ impl VkBufferCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkBufferViewCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkBufferViewCreateFlagBits,
-	buffer: VkBuffer,
-	format: VkFormat,
-	offset: VkDeviceSize,
-	range: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkBufferViewCreateFlagBits,
+	pub buffer: VkBuffer,
+	pub format: VkFormat,
+	pub offset: VkDeviceSize,
+	pub range: VkDeviceSize,
 }
 impl VkBufferViewCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
@@ -677,13 +677,13 @@ impl VkBufferViewCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkImageSubresource
 {
-	aspectMask: VkImageAspectFlagBits,
-	mipLevel: u32,
-	arrayLayer: u32,
+	pub aspectMask: VkImageAspectFlagBits,
+	pub mipLevel: u32,
+	pub arrayLayer: u32,
 }
 impl VkImageSubresource
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -695,14 +695,14 @@ impl VkImageSubresource
 #[derive(Copy, Clone)]
 pub struct VkImageSubresourceLayers
 {
-	aspectMask: VkImageAspectFlagBits,
-	mipLevel: u32,
-	baseArrayLayer: u32,
-	layerCount: u32,
+	pub aspectMask: VkImageAspectFlagBits,
+	pub mipLevel: u32,
+	pub baseArrayLayer: u32,
+	pub layerCount: u32,
 }
 impl VkImageSubresourceLayers
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -714,15 +714,15 @@ impl VkImageSubresourceLayers
 #[derive(Copy, Clone)]
 pub struct VkImageSubresourceRange
 {
-	aspectMask: VkImageAspectFlagBits,
-	baseMipLevel: u32,
-	levelCount: u32,
-	baseArrayLayer: u32,
-	layerCount: u32,
+	pub aspectMask: VkImageAspectFlagBits,
+	pub baseMipLevel: u32,
+	pub levelCount: u32,
+	pub baseArrayLayer: u32,
+	pub layerCount: u32,
 }
 impl VkImageSubresourceRange
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -734,14 +734,14 @@ impl VkImageSubresourceRange
 #[derive(Copy, Clone)]
 pub struct VkMemoryBarrier
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcAccessMask: VkAccessFlagBits,
-	dstAccessMask: VkAccessFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub srcAccessMask: VkAccessFlagBits,
+	pub dstAccessMask: VkAccessFlagBits,
 }
 impl VkMemoryBarrier
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_BARRIER;
@@ -754,19 +754,19 @@ impl VkMemoryBarrier
 #[derive(Copy, Clone)]
 pub struct VkBufferMemoryBarrier
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcAccessMask: VkAccessFlagBits,
-	dstAccessMask: VkAccessFlagBits,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	buffer: VkBuffer,
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub srcAccessMask: VkAccessFlagBits,
+	pub dstAccessMask: VkAccessFlagBits,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub buffer: VkBuffer,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 impl VkBufferMemoryBarrier
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
@@ -779,20 +779,20 @@ impl VkBufferMemoryBarrier
 #[derive(Copy, Clone)]
 pub struct VkImageMemoryBarrier
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcAccessMask: VkAccessFlagBits,
-	dstAccessMask: VkAccessFlagBits,
-	oldLayout: VkImageLayout,
-	newLayout: VkImageLayout,
-	srcQueueFamilyIndex: u32,
-	dstQueueFamilyIndex: u32,
-	image: VkImage,
-	subresourceRange: VkImageSubresourceRange,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub srcAccessMask: VkAccessFlagBits,
+	pub dstAccessMask: VkAccessFlagBits,
+	pub oldLayout: VkImageLayout,
+	pub newLayout: VkImageLayout,
+	pub srcQueueFamilyIndex: u32,
+	pub dstQueueFamilyIndex: u32,
+	pub image: VkImage,
+	pub subresourceRange: VkImageSubresourceRange,
 }
 impl VkImageMemoryBarrier
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -805,25 +805,25 @@ impl VkImageMemoryBarrier
 #[derive(Copy, Clone)]
 pub struct VkImageCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkImageCreateFlagBits,
-	imageType: VkImageType,
-	format: VkFormat,
-	extent: VkExtent3D,
-	mipLevels: u32,
-	arrayLayers: u32,
-	samples: VkSampleCountFlagBits,
-	tiling: VkImageTiling,
-	usage: VkImageUsageFlagBits,
-	sharingMode: VkSharingMode,
-	queueFamilyIndexCount: u32,
-	pQueueFamilyIndices: * const u32,
-	initialLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkImageCreateFlagBits,
+	pub imageType: VkImageType,
+	pub format: VkFormat,
+	pub extent: VkExtent3D,
+	pub mipLevels: u32,
+	pub arrayLayers: u32,
+	pub samples: VkSampleCountFlagBits,
+	pub tiling: VkImageTiling,
+	pub usage: VkImageUsageFlagBits,
+	pub sharingMode: VkSharingMode,
+	pub queueFamilyIndexCount: u32,
+	pub pQueueFamilyIndices: * const u32,
+	pub initialLayout: VkImageLayout,
 }
 impl VkImageCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -836,15 +836,15 @@ impl VkImageCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkSubresourceLayout
 {
-	offset: VkDeviceSize,
-	size: VkDeviceSize,
-	rowPitch: VkDeviceSize,
-	arrayPitch: VkDeviceSize,
-	depthPitch: VkDeviceSize,
+	pub offset: VkDeviceSize,
+	pub size: VkDeviceSize,
+	pub rowPitch: VkDeviceSize,
+	pub arrayPitch: VkDeviceSize,
+	pub depthPitch: VkDeviceSize,
 }
 impl VkSubresourceLayout
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -856,18 +856,18 @@ impl VkSubresourceLayout
 #[derive(Copy, Clone)]
 pub struct VkImageViewCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkImageViewCreateFlagBits,
-	image: VkImage,
-	viewType: VkImageViewType,
-	format: VkFormat,
-	components: VkComponentMapping,
-	subresourceRange: VkImageSubresourceRange,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkImageViewCreateFlagBits,
+	pub image: VkImage,
+	pub viewType: VkImageViewType,
+	pub format: VkFormat,
+	pub components: VkComponentMapping,
+	pub subresourceRange: VkImageSubresourceRange,
 }
 impl VkImageViewCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -880,13 +880,13 @@ impl VkImageViewCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkBufferCopy
 {
-	srcOffset: VkDeviceSize,
-	dstOffset: VkDeviceSize,
-	size: VkDeviceSize,
+	pub srcOffset: VkDeviceSize,
+	pub dstOffset: VkDeviceSize,
+	pub size: VkDeviceSize,
 }
 impl VkBufferCopy
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -898,15 +898,15 @@ impl VkBufferCopy
 #[derive(Copy, Clone)]
 pub struct VkSparseMemoryBind
 {
-	resourceOffset: VkDeviceSize,
-	size: VkDeviceSize,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	flags: VkSparseMemoryBindFlagBits,
+	pub resourceOffset: VkDeviceSize,
+	pub size: VkDeviceSize,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
+	pub flags: VkSparseMemoryBindFlagBits,
 }
 impl VkSparseMemoryBind
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -918,16 +918,16 @@ impl VkSparseMemoryBind
 #[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryBind
 {
-	subresource: VkImageSubresource,
-	offset: VkOffset3D,
-	extent: VkExtent3D,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
-	flags: VkSparseMemoryBindFlagBits,
+	pub subresource: VkImageSubresource,
+	pub offset: VkOffset3D,
+	pub extent: VkExtent3D,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
+	pub flags: VkSparseMemoryBindFlagBits,
 }
 impl VkSparseImageMemoryBind
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -939,13 +939,13 @@ impl VkSparseImageMemoryBind
 #[derive(Copy, Clone)]
 pub struct VkSparseBufferMemoryBindInfo
 {
-	buffer: VkBuffer,
-	bindCount: u32,
-	pBinds: * const VkSparseMemoryBind,
+	pub buffer: VkBuffer,
+	pub bindCount: u32,
+	pub pBinds: * const VkSparseMemoryBind,
 }
 impl VkSparseBufferMemoryBindInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -957,13 +957,13 @@ impl VkSparseBufferMemoryBindInfo
 #[derive(Copy, Clone)]
 pub struct VkSparseImageOpaqueMemoryBindInfo
 {
-	image: VkImage,
-	bindCount: u32,
-	pBinds: * const VkSparseMemoryBind,
+	pub image: VkImage,
+	pub bindCount: u32,
+	pub pBinds: * const VkSparseMemoryBind,
 }
 impl VkSparseImageOpaqueMemoryBindInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -975,13 +975,13 @@ impl VkSparseImageOpaqueMemoryBindInfo
 #[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryBindInfo
 {
-	image: VkImage,
-	bindCount: u32,
-	pBinds: * const VkSparseImageMemoryBind,
+	pub image: VkImage,
+	pub bindCount: u32,
+	pub pBinds: * const VkSparseImageMemoryBind,
 }
 impl VkSparseImageMemoryBindInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -993,22 +993,22 @@ impl VkSparseImageMemoryBindInfo
 #[derive(Copy, Clone)]
 pub struct VkBindSparseInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphores: * const VkSemaphore,
-	bufferBindCount: u32,
-	pBufferBinds: * const VkSparseBufferMemoryBindInfo,
-	imageOpaqueBindCount: u32,
-	pImageOpaqueBinds: * const VkSparseImageOpaqueMemoryBindInfo,
-	imageBindCount: u32,
-	pImageBinds: * const VkSparseImageMemoryBindInfo,
-	signalSemaphoreCount: u32,
-	pSignalSemaphores: * const VkSemaphore,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphores: * const VkSemaphore,
+	pub bufferBindCount: u32,
+	pub pBufferBinds: * const VkSparseBufferMemoryBindInfo,
+	pub imageOpaqueBindCount: u32,
+	pub pImageOpaqueBinds: * const VkSparseImageOpaqueMemoryBindInfo,
+	pub imageBindCount: u32,
+	pub pImageBinds: * const VkSparseImageMemoryBindInfo,
+	pub signalSemaphoreCount: u32,
+	pub pSignalSemaphores: * const VkSemaphore,
 }
 impl VkBindSparseInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_SPARSE_INFO;
@@ -1021,15 +1021,15 @@ impl VkBindSparseInfo
 #[derive(Copy, Clone)]
 pub struct VkImageCopy
 {
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffset: VkOffset3D,
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffset: VkOffset3D,
+	pub extent: VkExtent3D,
 }
 impl VkImageCopy
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1041,14 +1041,14 @@ impl VkImageCopy
 #[derive(Copy, Clone)]
 pub struct VkImageBlit
 {
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffsets: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffsets: VkOffset3D,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffsets: [VkOffset3D; 2],
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffsets: [VkOffset3D; 2],
 }
 impl VkImageBlit
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1060,16 +1060,16 @@ impl VkImageBlit
 #[derive(Copy, Clone)]
 pub struct VkBufferImageCopy
 {
-	bufferOffset: VkDeviceSize,
-	bufferRowLength: u32,
-	bufferImageHeight: u32,
-	imageSubresource: VkImageSubresourceLayers,
-	imageOffset: VkOffset3D,
-	imageExtent: VkExtent3D,
+	pub bufferOffset: VkDeviceSize,
+	pub bufferRowLength: u32,
+	pub bufferImageHeight: u32,
+	pub imageSubresource: VkImageSubresourceLayers,
+	pub imageOffset: VkOffset3D,
+	pub imageExtent: VkExtent3D,
 }
 impl VkBufferImageCopy
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1081,15 +1081,15 @@ impl VkBufferImageCopy
 #[derive(Copy, Clone)]
 pub struct VkImageResolve
 {
-	srcSubresource: VkImageSubresourceLayers,
-	srcOffset: VkOffset3D,
-	dstSubresource: VkImageSubresourceLayers,
-	dstOffset: VkOffset3D,
-	extent: VkExtent3D,
+	pub srcSubresource: VkImageSubresourceLayers,
+	pub srcOffset: VkOffset3D,
+	pub dstSubresource: VkImageSubresourceLayers,
+	pub dstOffset: VkOffset3D,
+	pub extent: VkExtent3D,
 }
 impl VkImageResolve
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1101,15 +1101,15 @@ impl VkImageResolve
 #[derive(Copy, Clone)]
 pub struct VkShaderModuleCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkShaderModuleCreateFlagBits,
-	codeSize: usize,
-	pCode: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkShaderModuleCreateFlagBits,
+	pub codeSize: usize,
+	pub pCode: * const u32,
 }
 impl VkShaderModuleCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -1122,15 +1122,15 @@ impl VkShaderModuleCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutBinding
 {
-	binding: u32,
-	descriptorType: VkDescriptorType,
-	descriptorCount: u32,
-	stageFlags: VkShaderStageFlagBits,
-	pImmutableSamplers: * const VkSampler,
+	pub binding: u32,
+	pub descriptorType: VkDescriptorType,
+	pub descriptorCount: u32,
+	pub stageFlags: VkShaderStageFlagBits,
+	pub pImmutableSamplers: * const VkSampler,
 }
 impl VkDescriptorSetLayoutBinding
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1142,15 +1142,15 @@ impl VkDescriptorSetLayoutBinding
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDescriptorSetLayoutCreateFlagBits,
-	bindingCount: u32,
-	pBindings: * const VkDescriptorSetLayoutBinding,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkDescriptorSetLayoutCreateFlagBits,
+	pub bindingCount: u32,
+	pub pBindings: * const VkDescriptorSetLayoutBinding,
 }
 impl VkDescriptorSetLayoutCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -1163,12 +1163,12 @@ impl VkDescriptorSetLayoutCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorPoolSize
 {
-	type_type: VkDescriptorType,
-	descriptorCount: u32,
+	pub type_type: VkDescriptorType,
+	pub descriptorCount: u32,
 }
 impl VkDescriptorPoolSize
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1180,16 +1180,16 @@ impl VkDescriptorPoolSize
 #[derive(Copy, Clone)]
 pub struct VkDescriptorPoolCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDescriptorPoolCreateFlagBits,
-	maxSets: u32,
-	poolSizeCount: u32,
-	pPoolSizes: * const VkDescriptorPoolSize,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkDescriptorPoolCreateFlagBits,
+	pub maxSets: u32,
+	pub poolSizeCount: u32,
+	pub pPoolSizes: * const VkDescriptorPoolSize,
 }
 impl VkDescriptorPoolCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -1202,15 +1202,15 @@ impl VkDescriptorPoolCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	descriptorPool: VkDescriptorPool,
-	descriptorSetCount: u32,
-	pSetLayouts: * const VkDescriptorSetLayout,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub descriptorPool: VkDescriptorPool,
+	pub descriptorSetCount: u32,
+	pub pSetLayouts: * const VkDescriptorSetLayout,
 }
 impl VkDescriptorSetAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -1223,13 +1223,13 @@ impl VkDescriptorSetAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkSpecializationMapEntry
 {
-	constantID: u32,
-	offset: u32,
-	size: usize,
+	pub constantID: u32,
+	pub offset: u32,
+	pub size: usize,
 }
 impl VkSpecializationMapEntry
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1241,14 +1241,14 @@ impl VkSpecializationMapEntry
 #[derive(Copy, Clone)]
 pub struct VkSpecializationInfo
 {
-	mapEntryCount: u32,
-	pMapEntries: * const VkSpecializationMapEntry,
-	dataSize: usize,
-	pData: * const c_void,
+	pub mapEntryCount: u32,
+	pub pMapEntries: * const VkSpecializationMapEntry,
+	pub dataSize: usize,
+	pub pData: * const c_void,
 }
 impl VkSpecializationInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1260,17 +1260,17 @@ impl VkSpecializationInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineShaderStageCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineShaderStageCreateFlagBits,
-	stage: VkShaderStageFlagBits,
-	module: VkShaderModule,
-	pName: * const c_char,
-	pSpecializationInfo: * const VkSpecializationInfo,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineShaderStageCreateFlagBits,
+	pub stage: VkShaderStageFlagBits,
+	pub module: VkShaderModule,
+	pub pName: * const c_uchar,
+	pub pSpecializationInfo: * const VkSpecializationInfo,
 }
 impl VkPipelineShaderStageCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -1283,17 +1283,17 @@ impl VkPipelineShaderStageCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkComputePipelineCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineCreateFlagBits,
-	stage: VkPipelineShaderStageCreateInfo,
-	layout: VkPipelineLayout,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineCreateFlagBits,
+	pub stage: VkPipelineShaderStageCreateInfo,
+	pub layout: VkPipelineLayout,
+	pub basePipelineHandle: VkPipeline,
+	pub basePipelineIndex: i32,
 }
 impl VkComputePipelineCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
@@ -1306,13 +1306,13 @@ impl VkComputePipelineCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkVertexInputBindingDescription
 {
-	binding: u32,
-	stride: u32,
-	inputRate: VkVertexInputRate,
+	pub binding: u32,
+	pub stride: u32,
+	pub inputRate: VkVertexInputRate,
 }
 impl VkVertexInputBindingDescription
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1324,14 +1324,14 @@ impl VkVertexInputBindingDescription
 #[derive(Copy, Clone)]
 pub struct VkVertexInputAttributeDescription
 {
-	location: u32,
-	binding: u32,
-	format: VkFormat,
-	offset: u32,
+	pub location: u32,
+	pub binding: u32,
+	pub format: VkFormat,
+	pub offset: u32,
 }
 impl VkVertexInputAttributeDescription
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1343,17 +1343,17 @@ impl VkVertexInputAttributeDescription
 #[derive(Copy, Clone)]
 pub struct VkPipelineVertexInputStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineVertexInputStateCreateFlagBits,
-	vertexBindingDescriptionCount: u32,
-	pVertexBindingDescriptions: * const VkVertexInputBindingDescription,
-	vertexAttributeDescriptionCount: u32,
-	pVertexAttributeDescriptions: * const VkVertexInputAttributeDescription,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineVertexInputStateCreateFlagBits,
+	pub vertexBindingDescriptionCount: u32,
+	pub pVertexBindingDescriptions: * const VkVertexInputBindingDescription,
+	pub vertexAttributeDescriptionCount: u32,
+	pub pVertexAttributeDescriptions: * const VkVertexInputAttributeDescription,
 }
 impl VkPipelineVertexInputStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -1366,15 +1366,15 @@ impl VkPipelineVertexInputStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineInputAssemblyStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineInputAssemblyStateCreateFlagBits,
-	topology: VkPrimitiveTopology,
-	primitiveRestartEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineInputAssemblyStateCreateFlagBits,
+	pub topology: VkPrimitiveTopology,
+	pub primitiveRestartEnable: VkBool32,
 }
 impl VkPipelineInputAssemblyStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -1387,14 +1387,14 @@ impl VkPipelineInputAssemblyStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineTessellationStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineTessellationStateCreateFlagBits,
-	patchControlPoints: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineTessellationStateCreateFlagBits,
+	pub patchControlPoints: u32,
 }
 impl VkPipelineTessellationStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
@@ -1407,17 +1407,17 @@ impl VkPipelineTessellationStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineViewportStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineViewportStateCreateFlagBits,
-	viewportCount: u32,
-	pViewports: * const VkViewport,
-	scissorCount: u32,
-	pScissors: * const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineViewportStateCreateFlagBits,
+	pub viewportCount: u32,
+	pub pViewports: * const VkViewport,
+	pub scissorCount: u32,
+	pub pScissors: * const VkRect2D,
 }
 impl VkPipelineViewportStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -1430,23 +1430,23 @@ impl VkPipelineViewportStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineRasterizationStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineRasterizationStateCreateFlagBits,
-	depthClampEnable: VkBool32,
-	rasterizerDiscardEnable: VkBool32,
-	polygonMode: VkPolygonMode,
-	cullMode: VkCullModeFlagBits,
-	frontFace: VkFrontFace,
-	depthBiasEnable: VkBool32,
-	depthBiasConstantFactor: f32,
-	depthBiasClamp: f32,
-	depthBiasSlopeFactor: f32,
-	lineWidth: f32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineRasterizationStateCreateFlagBits,
+	pub depthClampEnable: VkBool32,
+	pub rasterizerDiscardEnable: VkBool32,
+	pub polygonMode: VkPolygonMode,
+	pub cullMode: VkCullModeFlagBits,
+	pub frontFace: VkFrontFace,
+	pub depthBiasEnable: VkBool32,
+	pub depthBiasConstantFactor: f32,
+	pub depthBiasClamp: f32,
+	pub depthBiasSlopeFactor: f32,
+	pub lineWidth: f32,
 }
 impl VkPipelineRasterizationStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -1459,19 +1459,19 @@ impl VkPipelineRasterizationStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineMultisampleStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineMultisampleStateCreateFlagBits,
-	rasterizationSamples: VkSampleCountFlagBits,
-	sampleShadingEnable: VkBool32,
-	minSampleShading: f32,
-	pSampleMask: * const VkSampleMask,
-	alphaToCoverageEnable: VkBool32,
-	alphaToOneEnable: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineMultisampleStateCreateFlagBits,
+	pub rasterizationSamples: VkSampleCountFlagBits,
+	pub sampleShadingEnable: VkBool32,
+	pub minSampleShading: f32,
+	pub pSampleMask: * const VkSampleMask,
+	pub alphaToCoverageEnable: VkBool32,
+	pub alphaToOneEnable: VkBool32,
 }
 impl VkPipelineMultisampleStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -1484,18 +1484,18 @@ impl VkPipelineMultisampleStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineColorBlendAttachmentState
 {
-	blendEnable: VkBool32,
-	srcColorBlendFactor: VkBlendFactor,
-	dstColorBlendFactor: VkBlendFactor,
-	colorBlendOp: VkBlendOp,
-	srcAlphaBlendFactor: VkBlendFactor,
-	dstAlphaBlendFactor: VkBlendFactor,
-	alphaBlendOp: VkBlendOp,
-	colorWriteMask: VkColorComponentFlagBits,
+	pub blendEnable: VkBool32,
+	pub srcColorBlendFactor: VkBlendFactor,
+	pub dstColorBlendFactor: VkBlendFactor,
+	pub colorBlendOp: VkBlendOp,
+	pub srcAlphaBlendFactor: VkBlendFactor,
+	pub dstAlphaBlendFactor: VkBlendFactor,
+	pub alphaBlendOp: VkBlendOp,
+	pub colorWriteMask: VkColorComponentFlagBits,
 }
 impl VkPipelineColorBlendAttachmentState
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1507,18 +1507,18 @@ impl VkPipelineColorBlendAttachmentState
 #[derive(Copy, Clone)]
 pub struct VkPipelineColorBlendStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineColorBlendStateCreateFlagBits,
-	logicOpEnable: VkBool32,
-	logicOp: VkLogicOp,
-	attachmentCount: u32,
-	pAttachments: * const VkPipelineColorBlendAttachmentState,
-	blendConstants: f32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineColorBlendStateCreateFlagBits,
+	pub logicOpEnable: VkBool32,
+	pub logicOp: VkLogicOp,
+	pub attachmentCount: u32,
+	pub pAttachments: * const VkPipelineColorBlendAttachmentState,
+	pub blendConstants: [f32; 4],
 }
 impl VkPipelineColorBlendStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -1531,15 +1531,15 @@ impl VkPipelineColorBlendStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineDynamicStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineDynamicStateCreateFlagBits,
-	dynamicStateCount: u32,
-	pDynamicStates: * const VkDynamicState,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineDynamicStateCreateFlagBits,
+	pub dynamicStateCount: u32,
+	pub pDynamicStates: * const VkDynamicState,
 }
 impl VkPipelineDynamicStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -1552,17 +1552,17 @@ impl VkPipelineDynamicStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkStencilOpState
 {
-	failOp: VkStencilOp,
-	passOp: VkStencilOp,
-	depthFailOp: VkStencilOp,
-	compareOp: VkCompareOp,
-	compareMask: u32,
-	writeMask: u32,
-	reference: u32,
+	pub failOp: VkStencilOp,
+	pub passOp: VkStencilOp,
+	pub depthFailOp: VkStencilOp,
+	pub compareOp: VkCompareOp,
+	pub compareMask: u32,
+	pub writeMask: u32,
+	pub reference: u32,
 }
 impl VkStencilOpState
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1574,22 +1574,22 @@ impl VkStencilOpState
 #[derive(Copy, Clone)]
 pub struct VkPipelineDepthStencilStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineDepthStencilStateCreateFlagBits,
-	depthTestEnable: VkBool32,
-	depthWriteEnable: VkBool32,
-	depthCompareOp: VkCompareOp,
-	depthBoundsTestEnable: VkBool32,
-	stencilTestEnable: VkBool32,
-	front: VkStencilOpState,
-	back: VkStencilOpState,
-	minDepthBounds: f32,
-	maxDepthBounds: f32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineDepthStencilStateCreateFlagBits,
+	pub depthTestEnable: VkBool32,
+	pub depthWriteEnable: VkBool32,
+	pub depthCompareOp: VkCompareOp,
+	pub depthBoundsTestEnable: VkBool32,
+	pub stencilTestEnable: VkBool32,
+	pub front: VkStencilOpState,
+	pub back: VkStencilOpState,
+	pub minDepthBounds: f32,
+	pub maxDepthBounds: f32,
 }
 impl VkPipelineDepthStencilStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
@@ -1602,29 +1602,29 @@ impl VkPipelineDepthStencilStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkGraphicsPipelineCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineCreateFlagBits,
-	stageCount: u32,
-	pStages: * const VkPipelineShaderStageCreateInfo,
-	pVertexInputState: * const VkPipelineVertexInputStateCreateInfo,
-	pInputAssemblyState: * const VkPipelineInputAssemblyStateCreateInfo,
-	pTessellationState: * const VkPipelineTessellationStateCreateInfo,
-	pViewportState: * const VkPipelineViewportStateCreateInfo,
-	pRasterizationState: * const VkPipelineRasterizationStateCreateInfo,
-	pMultisampleState: * const VkPipelineMultisampleStateCreateInfo,
-	pDepthStencilState: * const VkPipelineDepthStencilStateCreateInfo,
-	pColorBlendState: * const VkPipelineColorBlendStateCreateInfo,
-	pDynamicState: * const VkPipelineDynamicStateCreateInfo,
-	layout: VkPipelineLayout,
-	renderPass: VkRenderPass,
-	subpass: u32,
-	basePipelineHandle: VkPipeline,
-	basePipelineIndex: i32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineCreateFlagBits,
+	pub stageCount: u32,
+	pub pStages: * const VkPipelineShaderStageCreateInfo,
+	pub pVertexInputState: * const VkPipelineVertexInputStateCreateInfo,
+	pub pInputAssemblyState: * const VkPipelineInputAssemblyStateCreateInfo,
+	pub pTessellationState: * const VkPipelineTessellationStateCreateInfo,
+	pub pViewportState: * const VkPipelineViewportStateCreateInfo,
+	pub pRasterizationState: * const VkPipelineRasterizationStateCreateInfo,
+	pub pMultisampleState: * const VkPipelineMultisampleStateCreateInfo,
+	pub pDepthStencilState: * const VkPipelineDepthStencilStateCreateInfo,
+	pub pColorBlendState: * const VkPipelineColorBlendStateCreateInfo,
+	pub pDynamicState: * const VkPipelineDynamicStateCreateInfo,
+	pub layout: VkPipelineLayout,
+	pub renderPass: VkRenderPass,
+	pub subpass: u32,
+	pub basePipelineHandle: VkPipeline,
+	pub basePipelineIndex: i32,
 }
 impl VkGraphicsPipelineCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -1637,15 +1637,15 @@ impl VkGraphicsPipelineCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineCacheCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineCacheCreateFlagBits,
-	initialDataSize: usize,
-	pInitialData: * const c_void,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineCacheCreateFlagBits,
+	pub initialDataSize: usize,
+	pub pInitialData: * const c_void,
 }
 impl VkPipelineCacheCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
@@ -1658,15 +1658,15 @@ impl VkPipelineCacheCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineCacheHeaderVersionOne
 {
-	headerSize: u32,
-	headerVersion: VkPipelineCacheHeaderVersion,
-	vendorID: u32,
-	deviceID: u32,
-	pipelineCacheUUID: u8,
+	pub headerSize: u32,
+	pub headerVersion: VkPipelineCacheHeaderVersion,
+	pub vendorID: u32,
+	pub deviceID: u32,
+	pub pipelineCacheUUID: [u8; VK_UUID_SIZE],
 }
 impl VkPipelineCacheHeaderVersionOne
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1678,13 +1678,13 @@ impl VkPipelineCacheHeaderVersionOne
 #[derive(Copy, Clone)]
 pub struct VkPushConstantRange
 {
-	stageFlags: VkShaderStageFlagBits,
-	offset: u32,
-	size: u32,
+	pub stageFlags: VkShaderStageFlagBits,
+	pub offset: u32,
+	pub size: u32,
 }
 impl VkPushConstantRange
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1696,17 +1696,17 @@ impl VkPushConstantRange
 #[derive(Copy, Clone)]
 pub struct VkPipelineLayoutCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkPipelineLayoutCreateFlagBits,
-	setLayoutCount: u32,
-	pSetLayouts: * const VkDescriptorSetLayout,
-	pushConstantRangeCount: u32,
-	pPushConstantRanges: * const VkPushConstantRange,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkPipelineLayoutCreateFlagBits,
+	pub setLayoutCount: u32,
+	pub pSetLayouts: * const VkDescriptorSetLayout,
+	pub pushConstantRangeCount: u32,
+	pub pPushConstantRanges: * const VkPushConstantRange,
 }
 impl VkPipelineLayoutCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -1719,28 +1719,28 @@ impl VkPipelineLayoutCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkSamplerCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkSamplerCreateFlagBits,
-	magFilter: VkFilter,
-	minFilter: VkFilter,
-	mipmapMode: VkSamplerMipmapMode,
-	addressModeU: VkSamplerAddressMode,
-	addressModeV: VkSamplerAddressMode,
-	addressModeW: VkSamplerAddressMode,
-	mipLodBias: f32,
-	anisotropyEnable: VkBool32,
-	maxAnisotropy: f32,
-	compareEnable: VkBool32,
-	compareOp: VkCompareOp,
-	minLod: f32,
-	maxLod: f32,
-	borderColor: VkBorderColor,
-	unnormalizedCoordinates: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkSamplerCreateFlagBits,
+	pub magFilter: VkFilter,
+	pub minFilter: VkFilter,
+	pub mipmapMode: VkSamplerMipmapMode,
+	pub addressModeU: VkSamplerAddressMode,
+	pub addressModeV: VkSamplerAddressMode,
+	pub addressModeW: VkSamplerAddressMode,
+	pub mipLodBias: f32,
+	pub anisotropyEnable: VkBool32,
+	pub maxAnisotropy: f32,
+	pub compareEnable: VkBool32,
+	pub compareOp: VkCompareOp,
+	pub minLod: f32,
+	pub maxLod: f32,
+	pub borderColor: VkBorderColor,
+	pub unnormalizedCoordinates: VkBool32,
 }
 impl VkSamplerCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -1753,14 +1753,14 @@ impl VkSamplerCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkCommandPoolCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkCommandPoolCreateFlagBits,
-	queueFamilyIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkCommandPoolCreateFlagBits,
+	pub queueFamilyIndex: u32,
 }
 impl VkCommandPoolCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -1773,15 +1773,15 @@ impl VkCommandPoolCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkCommandBufferAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	commandPool: VkCommandPool,
-	level: VkCommandBufferLevel,
-	commandBufferCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub commandPool: VkCommandPool,
+	pub level: VkCommandBufferLevel,
+	pub commandBufferCount: u32,
 }
 impl VkCommandBufferAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -1794,18 +1794,18 @@ impl VkCommandBufferAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkCommandBufferInheritanceInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	renderPass: VkRenderPass,
-	subpass: u32,
-	framebuffer: VkFramebuffer,
-	occlusionQueryEnable: VkBool32,
-	queryFlags: VkQueryControlFlagBits,
-	pipelineStatistics: VkQueryPipelineStatisticFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub renderPass: VkRenderPass,
+	pub subpass: u32,
+	pub framebuffer: VkFramebuffer,
+	pub occlusionQueryEnable: VkBool32,
+	pub queryFlags: VkQueryControlFlagBits,
+	pub pipelineStatistics: VkQueryPipelineStatisticFlagBits,
 }
 impl VkCommandBufferInheritanceInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
@@ -1818,14 +1818,14 @@ impl VkCommandBufferInheritanceInfo
 #[derive(Copy, Clone)]
 pub struct VkCommandBufferBeginInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkCommandBufferUsageFlagBits,
-	pInheritanceInfo: * const VkCommandBufferInheritanceInfo,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkCommandBufferUsageFlagBits,
+	pub pInheritanceInfo: * const VkCommandBufferInheritanceInfo,
 }
 impl VkCommandBufferBeginInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -1838,17 +1838,17 @@ impl VkCommandBufferBeginInfo
 #[derive(Copy, Clone)]
 pub struct VkRenderPassBeginInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	renderPass: VkRenderPass,
-	framebuffer: VkFramebuffer,
-	renderArea: VkRect2D,
-	clearValueCount: u32,
-	pClearValues: * const VkClearValue,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub renderPass: VkRenderPass,
+	pub framebuffer: VkFramebuffer,
+	pub renderArea: VkRect2D,
+	pub clearValueCount: u32,
+	pub pClearValues: * const VkClearValue,
 }
 impl VkRenderPassBeginInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -1861,12 +1861,12 @@ impl VkRenderPassBeginInfo
 #[derive(Copy, Clone)]
 pub struct VkClearDepthStencilValue
 {
-	depth: f32,
-	stencil: u32,
+	pub depth: f32,
+	pub stencil: u32,
 }
 impl VkClearDepthStencilValue
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1878,13 +1878,13 @@ impl VkClearDepthStencilValue
 #[derive(Copy, Clone)]
 pub struct VkClearAttachment
 {
-	aspectMask: VkImageAspectFlagBits,
-	colorAttachment: u32,
-	clearValue: VkClearValue,
+	pub aspectMask: VkImageAspectFlagBits,
+	pub colorAttachment: u32,
+	pub clearValue: VkClearValue,
 }
 impl VkClearAttachment
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1896,19 +1896,19 @@ impl VkClearAttachment
 #[derive(Copy, Clone)]
 pub struct VkAttachmentDescription
 {
-	flags: VkAttachmentDescriptionFlagBits,
-	format: VkFormat,
-	samples: VkSampleCountFlagBits,
-	loadOp: VkAttachmentLoadOp,
-	storeOp: VkAttachmentStoreOp,
-	stencilLoadOp: VkAttachmentLoadOp,
-	stencilStoreOp: VkAttachmentStoreOp,
-	initialLayout: VkImageLayout,
-	finalLayout: VkImageLayout,
+	pub flags: VkAttachmentDescriptionFlagBits,
+	pub format: VkFormat,
+	pub samples: VkSampleCountFlagBits,
+	pub loadOp: VkAttachmentLoadOp,
+	pub storeOp: VkAttachmentStoreOp,
+	pub stencilLoadOp: VkAttachmentLoadOp,
+	pub stencilStoreOp: VkAttachmentStoreOp,
+	pub initialLayout: VkImageLayout,
+	pub finalLayout: VkImageLayout,
 }
 impl VkAttachmentDescription
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1920,12 +1920,12 @@ impl VkAttachmentDescription
 #[derive(Copy, Clone)]
 pub struct VkAttachmentReference
 {
-	attachment: u32,
-	layout: VkImageLayout,
+	pub attachment: u32,
+	pub layout: VkImageLayout,
 }
 impl VkAttachmentReference
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1937,20 +1937,20 @@ impl VkAttachmentReference
 #[derive(Copy, Clone)]
 pub struct VkSubpassDescription
 {
-	flags: VkSubpassDescriptionFlagBits,
-	pipelineBindPoint: VkPipelineBindPoint,
-	inputAttachmentCount: u32,
-	pInputAttachments: * const VkAttachmentReference,
-	colorAttachmentCount: u32,
-	pColorAttachments: * const VkAttachmentReference,
-	pResolveAttachments: * const VkAttachmentReference,
-	pDepthStencilAttachment: * const VkAttachmentReference,
-	preserveAttachmentCount: u32,
-	pPreserveAttachments: * const u32,
+	pub flags: VkSubpassDescriptionFlagBits,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub inputAttachmentCount: u32,
+	pub pInputAttachments: * const VkAttachmentReference,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachments: * const VkAttachmentReference,
+	pub pResolveAttachments: * const VkAttachmentReference,
+	pub pDepthStencilAttachment: * const VkAttachmentReference,
+	pub preserveAttachmentCount: u32,
+	pub pPreserveAttachments: * const u32,
 }
 impl VkSubpassDescription
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1962,17 +1962,17 @@ impl VkSubpassDescription
 #[derive(Copy, Clone)]
 pub struct VkSubpassDependency
 {
-	srcSubpass: u32,
-	dstSubpass: u32,
-	srcStageMask: VkPipelineStageFlagBits,
-	dstStageMask: VkPipelineStageFlagBits,
-	srcAccessMask: VkAccessFlagBits,
-	dstAccessMask: VkAccessFlagBits,
-	dependencyFlags: VkDependencyFlagBits,
+	pub srcSubpass: u32,
+	pub dstSubpass: u32,
+	pub srcStageMask: VkPipelineStageFlagBits,
+	pub dstStageMask: VkPipelineStageFlagBits,
+	pub srcAccessMask: VkAccessFlagBits,
+	pub dstAccessMask: VkAccessFlagBits,
+	pub dependencyFlags: VkDependencyFlagBits,
 }
 impl VkSubpassDependency
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -1984,19 +1984,19 @@ impl VkSubpassDependency
 #[derive(Copy, Clone)]
 pub struct VkRenderPassCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkRenderPassCreateFlagBits,
-	attachmentCount: u32,
-	pAttachments: * const VkAttachmentDescription,
-	subpassCount: u32,
-	pSubpasses: * const VkSubpassDescription,
-	dependencyCount: u32,
-	pDependencies: * const VkSubpassDependency,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkRenderPassCreateFlagBits,
+	pub attachmentCount: u32,
+	pub pAttachments: * const VkAttachmentDescription,
+	pub subpassCount: u32,
+	pub pSubpasses: * const VkSubpassDescription,
+	pub dependencyCount: u32,
+	pub pDependencies: * const VkSubpassDependency,
 }
 impl VkRenderPassCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -2009,13 +2009,13 @@ impl VkRenderPassCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkEventCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkEventCreateFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkEventCreateFlagBits,
 }
 impl VkEventCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EVENT_CREATE_INFO;
@@ -2028,13 +2028,13 @@ impl VkEventCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkFenceCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkFenceCreateFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkFenceCreateFlagBits,
 }
 impl VkFenceCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -2047,65 +2047,65 @@ impl VkFenceCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFeatures
 {
-	robustBufferAccess: VkBool32,
-	fullDrawIndexUint32: VkBool32,
-	imageCubeArray: VkBool32,
-	independentBlend: VkBool32,
-	geometryShader: VkBool32,
-	tessellationShader: VkBool32,
-	sampleRateShading: VkBool32,
-	dualSrcBlend: VkBool32,
-	logicOp: VkBool32,
-	multiDrawIndirect: VkBool32,
-	drawIndirectFirstInstance: VkBool32,
-	depthClamp: VkBool32,
-	depthBiasClamp: VkBool32,
-	fillModeNonSolid: VkBool32,
-	depthBounds: VkBool32,
-	wideLines: VkBool32,
-	largePoints: VkBool32,
-	alphaToOne: VkBool32,
-	multiViewport: VkBool32,
-	samplerAnisotropy: VkBool32,
-	textureCompressionETC2: VkBool32,
-	textureCompressionASTC_LDR: VkBool32,
-	textureCompressionBC: VkBool32,
-	occlusionQueryPrecise: VkBool32,
-	pipelineStatisticsQuery: VkBool32,
-	vertexPipelineStoresAndAtomics: VkBool32,
-	fragmentStoresAndAtomics: VkBool32,
-	shaderTessellationAndGeometryPointSize: VkBool32,
-	shaderImageGatherExtended: VkBool32,
-	shaderStorageImageExtendedFormats: VkBool32,
-	shaderStorageImageMultisample: VkBool32,
-	shaderStorageImageReadWithoutFormat: VkBool32,
-	shaderStorageImageWriteWithoutFormat: VkBool32,
-	shaderUniformBufferArrayDynamicIndexing: VkBool32,
-	shaderSampledImageArrayDynamicIndexing: VkBool32,
-	shaderStorageBufferArrayDynamicIndexing: VkBool32,
-	shaderStorageImageArrayDynamicIndexing: VkBool32,
-	shaderClipDistance: VkBool32,
-	shaderCullDistance: VkBool32,
-	shaderFloat64: VkBool32,
-	shaderInt64: VkBool32,
-	shaderInt16: VkBool32,
-	shaderResourceResidency: VkBool32,
-	shaderResourceMinLod: VkBool32,
-	sparseBinding: VkBool32,
-	sparseResidencyBuffer: VkBool32,
-	sparseResidencyImage2D: VkBool32,
-	sparseResidencyImage3D: VkBool32,
-	sparseResidency2Samples: VkBool32,
-	sparseResidency4Samples: VkBool32,
-	sparseResidency8Samples: VkBool32,
-	sparseResidency16Samples: VkBool32,
-	sparseResidencyAliased: VkBool32,
-	variableMultisampleRate: VkBool32,
-	inheritedQueries: VkBool32,
+	pub robustBufferAccess: VkBool32,
+	pub fullDrawIndexUint32: VkBool32,
+	pub imageCubeArray: VkBool32,
+	pub independentBlend: VkBool32,
+	pub geometryShader: VkBool32,
+	pub tessellationShader: VkBool32,
+	pub sampleRateShading: VkBool32,
+	pub dualSrcBlend: VkBool32,
+	pub logicOp: VkBool32,
+	pub multiDrawIndirect: VkBool32,
+	pub drawIndirectFirstInstance: VkBool32,
+	pub depthClamp: VkBool32,
+	pub depthBiasClamp: VkBool32,
+	pub fillModeNonSolid: VkBool32,
+	pub depthBounds: VkBool32,
+	pub wideLines: VkBool32,
+	pub largePoints: VkBool32,
+	pub alphaToOne: VkBool32,
+	pub multiViewport: VkBool32,
+	pub samplerAnisotropy: VkBool32,
+	pub textureCompressionETC2: VkBool32,
+	pub textureCompressionASTC_LDR: VkBool32,
+	pub textureCompressionBC: VkBool32,
+	pub occlusionQueryPrecise: VkBool32,
+	pub pipelineStatisticsQuery: VkBool32,
+	pub vertexPipelineStoresAndAtomics: VkBool32,
+	pub fragmentStoresAndAtomics: VkBool32,
+	pub shaderTessellationAndGeometryPointSize: VkBool32,
+	pub shaderImageGatherExtended: VkBool32,
+	pub shaderStorageImageExtendedFormats: VkBool32,
+	pub shaderStorageImageMultisample: VkBool32,
+	pub shaderStorageImageReadWithoutFormat: VkBool32,
+	pub shaderStorageImageWriteWithoutFormat: VkBool32,
+	pub shaderUniformBufferArrayDynamicIndexing: VkBool32,
+	pub shaderSampledImageArrayDynamicIndexing: VkBool32,
+	pub shaderStorageBufferArrayDynamicIndexing: VkBool32,
+	pub shaderStorageImageArrayDynamicIndexing: VkBool32,
+	pub shaderClipDistance: VkBool32,
+	pub shaderCullDistance: VkBool32,
+	pub shaderFloat64: VkBool32,
+	pub shaderInt64: VkBool32,
+	pub shaderInt16: VkBool32,
+	pub shaderResourceResidency: VkBool32,
+	pub shaderResourceMinLod: VkBool32,
+	pub sparseBinding: VkBool32,
+	pub sparseResidencyBuffer: VkBool32,
+	pub sparseResidencyImage2D: VkBool32,
+	pub sparseResidencyImage3D: VkBool32,
+	pub sparseResidency2Samples: VkBool32,
+	pub sparseResidency4Samples: VkBool32,
+	pub sparseResidency8Samples: VkBool32,
+	pub sparseResidency16Samples: VkBool32,
+	pub sparseResidencyAliased: VkBool32,
+	pub variableMultisampleRate: VkBool32,
+	pub inheritedQueries: VkBool32,
 }
 impl VkPhysicalDeviceFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2117,15 +2117,15 @@ impl VkPhysicalDeviceFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSparseProperties
 {
-	residencyStandard2DBlockShape: VkBool32,
-	residencyStandard2DMultisampleBlockShape: VkBool32,
-	residencyStandard3DBlockShape: VkBool32,
-	residencyAlignedMipSize: VkBool32,
-	residencyNonResidentStrict: VkBool32,
+	pub residencyStandard2DBlockShape: VkBool32,
+	pub residencyStandard2DMultisampleBlockShape: VkBool32,
+	pub residencyStandard3DBlockShape: VkBool32,
+	pub residencyAlignedMipSize: VkBool32,
+	pub residencyNonResidentStrict: VkBool32,
 }
 impl VkPhysicalDeviceSparseProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2137,116 +2137,116 @@ impl VkPhysicalDeviceSparseProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceLimits
 {
-	maxImageDimension1D: u32,
-	maxImageDimension2D: u32,
-	maxImageDimension3D: u32,
-	maxImageDimensionCube: u32,
-	maxImageArrayLayers: u32,
-	maxTexelBufferElements: u32,
-	maxUniformBufferRange: u32,
-	maxStorageBufferRange: u32,
-	maxPushConstantsSize: u32,
-	maxMemoryAllocationCount: u32,
-	maxSamplerAllocationCount: u32,
-	bufferImageGranularity: VkDeviceSize,
-	sparseAddressSpaceSize: VkDeviceSize,
-	maxBoundDescriptorSets: u32,
-	maxPerStageDescriptorSamplers: u32,
-	maxPerStageDescriptorUniformBuffers: u32,
-	maxPerStageDescriptorStorageBuffers: u32,
-	maxPerStageDescriptorSampledImages: u32,
-	maxPerStageDescriptorStorageImages: u32,
-	maxPerStageDescriptorInputAttachments: u32,
-	maxPerStageResources: u32,
-	maxDescriptorSetSamplers: u32,
-	maxDescriptorSetUniformBuffers: u32,
-	maxDescriptorSetUniformBuffersDynamic: u32,
-	maxDescriptorSetStorageBuffers: u32,
-	maxDescriptorSetStorageBuffersDynamic: u32,
-	maxDescriptorSetSampledImages: u32,
-	maxDescriptorSetStorageImages: u32,
-	maxDescriptorSetInputAttachments: u32,
-	maxVertexInputAttributes: u32,
-	maxVertexInputBindings: u32,
-	maxVertexInputAttributeOffset: u32,
-	maxVertexInputBindingStride: u32,
-	maxVertexOutputComponents: u32,
-	maxTessellationGenerationLevel: u32,
-	maxTessellationPatchSize: u32,
-	maxTessellationControlPerVertexInputComponents: u32,
-	maxTessellationControlPerVertexOutputComponents: u32,
-	maxTessellationControlPerPatchOutputComponents: u32,
-	maxTessellationControlTotalOutputComponents: u32,
-	maxTessellationEvaluationInputComponents: u32,
-	maxTessellationEvaluationOutputComponents: u32,
-	maxGeometryShaderInvocations: u32,
-	maxGeometryInputComponents: u32,
-	maxGeometryOutputComponents: u32,
-	maxGeometryOutputVertices: u32,
-	maxGeometryTotalOutputComponents: u32,
-	maxFragmentInputComponents: u32,
-	maxFragmentOutputAttachments: u32,
-	maxFragmentDualSrcAttachments: u32,
-	maxFragmentCombinedOutputResources: u32,
-	maxComputeSharedMemorySize: u32,
-	maxComputeWorkGroupCount: u32,
-	maxComputeWorkGroupInvocations: u32,
-	maxComputeWorkGroupSize: u32,
-	subPixelPrecisionBits: u32,
-	subTexelPrecisionBits: u32,
-	mipmapPrecisionBits: u32,
-	maxDrawIndexedIndexValue: u32,
-	maxDrawIndirectCount: u32,
-	maxSamplerLodBias: f32,
-	maxSamplerAnisotropy: f32,
-	maxViewports: u32,
-	maxViewportDimensions: u32,
-	viewportBoundsRange: f32,
-	viewportSubPixelBits: u32,
-	minMemoryMapAlignment: usize,
-	minTexelBufferOffsetAlignment: VkDeviceSize,
-	minUniformBufferOffsetAlignment: VkDeviceSize,
-	minStorageBufferOffsetAlignment: VkDeviceSize,
-	minTexelOffset: i32,
-	maxTexelOffset: u32,
-	minTexelGatherOffset: i32,
-	maxTexelGatherOffset: u32,
-	minInterpolationOffset: f32,
-	maxInterpolationOffset: f32,
-	subPixelInterpolationOffsetBits: u32,
-	maxFramebufferWidth: u32,
-	maxFramebufferHeight: u32,
-	maxFramebufferLayers: u32,
-	framebufferColorSampleCounts: VkSampleCountFlagBits,
-	framebufferDepthSampleCounts: VkSampleCountFlagBits,
-	framebufferStencilSampleCounts: VkSampleCountFlagBits,
-	framebufferNoAttachmentsSampleCounts: VkSampleCountFlagBits,
-	maxColorAttachments: u32,
-	sampledImageColorSampleCounts: VkSampleCountFlagBits,
-	sampledImageIntegerSampleCounts: VkSampleCountFlagBits,
-	sampledImageDepthSampleCounts: VkSampleCountFlagBits,
-	sampledImageStencilSampleCounts: VkSampleCountFlagBits,
-	storageImageSampleCounts: VkSampleCountFlagBits,
-	maxSampleMaskWords: u32,
-	timestampComputeAndGraphics: VkBool32,
-	timestampPeriod: f32,
-	maxClipDistances: u32,
-	maxCullDistances: u32,
-	maxCombinedClipAndCullDistances: u32,
-	discreteQueuePriorities: u32,
-	pointSizeRange: f32,
-	lineWidthRange: f32,
-	pointSizeGranularity: f32,
-	lineWidthGranularity: f32,
-	strictLines: VkBool32,
-	standardSampleLocations: VkBool32,
-	optimalBufferCopyOffsetAlignment: VkDeviceSize,
-	optimalBufferCopyRowPitchAlignment: VkDeviceSize,
-	nonCoherentAtomSize: VkDeviceSize,
+	pub maxImageDimension1D: u32,
+	pub maxImageDimension2D: u32,
+	pub maxImageDimension3D: u32,
+	pub maxImageDimensionCube: u32,
+	pub maxImageArrayLayers: u32,
+	pub maxTexelBufferElements: u32,
+	pub maxUniformBufferRange: u32,
+	pub maxStorageBufferRange: u32,
+	pub maxPushConstantsSize: u32,
+	pub maxMemoryAllocationCount: u32,
+	pub maxSamplerAllocationCount: u32,
+	pub bufferImageGranularity: VkDeviceSize,
+	pub sparseAddressSpaceSize: VkDeviceSize,
+	pub maxBoundDescriptorSets: u32,
+	pub maxPerStageDescriptorSamplers: u32,
+	pub maxPerStageDescriptorUniformBuffers: u32,
+	pub maxPerStageDescriptorStorageBuffers: u32,
+	pub maxPerStageDescriptorSampledImages: u32,
+	pub maxPerStageDescriptorStorageImages: u32,
+	pub maxPerStageDescriptorInputAttachments: u32,
+	pub maxPerStageResources: u32,
+	pub maxDescriptorSetSamplers: u32,
+	pub maxDescriptorSetUniformBuffers: u32,
+	pub maxDescriptorSetUniformBuffersDynamic: u32,
+	pub maxDescriptorSetStorageBuffers: u32,
+	pub maxDescriptorSetStorageBuffersDynamic: u32,
+	pub maxDescriptorSetSampledImages: u32,
+	pub maxDescriptorSetStorageImages: u32,
+	pub maxDescriptorSetInputAttachments: u32,
+	pub maxVertexInputAttributes: u32,
+	pub maxVertexInputBindings: u32,
+	pub maxVertexInputAttributeOffset: u32,
+	pub maxVertexInputBindingStride: u32,
+	pub maxVertexOutputComponents: u32,
+	pub maxTessellationGenerationLevel: u32,
+	pub maxTessellationPatchSize: u32,
+	pub maxTessellationControlPerVertexInputComponents: u32,
+	pub maxTessellationControlPerVertexOutputComponents: u32,
+	pub maxTessellationControlPerPatchOutputComponents: u32,
+	pub maxTessellationControlTotalOutputComponents: u32,
+	pub maxTessellationEvaluationInputComponents: u32,
+	pub maxTessellationEvaluationOutputComponents: u32,
+	pub maxGeometryShaderInvocations: u32,
+	pub maxGeometryInputComponents: u32,
+	pub maxGeometryOutputComponents: u32,
+	pub maxGeometryOutputVertices: u32,
+	pub maxGeometryTotalOutputComponents: u32,
+	pub maxFragmentInputComponents: u32,
+	pub maxFragmentOutputAttachments: u32,
+	pub maxFragmentDualSrcAttachments: u32,
+	pub maxFragmentCombinedOutputResources: u32,
+	pub maxComputeSharedMemorySize: u32,
+	pub maxComputeWorkGroupCount: [u32; 3],
+	pub maxComputeWorkGroupInvocations: u32,
+	pub maxComputeWorkGroupSize: [u32; 3],
+	pub subPixelPrecisionBits: u32,
+	pub subTexelPrecisionBits: u32,
+	pub mipmapPrecisionBits: u32,
+	pub maxDrawIndexedIndexValue: u32,
+	pub maxDrawIndirectCount: u32,
+	pub maxSamplerLodBias: f32,
+	pub maxSamplerAnisotropy: f32,
+	pub maxViewports: u32,
+	pub maxViewportDimensions: [u32; 2],
+	pub viewportBoundsRange: [f32; 2],
+	pub viewportSubPixelBits: u32,
+	pub minMemoryMapAlignment: usize,
+	pub minTexelBufferOffsetAlignment: VkDeviceSize,
+	pub minUniformBufferOffsetAlignment: VkDeviceSize,
+	pub minStorageBufferOffsetAlignment: VkDeviceSize,
+	pub minTexelOffset: i32,
+	pub maxTexelOffset: u32,
+	pub minTexelGatherOffset: i32,
+	pub maxTexelGatherOffset: u32,
+	pub minInterpolationOffset: f32,
+	pub maxInterpolationOffset: f32,
+	pub subPixelInterpolationOffsetBits: u32,
+	pub maxFramebufferWidth: u32,
+	pub maxFramebufferHeight: u32,
+	pub maxFramebufferLayers: u32,
+	pub framebufferColorSampleCounts: VkSampleCountFlagBits,
+	pub framebufferDepthSampleCounts: VkSampleCountFlagBits,
+	pub framebufferStencilSampleCounts: VkSampleCountFlagBits,
+	pub framebufferNoAttachmentsSampleCounts: VkSampleCountFlagBits,
+	pub maxColorAttachments: u32,
+	pub sampledImageColorSampleCounts: VkSampleCountFlagBits,
+	pub sampledImageIntegerSampleCounts: VkSampleCountFlagBits,
+	pub sampledImageDepthSampleCounts: VkSampleCountFlagBits,
+	pub sampledImageStencilSampleCounts: VkSampleCountFlagBits,
+	pub storageImageSampleCounts: VkSampleCountFlagBits,
+	pub maxSampleMaskWords: u32,
+	pub timestampComputeAndGraphics: VkBool32,
+	pub timestampPeriod: f32,
+	pub maxClipDistances: u32,
+	pub maxCullDistances: u32,
+	pub maxCombinedClipAndCullDistances: u32,
+	pub discreteQueuePriorities: u32,
+	pub pointSizeRange: [f32; 2],
+	pub lineWidthRange: [f32; 2],
+	pub pointSizeGranularity: f32,
+	pub lineWidthGranularity: f32,
+	pub strictLines: VkBool32,
+	pub standardSampleLocations: VkBool32,
+	pub optimalBufferCopyOffsetAlignment: VkDeviceSize,
+	pub optimalBufferCopyRowPitchAlignment: VkDeviceSize,
+	pub nonCoherentAtomSize: VkDeviceSize,
 }
 impl VkPhysicalDeviceLimits
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2258,13 +2258,13 @@ impl VkPhysicalDeviceLimits
 #[derive(Copy, Clone)]
 pub struct VkSemaphoreCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkSemaphoreCreateFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkSemaphoreCreateFlagBits,
 }
 impl VkSemaphoreCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -2277,16 +2277,16 @@ impl VkSemaphoreCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkQueryPoolCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkQueryPoolCreateFlagBits,
-	queryType: VkQueryType,
-	queryCount: u32,
-	pipelineStatistics: VkQueryPipelineStatisticFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkQueryPoolCreateFlagBits,
+	pub queryType: VkQueryType,
+	pub queryCount: u32,
+	pub pipelineStatistics: VkQueryPipelineStatisticFlagBits,
 }
 impl VkQueryPoolCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
@@ -2299,19 +2299,19 @@ impl VkQueryPoolCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkFramebufferCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkFramebufferCreateFlagBits,
-	renderPass: VkRenderPass,
-	attachmentCount: u32,
-	pAttachments: * const VkImageView,
-	width: u32,
-	height: u32,
-	layers: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkFramebufferCreateFlagBits,
+	pub renderPass: VkRenderPass,
+	pub attachmentCount: u32,
+	pub pAttachments: * const VkImageView,
+	pub width: u32,
+	pub height: u32,
+	pub layers: u32,
 }
 impl VkFramebufferCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -2324,14 +2324,14 @@ impl VkFramebufferCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDrawIndirectCommand
 {
-	vertexCount: u32,
-	instanceCount: u32,
-	firstVertex: u32,
-	firstInstance: u32,
+	pub vertexCount: u32,
+	pub instanceCount: u32,
+	pub firstVertex: u32,
+	pub firstInstance: u32,
 }
 impl VkDrawIndirectCommand
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2343,15 +2343,15 @@ impl VkDrawIndirectCommand
 #[derive(Copy, Clone)]
 pub struct VkDrawIndexedIndirectCommand
 {
-	indexCount: u32,
-	instanceCount: u32,
-	firstIndex: u32,
-	vertexOffset: i32,
-	firstInstance: u32,
+	pub indexCount: u32,
+	pub instanceCount: u32,
+	pub firstIndex: u32,
+	pub vertexOffset: i32,
+	pub firstInstance: u32,
 }
 impl VkDrawIndexedIndirectCommand
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2363,13 +2363,13 @@ impl VkDrawIndexedIndirectCommand
 #[derive(Copy, Clone)]
 pub struct VkDispatchIndirectCommand
 {
-	x: u32,
-	y: u32,
-	z: u32,
+	pub x: u32,
+	pub y: u32,
+	pub z: u32,
 }
 impl VkDispatchIndirectCommand
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2381,19 +2381,19 @@ impl VkDispatchIndirectCommand
 #[derive(Copy, Clone)]
 pub struct VkSubmitInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphores: * const VkSemaphore,
-	pWaitDstStageMask: * const VkPipelineStageFlagBits,
-	commandBufferCount: u32,
-	pCommandBuffers: * const VkCommandBuffer,
-	signalSemaphoreCount: u32,
-	pSignalSemaphores: * const VkSemaphore,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphores: * const VkSemaphore,
+	pub pWaitDstStageMask: * const VkPipelineStageFlagBits,
+	pub commandBufferCount: u32,
+	pub pCommandBuffers: * const VkCommandBuffer,
+	pub signalSemaphoreCount: u32,
+	pub pSignalSemaphores: * const VkSemaphore,
 }
 impl VkSubmitInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -2406,13 +2406,13 @@ impl VkSubmitInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFeatures2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	features: VkPhysicalDeviceFeatures,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub features: VkPhysicalDeviceFeatures,
 }
 impl VkPhysicalDeviceFeatures2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -2425,13 +2425,13 @@ impl VkPhysicalDeviceFeatures2
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProperties2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	properties: VkPhysicalDeviceProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub properties: VkPhysicalDeviceProperties,
 }
 impl VkPhysicalDeviceProperties2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
@@ -2444,13 +2444,13 @@ impl VkPhysicalDeviceProperties2
 #[derive(Copy, Clone)]
 pub struct VkFormatProperties2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	formatProperties: VkFormatProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub formatProperties: VkFormatProperties,
 }
 impl VkFormatProperties2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2;
@@ -2463,13 +2463,13 @@ impl VkFormatProperties2
 #[derive(Copy, Clone)]
 pub struct VkImageFormatProperties2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	imageFormatProperties: VkImageFormatProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub imageFormatProperties: VkImageFormatProperties,
 }
 impl VkImageFormatProperties2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
@@ -2482,17 +2482,17 @@ impl VkImageFormatProperties2
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImageFormatInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	format: VkFormat,
-	type_type: VkImageType,
-	tiling: VkImageTiling,
-	usage: VkImageUsageFlagBits,
-	flags: VkImageCreateFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub format: VkFormat,
+	pub type_type: VkImageType,
+	pub tiling: VkImageTiling,
+	pub usage: VkImageUsageFlagBits,
+	pub flags: VkImageCreateFlagBits,
 }
 impl VkPhysicalDeviceImageFormatInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
@@ -2505,13 +2505,13 @@ impl VkPhysicalDeviceImageFormatInfo2
 #[derive(Copy, Clone)]
 pub struct VkQueueFamilyProperties2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	queueFamilyProperties: VkQueueFamilyProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub queueFamilyProperties: VkQueueFamilyProperties,
 }
 impl VkQueueFamilyProperties2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2;
@@ -2524,13 +2524,13 @@ impl VkQueueFamilyProperties2
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMemoryProperties2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	memoryProperties: VkPhysicalDeviceMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub memoryProperties: VkPhysicalDeviceMemoryProperties,
 }
 impl VkPhysicalDeviceMemoryProperties2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2;
@@ -2543,13 +2543,13 @@ impl VkPhysicalDeviceMemoryProperties2
 #[derive(Copy, Clone)]
 pub struct VkSparseImageFormatProperties2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	properties: VkSparseImageFormatProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub properties: VkSparseImageFormatProperties,
 }
 impl VkSparseImageFormatProperties2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2;
@@ -2562,17 +2562,17 @@ impl VkSparseImageFormatProperties2
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSparseImageFormatInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	format: VkFormat,
-	type_type: VkImageType,
-	samples: VkSampleCountFlagBits,
-	usage: VkImageUsageFlagBits,
-	tiling: VkImageTiling,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub format: VkFormat,
+	pub type_type: VkImageType,
+	pub samples: VkSampleCountFlagBits,
+	pub usage: VkImageUsageFlagBits,
+	pub tiling: VkImageTiling,
 }
 impl VkPhysicalDeviceSparseImageFormatInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2;
@@ -2585,14 +2585,14 @@ impl VkPhysicalDeviceSparseImageFormatInfo2
 #[derive(Copy, Clone)]
 pub struct VkConformanceVersion
 {
-	major: u8,
-	minor: u8,
-	subminor: u8,
-	patch: u8,
+	pub major: u8,
+	pub minor: u8,
+	pub subminor: u8,
+	pub patch: u8,
 }
 impl VkConformanceVersion
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2604,16 +2604,16 @@ impl VkConformanceVersion
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDriverProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	driverID: VkDriverId,
-	driverName: c_char,
-	driverInfo: c_char,
-	conformanceVersion: VkConformanceVersion,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub driverID: VkDriverId,
+	pub driverName: [c_uchar; VK_MAX_DRIVER_NAME_SIZE],
+	pub driverInfo: [c_uchar; VK_MAX_DRIVER_INFO_SIZE],
+	pub conformanceVersion: VkConformanceVersion,
 }
 impl VkPhysicalDeviceDriverProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
@@ -2626,14 +2626,14 @@ impl VkPhysicalDeviceDriverProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVariablePointersFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	variablePointersStorageBuffer: VkBool32,
-	variablePointers: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub variablePointersStorageBuffer: VkBool32,
+	pub variablePointers: VkBool32,
 }
 impl VkPhysicalDeviceVariablePointersFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES;
@@ -2649,7 +2649,7 @@ pub struct VkPhysicalDeviceVariablePointerFeatures
 }
 impl VkPhysicalDeviceVariablePointerFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2661,13 +2661,13 @@ impl VkPhysicalDeviceVariablePointerFeatures
 #[derive(Copy, Clone)]
 pub struct VkExternalMemoryProperties
 {
-	externalMemoryFeatures: VkExternalMemoryFeatureFlagBits,
-	exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagBits,
-	compatibleHandleTypes: VkExternalMemoryHandleTypeFlagBits,
+	pub externalMemoryFeatures: VkExternalMemoryFeatureFlagBits,
+	pub exportFromImportedHandleTypes: VkExternalMemoryHandleTypeFlagBits,
+	pub compatibleHandleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkExternalMemoryProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -2679,13 +2679,13 @@ impl VkExternalMemoryProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalImageFormatInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalImageFormatInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO;
@@ -2698,13 +2698,13 @@ impl VkPhysicalDeviceExternalImageFormatInfo
 #[derive(Copy, Clone)]
 pub struct VkExternalImageFormatProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	externalMemoryProperties: VkExternalMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub externalMemoryProperties: VkExternalMemoryProperties,
 }
 impl VkExternalImageFormatProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES;
@@ -2717,15 +2717,15 @@ impl VkExternalImageFormatProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalBufferInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkBufferCreateFlagBits,
-	usage: VkBufferUsageFlagBits,
-	handleType: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkBufferCreateFlagBits,
+	pub usage: VkBufferUsageFlagBits,
+	pub handleType: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalBufferInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO;
@@ -2738,13 +2738,13 @@ impl VkPhysicalDeviceExternalBufferInfo
 #[derive(Copy, Clone)]
 pub struct VkExternalBufferProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	externalMemoryProperties: VkExternalMemoryProperties,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub externalMemoryProperties: VkExternalMemoryProperties,
 }
 impl VkExternalBufferProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES;
@@ -2757,17 +2757,17 @@ impl VkExternalBufferProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceIDProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	deviceUUID: u8,
-	driverUUID: u8,
-	deviceLUID: u8,
-	deviceNodeMask: u32,
-	deviceLUIDValid: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub deviceUUID: [u8; VK_UUID_SIZE],
+	pub driverUUID: [u8; VK_UUID_SIZE],
+	pub deviceLUID: [u8; VK_LUID_SIZE],
+	pub deviceNodeMask: u32,
+	pub deviceLUIDValid: VkBool32,
 }
 impl VkPhysicalDeviceIDProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES;
@@ -2780,13 +2780,13 @@ impl VkPhysicalDeviceIDProperties
 #[derive(Copy, Clone)]
 pub struct VkExternalMemoryImageCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkExternalMemoryImageCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
@@ -2799,13 +2799,13 @@ impl VkExternalMemoryImageCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkExternalMemoryBufferCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkExternalMemoryBufferCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO;
@@ -2818,13 +2818,13 @@ impl VkExternalMemoryBufferCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkExportMemoryAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleTypes: VkExternalMemoryHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleTypes: VkExternalMemoryHandleTypeFlagBits,
 }
 impl VkExportMemoryAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
@@ -2837,13 +2837,13 @@ impl VkExportMemoryAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalSemaphoreInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleType: VkExternalSemaphoreHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleType: VkExternalSemaphoreHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalSemaphoreInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO;
@@ -2856,15 +2856,15 @@ impl VkPhysicalDeviceExternalSemaphoreInfo
 #[derive(Copy, Clone)]
 pub struct VkExternalSemaphoreProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
-	compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
-	externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub exportFromImportedHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
+	pub compatibleHandleTypes: VkExternalSemaphoreHandleTypeFlagBits,
+	pub externalSemaphoreFeatures: VkExternalSemaphoreFeatureFlagBits,
 }
 impl VkExternalSemaphoreProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
@@ -2877,13 +2877,13 @@ impl VkExternalSemaphoreProperties
 #[derive(Copy, Clone)]
 pub struct VkExportSemaphoreCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleTypes: VkExternalSemaphoreHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleTypes: VkExternalSemaphoreHandleTypeFlagBits,
 }
 impl VkExportSemaphoreCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO;
@@ -2896,13 +2896,13 @@ impl VkExportSemaphoreCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceExternalFenceInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleType: VkExternalFenceHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleType: VkExternalFenceHandleTypeFlagBits,
 }
 impl VkPhysicalDeviceExternalFenceInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO;
@@ -2915,15 +2915,15 @@ impl VkPhysicalDeviceExternalFenceInfo
 #[derive(Copy, Clone)]
 pub struct VkExternalFenceProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlagBits,
-	compatibleHandleTypes: VkExternalFenceHandleTypeFlagBits,
-	externalFenceFeatures: VkExternalFenceFeatureFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub exportFromImportedHandleTypes: VkExternalFenceHandleTypeFlagBits,
+	pub compatibleHandleTypes: VkExternalFenceHandleTypeFlagBits,
+	pub externalFenceFeatures: VkExternalFenceFeatureFlagBits,
 }
 impl VkExternalFenceProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
@@ -2936,13 +2936,13 @@ impl VkExternalFenceProperties
 #[derive(Copy, Clone)]
 pub struct VkExportFenceCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	handleTypes: VkExternalFenceHandleTypeFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub handleTypes: VkExternalFenceHandleTypeFlagBits,
 }
 impl VkExportFenceCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO;
@@ -2955,15 +2955,15 @@ impl VkExportFenceCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	multiview: VkBool32,
-	multiviewGeometryShader: VkBool32,
-	multiviewTessellationShader: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub multiview: VkBool32,
+	pub multiviewGeometryShader: VkBool32,
+	pub multiviewTessellationShader: VkBool32,
 }
 impl VkPhysicalDeviceMultiviewFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES;
@@ -2976,14 +2976,14 @@ impl VkPhysicalDeviceMultiviewFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMultiviewProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	maxMultiviewViewCount: u32,
-	maxMultiviewInstanceIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub maxMultiviewViewCount: u32,
+	pub maxMultiviewInstanceIndex: u32,
 }
 impl VkPhysicalDeviceMultiviewProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES;
@@ -2996,18 +2996,18 @@ impl VkPhysicalDeviceMultiviewProperties
 #[derive(Copy, Clone)]
 pub struct VkRenderPassMultiviewCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	subpassCount: u32,
-	pViewMasks: * const u32,
-	dependencyCount: u32,
-	pViewOffsets: * const i32,
-	correlationMaskCount: u32,
-	pCorrelationMasks: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub subpassCount: u32,
+	pub pViewMasks: * const u32,
+	pub dependencyCount: u32,
+	pub pViewOffsets: * const i32,
+	pub correlationMaskCount: u32,
+	pub pCorrelationMasks: * const u32,
 }
 impl VkRenderPassMultiviewCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO;
@@ -3020,15 +3020,15 @@ impl VkRenderPassMultiviewCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceGroupProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	physicalDeviceCount: u32,
-	physicalDevices: VkPhysicalDevice,
-	subsetAllocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub physicalDeviceCount: u32,
+	pub physicalDevices: [VkPhysicalDevice; VK_MAX_DEVICE_GROUP_SIZE],
+	pub subsetAllocation: VkBool32,
 }
 impl VkPhysicalDeviceGroupProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES;
@@ -3041,14 +3041,14 @@ impl VkPhysicalDeviceGroupProperties
 #[derive(Copy, Clone)]
 pub struct VkMemoryAllocateFlagsInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkMemoryAllocateFlagBits,
-	deviceMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkMemoryAllocateFlagBits,
+	pub deviceMask: u32,
 }
 impl VkMemoryAllocateFlagsInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO;
@@ -3061,15 +3061,15 @@ impl VkMemoryAllocateFlagsInfo
 #[derive(Copy, Clone)]
 pub struct VkBindBufferMemoryInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	buffer: VkBuffer,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub buffer: VkBuffer,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
 }
 impl VkBindBufferMemoryInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO;
@@ -3082,14 +3082,14 @@ impl VkBindBufferMemoryInfo
 #[derive(Copy, Clone)]
 pub struct VkBindBufferMemoryDeviceGroupInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	deviceIndexCount: u32,
-	pDeviceIndices: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub deviceIndexCount: u32,
+	pub pDeviceIndices: * const u32,
 }
 impl VkBindBufferMemoryDeviceGroupInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO;
@@ -3102,15 +3102,15 @@ impl VkBindBufferMemoryDeviceGroupInfo
 #[derive(Copy, Clone)]
 pub struct VkBindImageMemoryInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	image: VkImage,
-	memory: VkDeviceMemory,
-	memoryOffset: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub image: VkImage,
+	pub memory: VkDeviceMemory,
+	pub memoryOffset: VkDeviceSize,
 }
 impl VkBindImageMemoryInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO;
@@ -3123,16 +3123,16 @@ impl VkBindImageMemoryInfo
 #[derive(Copy, Clone)]
 pub struct VkBindImageMemoryDeviceGroupInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	deviceIndexCount: u32,
-	pDeviceIndices: * const u32,
-	splitInstanceBindRegionCount: u32,
-	pSplitInstanceBindRegions: * const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub deviceIndexCount: u32,
+	pub pDeviceIndices: * const u32,
+	pub splitInstanceBindRegionCount: u32,
+	pub pSplitInstanceBindRegions: * const VkRect2D,
 }
 impl VkBindImageMemoryDeviceGroupInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO;
@@ -3145,15 +3145,15 @@ impl VkBindImageMemoryDeviceGroupInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceGroupRenderPassBeginInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	deviceMask: u32,
-	deviceRenderAreaCount: u32,
-	pDeviceRenderAreas: * const VkRect2D,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub deviceMask: u32,
+	pub deviceRenderAreaCount: u32,
+	pub pDeviceRenderAreas: * const VkRect2D,
 }
 impl VkDeviceGroupRenderPassBeginInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO;
@@ -3166,13 +3166,13 @@ impl VkDeviceGroupRenderPassBeginInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceGroupCommandBufferBeginInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	deviceMask: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub deviceMask: u32,
 }
 impl VkDeviceGroupCommandBufferBeginInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO;
@@ -3185,18 +3185,18 @@ impl VkDeviceGroupCommandBufferBeginInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceGroupSubmitInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	waitSemaphoreCount: u32,
-	pWaitSemaphoreDeviceIndices: * const u32,
-	commandBufferCount: u32,
-	pCommandBufferDeviceMasks: * const u32,
-	signalSemaphoreCount: u32,
-	pSignalSemaphoreDeviceIndices: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub waitSemaphoreCount: u32,
+	pub pWaitSemaphoreDeviceIndices: * const u32,
+	pub commandBufferCount: u32,
+	pub pCommandBufferDeviceMasks: * const u32,
+	pub signalSemaphoreCount: u32,
+	pub pSignalSemaphoreDeviceIndices: * const u32,
 }
 impl VkDeviceGroupSubmitInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO;
@@ -3209,14 +3209,14 @@ impl VkDeviceGroupSubmitInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceGroupBindSparseInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	resourceDeviceIndex: u32,
-	memoryDeviceIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub resourceDeviceIndex: u32,
+	pub memoryDeviceIndex: u32,
 }
 impl VkDeviceGroupBindSparseInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO;
@@ -3229,14 +3229,14 @@ impl VkDeviceGroupBindSparseInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceGroupDeviceCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	physicalDeviceCount: u32,
-	pPhysicalDevices: * const VkPhysicalDevice,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub physicalDeviceCount: u32,
+	pub pPhysicalDevices: * const VkPhysicalDevice,
 }
 impl VkDeviceGroupDeviceCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO;
@@ -3249,16 +3249,16 @@ impl VkDeviceGroupDeviceCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorUpdateTemplateEntry
 {
-	dstBinding: u32,
-	dstArrayElement: u32,
-	descriptorCount: u32,
-	descriptorType: VkDescriptorType,
-	offset: usize,
-	stride: usize,
+	pub dstBinding: u32,
+	pub dstArrayElement: u32,
+	pub descriptorCount: u32,
+	pub descriptorType: VkDescriptorType,
+	pub offset: usize,
+	pub stride: usize,
 }
 impl VkDescriptorUpdateTemplateEntry
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -3270,20 +3270,20 @@ impl VkDescriptorUpdateTemplateEntry
 #[derive(Copy, Clone)]
 pub struct VkDescriptorUpdateTemplateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDescriptorUpdateTemplateCreateFlagBits,
-	descriptorUpdateEntryCount: u32,
-	pDescriptorUpdateEntries: * const VkDescriptorUpdateTemplateEntry,
-	templateType: VkDescriptorUpdateTemplateType,
-	descriptorSetLayout: VkDescriptorSetLayout,
-	pipelineBindPoint: VkPipelineBindPoint,
-	pipelineLayout: VkPipelineLayout,
-	set: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkDescriptorUpdateTemplateCreateFlagBits,
+	pub descriptorUpdateEntryCount: u32,
+	pub pDescriptorUpdateEntries: * const VkDescriptorUpdateTemplateEntry,
+	pub templateType: VkDescriptorUpdateTemplateType,
+	pub descriptorSetLayout: VkDescriptorSetLayout,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub pipelineLayout: VkPipelineLayout,
+	pub set: u32,
 }
 impl VkDescriptorUpdateTemplateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO;
@@ -3296,13 +3296,13 @@ impl VkDescriptorUpdateTemplateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkInputAttachmentAspectReference
 {
-	subpass: u32,
-	inputAttachmentIndex: u32,
-	aspectMask: VkImageAspectFlagBits,
+	pub subpass: u32,
+	pub inputAttachmentIndex: u32,
+	pub aspectMask: VkImageAspectFlagBits,
 }
 impl VkInputAttachmentAspectReference
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -3314,14 +3314,14 @@ impl VkInputAttachmentAspectReference
 #[derive(Copy, Clone)]
 pub struct VkRenderPassInputAttachmentAspectCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	aspectReferenceCount: u32,
-	pAspectReferences: * const VkInputAttachmentAspectReference,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub aspectReferenceCount: u32,
+	pub pAspectReferences: * const VkInputAttachmentAspectReference,
 }
 impl VkRenderPassInputAttachmentAspectCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO;
@@ -3334,16 +3334,16 @@ impl VkRenderPassInputAttachmentAspectCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDevice16BitStorageFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	storageBuffer16BitAccess: VkBool32,
-	uniformAndStorageBuffer16BitAccess: VkBool32,
-	storagePushConstant16: VkBool32,
-	storageInputOutput16: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub storageBuffer16BitAccess: VkBool32,
+	pub uniformAndStorageBuffer16BitAccess: VkBool32,
+	pub storagePushConstant16: VkBool32,
+	pub storageInputOutput16: VkBool32,
 }
 impl VkPhysicalDevice16BitStorageFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES;
@@ -3356,16 +3356,16 @@ impl VkPhysicalDevice16BitStorageFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSubgroupProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	subgroupSize: u32,
-	supportedStages: VkShaderStageFlagBits,
-	supportedOperations: VkSubgroupFeatureFlagBits,
-	quadOperationsInAllStages: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub subgroupSize: u32,
+	pub supportedStages: VkShaderStageFlagBits,
+	pub supportedOperations: VkSubgroupFeatureFlagBits,
+	pub quadOperationsInAllStages: VkBool32,
 }
 impl VkPhysicalDeviceSubgroupProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
@@ -3378,13 +3378,13 @@ impl VkPhysicalDeviceSubgroupProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	shaderSubgroupExtendedTypes: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub shaderSubgroupExtendedTypes: VkBool32,
 }
 impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES;
@@ -3397,13 +3397,13 @@ impl VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures
 #[derive(Copy, Clone)]
 pub struct VkBufferMemoryRequirementsInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub buffer: VkBuffer,
 }
 impl VkBufferMemoryRequirementsInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2;
@@ -3416,13 +3416,13 @@ impl VkBufferMemoryRequirementsInfo2
 #[derive(Copy, Clone)]
 pub struct VkImageMemoryRequirementsInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	image: VkImage,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub image: VkImage,
 }
 impl VkImageMemoryRequirementsInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2;
@@ -3435,13 +3435,13 @@ impl VkImageMemoryRequirementsInfo2
 #[derive(Copy, Clone)]
 pub struct VkImageSparseMemoryRequirementsInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	image: VkImage,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub image: VkImage,
 }
 impl VkImageSparseMemoryRequirementsInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2;
@@ -3454,13 +3454,13 @@ impl VkImageSparseMemoryRequirementsInfo2
 #[derive(Copy, Clone)]
 pub struct VkMemoryRequirements2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	memoryRequirements: VkMemoryRequirements,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub memoryRequirements: VkMemoryRequirements,
 }
 impl VkMemoryRequirements2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2;
@@ -3473,13 +3473,13 @@ impl VkMemoryRequirements2
 #[derive(Copy, Clone)]
 pub struct VkSparseImageMemoryRequirements2
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	memoryRequirements: VkSparseImageMemoryRequirements,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub memoryRequirements: VkSparseImageMemoryRequirements,
 }
 impl VkSparseImageMemoryRequirements2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2;
@@ -3492,13 +3492,13 @@ impl VkSparseImageMemoryRequirements2
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDevicePointClippingProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	pointClippingBehavior: VkPointClippingBehavior,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub pointClippingBehavior: VkPointClippingBehavior,
 }
 impl VkPhysicalDevicePointClippingProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES;
@@ -3511,14 +3511,14 @@ impl VkPhysicalDevicePointClippingProperties
 #[derive(Copy, Clone)]
 pub struct VkMemoryDedicatedRequirements
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	prefersDedicatedAllocation: VkBool32,
-	requiresDedicatedAllocation: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub prefersDedicatedAllocation: VkBool32,
+	pub requiresDedicatedAllocation: VkBool32,
 }
 impl VkMemoryDedicatedRequirements
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS;
@@ -3531,14 +3531,14 @@ impl VkMemoryDedicatedRequirements
 #[derive(Copy, Clone)]
 pub struct VkMemoryDedicatedAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	image: VkImage,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub image: VkImage,
+	pub buffer: VkBuffer,
 }
 impl VkMemoryDedicatedAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO;
@@ -3551,13 +3551,13 @@ impl VkMemoryDedicatedAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkImageViewUsageCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	usage: VkImageUsageFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub usage: VkImageUsageFlagBits,
 }
 impl VkImageViewUsageCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
@@ -3570,13 +3570,13 @@ impl VkImageViewUsageCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPipelineTessellationDomainOriginStateCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	domainOrigin: VkTessellationDomainOrigin,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub domainOrigin: VkTessellationDomainOrigin,
 }
 impl VkPipelineTessellationDomainOriginStateCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO;
@@ -3589,13 +3589,13 @@ impl VkPipelineTessellationDomainOriginStateCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	conversion: VkSamplerYcbcrConversion,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub conversion: VkSamplerYcbcrConversion,
 }
 impl VkSamplerYcbcrConversionInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
@@ -3608,20 +3608,20 @@ impl VkSamplerYcbcrConversionInfo
 #[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	format: VkFormat,
-	ycbcrModel: VkSamplerYcbcrModelConversion,
-	ycbcrRange: VkSamplerYcbcrRange,
-	components: VkComponentMapping,
-	xChromaOffset: VkChromaLocation,
-	yChromaOffset: VkChromaLocation,
-	chromaFilter: VkFilter,
-	forceExplicitReconstruction: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub format: VkFormat,
+	pub ycbcrModel: VkSamplerYcbcrModelConversion,
+	pub ycbcrRange: VkSamplerYcbcrRange,
+	pub components: VkComponentMapping,
+	pub xChromaOffset: VkChromaLocation,
+	pub yChromaOffset: VkChromaLocation,
+	pub chromaFilter: VkFilter,
+	pub forceExplicitReconstruction: VkBool32,
 }
 impl VkSamplerYcbcrConversionCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO;
@@ -3634,13 +3634,13 @@ impl VkSamplerYcbcrConversionCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkBindImagePlaneMemoryInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	planeAspect: VkImageAspectFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub planeAspect: VkImageAspectFlagBits,
 }
 impl VkBindImagePlaneMemoryInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO;
@@ -3653,13 +3653,13 @@ impl VkBindImagePlaneMemoryInfo
 #[derive(Copy, Clone)]
 pub struct VkImagePlaneMemoryRequirementsInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	planeAspect: VkImageAspectFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub planeAspect: VkImageAspectFlagBits,
 }
 impl VkImagePlaneMemoryRequirementsInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO;
@@ -3672,13 +3672,13 @@ impl VkImagePlaneMemoryRequirementsInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSamplerYcbcrConversionFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	samplerYcbcrConversion: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub samplerYcbcrConversion: VkBool32,
 }
 impl VkPhysicalDeviceSamplerYcbcrConversionFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES;
@@ -3691,13 +3691,13 @@ impl VkPhysicalDeviceSamplerYcbcrConversionFeatures
 #[derive(Copy, Clone)]
 pub struct VkSamplerYcbcrConversionImageFormatProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	combinedImageSamplerDescriptorCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub combinedImageSamplerDescriptorCount: u32,
 }
 impl VkSamplerYcbcrConversionImageFormatProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES;
@@ -3710,13 +3710,13 @@ impl VkSamplerYcbcrConversionImageFormatProperties
 #[derive(Copy, Clone)]
 pub struct VkProtectedSubmitInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	protectedSubmit: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub protectedSubmit: VkBool32,
 }
 impl VkProtectedSubmitInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
@@ -3729,13 +3729,13 @@ impl VkProtectedSubmitInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProtectedMemoryFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	protectedMemory: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub protectedMemory: VkBool32,
 }
 impl VkPhysicalDeviceProtectedMemoryFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES;
@@ -3748,13 +3748,13 @@ impl VkPhysicalDeviceProtectedMemoryFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceProtectedMemoryProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	protectedNoFault: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub protectedNoFault: VkBool32,
 }
 impl VkPhysicalDeviceProtectedMemoryProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES;
@@ -3767,15 +3767,15 @@ impl VkPhysicalDeviceProtectedMemoryProperties
 #[derive(Copy, Clone)]
 pub struct VkDeviceQueueInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkDeviceQueueCreateFlagBits,
-	queueFamilyIndex: u32,
-	queueIndex: u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkDeviceQueueCreateFlagBits,
+	pub queueFamilyIndex: u32,
+	pub queueIndex: u32,
 }
 impl VkDeviceQueueInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2;
@@ -3788,14 +3788,14 @@ impl VkDeviceQueueInfo2
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSamplerFilterMinmaxProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	filterMinmaxSingleComponentFormats: VkBool32,
-	filterMinmaxImageComponentMapping: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub filterMinmaxSingleComponentFormats: VkBool32,
+	pub filterMinmaxImageComponentMapping: VkBool32,
 }
 impl VkPhysicalDeviceSamplerFilterMinmaxProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES;
@@ -3808,13 +3808,13 @@ impl VkPhysicalDeviceSamplerFilterMinmaxProperties
 #[derive(Copy, Clone)]
 pub struct VkSamplerReductionModeCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	reductionMode: VkSamplerReductionMode,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub reductionMode: VkSamplerReductionMode,
 }
 impl VkSamplerReductionModeCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO;
@@ -3827,14 +3827,14 @@ impl VkSamplerReductionModeCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkImageFormatListCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	viewFormatCount: u32,
-	pViewFormats: * const VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub viewFormatCount: u32,
+	pub pViewFormats: * const VkFormat,
 }
 impl VkImageFormatListCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO;
@@ -3847,14 +3847,14 @@ impl VkImageFormatListCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceMaintenance3Properties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	maxPerSetDescriptors: u32,
-	maxMemoryAllocationSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub maxPerSetDescriptors: u32,
+	pub maxMemoryAllocationSize: VkDeviceSize,
 }
 impl VkPhysicalDeviceMaintenance3Properties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES;
@@ -3867,13 +3867,13 @@ impl VkPhysicalDeviceMaintenance3Properties
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutSupport
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	supported: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub supported: VkBool32,
 }
 impl VkDescriptorSetLayoutSupport
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT;
@@ -3886,13 +3886,13 @@ impl VkDescriptorSetLayoutSupport
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderDrawParametersFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	shaderDrawParameters: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub shaderDrawParameters: VkBool32,
 }
 impl VkPhysicalDeviceShaderDrawParametersFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES;
@@ -3908,7 +3908,7 @@ pub struct VkPhysicalDeviceShaderDrawParameterFeatures
 }
 impl VkPhysicalDeviceShaderDrawParameterFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let s: Self = unsafe { mem::zeroed() };
         
@@ -3920,14 +3920,14 @@ impl VkPhysicalDeviceShaderDrawParameterFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderFloat16Int8Features
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	shaderFloat16: VkBool32,
-	shaderInt8: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub shaderFloat16: VkBool32,
+	pub shaderInt8: VkBool32,
 }
 impl VkPhysicalDeviceShaderFloat16Int8Features
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES;
@@ -3940,29 +3940,29 @@ impl VkPhysicalDeviceShaderFloat16Int8Features
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceFloatControlsProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
-	roundingModeIndependence: VkShaderFloatControlsIndependence,
-	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
-	shaderDenormPreserveFloat16: VkBool32,
-	shaderDenormPreserveFloat32: VkBool32,
-	shaderDenormPreserveFloat64: VkBool32,
-	shaderDenormFlushToZeroFloat16: VkBool32,
-	shaderDenormFlushToZeroFloat32: VkBool32,
-	shaderDenormFlushToZeroFloat64: VkBool32,
-	shaderRoundingModeRTEFloat16: VkBool32,
-	shaderRoundingModeRTEFloat32: VkBool32,
-	shaderRoundingModeRTEFloat64: VkBool32,
-	shaderRoundingModeRTZFloat16: VkBool32,
-	shaderRoundingModeRTZFloat32: VkBool32,
-	shaderRoundingModeRTZFloat64: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	pub roundingModeIndependence: VkShaderFloatControlsIndependence,
+	pub shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	pub shaderDenormPreserveFloat16: VkBool32,
+	pub shaderDenormPreserveFloat32: VkBool32,
+	pub shaderDenormPreserveFloat64: VkBool32,
+	pub shaderDenormFlushToZeroFloat16: VkBool32,
+	pub shaderDenormFlushToZeroFloat32: VkBool32,
+	pub shaderDenormFlushToZeroFloat64: VkBool32,
+	pub shaderRoundingModeRTEFloat16: VkBool32,
+	pub shaderRoundingModeRTEFloat32: VkBool32,
+	pub shaderRoundingModeRTEFloat64: VkBool32,
+	pub shaderRoundingModeRTZFloat16: VkBool32,
+	pub shaderRoundingModeRTZFloat32: VkBool32,
+	pub shaderRoundingModeRTZFloat64: VkBool32,
 }
 impl VkPhysicalDeviceFloatControlsProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES;
@@ -3975,13 +3975,13 @@ impl VkPhysicalDeviceFloatControlsProperties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceHostQueryResetFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	hostQueryReset: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub hostQueryReset: VkBool32,
 }
 impl VkPhysicalDeviceHostQueryResetFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES;
@@ -3994,32 +3994,32 @@ impl VkPhysicalDeviceHostQueryResetFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDescriptorIndexingFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
-	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
-	shaderSampledImageArrayNonUniformIndexing: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageImageArrayNonUniformIndexing: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
-	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
-	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
-	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUpdateUnusedWhilePending: VkBool32,
-	descriptorBindingPartiallyBound: VkBool32,
-	descriptorBindingVariableDescriptorCount: VkBool32,
-	runtimeDescriptorArray: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	pub descriptorBindingPartiallyBound: VkBool32,
+	pub descriptorBindingVariableDescriptorCount: VkBool32,
+	pub runtimeDescriptorArray: VkBool32,
 }
 impl VkPhysicalDeviceDescriptorIndexingFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
@@ -4032,35 +4032,35 @@ impl VkPhysicalDeviceDescriptorIndexingFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDescriptorIndexingProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	maxUpdateAfterBindDescriptorsInAllPools: u32,
-	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
-	robustBufferAccessUpdateAfterBind: VkBool32,
-	quadDivergentImplicitLod: VkBool32,
-	maxPerStageDescriptorUpdateAfterBindSamplers: u32,
-	maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
-	maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
-	maxPerStageUpdateAfterBindResources: u32,
-	maxDescriptorSetUpdateAfterBindSamplers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindSampledImages: u32,
-	maxDescriptorSetUpdateAfterBindStorageImages: u32,
-	maxDescriptorSetUpdateAfterBindInputAttachments: u32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub maxUpdateAfterBindDescriptorsInAllPools: u32,
+	pub shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	pub robustBufferAccessUpdateAfterBind: VkBool32,
+	pub quadDivergentImplicitLod: VkBool32,
+	pub maxPerStageDescriptorUpdateAfterBindSamplers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
+	pub maxPerStageUpdateAfterBindResources: u32,
+	pub maxDescriptorSetUpdateAfterBindSamplers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindSampledImages: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageImages: u32,
+	pub maxDescriptorSetUpdateAfterBindInputAttachments: u32,
 }
 impl VkPhysicalDeviceDescriptorIndexingProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES;
@@ -4073,14 +4073,14 @@ impl VkPhysicalDeviceDescriptorIndexingProperties
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetLayoutBindingFlagsCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	bindingCount: u32,
-	pBindingFlags: * const VkDescriptorBindingFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub bindingCount: u32,
+	pub pBindingFlags: * const VkDescriptorBindingFlagBits,
 }
 impl VkDescriptorSetLayoutBindingFlagsCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
@@ -4093,14 +4093,14 @@ impl VkDescriptorSetLayoutBindingFlagsCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetVariableDescriptorCountAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	descriptorSetCount: u32,
-	pDescriptorCounts: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub descriptorSetCount: u32,
+	pub pDescriptorCounts: * const u32,
 }
 impl VkDescriptorSetVariableDescriptorCountAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO;
@@ -4113,13 +4113,13 @@ impl VkDescriptorSetVariableDescriptorCountAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkDescriptorSetVariableDescriptorCountLayoutSupport
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	maxVariableDescriptorCount: u32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub maxVariableDescriptorCount: u32,
 }
 impl VkDescriptorSetVariableDescriptorCountLayoutSupport
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT;
@@ -4132,21 +4132,21 @@ impl VkDescriptorSetVariableDescriptorCountLayoutSupport
 #[derive(Copy, Clone)]
 pub struct VkAttachmentDescription2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkAttachmentDescriptionFlagBits,
-	format: VkFormat,
-	samples: VkSampleCountFlagBits,
-	loadOp: VkAttachmentLoadOp,
-	storeOp: VkAttachmentStoreOp,
-	stencilLoadOp: VkAttachmentLoadOp,
-	stencilStoreOp: VkAttachmentStoreOp,
-	initialLayout: VkImageLayout,
-	finalLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkAttachmentDescriptionFlagBits,
+	pub format: VkFormat,
+	pub samples: VkSampleCountFlagBits,
+	pub loadOp: VkAttachmentLoadOp,
+	pub storeOp: VkAttachmentStoreOp,
+	pub stencilLoadOp: VkAttachmentLoadOp,
+	pub stencilStoreOp: VkAttachmentStoreOp,
+	pub initialLayout: VkImageLayout,
+	pub finalLayout: VkImageLayout,
 }
 impl VkAttachmentDescription2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
@@ -4159,15 +4159,15 @@ impl VkAttachmentDescription2
 #[derive(Copy, Clone)]
 pub struct VkAttachmentReference2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	attachment: u32,
-	layout: VkImageLayout,
-	aspectMask: VkImageAspectFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub attachment: u32,
+	pub layout: VkImageLayout,
+	pub aspectMask: VkImageAspectFlagBits,
 }
 impl VkAttachmentReference2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
@@ -4180,23 +4180,23 @@ impl VkAttachmentReference2
 #[derive(Copy, Clone)]
 pub struct VkSubpassDescription2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkSubpassDescriptionFlagBits,
-	pipelineBindPoint: VkPipelineBindPoint,
-	viewMask: u32,
-	inputAttachmentCount: u32,
-	pInputAttachments: * const VkAttachmentReference2,
-	colorAttachmentCount: u32,
-	pColorAttachments: * const VkAttachmentReference2,
-	pResolveAttachments: * const VkAttachmentReference2,
-	pDepthStencilAttachment: * const VkAttachmentReference2,
-	preserveAttachmentCount: u32,
-	pPreserveAttachments: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkSubpassDescriptionFlagBits,
+	pub pipelineBindPoint: VkPipelineBindPoint,
+	pub viewMask: u32,
+	pub inputAttachmentCount: u32,
+	pub pInputAttachments: * const VkAttachmentReference2,
+	pub colorAttachmentCount: u32,
+	pub pColorAttachments: * const VkAttachmentReference2,
+	pub pResolveAttachments: * const VkAttachmentReference2,
+	pub pDepthStencilAttachment: * const VkAttachmentReference2,
+	pub preserveAttachmentCount: u32,
+	pub pPreserveAttachments: * const u32,
 }
 impl VkSubpassDescription2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2;
@@ -4209,20 +4209,20 @@ impl VkSubpassDescription2
 #[derive(Copy, Clone)]
 pub struct VkSubpassDependency2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	srcSubpass: u32,
-	dstSubpass: u32,
-	srcStageMask: VkPipelineStageFlagBits,
-	dstStageMask: VkPipelineStageFlagBits,
-	srcAccessMask: VkAccessFlagBits,
-	dstAccessMask: VkAccessFlagBits,
-	dependencyFlags: VkDependencyFlagBits,
-	viewOffset: i32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub srcSubpass: u32,
+	pub dstSubpass: u32,
+	pub srcStageMask: VkPipelineStageFlagBits,
+	pub dstStageMask: VkPipelineStageFlagBits,
+	pub srcAccessMask: VkAccessFlagBits,
+	pub dstAccessMask: VkAccessFlagBits,
+	pub dependencyFlags: VkDependencyFlagBits,
+	pub viewOffset: i32,
 }
 impl VkSubpassDependency2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2;
@@ -4235,21 +4235,21 @@ impl VkSubpassDependency2
 #[derive(Copy, Clone)]
 pub struct VkRenderPassCreateInfo2
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkRenderPassCreateFlagBits,
-	attachmentCount: u32,
-	pAttachments: * const VkAttachmentDescription2,
-	subpassCount: u32,
-	pSubpasses: * const VkSubpassDescription2,
-	dependencyCount: u32,
-	pDependencies: * const VkSubpassDependency2,
-	correlatedViewMaskCount: u32,
-	pCorrelatedViewMasks: * const u32,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkRenderPassCreateFlagBits,
+	pub attachmentCount: u32,
+	pub pAttachments: * const VkAttachmentDescription2,
+	pub subpassCount: u32,
+	pub pSubpasses: * const VkSubpassDescription2,
+	pub dependencyCount: u32,
+	pub pDependencies: * const VkSubpassDependency2,
+	pub correlatedViewMaskCount: u32,
+	pub pCorrelatedViewMasks: * const u32,
 }
 impl VkRenderPassCreateInfo2
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2;
@@ -4262,13 +4262,13 @@ impl VkRenderPassCreateInfo2
 #[derive(Copy, Clone)]
 pub struct VkSubpassBeginInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	contents: VkSubpassContents,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub contents: VkSubpassContents,
 }
 impl VkSubpassBeginInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO;
@@ -4281,12 +4281,12 @@ impl VkSubpassBeginInfo
 #[derive(Copy, Clone)]
 pub struct VkSubpassEndInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
 }
 impl VkSubpassEndInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_END_INFO;
@@ -4299,13 +4299,13 @@ impl VkSubpassEndInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTimelineSemaphoreFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	timelineSemaphore: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub timelineSemaphore: VkBool32,
 }
 impl VkPhysicalDeviceTimelineSemaphoreFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES;
@@ -4318,13 +4318,13 @@ impl VkPhysicalDeviceTimelineSemaphoreFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceTimelineSemaphoreProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	maxTimelineSemaphoreValueDifference: u64,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub maxTimelineSemaphoreValueDifference: u64,
 }
 impl VkPhysicalDeviceTimelineSemaphoreProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_PROPERTIES;
@@ -4337,14 +4337,14 @@ impl VkPhysicalDeviceTimelineSemaphoreProperties
 #[derive(Copy, Clone)]
 pub struct VkSemaphoreTypeCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphoreType: VkSemaphoreType,
-	initialValue: u64,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub semaphoreType: VkSemaphoreType,
+	pub initialValue: u64,
 }
 impl VkSemaphoreTypeCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO;
@@ -4357,16 +4357,16 @@ impl VkSemaphoreTypeCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkTimelineSemaphoreSubmitInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	waitSemaphoreValueCount: u32,
-	pWaitSemaphoreValues: * const u64,
-	signalSemaphoreValueCount: u32,
-	pSignalSemaphoreValues: * const u64,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub waitSemaphoreValueCount: u32,
+	pub pWaitSemaphoreValues: * const u64,
+	pub signalSemaphoreValueCount: u32,
+	pub pSignalSemaphoreValues: * const u64,
 }
 impl VkTimelineSemaphoreSubmitInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
@@ -4379,16 +4379,16 @@ impl VkTimelineSemaphoreSubmitInfo
 #[derive(Copy, Clone)]
 pub struct VkSemaphoreWaitInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkSemaphoreWaitFlagBits,
-	semaphoreCount: u32,
-	pSemaphores: * const VkSemaphore,
-	pValues: * const u64,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkSemaphoreWaitFlagBits,
+	pub semaphoreCount: u32,
+	pub pSemaphores: * const VkSemaphore,
+	pub pValues: * const u64,
 }
 impl VkSemaphoreWaitInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO;
@@ -4401,14 +4401,14 @@ impl VkSemaphoreWaitInfo
 #[derive(Copy, Clone)]
 pub struct VkSemaphoreSignalInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	semaphore: VkSemaphore,
-	value: u64,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub semaphore: VkSemaphore,
+	pub value: u64,
 }
 impl VkSemaphoreSignalInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO;
@@ -4421,15 +4421,15 @@ impl VkSemaphoreSignalInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDevice8BitStorageFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	storageBuffer8BitAccess: VkBool32,
-	uniformAndStorageBuffer8BitAccess: VkBool32,
-	storagePushConstant8: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub storageBuffer8BitAccess: VkBool32,
+	pub uniformAndStorageBuffer8BitAccess: VkBool32,
+	pub storagePushConstant8: VkBool32,
 }
 impl VkPhysicalDevice8BitStorageFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES;
@@ -4442,15 +4442,15 @@ impl VkPhysicalDevice8BitStorageFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkanMemoryModelFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	vulkanMemoryModel: VkBool32,
-	vulkanMemoryModelDeviceScope: VkBool32,
-	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub vulkanMemoryModel: VkBool32,
+	pub vulkanMemoryModelDeviceScope: VkBool32,
+	pub vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
 }
 impl VkPhysicalDeviceVulkanMemoryModelFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES;
@@ -4463,14 +4463,14 @@ impl VkPhysicalDeviceVulkanMemoryModelFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceShaderAtomicInt64Features
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	shaderBufferInt64Atomics: VkBool32,
-	shaderSharedInt64Atomics: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub shaderBufferInt64Atomics: VkBool32,
+	pub shaderSharedInt64Atomics: VkBool32,
 }
 impl VkPhysicalDeviceShaderAtomicInt64Features
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES;
@@ -4483,16 +4483,16 @@ impl VkPhysicalDeviceShaderAtomicInt64Features
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceDepthStencilResolveProperties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	supportedDepthResolveModes: VkResolveModeFlagBits,
-	supportedStencilResolveModes: VkResolveModeFlagBits,
-	independentResolveNone: VkBool32,
-	independentResolve: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub supportedDepthResolveModes: VkResolveModeFlagBits,
+	pub supportedStencilResolveModes: VkResolveModeFlagBits,
+	pub independentResolveNone: VkBool32,
+	pub independentResolve: VkBool32,
 }
 impl VkPhysicalDeviceDepthStencilResolveProperties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES;
@@ -4505,15 +4505,15 @@ impl VkPhysicalDeviceDepthStencilResolveProperties
 #[derive(Copy, Clone)]
 pub struct VkSubpassDescriptionDepthStencilResolve
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	depthResolveMode: VkResolveModeFlagBits,
-	stencilResolveMode: VkResolveModeFlagBits,
-	pDepthStencilResolveAttachment: * const VkAttachmentReference2,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub depthResolveMode: VkResolveModeFlagBits,
+	pub stencilResolveMode: VkResolveModeFlagBits,
+	pub pDepthStencilResolveAttachment: * const VkAttachmentReference2,
 }
 impl VkSubpassDescriptionDepthStencilResolve
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE;
@@ -4526,13 +4526,13 @@ impl VkSubpassDescriptionDepthStencilResolve
 #[derive(Copy, Clone)]
 pub struct VkImageStencilUsageCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	stencilUsage: VkImageUsageFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub stencilUsage: VkImageUsageFlagBits,
 }
 impl VkImageStencilUsageCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO;
@@ -4545,13 +4545,13 @@ impl VkImageStencilUsageCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceScalarBlockLayoutFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	scalarBlockLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub scalarBlockLayout: VkBool32,
 }
 impl VkPhysicalDeviceScalarBlockLayoutFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES;
@@ -4564,13 +4564,13 @@ impl VkPhysicalDeviceScalarBlockLayoutFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	uniformBufferStandardLayout: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub uniformBufferStandardLayout: VkBool32,
 }
 impl VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES;
@@ -4583,15 +4583,15 @@ impl VkPhysicalDeviceUniformBufferStandardLayoutFeatures
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceBufferDeviceAddressFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	bufferDeviceAddress: VkBool32,
-	bufferDeviceAddressCaptureReplay: VkBool32,
-	bufferDeviceAddressMultiDevice: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub bufferDeviceAddress: VkBool32,
+	pub bufferDeviceAddressCaptureReplay: VkBool32,
+	pub bufferDeviceAddressMultiDevice: VkBool32,
 }
 impl VkPhysicalDeviceBufferDeviceAddressFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
@@ -4604,13 +4604,13 @@ impl VkPhysicalDeviceBufferDeviceAddressFeatures
 #[derive(Copy, Clone)]
 pub struct VkBufferDeviceAddressInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	buffer: VkBuffer,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub buffer: VkBuffer,
 }
 impl VkBufferDeviceAddressInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
@@ -4623,13 +4623,13 @@ impl VkBufferDeviceAddressInfo
 #[derive(Copy, Clone)]
 pub struct VkBufferOpaqueCaptureAddressCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	opaqueCaptureAddress: u64,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub opaqueCaptureAddress: u64,
 }
 impl VkBufferOpaqueCaptureAddressCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO;
@@ -4642,13 +4642,13 @@ impl VkBufferOpaqueCaptureAddressCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceImagelessFramebufferFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	imagelessFramebuffer: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub imagelessFramebuffer: VkBool32,
 }
 impl VkPhysicalDeviceImagelessFramebufferFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES;
@@ -4661,14 +4661,14 @@ impl VkPhysicalDeviceImagelessFramebufferFeatures
 #[derive(Copy, Clone)]
 pub struct VkFramebufferAttachmentsCreateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	attachmentImageInfoCount: u32,
-	pAttachmentImageInfos: * const VkFramebufferAttachmentImageInfo,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub attachmentImageInfoCount: u32,
+	pub pAttachmentImageInfos: * const VkFramebufferAttachmentImageInfo,
 }
 impl VkFramebufferAttachmentsCreateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENTS_CREATE_INFO;
@@ -4681,19 +4681,19 @@ impl VkFramebufferAttachmentsCreateInfo
 #[derive(Copy, Clone)]
 pub struct VkFramebufferAttachmentImageInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	flags: VkImageCreateFlagBits,
-	usage: VkImageUsageFlagBits,
-	width: u32,
-	height: u32,
-	layerCount: u32,
-	viewFormatCount: u32,
-	pViewFormats: * const VkFormat,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub flags: VkImageCreateFlagBits,
+	pub usage: VkImageUsageFlagBits,
+	pub width: u32,
+	pub height: u32,
+	pub layerCount: u32,
+	pub viewFormatCount: u32,
+	pub pViewFormats: * const VkFormat,
 }
 impl VkFramebufferAttachmentImageInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_FRAMEBUFFER_ATTACHMENT_IMAGE_INFO;
@@ -4706,14 +4706,14 @@ impl VkFramebufferAttachmentImageInfo
 #[derive(Copy, Clone)]
 pub struct VkRenderPassAttachmentBeginInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	attachmentCount: u32,
-	pAttachments: * const VkImageView,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub attachmentCount: u32,
+	pub pAttachments: * const VkImageView,
 }
 impl VkRenderPassAttachmentBeginInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO;
@@ -4726,13 +4726,13 @@ impl VkRenderPassAttachmentBeginInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	separateDepthStencilLayouts: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub separateDepthStencilLayouts: VkBool32,
 }
 impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES;
@@ -4745,13 +4745,13 @@ impl VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures
 #[derive(Copy, Clone)]
 pub struct VkAttachmentReferenceStencilLayout
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	stencilLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub stencilLayout: VkImageLayout,
 }
 impl VkAttachmentReferenceStencilLayout
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT;
@@ -4764,14 +4764,14 @@ impl VkAttachmentReferenceStencilLayout
 #[derive(Copy, Clone)]
 pub struct VkAttachmentDescriptionStencilLayout
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	stencilInitialLayout: VkImageLayout,
-	stencilFinalLayout: VkImageLayout,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub stencilInitialLayout: VkImageLayout,
+	pub stencilFinalLayout: VkImageLayout,
 }
 impl VkAttachmentDescriptionStencilLayout
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT;
@@ -4784,13 +4784,13 @@ impl VkAttachmentDescriptionStencilLayout
 #[derive(Copy, Clone)]
 pub struct VkMemoryOpaqueCaptureAddressAllocateInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	opaqueCaptureAddress: u64,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub opaqueCaptureAddress: u64,
 }
 impl VkMemoryOpaqueCaptureAddressAllocateInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO;
@@ -4803,13 +4803,13 @@ impl VkMemoryOpaqueCaptureAddressAllocateInfo
 #[derive(Copy, Clone)]
 pub struct VkDeviceMemoryOpaqueCaptureAddressInfo
 {
-	sType: VkStructureType,
-	pNext: * const c_void,
-	memory: VkDeviceMemory,
+	pub sType: VkStructureType,
+	pub pNext: * const c_void,
+	pub memory: VkDeviceMemory,
 }
 impl VkDeviceMemoryOpaqueCaptureAddressInfo
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO;
@@ -4822,24 +4822,24 @@ impl VkDeviceMemoryOpaqueCaptureAddressInfo
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan11Features
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	storageBuffer16BitAccess: VkBool32,
-	uniformAndStorageBuffer16BitAccess: VkBool32,
-	storagePushConstant16: VkBool32,
-	storageInputOutput16: VkBool32,
-	multiview: VkBool32,
-	multiviewGeometryShader: VkBool32,
-	multiviewTessellationShader: VkBool32,
-	variablePointersStorageBuffer: VkBool32,
-	variablePointers: VkBool32,
-	protectedMemory: VkBool32,
-	samplerYcbcrConversion: VkBool32,
-	shaderDrawParameters: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub storageBuffer16BitAccess: VkBool32,
+	pub uniformAndStorageBuffer16BitAccess: VkBool32,
+	pub storagePushConstant16: VkBool32,
+	pub storageInputOutput16: VkBool32,
+	pub multiview: VkBool32,
+	pub multiviewGeometryShader: VkBool32,
+	pub multiviewTessellationShader: VkBool32,
+	pub variablePointersStorageBuffer: VkBool32,
+	pub variablePointers: VkBool32,
+	pub protectedMemory: VkBool32,
+	pub samplerYcbcrConversion: VkBool32,
+	pub shaderDrawParameters: VkBool32,
 }
 impl VkPhysicalDeviceVulkan11Features
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
@@ -4852,27 +4852,27 @@ impl VkPhysicalDeviceVulkan11Features
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan11Properties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	deviceUUID: u8,
-	driverUUID: u8,
-	deviceLUID: u8,
-	deviceNodeMask: u32,
-	deviceLUIDValid: VkBool32,
-	subgroupSize: u32,
-	subgroupSupportedStages: VkShaderStageFlagBits,
-	subgroupSupportedOperations: VkSubgroupFeatureFlagBits,
-	subgroupQuadOperationsInAllStages: VkBool32,
-	pointClippingBehavior: VkPointClippingBehavior,
-	maxMultiviewViewCount: u32,
-	maxMultiviewInstanceIndex: u32,
-	protectedNoFault: VkBool32,
-	maxPerSetDescriptors: u32,
-	maxMemoryAllocationSize: VkDeviceSize,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub deviceUUID: [u8; VK_UUID_SIZE],
+	pub driverUUID: [u8; VK_UUID_SIZE],
+	pub deviceLUID: [u8; VK_LUID_SIZE],
+	pub deviceNodeMask: u32,
+	pub deviceLUIDValid: VkBool32,
+	pub subgroupSize: u32,
+	pub subgroupSupportedStages: VkShaderStageFlagBits,
+	pub subgroupSupportedOperations: VkSubgroupFeatureFlagBits,
+	pub subgroupQuadOperationsInAllStages: VkBool32,
+	pub pointClippingBehavior: VkPointClippingBehavior,
+	pub maxMultiviewViewCount: u32,
+	pub maxMultiviewInstanceIndex: u32,
+	pub protectedNoFault: VkBool32,
+	pub maxPerSetDescriptors: u32,
+	pub maxMemoryAllocationSize: VkDeviceSize,
 }
 impl VkPhysicalDeviceVulkan11Properties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES;
@@ -4885,59 +4885,59 @@ impl VkPhysicalDeviceVulkan11Properties
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan12Features
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	samplerMirrorClampToEdge: VkBool32,
-	drawIndirectCount: VkBool32,
-	storageBuffer8BitAccess: VkBool32,
-	uniformAndStorageBuffer8BitAccess: VkBool32,
-	storagePushConstant8: VkBool32,
-	shaderBufferInt64Atomics: VkBool32,
-	shaderSharedInt64Atomics: VkBool32,
-	shaderFloat16: VkBool32,
-	shaderInt8: VkBool32,
-	descriptorIndexing: VkBool32,
-	shaderInputAttachmentArrayDynamicIndexing: VkBool32,
-	shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
-	shaderUniformBufferArrayNonUniformIndexing: VkBool32,
-	shaderSampledImageArrayNonUniformIndexing: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageImageArrayNonUniformIndexing: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
-	shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
-	shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
-	descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
-	descriptorBindingSampledImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageImageUpdateAfterBind: VkBool32,
-	descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
-	descriptorBindingUpdateUnusedWhilePending: VkBool32,
-	descriptorBindingPartiallyBound: VkBool32,
-	descriptorBindingVariableDescriptorCount: VkBool32,
-	runtimeDescriptorArray: VkBool32,
-	samplerFilterMinmax: VkBool32,
-	scalarBlockLayout: VkBool32,
-	imagelessFramebuffer: VkBool32,
-	uniformBufferStandardLayout: VkBool32,
-	shaderSubgroupExtendedTypes: VkBool32,
-	separateDepthStencilLayouts: VkBool32,
-	hostQueryReset: VkBool32,
-	timelineSemaphore: VkBool32,
-	bufferDeviceAddress: VkBool32,
-	bufferDeviceAddressCaptureReplay: VkBool32,
-	bufferDeviceAddressMultiDevice: VkBool32,
-	vulkanMemoryModel: VkBool32,
-	vulkanMemoryModelDeviceScope: VkBool32,
-	vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
-	shaderOutputViewportIndex: VkBool32,
-	shaderOutputLayer: VkBool32,
-	subgroupBroadcastDynamicId: VkBool32,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub samplerMirrorClampToEdge: VkBool32,
+	pub drawIndirectCount: VkBool32,
+	pub storageBuffer8BitAccess: VkBool32,
+	pub uniformAndStorageBuffer8BitAccess: VkBool32,
+	pub storagePushConstant8: VkBool32,
+	pub shaderBufferInt64Atomics: VkBool32,
+	pub shaderSharedInt64Atomics: VkBool32,
+	pub shaderFloat16: VkBool32,
+	pub shaderInt8: VkBool32,
+	pub descriptorIndexing: VkBool32,
+	pub shaderInputAttachmentArrayDynamicIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayDynamicIndexing: VkBool32,
+	pub shaderUniformBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexing: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexing: VkBool32,
+	pub shaderUniformTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub shaderStorageTexelBufferArrayNonUniformIndexing: VkBool32,
+	pub descriptorBindingUniformBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingSampledImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageImageUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUniformTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingStorageTexelBufferUpdateAfterBind: VkBool32,
+	pub descriptorBindingUpdateUnusedWhilePending: VkBool32,
+	pub descriptorBindingPartiallyBound: VkBool32,
+	pub descriptorBindingVariableDescriptorCount: VkBool32,
+	pub runtimeDescriptorArray: VkBool32,
+	pub samplerFilterMinmax: VkBool32,
+	pub scalarBlockLayout: VkBool32,
+	pub imagelessFramebuffer: VkBool32,
+	pub uniformBufferStandardLayout: VkBool32,
+	pub shaderSubgroupExtendedTypes: VkBool32,
+	pub separateDepthStencilLayouts: VkBool32,
+	pub hostQueryReset: VkBool32,
+	pub timelineSemaphore: VkBool32,
+	pub bufferDeviceAddress: VkBool32,
+	pub bufferDeviceAddressCaptureReplay: VkBool32,
+	pub bufferDeviceAddressMultiDevice: VkBool32,
+	pub vulkanMemoryModel: VkBool32,
+	pub vulkanMemoryModelDeviceScope: VkBool32,
+	pub vulkanMemoryModelAvailabilityVisibilityChains: VkBool32,
+	pub shaderOutputViewportIndex: VkBool32,
+	pub shaderOutputLayer: VkBool32,
+	pub subgroupBroadcastDynamicId: VkBool32,
 }
 impl VkPhysicalDeviceVulkan12Features
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
@@ -4950,64 +4950,64 @@ impl VkPhysicalDeviceVulkan12Features
 #[derive(Copy, Clone)]
 pub struct VkPhysicalDeviceVulkan12Properties
 {
-	sType: VkStructureType,
-	pNext: * mut c_void,
-	driverID: VkDriverId,
-	driverName: c_char,
-	driverInfo: c_char,
-	conformanceVersion: VkConformanceVersion,
-	denormBehaviorIndependence: VkShaderFloatControlsIndependence,
-	roundingModeIndependence: VkShaderFloatControlsIndependence,
-	shaderSignedZeroInfNanPreserveFloat16: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat32: VkBool32,
-	shaderSignedZeroInfNanPreserveFloat64: VkBool32,
-	shaderDenormPreserveFloat16: VkBool32,
-	shaderDenormPreserveFloat32: VkBool32,
-	shaderDenormPreserveFloat64: VkBool32,
-	shaderDenormFlushToZeroFloat16: VkBool32,
-	shaderDenormFlushToZeroFloat32: VkBool32,
-	shaderDenormFlushToZeroFloat64: VkBool32,
-	shaderRoundingModeRTEFloat16: VkBool32,
-	shaderRoundingModeRTEFloat32: VkBool32,
-	shaderRoundingModeRTEFloat64: VkBool32,
-	shaderRoundingModeRTZFloat16: VkBool32,
-	shaderRoundingModeRTZFloat32: VkBool32,
-	shaderRoundingModeRTZFloat64: VkBool32,
-	maxUpdateAfterBindDescriptorsInAllPools: u32,
-	shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
-	shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
-	shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
-	robustBufferAccessUpdateAfterBind: VkBool32,
-	quadDivergentImplicitLod: VkBool32,
-	maxPerStageDescriptorUpdateAfterBindSamplers: u32,
-	maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
-	maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
-	maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
-	maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
-	maxPerStageUpdateAfterBindResources: u32,
-	maxDescriptorSetUpdateAfterBindSamplers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
-	maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
-	maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
-	maxDescriptorSetUpdateAfterBindSampledImages: u32,
-	maxDescriptorSetUpdateAfterBindStorageImages: u32,
-	maxDescriptorSetUpdateAfterBindInputAttachments: u32,
-	supportedDepthResolveModes: VkResolveModeFlagBits,
-	supportedStencilResolveModes: VkResolveModeFlagBits,
-	independentResolveNone: VkBool32,
-	independentResolve: VkBool32,
-	filterMinmaxSingleComponentFormats: VkBool32,
-	filterMinmaxImageComponentMapping: VkBool32,
-	maxTimelineSemaphoreValueDifference: u64,
-	framebufferIntegerColorSampleCounts: VkSampleCountFlagBits,
+	pub sType: VkStructureType,
+	pub pNext: * mut c_void,
+	pub driverID: VkDriverId,
+	pub driverName: [c_uchar; VK_MAX_DRIVER_NAME_SIZE],
+	pub driverInfo: [c_uchar; VK_MAX_DRIVER_INFO_SIZE],
+	pub conformanceVersion: VkConformanceVersion,
+	pub denormBehaviorIndependence: VkShaderFloatControlsIndependence,
+	pub roundingModeIndependence: VkShaderFloatControlsIndependence,
+	pub shaderSignedZeroInfNanPreserveFloat16: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat32: VkBool32,
+	pub shaderSignedZeroInfNanPreserveFloat64: VkBool32,
+	pub shaderDenormPreserveFloat16: VkBool32,
+	pub shaderDenormPreserveFloat32: VkBool32,
+	pub shaderDenormPreserveFloat64: VkBool32,
+	pub shaderDenormFlushToZeroFloat16: VkBool32,
+	pub shaderDenormFlushToZeroFloat32: VkBool32,
+	pub shaderDenormFlushToZeroFloat64: VkBool32,
+	pub shaderRoundingModeRTEFloat16: VkBool32,
+	pub shaderRoundingModeRTEFloat32: VkBool32,
+	pub shaderRoundingModeRTEFloat64: VkBool32,
+	pub shaderRoundingModeRTZFloat16: VkBool32,
+	pub shaderRoundingModeRTZFloat32: VkBool32,
+	pub shaderRoundingModeRTZFloat64: VkBool32,
+	pub maxUpdateAfterBindDescriptorsInAllPools: u32,
+	pub shaderUniformBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderSampledImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageBufferArrayNonUniformIndexingNative: VkBool32,
+	pub shaderStorageImageArrayNonUniformIndexingNative: VkBool32,
+	pub shaderInputAttachmentArrayNonUniformIndexingNative: VkBool32,
+	pub robustBufferAccessUpdateAfterBind: VkBool32,
+	pub quadDivergentImplicitLod: VkBool32,
+	pub maxPerStageDescriptorUpdateAfterBindSamplers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32,
+	pub maxPerStageDescriptorUpdateAfterBindSampledImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindStorageImages: u32,
+	pub maxPerStageDescriptorUpdateAfterBindInputAttachments: u32,
+	pub maxPerStageUpdateAfterBindResources: u32,
+	pub maxDescriptorSetUpdateAfterBindSamplers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffers: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32,
+	pub maxDescriptorSetUpdateAfterBindSampledImages: u32,
+	pub maxDescriptorSetUpdateAfterBindStorageImages: u32,
+	pub maxDescriptorSetUpdateAfterBindInputAttachments: u32,
+	pub supportedDepthResolveModes: VkResolveModeFlagBits,
+	pub supportedStencilResolveModes: VkResolveModeFlagBits,
+	pub independentResolveNone: VkBool32,
+	pub independentResolve: VkBool32,
+	pub filterMinmaxSingleComponentFormats: VkBool32,
+	pub filterMinmaxImageComponentMapping: VkBool32,
+	pub maxTimelineSemaphoreValueDifference: u64,
+	pub framebufferIntegerColorSampleCounts: VkSampleCountFlagBits,
 }
 impl VkPhysicalDeviceVulkan12Properties
 {
-    fn new() -> Self
+    pub fn new() -> Self
     {
         let mut s: Self = unsafe { mem::zeroed() };
         s.sType = VkStructureType::VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_PROPERTIES;

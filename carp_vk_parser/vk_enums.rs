@@ -1,3 +1,26 @@
+pub const VK_MAX_PHYSICAL_DEVICE_NAME_SIZE:usize = 256;
+pub const VK_UUID_SIZE:usize = 16;
+pub const VK_LUID_SIZE:usize = 8;
+pub const VK_MAX_EXTENSION_NAME_SIZE:usize = 256;
+pub const VK_MAX_DESCRIPTION_SIZE:usize = 256;
+pub const VK_MAX_MEMORY_TYPES:usize = 32;
+pub const VK_MAX_MEMORY_HEAPS:usize = 16;
+pub const VK_LOD_CLAMP_NONE:f32 = 1000.0f32;
+pub const VK_REMAINING_MIP_LEVELS:u32 = !0u32;
+pub const VK_REMAINING_ARRAY_LAYERS:u32 = !0u32;
+pub const VK_WHOLE_SIZE:u64 = !0u64;
+pub const VK_ATTACHMENT_UNUSED:u32 = !0u32;
+pub const VK_TRUE:usize = 1;
+pub const VK_FALSE:usize = 0;
+pub const VK_QUEUE_FAMILY_IGNORED:u32 = !0u32;
+pub const VK_QUEUE_FAMILY_EXTERNAL:u32 = !1u32;
+pub const VK_QUEUE_FAMILY_FOREIGN_EXT:u32 = !2u32;
+pub const VK_SUBPASS_EXTERNAL:u32 = !0u32;
+pub const VK_MAX_DEVICE_GROUP_SIZE:usize = 32;
+pub const VK_MAX_DRIVER_NAME_SIZE:usize = 256;
+pub const VK_MAX_DRIVER_INFO_SIZE:usize = 256;
+pub const VK_SHADER_UNUSED_KHR:u32 = !0u32;
+pub const VK_MAX_GLOBAL_PRIORITY_SIZE_EXT:usize = 16;
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum VkImageLayout
@@ -1815,9 +1838,6 @@ pub enum VkDriverId
 	VK_DRIVER_ID_COREAVI_PROPRIETARY = 15,
 	VK_DRIVER_ID_JUICE_PROPRIETARY = 16,
 	VK_DRIVER_ID_VERISILICON_PROPRIETARY = 17,
-	VK_DRIVER_ID_MESA_TURNIP = 18,
-	VK_DRIVER_ID_MESA_V3DV = 19,
-	VK_DRIVER_ID_MESA_PANVK = 20,
 }
 
 #[repr(i32)]
@@ -2462,31 +2482,31 @@ pub enum VkVideoEncodeH264CreateFlagBitsEXT
 	VK_VIDEO_ENCODE_H264_CREATE_RESERVED_0_BIT_EXT = 1,
 }
 
-type VkPipelineTessellationStateCreateFlagBits = u32;
-
-type VkPipelineInputAssemblyStateCreateFlagBits = u32;
-
-type VkPipelineRasterizationStateCreateFlagBits = u32;
-
 type VkQueryPoolCreateFlagBits = u32;
-
-type VkBufferViewCreateFlagBits = u32;
-
-type VkDeviceCreateFlagBits = u32;
-
-type VkDescriptorUpdateTemplateCreateFlagBits = u32;
-
-type VkPipelineColorBlendStateCreateFlagBits = u32;
-
-type VkInstanceCreateFlagBits = u32;
 
 type VkPipelineVertexInputStateCreateFlagBits = u32;
 
-type VkPipelineViewportStateCreateFlagBits = u32;
-
-type VkPipelineDynamicStateCreateFlagBits = u32;
+type VkPipelineInputAssemblyStateCreateFlagBits = u32;
 
 type VkPipelineMultisampleStateCreateFlagBits = u32;
 
+type VkDeviceCreateFlagBits = u32;
+
+type VkPipelineViewportStateCreateFlagBits = u32;
+
+type VkBufferViewCreateFlagBits = u32;
+
+type VkInstanceCreateFlagBits = u32;
+
 type VkPipelineDepthStencilStateCreateFlagBits = u32;
+
+type VkDescriptorUpdateTemplateCreateFlagBits = u32;
+
+type VkPipelineDynamicStateCreateFlagBits = u32;
+
+type VkPipelineRasterizationStateCreateFlagBits = u32;
+
+type VkPipelineTessellationStateCreateFlagBits = u32;
+
+type VkPipelineColorBlendStateCreateFlagBits = u32;
 
