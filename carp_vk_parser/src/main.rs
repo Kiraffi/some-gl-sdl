@@ -766,34 +766,19 @@ struct XMLStuff
 }
 impl XMLStuff
 {
-    fn new(name: &str, level: u32) -> Self
+    fn new(level: u32) -> Self
     {
-        XMLStuff{element_name: name.to_string(), element_text: "".to_string(), elements: Vec::new(), param_stack: Vec::new(), level }
+        XMLStuff {element_name: String::new(), element_text: String::new(), elements: Vec::new(), param_stack: Vec::new(), level }
     }
 }
 
-fn remove_element(current_element: &mut XMLStuff, element_level: &mut u32, tag_stack: &mut Vec<String>)
-{
-    tag_stack.remove(tag_stack.len() - 1);
-            
-    *element_level = *element_level - 1;
-    /*
-        unsafe 
-    { 
-        *current_element =  match (**current_element).parent.as_ref()
-        {
-            Some(v) => &mut v,
-            None => &mut XMLStuff::new(null_mut(), "")
-        };
-    };
-    */
-}
 
 fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usize)
 {
-    let mut tag_text = String::new();
-    let mut param_name = String::new();
-    let mut param_value = String::new();
+    let mut tag_text = (0usize, 0usize);
+    let mut param_name = (0usize, 0usize);
+    let mut param_value = (0usize, 0usize);
+    let mut elem_text = (0usize, 0usize);
 
     
     const TagStart: u32 =            1u32 << 0u32;
@@ -814,10 +799,14 @@ fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usi
     {
         *letter_pos = *letter_pos + 1;
         current_state = TagStart | InsideTag;
+        tag_text.0 = *letter_pos;
+        tag_text.1 = *letter_pos;
     }
     else 
     {
         current_state = ParsingText;
+        elem_text.0 = *letter_pos;
+        elem_text.1 = *letter_pos;
     }
     // else reading text!
 
@@ -849,15 +838,16 @@ fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usi
             current_letter_pos = current_letter_pos + 1;            
             continue;
         }
-        else if current_state & ParsingText == ParsingText && current_element.level > 0
+        else if (current_state & ParsingText) == ParsingText && current_element.level > 0
         {
             if c == '<' && current_state & BackSlash == 0
             {
+                current_element.element_text = txt[elem_text.0..current_letter_pos].to_string();
                 *letter_pos = *letter_pos - 1;
                 return
             }
 
-            current_element.element_text.push(c);
+            
         }
         else if c == '<' && current_state & BackSlash == 0
         {
@@ -876,30 +866,29 @@ fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usi
             }
             else
             {
-                let mut child = XMLStuff::new("", current_element.level + 1);                 
-                parse_element(txt, &mut child, letter_pos);
-                current_element.elements.push(child);
+                current_element.elements.push( XMLStuff::new(current_element.level + 1));
+                parse_element(txt, current_element.elements.last_mut().unwrap(), letter_pos);
             }
         }
         else if (current_state & TagStart) == TagStart
         {
-            if c.is_alphanumeric() || c == '_' || (c == '?' && tag_text.len() == 0)
+            if c.is_alphanumeric() || c == '_' || (c == '?'&& tag_text.0 == tag_text.1)
             {
-                tag_text.push(c);
+                tag_text.1 = tag_text.1 + 1;
             }
-            else if c == '!' || c == '-'
-            { 
-                tag_text.push(c); 
-            }
-            else if c.is_whitespace() && tag_text.len() == 0
+            else if c.is_whitespace() && tag_text.0 == tag_text.1
             {
-
+                tag_text.0 = tag_text.0 + 1;
+                tag_text.1 = tag_text.0;
             }
             else
             {
-                current_element.element_name = tag_text.clone();
-                end_string = format!("</{}>", tag_text);
+                current_element.element_name = txt[tag_text.0..tag_text.1].to_string();
+                end_string = format!("</{}>", current_element.element_name);
                 current_state = current_state & !( TagStart );
+
+                param_name.0 = current_letter_pos + 1;
+                param_name.1 = current_letter_pos + 1;
             }
         }
        
@@ -920,12 +909,17 @@ fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usi
         {
             if (c.is_alphanumeric() || c == '_') && (current_state & InsideTagParamValue == 0)
             {
-                param_name.push(c);
+                param_name.1 = param_name.1 + 1;
             }
             else if current_state & InsideTagParamValue == 0 && c == '='
             {
                 current_state = current_state | InsideTagParamValue;
                 inside_param_value_quote_count = 0;
+            }
+            else if current_state & InsideTagParamValue == 0 && param_name.0 == param_name.1
+            {
+                param_name.0 = current_letter_pos + 1;
+                param_name.1 = current_letter_pos + 1;
             }
             else if current_state & InsideTagParamValue == InsideTagParamValue && c == '"'
             {
@@ -933,22 +927,26 @@ fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usi
                 if inside_param_value_quote_count == 2
                 {
                     inside_param_value_quote_count = 0;
+                    param_value.1 = core::cmp::max(param_value.0, current_letter_pos);
 
-                    current_element.param_stack.push((param_name.clone(), param_value.clone()));
-                    param_name.clear();
-                    param_value.clear();
+                    current_element.param_stack.push(
+                        (txt[param_name.0..param_name.1].to_string(), txt[param_value.0..param_value.1].to_string()));
 
                     current_state = current_state & !(InsideTagParamValue);
+
+                    param_name.0 = current_letter_pos + 1;
+                    param_name.1 = current_letter_pos + 1;
+                }
+                else
+                {
+                    param_value.0 = current_letter_pos + 1;
+                    param_value.1 = current_letter_pos + 1;
                 }
             }
-            else if current_state & InsideTagParamValue == InsideTagParamValue && inside_param_value_quote_count == 1
-            {
-                param_value.push(c);
-            }
         }
-        else if (current_state & (InsideTag | ParsingText)) == 0u32 && tag_text.len() > 0
+        else if (current_state & (InsideTag | ParsingText)) == 0u32 && tag_text.0 != tag_text.1
         {
-            let mut child = XMLStuff::new("", current_element.level + 1);                 
+            let mut child = XMLStuff::new(current_element.level + 1);                 
             parse_element(txt, &mut child, letter_pos);
             current_element.elements.push(child);
         }
@@ -970,9 +968,6 @@ fn parse_element(txt: &str, current_element: &mut XMLStuff, letter_pos: &mut usi
         if c == '>' &&  (current_state & BackSlash) == 0u32
         {
             current_state = current_state & !(InsideTag);
-
-            param_name.clear();
-            param_value.clear();
         }
 
         current_letter_pos = current_letter_pos + 1;
@@ -990,6 +985,12 @@ fn print_xml(xml: &XMLStuff)
     {
         println!("Text: {}", xml.element_text);    
     }
+    
+    for i in &xml.param_stack
+    {
+        println!("Param: {} = {}", i.0, i.1);
+    }
+    
     for i in &xml.elements
     {
         print_xml(i);
@@ -1000,11 +1001,11 @@ fn print_xml(xml: &XMLStuff)
 fn print_tags(txt: &str)
 {
     let now = std::time::Instant::now();
-    let mut root = XMLStuff::new("", 0);
+    let mut root = XMLStuff::new(0);
     
     let mut letter_pos = 0;
     parse_element(txt, &mut root, &mut letter_pos);
-    print_xml(&root);
+    //print_xml(&root);
 
     println!("print tags duration: {}", now.elapsed().as_micros());
     return ;
