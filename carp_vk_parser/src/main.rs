@@ -1,6 +1,8 @@
 #![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::{io::Read};
+use std::{io::Read, thread::current};
+
+use crate::vk_all::VkInternalAllocationType;
 
 pub mod test_vk;
 pub mod vk_all;
@@ -28,6 +30,8 @@ fn get_type_as_rust_type(s: &str) -> &str
 
     return result;
 }
+
+
 
 
 
@@ -751,6 +755,247 @@ fn get_enums_as_string(enum_types: &Vec<EnumType>) -> String
     return vk_enum_str;
 }
 
+struct XMLStuff
+{
+    elements: Vec<XMLStuff>,
+    element_name: String,
+    element_text: String,
+}
+impl XMLStuff
+{
+    fn new(name: &str) -> Self
+    {
+        XMLStuff{element_name: name.to_string(), element_text: "".to_string(), elements: Vec::new() }
+    }
+}
+
+fn remove_element<'a>(root: &'a mut XMLStuff, current_element: &'a mut &'a mut XMLStuff, element_level: &mut u32, tag_stack: &mut Vec<String>)
+{
+    tag_stack.remove(tag_stack.len() - 1);
+            
+    *element_level = *element_level - 1;
+    *current_element = root;
+    for _ in 0..*element_level
+    {
+        *current_element = (**current_element).elements.last_mut().unwrap();
+    }
+
+}
+
+fn print_tags(txt: &str)
+{
+    let mut root = XMLStuff::new("");
+    let mut current_element = &mut root;
+    let mut element_level = 0u32;
+
+    let now = std::time::Instant::now();
+
+    let mut tag_stack: Vec<String> = Vec::new();
+    let mut param_stack: Vec<(String, String)> = Vec::new();
+
+
+    let mut prev_char = '\0';
+    let mut tag_text = String::new();
+    let mut param_name = String::new();
+    let mut param_value = String::new();
+
+    
+    const TagStart: u32 =  1u32 << 0u32;
+    const TagEnd: u32 =  1u32 << 1u32;
+    
+    const BackSlash: u32 = 1u32 << 2u32;
+
+    const InsideTag: u32 = 1u32 << 3u32;
+    const InsideTagParamValue: u32 = 1u32 << 4u32;
+
+    const InisdeComment: u32 = 1u32 << 5u32;
+
+    let mut current_state = 0u32;
+
+
+    let mut line_number = 0u32;
+    
+    let mut inside_param_value_quote_count = 0u32;
+
+    let iter = txt.chars();
+    for c in iter
+    {
+        if (c == '-' || c == '>') && (current_state & (InisdeComment | BackSlash)) == InisdeComment
+        {
+            tag_text.push(c);
+            if tag_text.eq("-->")
+            {
+                current_state = current_state & !(InisdeComment);
+                tag_text.clear();
+            }
+        }
+        else if (current_state & InisdeComment) == InisdeComment
+        {
+            tag_text.clear();
+        }
+        else if c == '<'
+        {
+            current_state = current_state | TagStart | InsideTag; 
+            //tag_text.clear();
+        }
+        else if (current_state & TagStart) == TagStart
+        {
+            if c.is_alphanumeric() || c == '_' || c == '!' || c == '-' || (c == '?' && tag_text.len() == 0)
+            { 
+                tag_text.push(c); 
+            }
+            else if c.is_whitespace() && tag_text.len() == 0 {}
+            else if c == '/' && prev_char == '<' 
+            {
+                current_state = current_state & !(TagStart | InsideTag);
+                current_state = current_state | TagEnd;
+            }
+            else if tag_text.len() >= 3 && tag_text[0..3].eq("!--")
+            {
+                current_state = current_state & !( TagStart );
+                current_state = current_state | InisdeComment;
+                tag_text.clear();
+            }
+            else
+            {
+                (*current_element).elements.push(XMLStuff::new(&tag_text));
+                current_element = (*current_element).elements.last_mut().unwrap();
+                element_level = element_level + 1;
+
+
+                tag_stack.push(tag_text.clone());
+                //println!("Tag: {}", &tag_text);
+                current_state = current_state & !( TagStart );
+                tag_text.clear();
+            }
+        }
+        else if (current_state & TagEnd) == TagEnd
+        {
+            if c.is_alphanumeric() || c == '_' || (c == '?' && tag_text.len() == 0)
+            { 
+                tag_text.push(c); 
+            }
+            else if c.is_whitespace() && tag_text.len() == 0 {}
+            else 
+            {
+                current_state = current_state & !(TagEnd);
+               
+                if tag_text.eq(tag_stack.last().unwrap())
+                {
+                    remove_element(&mut root, &mut &mut current_element, &mut element_level, &mut &mut tag_stack);
+                }
+                else
+                {
+                    println!("Unmatched tags! {} vs {}", &tag_text, tag_stack.last().unwrap() );
+                }
+                tag_text.clear();
+            }
+        }
+        else if (current_state & (TagEnd | TagStart | BackSlash) == 0) && prev_char == '/' && c == '>'
+        {
+            remove_element(&mut root, &mut current_element, &mut element_level, &mut &mut tag_stack);
+        }
+        else if c == '>' && prev_char == '?' &&  tag_stack.last().unwrap().eq("?xml")
+        {
+            remove_element(&mut root, &mut current_element, &mut element_level, &mut &mut tag_stack);
+        }
+
+        else if current_state & InsideTag == InsideTag
+        {
+            if (c.is_alphanumeric() || c == '_') && (current_state & InsideTagParamValue == 0)
+            {
+                param_name.push(c);
+            }
+            else if current_state & InsideTagParamValue == 0 && c == '='
+            {
+                current_state = current_state | InsideTagParamValue;
+                inside_param_value_quote_count = 0;
+            }
+            else if current_state & InsideTagParamValue == InsideTagParamValue && c == '"'
+            {
+                inside_param_value_quote_count = inside_param_value_quote_count + 1;
+                if inside_param_value_quote_count == 2
+                {
+                    inside_param_value_quote_count = 0;
+
+                    param_stack.push((param_name.clone(), param_value.clone()));
+                    param_name.clear();
+                    param_value.clear();
+
+                    current_state = current_state & !(InsideTagParamValue);
+                }
+            }
+            else if current_state & InsideTagParamValue == InsideTagParamValue && inside_param_value_quote_count == 1
+            {
+                param_value.push(c);
+            }
+        }
+        else if current_state & (InsideTag | TagStart | TagEnd) == 0u32
+        {
+
+        }
+
+        if c == '\\' 
+        { 
+            let is_black_slash = (current_state & BackSlash) == BackSlash;
+            current_state = current_state & (!BackSlash);
+            if !is_black_slash
+            {
+                current_state = current_state | BackSlash;
+            }
+        }
+        else if (current_state & BackSlash) == BackSlash
+        {
+            current_state = current_state & !(BackSlash);
+        }
+
+        if c == '>' &&  (current_state & BackSlash) == 0u32
+        {
+            current_state = current_state & !(InsideTag);
+
+
+            if current_state & InsideTagParamValue == InsideTagParamValue
+            {
+                param_stack.push((param_name.clone(), param_value.clone()));
+            }
+            let ssss = ("category".to_string(), "struct".to_string());
+
+            if param_stack.len() > 0 && tag_stack.len() >= 3 && tag_stack[2].eq("type") && param_stack[0].eq(&ssss)
+            {
+                let mut ss = String::new();
+                for a in &param_stack
+                {
+                    ss.push_str(&a.0);
+                    ss.push_str(": ");
+                    ss.push_str(&a.1);
+                    ss.push_str(" ");
+                }
+                println!("Line: {} - {}", line_number, ss);
+            }
+            
+            param_name.clear();
+            param_value.clear();
+
+            param_stack.clear();
+        }
+        
+        if c == '\n'
+        {
+            line_number = line_number + 1;
+        }
+
+        prev_char = c;
+        
+    }
+    for tag in &tag_stack
+    {
+        println!("tag left: {}", tag);
+    }
+    println!("print tags: {}", now.elapsed().as_micros());
+    return ;
+}
+
+
 
 fn main() 
 {
@@ -760,7 +1005,12 @@ fn main()
         Ok(v) => v,
         Err(_) => { println!("Failed to load vk.xml"); return; }
     };
+
+    print_tags(&vk_xml);
+
+    let now = std::time::Instant::now();
     let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
+    println!("parse elements: {}", now.elapsed().as_micros());
 
     //parse_vk_structs2(&root);
     let mut vk_enums = parse_vk_enums(&root);
