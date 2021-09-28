@@ -1061,7 +1061,7 @@ fn print_tags(txt: &str)
     let cstr = CString::new(txt).unwrap();
     str_vec = cstr.as_bytes().to_vec();
     println!("print tags duration for conv: {}", now.elapsed().as_micros());
-
+    let now = std::time::Instant::now();
     //parse_element(txt, txt.len(), &mut root, &mut letter_pos);
     parse_element(&str_vec, txt.len(), &mut root, &mut letter_pos);
     //print_xml(&root, txt);
@@ -1084,11 +1084,14 @@ fn main()
     println!("read file: {}", now.elapsed().as_micros());
 
     print_tags(&vk_xml);
-
+/*
     let now = std::time::Instant::now();
     let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
     println!("parse elements: {}", now.elapsed().as_micros());
 
+
+
+    let now = std::time::Instant::now();
     //parse_vk_structs2(&root);
     let mut vk_enums = parse_vk_enums(&root);
     parse_vk_enum_extensions(&root, &mut vk_enums);
@@ -1126,24 +1129,31 @@ pub fn vk_make_version(variant: u32, major: u32, minor: u32, patch: u32) -> u32
 }     
 
 ".to_string();
+
     vk_all.push_str(&handles_str);
     vk_all.push_str(&vk_enum_str);
     vk_all.push_str(&vk_structs);
+    println!("parse xml into strings: {}", now.elapsed().as_micros());
 
 
+    let now = std::time::Instant::now();
     std::fs::write("carp_vk_parser/vk_handles.rs", &handles_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_enums.rs", &vk_enum_str).expect("Unable to write file");
     std::fs::write("carp_vk_parser/vk_structs.rs", &vk_structs).expect("Unable to write file");
     std::fs::write("carp_vk_parser/src/vk_all.rs", &vk_all).expect("Unable to write file");
     std::fs::write("carp_vk_parser/commands.rs", &command_str).expect("Unable to write file");
-    
+    println!("write xml files: {}", now.elapsed().as_micros());
+
+    let now = std::time::Instant::now();
+
     let mut carp_lib_loader =  carp_lib_loader::CarpLibLoader::new();
     match test_vk::Vulkan::new(&mut carp_lib_loader)
     {
         Ok(_) => (),
         Err(err) => println!("Loader error: {}", &err)
     };
-
+    println!("instantiate vulkan: {}", now.elapsed().as_micros());
+*/
 }
 
 
