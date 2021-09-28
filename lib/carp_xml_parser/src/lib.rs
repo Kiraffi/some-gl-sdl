@@ -18,7 +18,7 @@ impl XMLElement
 }
 
 
-fn get_text_from_array(txt: &[u8], start: usize, end: usize) -> Result<String, &'static str>
+pub fn get_text_from_array(txt: &[u8], start: usize, end: usize) -> Result<String, &'static str>
 {
     if start >= end || end > txt.len()
     {
