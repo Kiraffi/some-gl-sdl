@@ -763,7 +763,7 @@ struct XMLStuff
     element_name: (usize, usize),
     element_text: (usize, usize),
 
-    param_stack: Vec<((usize, usize, usize, usize))>,
+    param_stack: Vec<(usize, usize, usize, usize)>,
     level: u32,
 }
 impl XMLStuff
@@ -774,29 +774,23 @@ impl XMLStuff
     }
 }
 
-fn get_text(txt: &[u8], start: usize, end: usize) -> String
+
+fn get_text_from_array(txt: &[u8], start: usize, end: usize) -> Result<String, &'static str>
 {
     if start >= end || end > txt.len()
     {
-        return String::new();
+        return Ok( String::new() );
     }
 
-    let mut s = String::from_utf8(txt[start..end].to_vec()).unwrap();
-    return s;
-}
-
-fn compare_text(txt: &[u8], current_letter_pos: usize, cmp_text: &str) -> bool
-{
-    let str_u8 = cmp_text.as_bytes();
-    let str_cmp_len = str_u8.len();
-    if current_letter_pos + str_cmp_len > txt.len()
+    let s = match String::from_utf8(txt[start..end].to_vec())
     {
-        return false;
-    }
-
-    let s = &txt[current_letter_pos..current_letter_pos + str_cmp_len];
-    return s.eq(str_u8);
+        Ok(r) => r,
+        Err(_) => return Err("Failed to convert u8 array to string")
+    };
+    return Ok(s);
 }
+
+
 
 fn compare_text_arrays(txt: &[u8], current_letter_pos: usize, cmp_text: &[u8]) -> bool
 {
@@ -809,13 +803,11 @@ fn compare_text_arrays(txt: &[u8], current_letter_pos: usize, cmp_text: &[u8]) -
     let s = &txt[current_letter_pos..current_letter_pos + str_cmp_len];
     return s.eq(cmp_text);
 }
-
-/*
-fn compare_text(txt: &str, current_letter_pos: usize, cmp_text: &str) -> bool
+fn compare_text(txt: &[u8], current_letter_pos: usize, cmp_text: &str) -> bool
 {
-    return current_letter_pos + cmp_text.len() <= txt.len() && txt[current_letter_pos .. current_letter_pos + cmp_text.len()].eq(cmp_text);
+    return compare_text_arrays(txt, current_letter_pos, cmp_text.as_bytes());
 }
-*/
+
 
 fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, letter_pos: &mut usize) -> Result<(), &'static str>
 //fn parse_element(txt: &str, txt_len: usize, current_element: &mut XMLStuff, letter_pos: &mut usize)
