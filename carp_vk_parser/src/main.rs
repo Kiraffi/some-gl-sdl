@@ -75,9 +75,9 @@ struct ReturnType
 }
 impl ReturnType
 {
-    fn new() -> Self
+    fn new(mutable: bool) -> Self
     {
-        return Self {return_type: String::new(), ptrs: 0u32, ptr_mutable: false };
+        return Self {return_type: String::new(), ptrs: 0u32, ptr_mutable: mutable };
     }
 }
 //#[derive(Debug, Clone, PartialEq, Eq)]
@@ -123,6 +123,17 @@ struct StructType
     s_type_name: String,
     param_names: Vec<String>,
     type_names: Vec<String>,
+}
+
+
+#[derive(Debug)]
+struct StructType2
+{
+    struct_name: String,
+    s_type_value: String,
+    struct_extends: String,
+    param_names: Vec<String>,
+    types: Vec<ReturnType>,
 }
 
 impl StructType
@@ -184,6 +195,8 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
     let mut handles: Vec<VulkanHandle> = Vec::new();
     let mut enums: Vec<EnumType2> = Vec::new();
     let mut func_ptrs: Vec<FuncPointer> = Vec::new();
+    let mut structs: Vec<StructType2> = Vec::new();
+
 
     for child in &type_elemnt.elements
     {
@@ -299,12 +312,11 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                     }
                     "funcpointer" =>
                     {
-                        let mut f = FuncPointer { name: String::new(), return_type: ReturnType::new(), param_type_names: Vec::new(), param_types: Vec::new() };
+                        let mut f = FuncPointer { name: String::new(), return_type: ReturnType::new(false), param_type_names: Vec::new(), param_types: Vec::new() };
                         let mut return_found = false;
                         let mut name_found = false;
 
-                        let mut param_type = ReturnType::new();
-                        param_type.ptr_mutable = true;
+                        let mut param_type = ReturnType::new(true);
 
                         for child2 in &child.elements
                         {
@@ -386,8 +398,7 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                                     }
                                     f.param_types.push(param_type);
 
-                                    param_type = ReturnType::new();
-                                    param_type.ptr_mutable = true;
+                                    param_type = ReturnType::new(true);
                                     
                                 }
                                 else if child2.element_text.contains(");")
@@ -402,8 +413,7 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                                     f.param_type_names.push(get_text_from_array(s, c, d).unwrap());
                                     f.param_types.push(param_type);
 
-                                    param_type = ReturnType::new();
-                                    param_type.ptr_mutable = true;
+                                    param_type = ReturnType::new(true);
                                 }
                                 else if child2.element_text.contains("const")
                                 {
@@ -421,14 +431,86 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                         func_ptrs.push(f);
 
                     },
-                    _ => ()
+                    "struct" =>
+                    {
+                        let mut s = StructType2 { struct_name: String::new(), s_type_value: String::new(), struct_extends: String::new(),
+                            param_names: Vec::new(), types: Vec::new() };
+                        let mut name_found = false;
+                        for attr in &child.attributes
+                        {
+                            if attr.0 == "name"
+                            {
+                                s.struct_name = attr.1.clone();
+                                name_found = true;
+                            }
+                            else if attr.0 == "structextends"
+                            {
+                                s.struct_extends = attr.1.clone();
+                            }
+                        }
+                        for child2 in &child.elements
+                        {
+                            if child2.element_name == "comment"
+                            {
+                                continue;
+                            }
+                            if child2.element_name != "member"
+                            {
+                                println!("{}", child2.element_name);
+                                return Err("Found non-member/non-comment type in struct");
+                            }
+
+                           
+                            
+                            let mut return_type = ReturnType::new(true);
+                            let mut return_name = String::new();
+                            for attr in &child2.attributes
+                            {
+                                if attr.0 == "values"
+                                {
+                                    s.s_type_value = attr.1.clone();
+                                }
+                            }
+                            for child3 in &child2.elements
+                            {
+                                if child3.element_text.len() > 0
+                                {
+                                    if child3.element_text.contains("const")
+                                    {
+                                        return_type.ptr_mutable = false;
+                                    }
+                                    let s = child3.element_text[..].as_bytes();
+                                    for i in 0..s.len()
+                                    {
+                                        if s[i] as char == '*'
+                                        {
+                                            return_type.ptrs += 1;
+                                        }
+                                    }
+                                }
+                                else if child3.element_name == "type"
+                                {
+                                    return_type.return_type = get_type_as_rust_type(&child3.elements[0].element_text).to_string();
+                                }
+                                else if child3.element_name == "name"
+                                {
+                                    return_name = child3.elements[0].element_text.clone();
+                                }
+                            }
+                            s.param_names.push(return_name);
+                            s.types.push(return_type);
+                            
+                        }
+                        structs.push(s);
+                    },
+                    _ => () //println!("cat: {}", category) include, define basetype, union
     
                 }
             }
         }
     }
 
-    //dbg!(func_ptrs);
+    //dbg!(structs);
     return Ok(());
 }
 
