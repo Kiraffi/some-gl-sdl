@@ -2,11 +2,13 @@
 
 use std::{ffi::CString, io::Read, ptr::null_mut, thread::current};
 
+/*
 use crate::vk_all::VkInternalAllocationType;
 
 pub mod test_vk;
 pub mod vk_all;
-
+*/
+ 
 fn get_type_as_rust_type(s: &str) -> &str
 {
     let result: &str = match s 
@@ -772,42 +774,40 @@ impl XMLStuff
     }
 }
 
-fn get_text(txt: &Vec<u8>, start: usize, end: usize) -> String
+fn get_text(txt: &[u8], start: usize, end: usize) -> String
 {
-    if start >= end
+    if start >= end || end > txt.len()
     {
         return String::new();
     }
 
-    let mut s = String::new();
-
-    for i in start .. end
-    {
-        s.push(txt[i] as char);
-    }
-
+    let mut s = String::from_utf8(txt[start..end].to_vec()).unwrap();
     return s;
 }
 
-fn compare_text(txt: &Vec<u8>, current_letter_pos: usize, cmp_text: &str) -> bool
+fn compare_text(txt: &[u8], current_letter_pos: usize, cmp_text: &str) -> bool
 {
-    if current_letter_pos + cmp_text.len() > txt.len()
+    let str_u8 = cmp_text.as_bytes();
+    let str_cmp_len = str_u8.len();
+    if current_letter_pos + str_cmp_len > txt.len()
     {
         return false;
     }
 
-    let mut i = current_letter_pos;
+    let s = &txt[current_letter_pos..current_letter_pos + str_cmp_len];
+    return s.eq(str_u8);
+}
 
-    for c in cmp_text.chars()
+fn compare_text_arrays(txt: &[u8], current_letter_pos: usize, cmp_text: &[u8]) -> bool
+{
+    let str_cmp_len = cmp_text.len();
+    if current_letter_pos + str_cmp_len > txt.len()
     {
-        if txt[i] as char != c
-        {
-            return false;
-        }
-        i += 1;
+        return false;
     }
 
-    return true;
+    let s = &txt[current_letter_pos..current_letter_pos + str_cmp_len];
+    return s.eq(cmp_text);
 }
 
 /*
@@ -817,7 +817,7 @@ fn compare_text(txt: &str, current_letter_pos: usize, cmp_text: &str) -> bool
 }
 */
 
-fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, letter_pos: &mut usize)
+fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, letter_pos: &mut usize) -> Result<(), &'static str>
 //fn parse_element(txt: &str, txt_len: usize, current_element: &mut XMLStuff, letter_pos: &mut usize)
 {
     let mut tag_text = (0usize, 0usize);
@@ -867,8 +867,14 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
     //for c in iter
     while *letter_pos < txt_len
     {
+        let u = txt[*letter_pos];
+        if u >= 128
+        {
+            *letter_pos = *letter_pos + 1;
+            continue;
+        }
+        let c = u as char;
         current_letter_pos = *letter_pos;
-        let c = txt[current_letter_pos] as char;
         /*
         if current_letter_pos < *letter_pos
         {
@@ -893,10 +899,14 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
             {
                 current_element.element_text = (elem_text.0, current_letter_pos); // txt[elem_text.0..current_letter_pos].to_string();
                 *letter_pos = *letter_pos - 1;
-                return
+                return Ok(());
             }
 
-            
+            if c.is_whitespace() && elem_text.0 == current_letter_pos
+            {
+                elem_text.0 = current_letter_pos + 1;
+                elem_text.1 = current_letter_pos + 1;
+            }
         }
         else if c == '<' && current_state & BackSlash == 0
         {
@@ -907,16 +917,46 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
             }
             else if compare_text(txt, current_letter_pos, "</")
             {
-                if compare_text(txt, current_letter_pos, &end_string)
+                current_letter_pos += 2;
+                let mut tmp = txt[current_letter_pos] as char;
+                while tmp.is_whitespace()
                 {
-                    *letter_pos = current_letter_pos + end_string.len() - 1;
-                    return;
-                } 
+                    current_letter_pos += 1;                 
+                    if current_letter_pos >= txt_len
+                    {
+                        return Err("No matching ending tag!");
+                    }
+                    tmp = txt[current_letter_pos] as char;
+                }
+                let cmp = &txt[tag_text.0..tag_text.1];
+                
+                if compare_text_arrays(txt, current_letter_pos, cmp)
+                {
+                    current_letter_pos += cmp.len();
+                    tmp = txt[current_letter_pos] as char;
+                    while tmp.is_whitespace()
+                    {
+                        current_letter_pos += 1;                 
+                        if current_letter_pos >= txt_len
+                        {
+                            return Err("No matching ending tag!");
+                        }
+                        tmp = txt[current_letter_pos] as char;
+                    }
+                    if tmp != '>'
+                    {
+                        return Err("Failed to find matching end!");
+                    }
+                    *letter_pos = current_letter_pos;
+                    return Ok(());
+                }
+
             }
             else
             {
-                current_element.elements.push( XMLStuff::new(current_element.level + 1));
-                parse_element(txt, txt_len, current_element.elements.last_mut().unwrap(), letter_pos);
+                let mut child = XMLStuff::new(current_element.level + 1);
+                parse_element(txt, txt_len, &mut child, letter_pos)?;
+                current_element.elements.push(child);
             }
         }
         else if (current_state & TagStart) == TagStart
@@ -933,7 +973,7 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
             else
             {
                 current_element.element_name = (tag_text.0, tag_text.1); // txt[tag_text.0..tag_text.1].to_string();
-                end_string = format!("</{}>", &get_text(txt, tag_text.0, tag_text.1));
+               
                 //println!("Endstring: {}, s: {}, e: {}", end_string, tag_text.0, tag_text.1);
                 current_state = current_state & !( TagStart );
 
@@ -946,12 +986,12 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
             compare_text(txt, current_letter_pos, "/>")
         {
             *letter_pos = *letter_pos + 1;
-            return;
+            return Ok(());
         }
         else if c == '?' && compare_text(txt, current_letter_pos, "?>")
         {
             *letter_pos = *letter_pos + 1;
-            return;
+            return Ok(());
         }
 
         else if current_state & InsideTag == InsideTag
@@ -996,8 +1036,11 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
         else if (current_state & (InsideTag | ParsingText)) == 0u32 && tag_text.0 != tag_text.1
         {
             let mut child = XMLStuff::new(current_element.level + 1);                 
-            parse_element(txt, txt_len, &mut child, letter_pos);
-            current_element.elements.push(child);
+            parse_element(txt, txt_len, &mut child, letter_pos)?;
+            if child.element_text.0 < child.element_text.1
+            {
+                current_element.elements.push(child);
+            }
         }
         
         if c == '\\' 
@@ -1019,9 +1062,9 @@ fn parse_element(txt: &Vec<u8>, txt_len: usize, current_element: &mut XMLStuff, 
             current_state = current_state & !(InsideTag);
         }
 
-        current_letter_pos = current_letter_pos + 1;
         *letter_pos = *letter_pos + 1;
     }
+    return Ok(());
 }
 
 fn print_xml(xml: &XMLStuff, txt: &str)
@@ -1057,16 +1100,23 @@ fn print_tags(txt: &str)
     let mut letter_pos = 0;
 
 
-    let mut str_vec: Vec<u8> = Vec::new();
-    let cstr = CString::new(txt).unwrap();
-    str_vec = cstr.as_bytes().to_vec();
+    //let mut str_vec: Vec<u8> = Vec::new();
+    //let cstr = CString::new(txt).unwrap();
+    let str_vec = txt.as_bytes();
+   
     println!("print tags duration for conv: {}", now.elapsed().as_micros());
+
+
     let now = std::time::Instant::now();
     //parse_element(txt, txt.len(), &mut root, &mut letter_pos);
-    parse_element(&str_vec, txt.len(), &mut root, &mut letter_pos);
+    match parse_element(&str_vec,  str_vec.len(), &mut root, &mut letter_pos)
+    {
+        Ok(_) => (),
+        Err(v) => println!("Error parsing: {}", v)
+    };
     //print_xml(&root, txt);
     
-    
+    println!("text: {:?}", String::from_utf8(str_vec[root.element_name.0..root.element_name.1].to_vec()).unwrap());
     println!("print tags duration: {}", now.elapsed().as_micros());
     return ;
 }
@@ -1084,12 +1134,12 @@ fn main()
     println!("read file: {}", now.elapsed().as_micros());
 
     print_tags(&vk_xml);
-/*
+
     let now = std::time::Instant::now();
     let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
     println!("parse elements: {}", now.elapsed().as_micros());
 
-
+/*
 
     let now = std::time::Instant::now();
     //parse_vk_structs2(&root);
