@@ -125,6 +125,12 @@ struct StructType
     type_names: Vec<String>,
 }
 
+#[derive(Debug)]
+struct Define
+{
+    define_name: String,
+    define_value: ReturnType,
+}
 
 #[derive(Debug)]
 struct StructType2
@@ -196,7 +202,7 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
     let mut enums: Vec<EnumType2> = Vec::new();
     let mut func_ptrs: Vec<FuncPointer> = Vec::new();
     let mut structs: Vec<StructType2> = Vec::new();
-
+    let mut defines: Vec<Define> = Vec::new();
 
     for child in &type_elemnt.elements
     {
@@ -225,6 +231,43 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                 
                 match category
                 {
+                    "basetype" =>
+                    {
+                        let mut defi = Define { define_name: String::new(), define_value: ReturnType::new(true) };
+
+                        for child2 in &child.elements
+                        {
+                            let s: &str = &child2.element_name;
+                            match s
+                            {
+                                "type" => defi.define_value.return_type = get_type_as_rust_type(&child2.elements[0].element_text).to_string(),
+                                "name" => defi.define_name = child2.elements[0].element_text.clone(),
+                                _ => ()
+                            }
+                            if child2.element_text.len() > 0
+                            {
+                                if child2.element_text.contains("const")
+                                {
+                                    defi.define_value.ptr_mutable = false;
+                                }
+
+                                let s = child2.element_text.as_bytes();
+                                for c in s
+                                {
+                                    if *c as char == '*'
+                                    {
+                                        defi.define_value.ptrs += 1;
+                                    }
+                                }
+                            }
+                        }
+
+                        if defi.define_name.len() > 0 && defi.define_value.return_type.len() > 0
+                        {
+                            defines.push(defi);
+                        }
+
+                    },
                     "bitmask" => 
                     {
                         let mut bitmask = BitMask{name: String::new(), flag_bits: 32};
@@ -503,14 +546,14 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                         }
                         structs.push(s);
                     },
-                    _ => () //println!("cat: {}", category) include, define basetype, union
+                    _ => println!("cat: {}", category) // include, define basetype, union
     
                 }
             }
         }
     }
 
-    //dbg!(structs);
+    //dbg!(defines);
     return Ok(());
 }
 
