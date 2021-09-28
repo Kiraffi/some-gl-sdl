@@ -1,6 +1,6 @@
 #![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::{ffi::CString, io::Read, ptr::null_mut, thread::current};
+use std::io::Read;
 
 /*
 use crate::vk_all::VkInternalAllocationType;
@@ -770,7 +770,9 @@ impl XMLStuff
 {
     fn new(level: u32) -> Self
     {
-        XMLStuff {element_name: (0,0), element_text: (0,0), elements: Vec::new(), param_stack: Vec::new(), level }
+        let s = XMLStuff {element_name: (0,0), element_text: (0,0), elements: Vec::new(), param_stack: Vec::new(), level };
+        //let s = XMLStuff {element_name: String::new(), element_text: String::new(), elements: Vec::new(), param_stack: Vec::new(), level };
+        return s;
     }
 }
 
@@ -830,7 +832,7 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
     const ParsingText: u32 =         1u32 << 5u32;
     
     
-    let mut current_state = 0u32;
+    let mut current_state: u32;
     
     //if txt[*letter_pos..*letter_pos + 1].eq("<") && current_element.level > 0
     let c = txt[*letter_pos] as char;
@@ -847,32 +849,15 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
         elem_text.0 = *letter_pos;
         elem_text.1 = *letter_pos;
     }
-    // else reading text!
 
     let mut inside_param_value_quote_count = 0u32;
 
-    //let iter = txt[*letter_pos..].chars();
-
-    let mut end_string = String::new();
-
-    let mut current_letter_pos = *letter_pos;
-    //for c in iter
     while *letter_pos < txt_len
     {
         let u = txt[*letter_pos];
-        if u >= 128
-        {
-            *letter_pos = *letter_pos + 1;
-            continue;
-        }
         let c = u as char;
-        current_letter_pos = *letter_pos;
-        /*
-        if current_letter_pos < *letter_pos
-        {
-            current_letter_pos = current_letter_pos + 1;
-            continue;
-        }*/
+        let mut current_letter_pos = *letter_pos;
+
 
         if (current_state & InisdeComment) == InisdeComment && (c == '-') && compare_text(txt, current_letter_pos, "-->")
         {
@@ -881,7 +866,6 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
         }
         else if (current_state & InisdeComment) == InisdeComment
         {
-            current_letter_pos = current_letter_pos + 1;
             *letter_pos = *letter_pos + 1;           
             continue;
         }
@@ -889,7 +873,9 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
         {
             if c == '<' && current_state & BackSlash == 0
             {
-                current_element.element_text = (elem_text.0, current_letter_pos); // txt[elem_text.0..current_letter_pos].to_string();
+                elem_text.1 = current_letter_pos;
+                current_element.element_text = (elem_text.0, elem_text.1);
+                //current_element.element_text = get_text_from_array(txt, elem_text.0, current_letter_pos)?;
                 *letter_pos = *letter_pos - 1;
                 return Ok(());
             }
@@ -900,9 +886,8 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
                 elem_text.1 = current_letter_pos + 1;
             }
         }
-        else if c == '<' && current_state & BackSlash == 0
+        else if c == '<' && (current_state & BackSlash) == 0
         {
-            //println!("{}", &txt[current_letter_pos..current_letter_pos + 10]);
             if compare_text(txt, current_letter_pos, "<!--")
             {
                 current_state = current_state | InisdeComment;                
@@ -964,7 +949,8 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
             }
             else
             {
-                current_element.element_name = (tag_text.0, tag_text.1); // txt[tag_text.0..tag_text.1].to_string();
+                current_element.element_name =  (tag_text.0, tag_text.1);
+                //current_element.element_name =  get_text_from_array(txt, tag_text.0, tag_text.1)?; // txt[tag_text.0..tag_text.1].to_string();
                
                 //println!("Endstring: {}, s: {}, e: {}", end_string, tag_text.0, tag_text.1);
                 current_state = current_state & !( TagStart );
@@ -988,21 +974,20 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
 
         else if current_state & InsideTag == InsideTag
         {
-            if (c.is_alphanumeric() || c == '_') && (current_state & InsideTagParamValue == 0)
+            if (c.is_alphanumeric() || c == '_') && (current_state & InsideTagParamValue) == 0
             {
-                param_name.1 = param_name.1 + 1;
             }
-            else if current_state & InsideTagParamValue == 0 && c == '='
+            else if (current_state & InsideTagParamValue) == 0 && c == '='
             {
                 current_state = current_state | InsideTagParamValue;
                 inside_param_value_quote_count = 0;
+                param_name.1 = current_letter_pos - 1;
             }
-            else if current_state & InsideTagParamValue == 0 && param_name.0 == param_name.1
+            else if (current_state & InsideTagParamValue) == 0 && param_name.0 <= param_name.1
             {
-                param_name.0 = current_letter_pos + 1;
-                param_name.1 = current_letter_pos + 1;
+                param_name.0 = current_letter_pos + 1;                
             }
-            else if current_state & InsideTagParamValue == InsideTagParamValue && c == '"'
+            else if (current_state & InsideTagParamValue) == InsideTagParamValue && c == '"'
             {
                 inside_param_value_quote_count = inside_param_value_quote_count + 1;
                 if inside_param_value_quote_count == 2
@@ -1011,7 +996,10 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
                     param_value.1 = core::cmp::max(param_value.0, current_letter_pos);
 
                     current_element.param_stack.push( (param_name.0, param_name.1, param_value.0, param_value.1) );
-                        //(txt[param_name.0..param_name.1].to_string(), txt[param_value.0..param_value.1].to_string()));
+                    /*
+                    current_element.param_stack.push((
+                         get_text_from_array(txt,param_name.0, param_name.1)?, get_text_from_array(txt, param_value.0, param_value.1)?));
+                    */
 
                     current_state = current_state & !(InsideTagParamValue);
 
@@ -1025,10 +1013,11 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
                 }
             }
         }
-        else if (current_state & (InsideTag | ParsingText)) == 0u32 && tag_text.0 != tag_text.1
+        else if (current_state & (InsideTag | ParsingText)) == 0 && tag_text.0 != tag_text.1
         {
             let mut child = XMLStuff::new(current_element.level + 1);                 
             parse_element(txt, txt_len, &mut child, letter_pos)?;
+            //if child.element_text.len() > 0
             if child.element_text.0 < child.element_text.1
             {
                 current_element.elements.push(child);
@@ -1049,7 +1038,7 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
             current_state = current_state & !(BackSlash);
         }
 
-        if c == '>' &&  (current_state & BackSlash) == 0u32
+        if c == '>' &&  (current_state & BackSlash) == 0
         {
             current_state = current_state & !(InsideTag);
         }
@@ -1059,7 +1048,8 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLStuff, let
     return Ok(());
 }
 
-fn print_xml(xml: &XMLStuff, txt: &str)
+
+fn print_xml_elem(xml: &XMLStuff, txt: &str)
 {
     if xml.element_name.0 != xml.element_name.1
     //if xml.element_name.len() > 0
@@ -1079,12 +1069,37 @@ fn print_xml(xml: &XMLStuff, txt: &str)
     
     for i in &xml.elements
     {
+        print_xml_elem(i, txt);
+    }
+
+}
+
+fn print_xml(xml: &XMLStuff2, txt: &str)
+{
+    //if xml.element_name.0 != xml.element_name.1
+    if xml.element_name.len() > 0
+    {
+        println!("Name: {}", xml.element_name);
+    }
+    else
+    {
+        println!("Text: {}", xml.element_text);// xml.element_text);    
+    }
+    
+    for i in &xml.param_stack
+    {
+        println!("Param: {} = {}", i.0, i.1);
+    }
+    
+    for i in &xml.elements
+    {
         print_xml(i, txt);
     }
 
 }
 
-fn print_tags(txt: &str)
+
+fn print_tags(txt: &str) -> Result<(), &'static str>
 {
     let now = std::time::Instant::now();
     let mut root = XMLStuff::new(0);
@@ -1106,13 +1121,56 @@ fn print_tags(txt: &str)
         Ok(_) => (),
         Err(v) => println!("Error parsing: {}", v)
     };
+    //print_xml_elem(&root, txt);
     //print_xml(&root, txt);
     
-    println!("text: {:?}", String::from_utf8(str_vec[root.element_name.0..root.element_name.1].to_vec()).unwrap());
+    //println!("text: {:?}", String::from_utf8(str_vec[root.element_name.0..root.element_name.1].to_vec()).unwrap());
+    println!("text: {:?}", root.element_name);
     println!("print tags duration: {}", now.elapsed().as_micros());
-    return ;
+
+    let now = std::time::Instant::now();
+    let elem = XMLStuff2::new(&str_vec, &root)?;
+    println!("text: {:?}", elem.element_name);
+    println!("print tags duration: {}", now.elapsed().as_micros());
+
+
+
+    return Ok(());
 }
 
+struct XMLStuff2
+{
+    elements: Vec<XMLStuff2>,
+    element_name: String,
+    element_text: String,
+
+    param_stack: Vec<(String, String)>,
+}
+impl XMLStuff2
+{
+    fn new(txt: &[u8], orig: &XMLStuff) -> Result<Self, &'static str>
+    {
+
+        //let s = XMLStuff {element_name: (0,0), element_text: (0,0), elements: Vec::new(), param_stack: Vec::new(), level };
+        let mut s = XMLStuff2 {element_name: get_text_from_array(txt, orig.element_name.0, orig.element_name.1)?,
+            element_text: get_text_from_array(txt, orig.element_text.0, orig.element_text.1)?, elements: Vec::new(), param_stack: Vec::new() };
+        
+        
+        s.elements.reserve(orig.elements.len());
+        s.param_stack.reserve(orig.param_stack.len());
+        for element in &orig.elements
+        {
+            s.elements.push(Self::new(txt, element)?);
+        }
+
+        for param in &orig.param_stack
+        {
+            s.param_stack.push((get_text_from_array(txt, param.0, param.1)?, get_text_from_array(txt, param.2, param.3)?));
+        }
+
+        return Ok(s);
+    }
+}
 
 
 fn main() 
@@ -1125,10 +1183,14 @@ fn main()
     };
     println!("read file: {}", now.elapsed().as_micros());
 
-    print_tags(&vk_xml);
+    match print_tags(&vk_xml)
+    {
+        Ok(_) => (),
+        Err(v) => { println!("Error parsing: {}", v); return; }
+    };
 
     let now = std::time::Instant::now();
-    let root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
+    let _root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
     println!("parse elements: {}", now.elapsed().as_micros());
 
 /*
