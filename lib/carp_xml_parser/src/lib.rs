@@ -1,18 +1,18 @@
 
 pub struct XMLElement
 {
-    elements: Vec<XMLElement>,
-    element_name: String,
-    element_text: String,
+    pub elements: Vec<XMLElement>,
+    pub element_name: String,
+    pub element_text: String,
 
-    param_stack: Vec<(String, String)>,
-    level: u32,
+    pub attributes: Vec<(String, String)>,
+    pub level: u32,
 }
 impl XMLElement
 {
     fn new(level: u32) -> Self
     {
-        let s = XMLElement {element_name: String::new(), element_text: String::new(), elements: Vec::new(), param_stack: Vec::new(), level };
+        let s = XMLElement {element_name: String::new(), element_text: String::new(), elements: Vec::new(), attributes: Vec::new(), level };
         return s;
     }
 }
@@ -212,16 +212,18 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLElement, l
         {
             if (c.is_alphanumeric() || c == '_') && (current_state & INSIDE_TAG_PARAM_VALUE) == 0
             {
+                param_name.1 = current_letter_pos;
             }
             else if (current_state & INSIDE_TAG_PARAM_VALUE) == 0 && c == '='
             {
                 current_state = current_state | INSIDE_TAG_PARAM_VALUE;
                 inside_param_value_quote_count = 0;
-                param_name.1 = current_letter_pos - 1;
+                param_name.1 = current_letter_pos;
             }
-            else if (current_state & INSIDE_TAG_PARAM_VALUE) == 0 && param_name.0 <= param_name.1
+            else if (current_state & INSIDE_TAG_PARAM_VALUE) == 0 && c.is_whitespace() && param_name.0 <= param_name.1
             {
-                param_name.0 = current_letter_pos + 1;                
+                param_name.0 = current_letter_pos + 1;
+                param_name.1 = current_letter_pos + 1;
             }
             else if (current_state & INSIDE_TAG_PARAM_VALUE) == INSIDE_TAG_PARAM_VALUE && c == '"'
             {
@@ -232,7 +234,7 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLElement, l
                     param_value.1 = core::cmp::max(param_value.0, current_letter_pos);
 
                     
-                    current_element.param_stack.push(
+                    current_element.attributes.push(
                          (get_text_from_array(txt,param_name.0, param_name.1)?,
                          get_text_from_array(txt, param_value.0, param_value.1)?)
                     );
