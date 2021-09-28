@@ -1,6 +1,7 @@
 #![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
 use std::io::Read;
+use carp_xml_parser::{XMLElement, get_text_from_array};
 
 /*
 use crate::vk_all::VkInternalAllocationType;
@@ -22,7 +23,7 @@ fn get_type_as_rust_type(s: &str) -> &str
         "int32_t" =>  "i32",
         "int16_t" =>  "i16",
         "int8_t" =>    "i8",
-        "char" => "c_uchar",
+        "char" =>  "c_char",
         "float" =>    "f32",
         "double" =>   "f64",
         "void" =>  "c_void",
@@ -53,6 +54,415 @@ fn print_attributes(elem: &xmltree::Element)
         println!("name: {}, value: {}", attr.0, attr.1);
     }
 }
+
+#[derive(Debug)]
+struct VulkanHandle
+{
+    handle_name: String,
+    handle_type: String,
+    parent: String,
+    obj_enum: String,
+
+}
+
+
+#[derive(Debug)]
+struct ReturnType
+{
+    return_type: String,
+    ptrs: u32,
+    ptr_mutable: bool,
+}
+impl ReturnType
+{
+    fn new() -> Self
+    {
+        return Self {return_type: String::new(), ptrs: 0u32, ptr_mutable: false };
+    }
+}
+//#[derive(Debug, Clone, PartialEq, Eq)]
+
+#[derive(Debug)]
+struct Aliases
+{
+    original_name: String,
+    alias_name: String,
+    category: String,
+}
+
+#[derive(Debug)]
+struct BitMask
+{
+    name: String,
+    flag_bits: u32,
+}
+
+#[derive(Debug)]
+struct FuncPointer
+{
+    name: String,
+    return_type: ReturnType,
+    param_type_names: Vec<String>,
+    param_types: Vec<ReturnType>,
+}
+
+
+#[derive(Debug)]
+struct EnumType2
+{
+    enum_name: String,
+    param_type_names: Vec<String>,
+    param_type_values: Vec<String>,
+}
+
+
+#[derive(Debug)]
+struct StructType
+{
+    struct_name: String,
+    s_type_name: String,
+    param_names: Vec<String>,
+    type_names: Vec<String>,
+}
+
+impl StructType
+{
+    pub fn new() -> Self
+    {
+        Self{ struct_name: String::new(), s_type_name: String::new(), param_names: Vec::new(), type_names: Vec::new() }
+    }
+}
+
+
+
+fn check_attributes(elem: &XMLElement, attribute_list: &[(&str, &str)]) -> bool
+{
+    for attr in &*attribute_list
+    {
+        let mut found = false;
+        for elem_attr in &elem.attributes
+        {
+            if !elem_attr.0.eq(attr.0)
+            {
+                continue;
+            }
+            if attr.1.len() > 0 && !elem_attr.1.eq(attr.1)
+            {
+                return false;
+            }
+            found = true;
+            break;
+        }
+
+        if !found
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+fn get_attribute(elem: &XMLElement, attr: &'static str) -> String
+{
+    for attribute in &elem.attributes
+    {
+        if attribute.0.eq(attr)
+        {
+            return attribute.1.clone();
+        }
+    }
+
+    return String::new();
+}
+
+
+fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
+{
+    let mut aliases: Vec<Aliases> = Vec::new();
+    let mut bitmasks: Vec<BitMask> = Vec::new();
+    let mut handles: Vec<VulkanHandle> = Vec::new();
+    let mut enums: Vec<EnumType2> = Vec::new();
+    let mut func_ptrs: Vec<FuncPointer> = Vec::new();
+
+    for child in &type_elemnt.elements
+    {
+        if child.element_name.eq("type")
+        {
+            // Aliases
+            if check_attributes(child, &[("category", ""), ("name", ""), ("alias", "")])
+            {
+                let mut alias = Aliases { alias_name: String::new(), category: String::new(), original_name: String::new() };
+                for attr in &child.attributes
+                {
+                    let s: &str = &attr.0;
+                    match s
+                    {
+                        "alias" => alias.original_name = attr.1.clone(),
+                        "category" => alias.category = attr.1.clone(),
+                        "name" => alias.alias_name = attr.1.clone(),
+                        _ => ()
+                    }
+                }
+                aliases.push(alias);
+            }
+            else if check_attributes(child, &[("category", "")])
+            {
+                let category = &get_attribute(child, "category")[..];
+                
+                match category
+                {
+                    "bitmask" => 
+                    {
+                        let mut bitmask = BitMask{name: String::new(), flag_bits: 32};
+                        let mut founds = 0u32;
+                        for child2 in &child.elements
+                        {
+                            if child2.element_name == "type"
+                            {
+                                founds += 1;
+                                let s: &str = &child2.elements[0].element_text;
+                                bitmask.flag_bits = match s
+                                {
+                                    "VkFlags" => 32,
+                                    "VkFlags64" => 64,
+                                    _ => return Err("Bitmask has unknown type, not VkFlags or VkFlags64")
+                                };
+                            }
+                            else if child2.element_name == "name"
+                            {
+                                founds += 1;
+                                bitmask.name = child2.elements[0].element_text.clone();
+                            }
+                        }
+                        if founds != 2
+                        {
+                            return Err("Didn't find all the required types for bitmask, name and type.");
+                        }
+                        bitmasks.push(bitmask);
+    
+                    },
+                    "handle" =>
+                    {
+                        let mut handle = VulkanHandle { handle_name: String::new(), handle_type: String::new(), obj_enum: String::new(), parent: String::new() };
+                        let mut founds = 0u32;
+                        let mut p = false;
+                        for attr in &child.attributes
+                        {
+                            let s: &str = &attr.0;
+                            match s
+                            {
+                                "parent" => { p = true; handle.parent = attr.1.clone(); },
+                                "objtypeenum" => { founds += 1; handle.obj_enum = attr.1.clone(); },
+                                _ => ()
+                            };
+                        }
+
+                        for child2 in &child.elements
+                        {
+                            let s: &str = &child2.element_name;
+                            match s 
+                            {
+                                "type" =>  { founds += 1; handle.handle_type = child2.elements[0].element_text.clone(); },
+                                "name" => { founds += 1; handle.handle_name = child2.elements[0].element_text.clone(); },
+                                _ => ()
+                            }
+                        }
+
+                        if founds != 3 || !(p || handle.handle_name == "VkInstance")
+                        {
+                            return Err("Failed to parse handle!");
+                        }
+                        handles.push(handle);
+
+                    },
+                    "enum" => 
+                    {
+                        let mut e = EnumType2{ enum_name: String::new(), param_type_names: Vec::new(), param_type_values: Vec::new() };
+                        let mut founds = 0u32;
+                        for attr in &child.attributes
+                        {
+                            let s: &str = &attr.0;
+                            match s
+                            {
+                                "name" => { founds += 1; e.enum_name = attr.1.clone(); },
+                                _ => ()
+                            };
+                        }
+
+                        if founds != 1
+                        {
+                            return Err("Failed to parse enum types");
+                        }
+
+                        enums.push(e);
+                    }
+                    "funcpointer" =>
+                    {
+                        let mut f = FuncPointer { name: String::new(), return_type: ReturnType::new(), param_type_names: Vec::new(), param_types: Vec::new() };
+                        let mut return_found = false;
+                        let mut name_found = false;
+
+                        let mut param_type = ReturnType::new();
+                        param_type.ptr_mutable = true;
+
+                        for child2 in &child.elements
+                        {
+                            //println!("text: {}", child2.element_text);
+                            if !return_found && (child2.element_text.len() == 0 || !child2.element_text.starts_with("typedef "))
+                            {
+                                println!("found:{} len:{}, text:{}", return_found, child2.element_text.len(), child2.element_text);
+                                return Err("Failed to parse return value of funcpointer");
+                            }
+                            else if !return_found
+                            {
+                                let constness = child2.element_text.find(" const ");
+                                let mut start_value = 8usize;
+                                if constness.is_some()
+                                {
+                                    start_value = constness.unwrap() + 7;
+                                }
+                                let s = child2.element_text[start_value..].as_bytes();
+                                let mut start_char = 0usize;
+                                while (s[start_char] as char).is_whitespace()
+                                {
+                                    start_char += 1;
+                                }
+
+                                let mut empty_char = start_char;
+
+                                while !(s[empty_char] as char).is_whitespace() && s[empty_char] as char != '*'
+                                {
+                                    empty_char += 1;
+                                }
+
+                                let mut ptrs = 0u32;
+
+                                for c in s
+                                {
+                                    if *c as char == '*'
+                                    {
+                                        ptrs += 1;
+                                    }
+                                }
+                                
+                                
+
+                                f.return_type.return_type = get_type_as_rust_type(&carp_xml_parser::get_text_from_array(s, start_char, empty_char)?).to_string();
+                                f.return_type.ptrs = ptrs;
+                                f.return_type.ptr_mutable = constness.is_none();
+
+                                return_found = true;
+                            }
+                            else if child2.element_name == "name"
+                            {
+                                f.name = child2.elements[0].element_text.clone();
+                                name_found = true;
+                            }
+                            else if name_found && return_found
+                            {
+                                let s = child2.element_text[..].as_bytes();
+                                if child2.element_text == ")(void);"
+                                {
+
+                                }
+                                else if child2.element_text.contains(",")
+                                {
+                                    let d = child2.element_text.find(",").unwrap();
+                                    let mut c = d - 1;
+                                    while c > 0 && (s[c - 1].is_ascii_alphanumeric() || s[c - 1] as char == '_')
+                                    {
+                                        c -= 1;
+                                    }
+
+                                    f.param_type_names.push(get_text_from_array(s, c, d).unwrap());
+
+                                    for i in 0..d
+                                    {
+                                        if s[i] as char == '*'
+                                        {
+                                            param_type.ptrs += 1;
+                                        }                                        
+                                    }
+                                    f.param_types.push(param_type);
+
+                                    param_type = ReturnType::new();
+                                    param_type.ptr_mutable = true;
+                                    
+                                }
+                                else if child2.element_text.contains(");")
+                                {
+                                    let d = child2.element_text.find(");").unwrap();
+                                    let mut c = d - 1;
+                                    while c > 0 && (s[c - 1].is_ascii_alphanumeric() || s[c - 1] as char == '_')
+                                    {
+                                        c -= 1;
+                                    }
+
+                                    f.param_type_names.push(get_text_from_array(s, c, d).unwrap());
+                                    f.param_types.push(param_type);
+
+                                    param_type = ReturnType::new();
+                                    param_type.ptr_mutable = true;
+                                }
+                                else if child2.element_text.contains("const")
+                                {
+                                    param_type.ptr_mutable = false;
+                                }
+                                else if child2.element_name == "type"
+                                {
+                                    param_type.return_type = get_type_as_rust_type(&child2.elements[0].element_text).to_string();
+                                }
+                            }
+                            
+                        }
+
+
+                        func_ptrs.push(f);
+
+                    },
+                    _ => ()
+    
+                }
+            }
+        }
+    }
+
+    //dbg!(func_ptrs);
+    return Ok(());
+}
+
+
+fn parse_vk(elem: &XMLElement) -> Result<(), String>
+{
+    for child in &elem.elements
+    {
+        if !child.element_name.eq("registry")
+        {
+            continue;
+        }
+
+        for child2 in &child.elements
+        {
+            if child2.element_name.eq("types")
+            {
+                parse_types(child2)?;
+            }
+        }
+    }
+
+    return Ok(());
+}
+
+
+
+
+
+
+
+
+
+
 
 // The most awkward lambda, having to pass arrays for looking what attributes it contains, and setting possible filter value,
 // and returning array of the type.
@@ -112,21 +522,7 @@ fn node_children2<U>(elem: &xmltree::Element, u: &mut U, filter_name: &str, attr
 
 
 
-struct StructType
-{
-    struct_name: String,
-    s_type_name: String,
-    param_names: Vec<String>,
-    type_names: Vec<String>,
-}
 
-impl StructType
-{
-    pub fn new() -> Self
-    {
-        Self{ struct_name: String::new(), s_type_name: String::new(), param_names: Vec::new(), type_names: Vec::new() }
-    }
-}
 fn count_sub_strings_from_str(count_from: &str, what_to_count: &str) -> u32
 {
     let mut count = 0u32;
@@ -769,14 +1165,22 @@ fn main()
 
 
     let now = std::time::Instant::now();
-    let __root = match carp_xml_parser::parse(&vk_xml)
+    let root = match carp_xml_parser::parse(&vk_xml)
     {
         Ok(v) => v,
         Err(v) => { println!("Error parsing: {}", v); return; }
     };
     println!("carp parse xml: {}", now.elapsed().as_micros());
 
-    /*
+
+    let now = std::time::Instant::now();
+    match parse_vk(&root)
+    {
+        Ok(_) => (),
+        Err(e) => println!("Error: {}", &e)
+    };
+    println!("carp parse vk: {}", now.elapsed().as_micros());
+/*
     let now = std::time::Instant::now();
     let _root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();
     println!("parse elements: {}", now.elapsed().as_micros());
