@@ -22,20 +22,20 @@ extern "system"
 
 
 #[cfg(windows)]
-pub fn get_proc_address(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { unsafe { GetProcAddress(lib_module_handle, proc_name ) } }
+pub unsafe fn get_proc_address(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { GetProcAddress(lib_module_handle, proc_name ) }
 #[cfg(windows)]
-pub fn load_library(file_name: CHARSTRING) -> HANDLE { unsafe { LoadLibraryA(file_name) } }
+pub unsafe fn load_library(file_name: CHARSTRING) -> HANDLE { LoadLibraryA(file_name) }
 #[cfg(windows)]
- pub fn free_library(lib_module_handle: HANDLE) -> BOOL { unsafe { FreeLibrary(lib_module_handle) } }
+pub unsafe fn free_library(lib_module_handle: HANDLE) -> BOOL { FreeLibrary(lib_module_handle) }
 
 
 
 #[cfg(target_os = "linux")]
-pub fn get_proc_address(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { unsafe { dlsym(lib_module_handle, proc_name ) } }
+pub unsafe fn get_proc_address(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE { dlsym(lib_module_handle, proc_name ) }
 #[cfg(target_os = "linux")]
-pub fn load_library(file_name: CHARSTRING) -> HANDLE { unsafe { dlopen(file_name, 1 ) } }
+pub unsafe fn load_library(file_name: CHARSTRING) -> HANDLE { dlopen(file_name, 1 ) }
 #[cfg(target_os = "linux")]
- pub fn free_library(lib_module_handle: HANDLE) -> BOOL { unsafe { dlclose(lib_module_handle) } }
+pub unsafe fn free_library(lib_module_handle: HANDLE) -> BOOL { dlclose(lib_module_handle) }
 
 
 
