@@ -1,6 +1,6 @@
 #![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::io::Read;
+use std::{clone, io::Read};
 use carp_xml_parser::{XMLElement, get_text_from_array};
 
 /*
@@ -9,7 +9,83 @@ use crate::vk_all::VkInternalAllocationType;
 pub mod test_vk;
 pub mod vk_all;
 */
- 
+
+fn parse_api_constant(st: &String) -> String
+{
+    // wrong way....
+    let eq_len = st.len();
+    if eq_len == 0
+    {
+        return String::new();
+    }
+    let mut s = st.clone(); 
+    s = s.trim().to_string();
+    s = s.replace("(", "");
+    s = s.replace(")", "");
+    s = s.replace("~", "!");
+    s = s.replace(",", ";");
+
+    if s.ends_with("F;")
+    {
+        s = s.replace("F;", "f32;");
+        s = s.replace(" = ", ":f32 = ");
+    }
+    else if s.ends_with("U;")
+    {
+        s = s.replace("U;", "u32;");
+        s = s.replace(" = ", ":u32 = ");
+
+    }
+    else if s.ends_with("ULL;")
+    {
+        s = s.replace("ULL;", "u64;");
+        s = s.replace(" = ", ":u64 = ");
+
+    }
+
+    else
+    {
+        s = s.replace(" = ", ":usize = ");
+
+    }
+
+    return s;
+}
+
+
+fn parse_api_constant2(st: &String) -> String
+{
+    // wrong way....
+    let eq_len = st.len();
+    if eq_len == 0
+    {
+        return String::new();
+    }
+    let mut s = st.clone(); 
+    s = s.trim().to_string();
+    s = s.replace("(", "");
+    s = s.replace(")", "");
+    s = s.replace("~", "!");
+
+    if s.ends_with("F")
+    {
+        s = s.replace("F", "f32");
+    }
+    else if s.ends_with("U")
+    {
+        s = s.replace("U", "u32");
+
+    }
+    else if s.ends_with("ULL")
+    {
+        s = s.replace("ULL", "u64");
+
+    }
+
+    return s;
+}
+
+
 fn get_type_as_rust_type(s: &str) -> &str
 {
     let result: &str = match s 
@@ -113,6 +189,7 @@ struct EnumType2
     enum_name: String,
     param_type_names: Vec<String>,
     param_type_values: Vec<String>,
+    is_bitmask: bool,
 }
 
 
@@ -151,6 +228,25 @@ impl StructType
 }
 
 
+#[derive(Debug)]
+struct ConstantValue
+{
+    name: String,
+    constant_type: String,
+    constant_value: String,    
+}
+
+struct ParsedArrays
+{
+    aliases: Vec<Aliases>,
+    bitmasks: Vec<BitMask>,
+    handles: Vec<VulkanHandle>,
+    enums: Vec<EnumType2>,
+    func_ptrs: Vec<FuncPointer>,
+    structs: Vec<StructType2>,
+    defines: Vec<Define>,
+    constants: Vec<ConstantValue>,
+}
 
 fn check_attributes(elem: &XMLElement, attribute_list: &[(&str, &str)]) -> bool
 {
@@ -194,15 +290,15 @@ fn get_attribute(elem: &XMLElement, attr: &'static str) -> String
 }
 
 
-fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
+fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Result<(), &'static str>
 {
-    let mut aliases: Vec<Aliases> = Vec::new();
-    let mut bitmasks: Vec<BitMask> = Vec::new();
-    let mut handles: Vec<VulkanHandle> = Vec::new();
-    let mut enums: Vec<EnumType2> = Vec::new();
-    let mut func_ptrs: Vec<FuncPointer> = Vec::new();
-    let mut structs: Vec<StructType2> = Vec::new();
-    let mut defines: Vec<Define> = Vec::new();
+    let aliases = &mut parsed_arrays.aliases;
+    let bitmasks = &mut parsed_arrays.bitmasks;
+    let handles = &mut parsed_arrays.handles;
+    let enums = &mut parsed_arrays.enums;
+    let func_ptrs = &mut parsed_arrays.func_ptrs;
+    let structs = &mut parsed_arrays.structs;
+    let defines = &mut parsed_arrays.defines;
 
     for child in &type_elemnt.elements
     {
@@ -334,7 +430,7 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                     },
                     "enum" => 
                     {
-                        let mut e = EnumType2{ enum_name: String::new(), param_type_names: Vec::new(), param_type_values: Vec::new() };
+                        let mut e = EnumType2{ enum_name: String::new(), param_type_names: Vec::new(), param_type_values: Vec::new(), is_bitmask: false };
                         let mut founds = 0u32;
                         for attr in &child.attributes
                         {
@@ -544,9 +640,13 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
                             s.types.push(return_type);
                             
                         }
+                        if !name_found
+                        {
+                            return Err("No name for struct found!");
+                        }
                         structs.push(s);
                     },
-                    _ => println!("cat: {}", category) // include, define basetype, union
+                    _ => () //println!("cat: {}", category) // include, define basetype, union
     
                 }
             }
@@ -558,25 +658,160 @@ fn parse_types(type_elemnt: &XMLElement) -> Result<(), &'static str>
 }
 
 
-fn parse_vk(elem: &XMLElement) -> Result<(), String>
+fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
 {
+    let mut parsed_arrays = ParsedArrays{ 
+        aliases: Vec::new(), bitmasks: Vec::new(), defines: Vec::new(), enums: Vec::new(),
+        func_ptrs: Vec::new(), handles: Vec::new(), structs: Vec::new(), constants: Vec::new(),
+    };
     for child in &elem.elements
     {
-        if !child.element_name.eq("registry")
+        if child.element_name != "registry"
         {
             continue;
         }
 
         for child2 in &child.elements
         {
-            if child2.element_name.eq("types")
+            if child2.element_name == "types"
             {
-                parse_types(child2)?;
+                parse_types(child2, &mut parsed_arrays)?;
+            }
+            else if child2.element_name == "enums"
+            {
+                let mut enum_name = String::new();
+                let mut enum_bitmask = -1;
+                let mut bit_width = 32;
+
+                let mut enums: Vec<(String, String)> = Vec::new();
+
+                for attr in &child2.attributes
+                {
+                    let s: &str = &attr.0;
+                    match s
+                    {
+                        "name" => enum_name = attr.1.clone(),
+                        "type" => enum_bitmask = if attr.1 == "bitmask" { 1 } else { 0 },
+                        "bitwidth" => bit_width = attr.1.parse().unwrap(),
+                        _ => ()
+                    };
+                    
+                }
+                if enum_name == "API Constants"
+                {
+                    println!("api constants");
+                    enum_name = "APIConstants".to_string();
+
+
+                    for c in &child2.elements
+                    {
+                        let mut constant = ConstantValue{ name: String::new(), constant_type: String::new(), constant_value: String::new()  };
+                        let mut alias = String::new();
+                        for attr in &c.attributes
+                        {
+                            let s: &str = &attr.0;
+                            match s 
+                            {
+                                "type" => constant.constant_type = attr.1.clone(),
+                                "value" => constant.constant_value = attr.1.clone(),
+                                "name" => constant.name = attr.1.clone(),
+                                "alias" => alias = attr.1.clone(),
+                                _ => ()
+                            };
+                        }
+
+                        constant.constant_type = get_type_as_rust_type(&constant.constant_type).to_string();
+                        constant.constant_value = parse_api_constant2(&constant.constant_value);
+
+                        if alias.len() != 0
+                        {
+                            for alias_constant in &parsed_arrays.constants
+                            {
+                                if alias_constant.name == alias
+                                {
+                                    constant.constant_value = alias_constant.constant_value.clone();
+                                    constant.constant_type = alias_constant.constant_type.clone();
+                                    break;
+                                }
+                            }
+                        }
+
+
+
+
+                        if constant.name.len() == 0 || constant.constant_value.len() == 0 || constant.constant_type.len() == 0
+                        {
+                            println!("{}, {}, {}", constant.name, constant.constant_value, constant.constant_type);
+                            return Err("Failed to parse apiconstants!");
+                        }
+                        parsed_arrays.constants.push(constant);
+                    }
+                    // continue with the upper for loop
+                    continue;
+                }
+                else if enum_name.len() == 0 || enum_bitmask == -1
+                {
+                    println!("name; {}, bit: {}", enum_name, enum_bitmask);
+                    return Err("Failed to parse enums!");
+                }
+
+
+                'enum_loop:
+                for c in &child2.elements
+                {
+                    if c.element_name != "enum"
+                    {
+                        continue;
+                    }
+                    let mut bit_value = String::new();
+                    let mut enum_enum_name = String::new();
+                    for attr in &c.attributes
+                    {
+                        let s: &str = &attr.0;
+                        match s
+                        {
+                            "value" => bit_value = attr.1.clone(),
+                            "bitpos" => bit_value = (1i128 << attr.1.parse::<i128>().unwrap()).to_string(),
+                            "name" => enum_enum_name = attr.1.clone(),
+                            "alias" => continue 'enum_loop,
+                            _ => ()
+                        }                        
+                    };
+                    enums.push((enum_enum_name, bit_value));
+
+                }
+                let mut found = false;
+                for ind in &mut parsed_arrays.enums
+                {
+                    if ind.enum_name == enum_name
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if !found 
+                {
+                    parsed_arrays.enums.push( EnumType2{ enum_name: enum_name.clone(), is_bitmask: false,  param_type_names: Vec::new(), param_type_values: Vec::new() } );
+                }
+
+                for ind in &mut parsed_arrays.enums
+                {
+                    if ind.enum_name == enum_name
+                    {
+                        for e in &enums
+                        {
+                            ind.is_bitmask = if enum_bitmask == 1 { true } else { false };
+                            ind.param_type_names.push(e.0.clone());
+                            ind.param_type_values.push(e.1.clone());
+                        }
+                    }
+                }
             }
         }
     }
+    //dbg!(&parsed_arrays.enums);
 
-    return Ok(());
+    return Ok(parsed_arrays);
 }
 
 
@@ -1232,45 +1467,11 @@ fn get_enums_as_string(enum_types: &Vec<EnumType>) -> String
         {
             for enum_type_param_type_names in &enum_type.param_type_names
             {
-                
-                // wrong way....
-                let eq_len = enum_type_param_type_names.len();
-                if eq_len == 0
+                let s = parse_api_constant(&enum_type_param_type_names);
+                if s.len() == 0
                 {
                     continue;
                 }
-                let mut s = enum_type_param_type_names.clone(); 
-                s = s.trim().to_string();
-                s = s.replace("(", "");
-                s = s.replace(")", "");
-                s = s.replace("~", "!");
-                s = s.replace(",", ";");
-
-                if s.ends_with("F;")
-                {
-                    s = s.replace("F;", "f32;");
-                    s = s.replace(" = ", ":f32 = ");
-                }
-                else if s.ends_with("U;")
-                {
-                    s = s.replace("U;", "u32;");
-                    s = s.replace(" = ", ":u32 = ");
-
-                }
-                else if s.ends_with("ULL;")
-                {
-                    s = s.replace("ULL;", "u64;");
-                    s = s.replace(" = ", ":u64 = ");
-
-                }
-
-                else
-                {
-                    s = s.replace(" = ", ":usize = ");
-
-                }
-
-
                 vk_enum_str.push_str(&format!("pub const {}\n", s));
             }
         }
