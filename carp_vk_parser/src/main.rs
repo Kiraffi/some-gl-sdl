@@ -1,4 +1,4 @@
-#![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
+#![allow(dead_code)]
 
 use std::{clone, io::Read};
 use carp_xml_parser::{XMLElement, get_text_from_array};
@@ -699,10 +699,6 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                 }
                 if enum_name == "API Constants"
                 {
-                    println!("api constants");
-                    enum_name = "APIConstants".to_string();
-
-
                     for c in &child2.elements
                     {
                         let mut constant = ConstantValue{ name: String::new(), constant_type: String::new(), constant_value: String::new()  };
