@@ -5,7 +5,7 @@ use std::io::Read;
 
 use regex::Regex;
 
-use std::os::raw::*;
+//use std::os::raw::*;
 
 
 //include!("../combined.rs");

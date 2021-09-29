@@ -1,6 +1,6 @@
-#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
+#![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-use std::{intrinsics::transmute, mem::transmute_copy, os::raw::*};
+use std::{mem::transmute_copy, os::raw::*};
 pub mod fn_test;
 use fn_test::*;
 
