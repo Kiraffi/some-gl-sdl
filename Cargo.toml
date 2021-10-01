@@ -10,6 +10,7 @@ members = [
 	"carp_sdl",
 	"carp_sdl_parser",
 	"carp_vk_parser",
+	"text_test",
 ]
 
 [profile.dev]
@@ -22,3 +23,14 @@ debug = true
 opt-level = 0
 panic = "abort"
 #linker-flavor = "ld64.lld"
+
+
+[profile.release]
+codegen-units = 32
+incremental = true
+overflow-checks = true
+debug-assertions = true
+lto = true
+debug = true
+opt-level = 3
+panic = "abort"
