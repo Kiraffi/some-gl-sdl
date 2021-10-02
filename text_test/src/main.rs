@@ -1680,7 +1680,7 @@ fn find_u128x16_rotate_3(s: &str) -> usize
 
 
 
-
+/*
 fn find_u32x32_rotate_3(s: &str) -> usize
 {
     let v = !V32;
@@ -2290,78 +2290,71 @@ fn find_u128x32_rotate_3(s: &str) -> usize
 
     return find_ending(ss, counter);
 }
+*/
 
 
 
 
 
-
-fn find_u8_simd_fake8(s: &str) -> usize
+fn find_simd(s: &str) -> usize
 {
     let v = unsafe { _mm_set1_epi8(0x61i8) };
     let ss = s.as_bytes();
-    
+    let len = ss.len() - 16;
     
     let mut counter = 0;
-    let zero_u = unsafe { _mm_set1_epi8(0) } ;
-
-    while counter + 16 <= s.len()
+    let one_u = unsafe { _mm_set1_epi8(-1) } ;
+    let mut p = ss.as_ptr() as *const __m128i;
+    while counter < len
     {
-        let slice = &ss[counter..counter + 16];
-        //let t = unsafe{ _mm_loadl_epi64(slice.as_ptr() as *const __m128i ) };
-        let t = unsafe{ _mm_loadl_epi64(slice.as_ptr() as *const __m128i ) };
-        //let a: __m256 = unsafe { _mm256_load_epi32(slice.as_ptr() as *const i32 ) };
-        
-        let u = unsafe { _mm_cmpeq_epi8(t, v) };
-        counter += 16;
-
-        if unsafe{ _mm_test_all_zeros(u, zero_u) } != 0
+        unsafe 
         {
-            break;
-        }
-    }
-
-    counter = counter - 16;
-    return find_ending(ss, counter);
-}
-
-
-
-
-fn find_u8_simd_fake9(s: &str) -> usize
-{
-    let v = unsafe { _mm_set1_epi8(0x61i8) };
-    let ss = s.as_bytes();
-    
-    
-    let mut counter = 0;
-    let zero_u = unsafe { _mm_set1_epi8(0) } ;
-
-    let mut p = ss.as_ptr();
-    
-    while counter + 16 <= s.len()
-    {
-        unsafe {
-        //let slice = &ss[counter..counter + 16];
-        //let t = unsafe{ _mm_loadl_epi64(slice.as_ptr() as *const __m128i ) };
-            let t = _mm_loadl_epi64(p as *const __m128i );
-            
-            
+            let t =  _mm_load_si128(p);
             let u = _mm_cmpeq_epi8(t, v);
-            counter += 16;
-            p =p.add(16);
-            if _mm_test_all_zeros(u, zero_u) != 0
+
+            if _mm_test_all_zeros(u, one_u) == 0
             {
                 break;
             }
+
+            counter += 16;
+            p = p.add(1);
         }
     }
 
-    counter = counter - 16;
     return find_ending(ss, counter);
 }
 
 
+
+fn find_simd_256(s: &str) -> usize
+{
+    let v = unsafe { _mm256_set1_epi8(0x61i8) };
+    let ss = s.as_bytes();
+    let len = ss.len() - 32;
+    
+    let mut counter = 0;
+    let one_u = unsafe { _mm256_set1_epi8(-1) } ;
+    let mut p = ss.as_ptr() as *const __m256i;
+    while counter < len
+    {
+        unsafe 
+        {
+            let t =  _mm256_load_si256(p);
+            let u = _mm256_cmpeq_epi8(t, v);
+
+            if _mm256_testz_si256(u, one_u) == 0
+            {
+                break;
+            }
+
+            counter += 32;
+            p = p.add(1);
+        }
+    }
+    
+    return find_ending(ss, counter);
+}
 
 
 
@@ -2375,7 +2368,7 @@ fn print_find(s: &str, s_len: usize, type_str: &str, f: fn(s: &str) -> usize)
     let mut max_sum = 0u128;
     let mut min_sum = !0u128;
     let mut amount = 0;
-    for _ in 0..1000
+    for _ in 0..100
     {
         amount += 1;
         let timer = std::time::Instant::now();
@@ -2467,45 +2460,9 @@ fn main()
     print_find(&s, s_len,"using u32x16_rotate_3_times", find_u32x16_rotate_3);
     print_find(&s, s_len,"using u64x16_rotate_3_times", find_u64x16_rotate_3);
     print_find(&s, s_len,"using u128x16_rotate_3_times", find_u128x16_rotate_3);
-    print_find(&s, s_len,"using u32x32_rotate_3_times", find_u32x32_rotate_3);
-    print_find(&s, s_len,"using u64x32_rotate_3_times", find_u64x32_rotate_3);
-    print_find(&s, s_len,"using u128x32_rotate_3_times", find_u128x32_rotate_3);
-    
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 6", find_u8_simd_fake6);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 6_2", find_u8_simd_fake6_2);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    
 
-
-    //print_find(&s, s_len,"using fakesimd 7", find_u8_simd_fake7);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 7_2", find_u8_simd_fake7_2);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 7_32",  find_u8_simd_fake7_32);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 7_2_32",  find_u8_simd_fake7_2_32);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 7_2_64",  find_u8_simd_fake7_2_64);
-
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    //print_find(&s, s_len,"using fakesimd 7_2_64_2",  find_u8_simd_fake7_2_64_2);
-    
-   
-
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    print_find(&s, s_len,"using simd 8", find_u8_simd_fake8);
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    print_find(&s, s_len,"using simd 9", find_u8_simd_fake9);
-
-    
-    //std::thread::sleep(std::time::Duration::from_millis(100));
-    print_find(&s, s_len,"using find char", find_find_char);
-
-
- 
-    
+    print_find(&s, s_len,"using simd", find_simd);
+    print_find(&s, s_len,"using simd256", find_simd_256);
 }
 
 
