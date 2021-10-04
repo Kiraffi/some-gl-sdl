@@ -2892,7 +2892,7 @@ fn find_u32x8_rotate_3_half(s: &str) -> usize
     return find_ending(ss, counter);
 }
 
-fn find_u64x8_rotate_3_half(s: &str) -> usize
+fn find_u64x8_rotate_3_half_left(s: &str) -> usize
 {
     let v = !V64;
     let ss = s.as_bytes();
@@ -2958,7 +2958,7 @@ fn find_u64x8_rotate_3_half(s: &str) -> usize
 }
 
 
-fn find_u64x8_rotate_3_half_left(s: &str) -> usize
+fn find_u64x8_rotate_3_half(s: &str) -> usize
 {
     let v = !V64;
     let ss = s.as_bytes();
