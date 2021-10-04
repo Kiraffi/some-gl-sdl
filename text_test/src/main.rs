@@ -2327,6 +2327,59 @@ fn find_u64_rotate_3_half(s: &str) -> usize
     counter = counter - 8;
     return find_ending(ss, counter);
 }
+
+fn find_u64_rotate_3_half_2(s: &str) -> usize
+{
+    // take invert
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8;
+    
+    let mut counter = 0;
+    let mut u = 0u64;
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len && u == 0
+    {
+        let t = unsafe{ *p } ^ v;
+
+        u = t;
+        u &= (u & 0xf0f0_f0f0_f0f0_f0f0) >> 4;
+        u &= (u & 0x0c0c_0c0c_0c0c_0c0c) >> 2;
+        u &= (u & 0x0202_0202_0202_0202) >> 1;
+
+        counter += 8;
+        p = unsafe { p.add(1) };
+    }
+    counter = counter - 8;
+    return find_ending(ss, counter);
+}
+
+fn find_u64_rotate_3_half_left(s: &str) -> usize
+{
+    // take invert
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8;
+    
+    let mut counter = 0;
+    let mut u = 0u64;
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len && u == 0
+    {
+        let t = unsafe{ *p } ^ v;
+
+        u = t;
+        u &= (u & 0x0f0f_0f0f_0f0f_0f0f) << 4;
+        u &= (u & 0x3030_3030_3030_3030) << 2;
+        u &= (u & 0x4040_4040_4040_4040) << 1;
+
+        counter += 8;
+        p = unsafe { p.add(1) };
+    }
+    counter = counter - 8;
+    return find_ending(ss, counter);
+}
+ 
  
 fn find_u128_rotate_3_half(s: &str) -> usize
 {
@@ -2347,6 +2400,34 @@ fn find_u128_rotate_3_half(s: &str) -> usize
         u &= (u & 0xf0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0) >> 4;
         u &= (u & 0xcccc_cccc_cccc_cccc_cccc_cccc_cccc_cccc) >> 2;
         u &= (u & 0xaaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa) >> 1;
+
+        counter += 16;
+        p = unsafe { p.add(1) };
+    }
+    counter = counter - 16;
+    return find_ending(ss, counter);
+}
+
+
+fn find_u128_rotate_3_half_left(s: &str) -> usize
+{
+    let v = !V128;
+    let ss = s.as_bytes();
+    let len = ss.len() - 16;
+    
+    let mut counter = 0;
+    let mut u = 0u128;
+    let mut p = ss.as_ptr() as *const u128;
+    while counter < len && u == 0
+    {
+        let t = unsafe{ *p } ^ v;
+
+        u = t;
+        // first mask 4 bits, for 4 bit swap, then 2 bits for every 2 bit sequence swap and finally one bit swapping next to each other.
+        // In case the one or another is 0, the & operation will 'copy' the 0 to the other one and thus the 0 will 'spread'.
+        u &= (u & 0x0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f) << 4;
+        u &= (u & 0x3030_3030_3030_3030_3030_3030_3030_3030) << 2;
+        u &= (u & 0x4040_4040_4040_4040_4040_4040_4040_4040) << 1;
 
         counter += 16;
         p = unsafe { p.add(1) };
@@ -2436,6 +2517,47 @@ fn find_u64x2_rotate_3_half(s: &str) -> usize
     return find_ending(ss, counter);
 }
 
+
+fn find_u64x2_rotate_3_half_left(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 4;
+    
+    let mut counter = 0;
+
+    let u0 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u1 = 0x3030_3030_3030_3030;
+    let u2 = 0x4040_4040_4040_4040;
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+
+
+        t1 &= (t1 & u0) << 4;
+        t1 &= (t1 & u1) << 2;
+        t1 &= (t1 & u2) << 1;
+        t2 &= (t2 & u0) << 4;
+        t2 &= (t2 & u1) << 2;
+        t2 &= (t2 & u2) << 1;
+
+
+        if (t1 | t2) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 2;
+        p = unsafe { p.add(2) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
 fn find_u128x2_rotate_3_half(s: &str) -> usize
 {
     let v = !V128;
@@ -2474,6 +2596,44 @@ fn find_u128x2_rotate_3_half(s: &str) -> usize
     return find_ending(ss, counter);
 }
 
+
+fn find_u128x2_rotate_3_half_left(s: &str) -> usize
+{
+    let v = !V128;
+    let ss = s.as_bytes();
+    let len = ss.len() - 16 * 2;
+    
+    let mut counter = 0;
+
+    let u0 = 0x0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f;
+    let u1 = 0x3030_3030_3030_3030_3030_3030_3030_3030;
+    let u2 = 0x4040_4040_4040_4040_4040_4040_4040_4040;
+
+    let mut p = ss.as_ptr() as *const u128;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+
+        t1 &= (t1 & u0) << 4;
+        t1 &= (t1 & u1) << 2;
+        t1 &= (t1 & u2) << 1;
+        t2 &= (t2 & u0) << 4;
+        t2 &= (t2 & u1) << 2;
+        t2 &= (t2 & u2) << 1;
+
+
+        if (t1 | t2) != 0
+        {
+            break;
+        }        
+
+        counter += 16 * 2;
+        p = unsafe { p.add(2) };
+    }
+
+    return find_ending(ss, counter);
+}
 
 
 fn find_u32x4_rotate_3_half(s: &str) -> usize
@@ -2568,6 +2728,56 @@ fn find_u64x4_rotate_3_half(s: &str) -> usize
 
     return find_ending(ss, counter);
 }
+
+fn find_u64x4_rotate_3_half_left(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 4;
+    
+    let mut counter = 0;
+
+    let u0 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u1 = 0x3030_3030_3030_3030;
+    let u2 = 0x4040_4040_4040_4040;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+        t1 &= (t1 & u0) << 4;
+        t2 &= (t2 & u0) << 4;
+        t3 &= (t3 & u0) << 4;
+        t4 &= (t4 & u0) << 4;
+        t1 &= (t1 & u1) << 2;
+        t2 &= (t2 & u1) << 2;
+        t3 &= (t3 & u1) << 2;
+        t4 &= (t4 & u1) << 2;
+        t1 &= (t1 & u2) << 1;
+        t2 &= (t2 & u2) << 1;
+        t3 &= (t3 & u2) << 1;
+        t4 &= (t4 & u2) << 1;
+
+        t1 = t1 | t2;
+        t3 = t3 | t4;
+
+        if (t1 | t3) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 4;
+        p = unsafe { p.add(4) };
+    }
+
+    return find_ending(ss, counter);
+}
+
 
 fn find_u128x4_rotate_3_half(s: &str) -> usize
 {
@@ -2690,6 +2900,72 @@ fn find_u64x8_rotate_3_half(s: &str) -> usize
     
     let mut counter = 0;
 
+    let u0 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u1 = 0x3030_3030_3030_3030;
+    let u2 = 0x4040_4040_4040_4040;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+
+        t1 &= (t1 & u0) << 4;
+        t1 &= (t1 & u1) << 2;
+        t1 &= (t1 & u2) << 1;
+        t2 &= (t2 & u0) << 4;
+        t2 &= (t2 & u1) << 2;
+        t2 &= (t2 & u2) << 1;
+        t3 &= (t3 & u0) << 4;
+        t3 &= (t3 & u1) << 2;
+        t3 &= (t3 & u2) << 1;
+        t4 &= (t4 & u0) << 4;
+        t4 &= (t4 & u1) << 2;
+        t4 &= (t4 & u2) << 1;
+        t5 &= (t5 & u0) << 4;
+        t5 &= (t5 & u1) << 2;
+        t5 &= (t5 & u2) << 1;
+        t6 &= (t6 & u0) << 4;
+        t6 &= (t6 & u1) << 2;
+        t6 &= (t6 & u2) << 1;
+        t7 &= (t7 & u0) << 4;
+        t7 &= (t7 & u1) << 2;
+        t7 &= (t7 & u2) << 1;
+        t8 &= (t8 & u0) << 4;
+        t8 &= (t8 & u1) << 2;
+        t8 &= (t8 & u2) << 1;
+
+
+
+        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 8;
+        p = unsafe { p.add(8) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+fn find_u64x8_rotate_3_half_left(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 8;
+    
+    let mut counter = 0;
+
     let u0 = 0xf0f0_f0f0_f0f0_f0f0;
     let u1 = 0xcccc_cccc_cccc_cccc;
     let u2 = 0xaaaa_aaaa_aaaa_aaaa;
@@ -2745,7 +3021,6 @@ fn find_u64x8_rotate_3_half(s: &str) -> usize
 
     return find_ending(ss, counter);
 }
-
 fn find_u128x8_rotate_3_half(s: &str) -> usize
 {
     let v = !V128;
@@ -3170,7 +3445,428 @@ fn find_u32x8_rotate_3_parallel(s: &str) -> usize
 
 
 
+fn find_u32x4_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V32;
+    let ss = s.as_bytes();
+    let len = ss.len() - 4 * 4;
+    
+    let mut counter = 0;
 
+    let u0 = 0xf0f0_f0f0;
+    //let u1 = 0xcccc_cccc;
+    //let u2 = 0xaaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f;
+    let u4 = 0x3333_3333;
+    let u5 = 0x5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u32;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u3) << 4;
+        t4 &= (t4 & u3) << 4;
+
+
+        t1 |= t3;
+        t2 |= t4;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+
+        if (t1 | t2) != 0
+        {
+            break;
+        }        
+
+        counter += 4 * 4;
+        p = unsafe { p.add(4) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+fn find_u64x2_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 2;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
+    //let u1 = 0xcccc_cccc;
+    //let u2 = 0xaaaa_aaaa_aaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u4 = 0x3333_3333_3333_3333;
+    let u5 = 0x5555_5555_5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        //let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        //let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+
+        t1 &= (t1 & u3) << 4;
+        t2 &= (t2 & u0) >> 4;
+        //t3 &= (t3 & u3) << 4;
+        //t4 &= (t4 & u3) << 4;
+
+
+        t1 |= t2;
+        t1 &= (t1 & u4) << 2;
+        t1 &= (t1 & u5) << 1;
+
+        if t1 != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 2;
+        p = unsafe { p.add(2) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+fn find_u64x4_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 4;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
+    //let u1 = 0xcccc_cccc;
+    //let u2 = 0xaaaa_aaaa_aaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u4 = 0x3333_3333_3333_3333;
+    let u5 = 0x5555_5555_5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u3) << 4;
+        t4 &= (t4 & u3) << 4;
+
+
+        t1 |= t3;
+        t2 |= t4;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+
+        if (t1 | t2) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 4;
+        p = unsafe { p.add(4) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+
+fn find_u32x8_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V32;
+    let ss = s.as_bytes();
+    let len = ss.len() - 4 * 8;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0;
+    //let u1 = 0xcccc_cccc;
+    //let u2 = 0xaaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f;
+    let u4 = 0x3333_3333;
+    let u5 = 0x5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u32;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u0) >> 4;
+        t4 &= (t4 & u0) >> 4;
+        t5 &= (t5 & u3) << 4;
+        t6 &= (t6 & u3) << 4;
+        t7 &= (t7 & u3) << 4;
+        t8 &= (t8 & u3) << 4;
+
+
+        t1 |= t5;
+        t2 |= t6;
+        t3 |= t7;
+        t4 |= t8;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+        t3 &= (t3 & u4) << 2;
+        t4 &= (t4 & u4) << 2;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+        t3 &= (t3 & u5) << 1;
+        t4 &= (t4 & u5) << 1;
+
+        if (t1 | t2 | t3 | t4) != 0
+        {
+            break;
+        }        
+
+        counter += 4 * 8;
+        p = unsafe { p.add(8) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+
+fn find_u32x16_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V32;
+    let ss = s.as_bytes();
+    let len = ss.len() - 4 * 16;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0;
+    let u1 = 0xcccc_cccc;
+    //let u2 = 0xaaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f;
+    let u4 = 0x3333_3333;
+    let u5 = 0x5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u32;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+        let mut r1 = (unsafe{ *p.offset(8) } ^ v);
+        let mut r2 = (unsafe{ *p.offset(9) } ^ v);
+        let mut r3 = (unsafe{ *p.offset(10) } ^ v);
+        let mut r4 = (unsafe{ *p.offset(11) } ^ v);
+        let mut r5 = (unsafe{ *p.offset(12) } ^ v);
+        let mut r6 = (unsafe{ *p.offset(13) } ^ v);
+        let mut r7 = (unsafe{ *p.offset(14) } ^ v);
+        let mut r8 = (unsafe{ *p.offset(15) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u0) >> 4;
+        t4 &= (t4 & u0) >> 4;
+        t5 &= (t5 & u0) >> 4;
+        t6 &= (t6 & u0) >> 4;
+        t7 &= (t7 & u0) >> 4;
+        t8 &= (t8 & u0) >> 4;
+        
+        r1 &= (r1 & u3) << 4;
+        r2 &= (r2 & u3) << 4;
+        r3 &= (r3 & u3) << 4;
+        r4 &= (r4 & u3) << 4;
+        r5 &= (r5 & u3) << 4;
+        r6 &= (r6 & u3) << 4;
+        r7 &= (r7 & u3) << 4;
+        r8 &= (r8 & u3) << 4;
+
+
+        t1 |= r1;
+        t2 |= r2;
+        t3 |= r3;
+        t4 |= r4;
+        t5 |= r5;
+        t6 |= r6;
+        t7 |= r7;
+        t8 |= r8;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+        t3 &= (t3 & u4) << 2;
+        t4 &= (t4 & u4) << 2;
+        t5 &= (t5 & u1) >> 2;
+        t6 &= (t6 & u1) >> 2;
+        t7 &= (t7 & u1) >> 2;
+        t8 &= (t8 & u1) >> 2;
+
+        t1 |= t5;
+        t2 |= t6;
+        t3 |= t7;
+        t4 |= t8;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+        t3 &= (t3 & u5) << 1;
+        t4 &= (t4 & u5) << 1;
+
+        if (t1 | t2 | t3 | t4) != 0
+        {
+            break;
+        }        
+
+        counter += 4 * 16;
+        p = unsafe { p.add(16) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+fn find_u64x16_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 8;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
+    let u1 = 0xcccc_cccc_cccc_cccc;
+    //let u2 = 0xaaaa_aaaa_aaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u4 = 0x3333_3333_3333_3333;
+    let u5 = 0x5555_5555_5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+        let mut r1 = (unsafe{ *p.offset(8) } ^ v);
+        let mut r2 = (unsafe{ *p.offset(9) } ^ v);
+        let mut r3 = (unsafe{ *p.offset(10) } ^ v);
+        let mut r4 = (unsafe{ *p.offset(11) } ^ v);
+        let mut r5 = (unsafe{ *p.offset(12) } ^ v);
+        let mut r6 = (unsafe{ *p.offset(13) } ^ v);
+        let mut r7 = (unsafe{ *p.offset(14) } ^ v);
+        let mut r8 = (unsafe{ *p.offset(15) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u0) >> 4;
+        t4 &= (t4 & u0) >> 4;
+        t5 &= (t5 & u0) >> 4;
+        t6 &= (t6 & u0) >> 4;
+        t7 &= (t7 & u0) >> 4;
+        t8 &= (t8 & u0) >> 4;
+        
+        r1 &= (r1 & u3) << 4;
+        r2 &= (r2 & u3) << 4;
+        r3 &= (r3 & u3) << 4;
+        r4 &= (r4 & u3) << 4;
+        r5 &= (r5 & u3) << 4;
+        r6 &= (r6 & u3) << 4;
+        r7 &= (r7 & u3) << 4;
+        r8 &= (r8 & u3) << 4;
+
+
+        t1 |= r1;
+        t2 |= r2;
+        t3 |= r3;
+        t4 |= r4;
+        t5 |= r5;
+        t6 |= r6;
+        t7 |= r7;
+        t8 |= r8;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+        t3 &= (t3 & u4) << 2;
+        t4 &= (t4 & u4) << 2;
+        t5 &= (t5 & u1) >> 2;
+        t6 &= (t6 & u1) >> 2;
+        t7 &= (t7 & u1) >> 2;
+        t8 &= (t8 & u1) >> 2;
+
+        t1 |= t5;
+        t2 |= t6;
+        t3 |= t7;
+        t4 |= t8;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+        t3 &= (t3 & u5) << 1;
+        t4 &= (t4 & u5) << 1;
+
+        if (t1 | t2 | t3 | t4) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 16;
+        p = unsafe { p.add(16) };
+    }
+
+    return find_ending(ss, counter);
+}
 
 
 
@@ -3228,6 +3924,147 @@ fn find_u64x8_rotate_3_parallel(s: &str) -> usize
 
 
 
+fn find_u64x8_rotate_3_parallel_2(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 8;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
+    let u1 = 0xcccc_cccc_cccc_cccc;
+    let u2 = 0xaaaa_aaaa_aaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u4 = 0x3333_3333_3333_3333;
+    let u5 = 0x5555_5555_5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u0) >> 4;
+        t4 &= (t4 & u0) >> 4;
+        t5 &= (t5 & u3) << 4;
+        t6 &= (t6 & u3) << 4;
+        t7 &= (t7 & u3) << 4;
+        t8 &= (t8 & u3) << 4;
+
+
+        t1 |= t5;
+        t2 |= t6;
+        t3 |= t7;
+        t4 |= t8;
+
+        t1 &= (t1 & u1) >> 2;
+        t2 &= (t2 & u1) >> 2;
+        t3 &= (t3 & u4) << 2;
+        t4 &= (t4 & u4) << 2;
+
+        t1 |= t3;
+        t2 |= t4;
+
+        t1 &= (t1 & u2) >> 1;
+        t2 &= (t2 & u5) << 1;
+
+        if (t1 | t2) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 8;
+        p = unsafe { p.add(8) };
+    }
+
+    return find_ending(ss, counter);
+}
+
+
+
+
+fn find_u64x8_rotate_3_parallel_3(s: &str) -> usize
+{
+    let v = !V64;
+    let ss = s.as_bytes();
+    let len = ss.len() - 8 * 8;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
+    //let u1 = 0xcccc_cccc_cccc_cccc;
+    //let u2 = 0xaaaa_aaaa_aaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
+    let u4 = 0x3333_3333_3333_3333;
+    let u5 = 0x5555_5555_5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u64;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u0) >> 4;
+        t4 &= (t4 & u0) >> 4;
+        t5 &= (t5 & u3) << 4;
+        t6 &= (t6 & u3) << 4;
+        t7 &= (t7 & u3) << 4;
+        t8 &= (t8 & u3) << 4;
+
+
+        t1 |= t5;
+        t2 |= t6;
+        t3 |= t7;
+        t4 |= t8;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+        t3 &= (t3 & u4) << 2;
+        t4 &= (t4 & u4) << 2;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+        t3 &= (t3 & u5) << 1;
+        t4 &= (t4 & u5) << 1;
+
+
+        if (t1 | t2 | t3 | t4) != 0
+        {
+            break;
+        }        
+
+        counter += 8 * 8;
+        p = unsafe { p.add(8) };
+    }
+
+    return find_ending(ss, counter);
+}
+
 
 fn find_u128x8_rotate_3_parallel(s: &str) -> usize
 {
@@ -3284,6 +4121,75 @@ fn find_u128x8_rotate_3_parallel(s: &str) -> usize
 
 
 
+fn find_u128x8_rotate_3_parallel_3(s: &str) -> usize
+{
+    let v = !V128;
+    let ss = s.as_bytes();
+    let len = ss.len() - 16 * 8;
+    
+    let mut counter = 0;
+
+    let u0 = 0xf0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0;
+    //let u1 = 0xcccc_cccc_cccc_cccc_cccc_cccc_cccc_cccc;
+    //let u2 = 0xaaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa;
+
+    let u3 = 0x0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f;
+    let u4 = 0x3333_3333_3333_3333_3333_3333_3333_3333;
+    let u5 = 0x5555_5555_5555_5555_5555_5555_5555_5555;
+
+
+    let mut p = ss.as_ptr() as *const u128;
+    while counter < len
+    {
+        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
+        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
+        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
+        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
+
+        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
+        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
+        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
+        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
+
+
+        t1 &= (t1 & u0) >> 4;
+        t2 &= (t2 & u0) >> 4;
+        t3 &= (t3 & u0) >> 4;
+        t4 &= (t4 & u0) >> 4;
+        t5 &= (t5 & u3) << 4;
+        t6 &= (t6 & u3) << 4;
+        t7 &= (t7 & u3) << 4;
+        t8 &= (t8 & u3) << 4;
+
+
+        t1 |= t5;
+        t2 |= t6;
+        t3 |= t7;
+        t4 |= t8;
+
+        t1 &= (t1 & u4) << 2;
+        t2 &= (t2 & u4) << 2;
+        t3 &= (t3 & u4) << 2;
+        t4 &= (t4 & u4) << 2;
+
+        t1 &= (t1 & u5) << 1;
+        t2 &= (t2 & u5) << 1;
+        t3 &= (t3 & u5) << 1;
+        t4 &= (t4 & u5) << 1;
+
+
+        if (t1 | t2 | t3 | t4) != 0
+        {
+            break;
+        }        
+
+        counter += 16 * 8;
+        p = unsafe { p.add(8) };
+    }
+
+    return find_ending(ss, counter);
+}
+
 
 
 fn find_simd(s: &str) -> usize
@@ -3315,7 +4221,36 @@ fn find_simd(s: &str) -> usize
     return find_ending(ss, counter);
 }
 
+/*
+fn find_simd_rot3(s: &str) -> usize
+{
+    let v = unsafe { _mm_set1_epi8(!0x61i8) };
+    let ss = s.as_bytes();
+    let len = ss.len() - 16;
+    
+    let mut counter = 0;
+    let one_u = unsafe { _mm_set1_epi8(-1) } ;
+    let mut p = ss.as_ptr() as *const __m128i;
+    while counter < len
+    {
+        unsafe 
+        {
+            let t =  _mm_load_si128(p);
+            let u = _mm_cmpeq_epi8(t, v);
 
+            if _mm_test_all_zeros(u, one_u) == 0
+            {
+                break;
+            }
+
+            counter += 16;
+            p = p.add(1);
+        }
+    }
+
+    return find_ending(ss, counter);
+}
+*/
 /*
 fn find_simd_256(s: &str) -> usize
 {
@@ -3454,16 +4389,25 @@ fn main()
 
     print_find(&s, s_len,"using u32_rotate_3_times_half", find_u32_rotate_3_half);
     print_find(&s, s_len,"using u64_rotate_3_times_half", find_u64_rotate_3_half);
+    print_find(&s, s_len,"using u64_rotate_3_times_half_2", find_u64_rotate_3_half_2);
+    print_find(&s, s_len,"using u64_rotate_3_times_half_left", find_u64_rotate_3_half_left);
+    
     print_find(&s, s_len,"using u128_rotate_3_times_half", find_u128_rotate_3_half);
+    print_find(&s, s_len,"using u128_rotate_3_times_half_left", find_u128_rotate_3_half_left);
 
     print_find(&s, s_len,"using u32x2_rotate_3_times_half", find_u32x2_rotate_3_half);
     print_find(&s, s_len,"using u64x2_rotate_3_times_half", find_u64x2_rotate_3_half);
+    print_find(&s, s_len,"using u64x2_rotate_3_times_half_left", find_u64x2_rotate_3_half_left);
     print_find(&s, s_len,"using u128x2_rotate_3_times_half", find_u128x2_rotate_3_half);
+    print_find(&s, s_len,"using u128x2_rotate_3_times_half_left", find_u128x2_rotate_3_half_left);
+    
     print_find(&s, s_len,"using u32x4_rotate_3_times_half", find_u32x4_rotate_3_half);
     print_find(&s, s_len,"using u64x4_rotate_3_times_half", find_u64x4_rotate_3_half);
+    print_find(&s, s_len,"using u64x4_rotate_3_times_half_left", find_u64x4_rotate_3_half_left);
     print_find(&s, s_len,"using u128x4_rotate_3_times_half", find_u128x4_rotate_3_half);
     print_find(&s, s_len,"using u32x8_rotate_3_times_half", find_u32x8_rotate_3_half);
     print_find(&s, s_len,"using u64x8_rotate_3_times_half", find_u64x8_rotate_3_half);
+    print_find(&s, s_len,"using u64x8_rotate_3_times_half_left", find_u64x8_rotate_3_half_left);
     print_find(&s, s_len,"using u128x8_rotate_3_times_half", find_u128x8_rotate_3_half);
     print_find(&s, s_len,"using u32x16_rotate_3_times_half", find_u32x16_rotate_3_half);
     print_find(&s, s_len,"using u64x16_rotate_3_times_half", find_u64x16_rotate_3_half);
@@ -3473,13 +4417,27 @@ fn main()
     //print_find(&s, s_len,"using simd256", find_simd_256);
 
 
-    print_find(&s, s_len,"using find_u32x8_rotate_3_parallel", find_u32x8_rotate_3_parallel);
+    print_find(&s, s_len,"using find_u64x2_rotate_3_parallel_2", find_u64x2_rotate_3_parallel_2);
 
+    print_find(&s, s_len,"using find_u32x4_rotate_3_parallel_2", find_u32x4_rotate_3_parallel_2);
+    print_find(&s, s_len,"using find_u64x4_rotate_3_parallel_2", find_u64x4_rotate_3_parallel_2);
+
+    
+
+    print_find(&s, s_len,"using find_u32x8_rotate_3_parallel", find_u32x8_rotate_3_parallel);
+    print_find(&s, s_len,"using find_u32x8_rotate_3_parallel_2", find_u32x8_rotate_3_parallel_2);
+    
     print_find(&s, s_len,"using find_u64x8_rotate_3_parallel", find_u64x8_rotate_3_parallel);
+    print_find(&s, s_len,"using find_u64x8_rotate_3_parallel_2", find_u64x8_rotate_3_parallel_2);
+    print_find(&s, s_len,"using find_u64x8_rotate_3_parallel_3", find_u64x8_rotate_3_parallel_3);
+    
     print_find(&s, s_len,"using find_u128x8_rotate_3_parallel", find_u128x8_rotate_3_parallel);
+    print_find(&s, s_len,"using find_u128x8_rotate_3_parallel_3", find_u128x8_rotate_3_parallel_3);
     
+    print_find(&s, s_len,"using find_u32x16_rotate_3_parallel_3", find_u32x16_rotate_3_parallel_2);
+    print_find(&s, s_len,"using find_u64x16_rotate_3_parallel_2", find_u64x16_rotate_3_parallel_2);
     
-    
+        
 }
 
 
