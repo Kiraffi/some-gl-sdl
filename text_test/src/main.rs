@@ -3682,7 +3682,7 @@ fn find_u32x16_rotate_3_parallel_2(s: &str) -> usize
     let mut counter = 0;
 
     let u0 = 0xf0f0_f0f0;
-    let u1 = 0xcccc_cccc;
+    //let u1 = 0xcccc_cccc;
     //let u2 = 0xaaaa_aaaa;
 
     let u3 = 0x0f0f_0f0f;
@@ -3743,22 +3743,26 @@ fn find_u32x16_rotate_3_parallel_2(s: &str) -> usize
         t2 &= (t2 & u4) << 2;
         t3 &= (t3 & u4) << 2;
         t4 &= (t4 & u4) << 2;
-        t5 &= (t5 & u1) >> 2;
-        t6 &= (t6 & u1) >> 2;
-        t7 &= (t7 & u1) >> 2;
-        t8 &= (t8 & u1) >> 2;
+        t5 &= (t5 & u4) << 2;
+        t6 &= (t6 & u4) << 2;
+        t7 &= (t7 & u4) << 2;
+        t8 &= (t8 & u4) << 2;
 
-        t1 |= t5;
-        t2 |= t6;
-        t3 |= t7;
-        t4 |= t8;
+        //t1 |= t5;
+        //t2 |= t6;
+        //t3 |= t7;
+        //t4 |= t8;
 
         t1 &= (t1 & u5) << 1;
         t2 &= (t2 & u5) << 1;
         t3 &= (t3 & u5) << 1;
         t4 &= (t4 & u5) << 1;
+        t5 &= (t5 & u5) << 1;
+        t6 &= (t6 & u5) << 1;
+        t7 &= (t7 & u5) << 1;
+        t8 &= (t8 & u5) << 1;
 
-        if (t1 | t2 | t3 | t4) != 0
+        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8) != 0
         {
             break;
         }        
@@ -3780,7 +3784,7 @@ fn find_u64x16_rotate_3_parallel_2(s: &str) -> usize
     let mut counter = 0;
 
     let u0 = 0xf0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc;
+    //let u1 = 0xcccc_cccc_cccc_cccc;
     //let u2 = 0xaaaa_aaaa_aaaa_aaaa;
 
     let u3 = 0x0f0f_0f0f_0f0f_0f0f;
@@ -3841,22 +3845,26 @@ fn find_u64x16_rotate_3_parallel_2(s: &str) -> usize
         t2 &= (t2 & u4) << 2;
         t3 &= (t3 & u4) << 2;
         t4 &= (t4 & u4) << 2;
-        t5 &= (t5 & u1) >> 2;
-        t6 &= (t6 & u1) >> 2;
-        t7 &= (t7 & u1) >> 2;
-        t8 &= (t8 & u1) >> 2;
+        t5 &= (t5 & u4) << 2;
+        t6 &= (t6 & u4) << 2;
+        t7 &= (t7 & u4) << 2;
+        t8 &= (t8 & u4) << 2;
 
-        t1 |= t5;
-        t2 |= t6;
-        t3 |= t7;
-        t4 |= t8;
+        //t1 |= t5;
+        //t2 |= t6;
+        //t3 |= t7;
+        //t4 |= t8;
 
         t1 &= (t1 & u5) << 1;
         t2 &= (t2 & u5) << 1;
         t3 &= (t3 & u5) << 1;
         t4 &= (t4 & u5) << 1;
+        t5 &= (t5 & u5) << 1;
+        t6 &= (t6 & u5) << 1;
+        t7 &= (t7 & u5) << 1;
+        t8 &= (t8 & u5) << 1;
 
-        if (t1 | t2 | t3 | t4) != 0
+        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8) != 0
         {
             break;
         }        
@@ -4251,7 +4259,7 @@ fn find_simd_rot3(s: &str) -> usize
     return find_ending(ss, counter);
 }
 */
-/*
+
 fn find_simd_256(s: &str) -> usize
 {
     let v = unsafe { _mm256_set1_epi8(0x61i8) };
@@ -4280,7 +4288,7 @@ fn find_simd_256(s: &str) -> usize
     
     return find_ending(ss, counter);
 }
-*/
+
 
 
 
@@ -4414,7 +4422,7 @@ fn main()
     print_find(&s, s_len,"using u128x16_rotate_3_times_half", find_u128x16_rotate_3_half);
 
     print_find(&s, s_len,"using simd", find_simd);
-    //print_find(&s, s_len,"using simd256", find_simd_256);
+    print_find(&s, s_len,"using simd256", find_simd_256);
 
 
     print_find(&s, s_len,"using find_u64x2_rotate_3_parallel_2", find_u64x2_rotate_3_parallel_2);
