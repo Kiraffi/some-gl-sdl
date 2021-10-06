@@ -3049,16 +3049,18 @@ fn find_simd(s: &Vec<Align64ByteMem>) -> usize
     let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
-    let one_u = unsafe { _mm_set1_epi8(-1) } ;
+    //let one_u = unsafe { _mm_set1_epi8(-1) } ;
     let mut p = ss.as_ptr() as *const __m128i;
+    let mut res = 0i32;
     while counter < len
     {
         unsafe 
         {
             let t =  _mm_load_si128(p);
             let u = _mm_cmpeq_epi8(t, v);
-
-            if _mm_test_all_zeros(u, one_u) == 0
+            res  = _mm_movemask_epi8(u);
+            
+            if res != 0//_mm_test_all_zeros(u, one_u) == 0
             {
                 break;
             }
@@ -3067,9 +3069,48 @@ fn find_simd(s: &Vec<Align64ByteMem>) -> usize
             p = p.add(1);
         }
     }
-
+    if res != 0
+    {
+        return counter + res.trailing_zeros() as usize;
+    }
     return find_ending(s, counter);
 }
+
+
+fn find_simd_256(s: &Vec<Align64ByteMem>) -> usize
+{
+    let v = unsafe { _mm256_set1_epi8(0x61i8) };
+    let ss = &s[0].0;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
+    
+    let mut counter = 0;
+    //let one_u = unsafe { _mm256_set1_epi8(-1) } ;
+    let mut p = ss.as_ptr() as *const __m256i;
+    let mut res = 0i32;
+    while counter < len
+    {
+        unsafe 
+        {
+            let t =  _mm256_load_si256(p);
+            let u = _mm256_cmpeq_epi8(t, v);
+            res  = _mm256_movemask_epi8(u);
+            
+            if res != 0//_mm256_testz_si256(u, one_u) == 0
+            {
+                break;
+            }
+
+            counter += 32;
+            p = p.add(1);
+        }
+    }
+    if res != 0
+    {
+        return counter + res.trailing_zeros() as usize;
+    }
+    return find_ending(s, counter);
+}
+
 
 
 fn final_form(s: &Vec<Align64ByteMem>) -> usize
@@ -3151,37 +3192,6 @@ fn find_simd_rot3(s: &Vec<Align64ByteMem>) -> usize
     return find_ending(s, counter);
 }
 */
-
-
-fn find_simd_256(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = unsafe { _mm256_set1_epi8(0x61i8) };
-    let ss = &s[0].0;
-    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
-    
-    let mut counter = 0;
-    let one_u = unsafe { _mm256_set1_epi8(-1) } ;
-    let mut p = ss.as_ptr() as *const __m256i;
-    while counter < len
-    {
-        unsafe 
-        {
-            let t =  _mm256_load_si256(p);
-            let u = _mm256_cmpeq_epi8(t, v);
-
-            if _mm256_testz_si256(u, one_u) == 0
-            {
-                break;
-            }
-
-            counter += 32;
-            p = p.add(1);
-        }
-    }
-    
-    return find_ending(s, counter);
-}
-
 
 
 
