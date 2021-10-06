@@ -91,10 +91,10 @@ fn find_u8_2(s: &Vec<Align64ByteMem>) -> usize
 
 
 
-fn find_ending(ss: &Vec<Align64ByteMem>, mut pos: usize) -> usize
+fn find_ending(s: &Vec<Align64ByteMem>, mut pos: usize) -> usize
 {
-    let len = ss.len() * std::mem::size_of::<Align64ByteMem>();
-    let mut p = unsafe { ss[0].0.as_ptr().add(pos) };
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
+    let mut p = unsafe { s[0].0.as_ptr().add(pos) };
     while pos < len
     {
         unsafe 
@@ -123,59 +123,61 @@ fn find_ending(ss: &Vec<Align64ByteMem>, mut pos: usize) -> usize
 
 fn find_u128_slice_return(s: &Vec<Align64ByteMem>) -> usize
 {
-    let v = V128;    
-    let ss = &s[0].0;    
-    let len = ss.len() - 16;
+    let v = V128;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
 
     let mut counter = 0;
     while counter < len
     {
-        let slice = &ss[counter..counter + 16];
-        let mut t = 0u128;
-        t |= (slice[0] as u128) << (0 * 8);
-        t |= (slice[1] as u128) << (1 * 8);
-        t |= (slice[2] as u128) << (2 * 8);
-        t |= (slice[3] as u128) << (3 * 8);
+        for p in 0..4
+        {
+            let slice = &s[counter / 64].0[p * 16..(p + 1) * 16];
+            let mut t = 0u128;
+            t |= (slice[0] as u128) << (0 * 8);
+            t |= (slice[1] as u128) << (1 * 8);
+            t |= (slice[2] as u128) << (2 * 8);
+            t |= (slice[3] as u128) << (3 * 8);
 
-        t |= (slice[4] as u128) << (4 * 8);
-        t |= (slice[5] as u128) << (5 * 8);
-        t |= (slice[6] as u128) << (6 * 8);
-        t |= (slice[7] as u128) << (7 * 8);
+            t |= (slice[4] as u128) << (4 * 8);
+            t |= (slice[5] as u128) << (5 * 8);
+            t |= (slice[6] as u128) << (6 * 8);
+            t |= (slice[7] as u128) << (7 * 8);
 
-        t |= (slice[8]  as u128) << (8 * 8);
-        t |= (slice[9]  as u128) << (9 * 8);
-        t |= (slice[10] as u128) << (10 * 8);
-        t |= (slice[11] as u128) << (11 * 8);
+            t |= (slice[8]  as u128) << (8 * 8);
+            t |= (slice[9]  as u128) << (9 * 8);
+            t |= (slice[10] as u128) << (10 * 8);
+            t |= (slice[11] as u128) << (11 * 8);
 
-        t |= (slice[12] as u128) << (12 * 8);
-        t |= (slice[13] as u128) << (13 * 8);
-        t |= (slice[14] as u128) << (14 * 8);
-        t |= (slice[15] as u128) << (15 * 8);
+            t |= (slice[12] as u128) << (12 * 8);
+            t |= (slice[13] as u128) << (13 * 8);
+            t |= (slice[14] as u128) << (14 * 8);
+            t |= (slice[15] as u128) << (15 * 8);
 
-        t = t ^ v;
+            t = t ^ v;
 
-        if (t >> (0  * 8)) & 255 == 0 { return counter + 0; }
-        if (t >> (1  * 8)) & 255 == 0 { return counter + 1; }
-        if (t >> (2  * 8)) & 255 == 0 { return counter + 2; }
-        if (t >> (3  * 8)) & 255 == 0 { return counter + 3; }
- 
-        if (t >> (4  * 8)) & 255 == 0 { return counter + 4; }
-        if (t >> (5  * 8)) & 255 == 0 { return counter + 5; }
-        if (t >> (6  * 8)) & 255 == 0 { return counter + 6; }
-        if (t >> (7  * 8)) & 255 == 0 { return counter + 7; }
- 
-        
-        if (t >> 8  * 8) & 255 == 0 { return counter + 8; }
-        if (t >> 9  * 8) & 255 == 0 { return counter + 9; }
-        if (t >> 10 * 8) & 255 == 0 { return counter + 10; }
-        if (t >> 11 * 8) & 255 == 0 { return counter + 11; }
+            if (t >> (0  * 8)) & 255 == 0 { return counter + 0; }
+            if (t >> (1  * 8)) & 255 == 0 { return counter + 1; }
+            if (t >> (2  * 8)) & 255 == 0 { return counter + 2; }
+            if (t >> (3  * 8)) & 255 == 0 { return counter + 3; }
+    
+            if (t >> (4  * 8)) & 255 == 0 { return counter + 4; }
+            if (t >> (5  * 8)) & 255 == 0 { return counter + 5; }
+            if (t >> (6  * 8)) & 255 == 0 { return counter + 6; }
+            if (t >> (7  * 8)) & 255 == 0 { return counter + 7; }
+    
+            
+            if (t >> 8  * 8) & 255 == 0 { return counter + 8; }
+            if (t >> 9  * 8) & 255 == 0 { return counter + 9; }
+            if (t >> 10 * 8) & 255 == 0 { return counter + 10; }
+            if (t >> 11 * 8) & 255 == 0 { return counter + 11; }
 
-        if (t >> 12 * 8) & 255 == 0 { return counter + 12; }
-        if (t >> 13 * 8) & 255 == 0 { return counter + 13; }
-        if (t >> 14 * 8) & 255 == 0 { return counter + 14; }
-        if (t >> 15 * 8) & 255 == 0 { return counter + 15; }
+            if (t >> 12 * 8) & 255 == 0 { return counter + 12; }
+            if (t >> 13 * 8) & 255 == 0 { return counter + 13; }
+            if (t >> 14 * 8) & 255 == 0 { return counter + 14; }
+            if (t >> 15 * 8) & 255 == 0 { return counter + 15; }
 
-        counter += 16;
+            counter += 16;
+        }
     }
 
     return find_ending(s, counter);
@@ -196,7 +198,7 @@ fn find_u32_return(s: &Vec<Align64ByteMem>) -> usize
     let v = V32;
     
     let ss = &s[0].0;
-    let len = ss.len() - 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
 
     let mut p = ss.as_ptr() as *const u32;
     let mut counter = 0;
@@ -223,7 +225,7 @@ fn find_u32_return_test_assign(s: &Vec<Align64ByteMem>) -> usize
     let v = V32;
     
     let ss = &s[0].0;
-    let len = ss.len() - 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
 
     let mut p = ss.as_ptr() as *const u32;
     let mut counter = 0;
@@ -257,7 +259,7 @@ fn find_u32_return_test(s: &Vec<Align64ByteMem>) -> usize
     let v = V32;
     
     let ss = &s[0].0;
-    let len = ss.len() - 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
 
     let mut p = ss.as_ptr() as *const u32;
     let mut counter = 0;
@@ -287,7 +289,7 @@ fn find_u64_return(s: &Vec<Align64ByteMem>) -> usize
     let v = V64;
     let ss = &s[0].0;
     let mut p = ss.as_ptr() as *const u64;
-    let len = ss.len() - 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     let mut counter = 0;
     while counter < len
     {
@@ -316,7 +318,7 @@ fn find_u64_return_2(s: &Vec<Align64ByteMem>) -> usize
     let v = V64;
     let ss = &s[0].0;
     let mut p = ss.as_ptr() as *const u64;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
 
     let mut test_case = false;
@@ -383,7 +385,7 @@ fn find_u64x4_return(s: &Vec<Align64ByteMem>) -> usize
     let v = V64;
     let ss = &s[0].0;
     let mut p = ss.as_ptr() as *const u64;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
 
     let mut counter = 0;
@@ -446,7 +448,7 @@ fn find_u64x4_return_test(s: &Vec<Align64ByteMem>) -> usize
     let v = V64;
     let ss = &s[0].0;
     let mut p = ss.as_ptr() as *const u64;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut find_test = false;
     let mut counter = 0;
@@ -509,7 +511,7 @@ fn find_u128_return(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
 
     let mut p = ss.as_ptr() as *const u128;
     let mut counter = 0;
@@ -551,7 +553,7 @@ fn find_u128x2_return(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 2;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
 
     let mut p = ss.as_ptr() as *const u128;
     let mut counter = 0;
@@ -610,7 +612,7 @@ fn find_u32_rotate_7(s: &Vec<Align64ByteMem>) -> usize
     // take invert
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u32;
@@ -644,7 +646,7 @@ fn find_u64_rotate_7(s: &Vec<Align64ByteMem>) -> usize
     // take invert
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u64;
@@ -678,7 +680,7 @@ fn find_u128_rotate_7(s: &Vec<Align64ByteMem>) -> usize
     // take invert
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u128;
@@ -712,7 +714,7 @@ fn find_u32_rotate_3(s: &Vec<Align64ByteMem>) -> usize
     // take invert so that xor with value will be all ones
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u32;
@@ -738,7 +740,7 @@ fn find_u64_rotate_3(s: &Vec<Align64ByteMem>) -> usize
     // take invert
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u64;
@@ -763,7 +765,7 @@ fn find_u128_rotate_3(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u128;
@@ -785,888 +787,6 @@ fn find_u128_rotate_3(s: &Vec<Align64ByteMem>) -> usize
     counter = counter - 16;
     return find_ending(s, counter);
 }
-
-
-
-
-fn find_u32x2_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V32;
-    let ss = &s[0].0;
-    let len = ss.len() - 4 * 2;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0;
-    let u1 = 0xcccc_cccc;
-    let u2 = 0xaaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f;
-    let u4 = 0x3333_3333;
-    let u5 = 0x5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u32;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        if (t1 | t2) != 0
-        {
-            break;
-        }        
-
-        counter += 4 * 2;
-        p = unsafe { p.add(2) };
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u64x2_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V64;
-    let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc;
-    let u2 = 0xaaaa_aaaa_aaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
-    let u4 = 0x3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u64;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        if (t1 | t2) != 0
-        {
-            break;
-        }        
-
-        counter += 8 * 2;
-        p = unsafe { p.add(2) };
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u128x2_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V128;
-    let ss = &s[0].0;
-    let len = ss.len() - 16 * 2;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc_cccc_cccc_cccc_cccc;
-    let u2 = 0xaaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f;
-    let u4 = 0x3333_3333_3333_3333_3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555_5555_5555_5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u128;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        if (t1 | t2) != 0
-        {
-            break;
-        }        
-
-        counter += 16 * 2;
-        p = unsafe { p.add(2) };
-    }
-
-    return find_ending(s, counter);
-}
-
-
-
-fn find_u32x4_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V32;
-    let ss = &s[0].0;
-    let len = ss.len() - 4 * 4;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0;
-    let u1 = 0xcccc_cccc;
-    let u2 = 0xaaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f;
-    let u4 = 0x3333_3333;
-    let u5 = 0x5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u32;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        if (t1 | t2 | t3 | t4) != 0
-        {
-            break;
-        }        
-
-        counter += 4 * 4;
-        p = unsafe { p.add(4) };
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u64x4_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V64;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 8 * 4;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc;
-    let u2 = 0xaaaa_aaaa_aaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
-    let u4 = 0x3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u64;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        if (t1 | t2 | t3 | t4) != 0
-        {
-            break;
-        }        
-
-        counter += 8 * 4;
-        p = unsafe { p.add(4) };
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u128x4_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V128;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 16 * 4;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc_cccc_cccc_cccc_cccc;
-    let u2 = 0xaaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f;
-    let u4 = 0x3333_3333_3333_3333_3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555_5555_5555_5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u128;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-
-        if (t1 | t2 | t3 | t4) != 0
-        {
-            break;
-        }        
-
-        counter += 16 * 4;
-        p = unsafe { p.add(4) };
-    }
-
-    return find_ending(s, counter);
-}
-
-
-
-fn find_u32x8_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V32;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 4 * 8;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0;
-    let u1 = 0xcccc_cccc;
-    let u2 = 0xaaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f;
-    let u4 = 0x3333_3333;
-    let u5 = 0x5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u32;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
-        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
-        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
-        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        t5 &= ((t5 & u0) >> 4) | ((t5 & u3) << 4);
-        t5 &= ((t5 & u1) >> 2) | ((t5 & u4) << 2);
-        t5 &= ((t5 & u2) >> 1) | ((t5 & u5) << 1);
-
-        t6 &= ((t6 & u0) >> 4) | ((t6 & u3) << 4);
-        t6 &= ((t6 & u1) >> 2) | ((t6 & u4) << 2);
-        t6 &= ((t6 & u2) >> 1) | ((t6 & u5) << 1);
-
-        t7 &= ((t7 & u0) >> 4) | ((t7 & u3) << 4);
-        t7 &= ((t7 & u1) >> 2) | ((t7 & u4) << 2);
-        t7 &= ((t7 & u2) >> 1) | ((t7 & u5) << 1);
-
-        t8 &= ((t8 & u0) >> 4) | ((t8 & u3) << 4);
-        t8 &= ((t8 & u1) >> 2) | ((t8 & u4) << 2);
-        t8 &= ((t8 & u2) >> 1) | ((t8 & u5) << 1);
-
-
-        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8) != 0
-        {
-            break;
-        }        
-
-        counter += 4 * 8;
-        p = unsafe { p.add(8) };
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u64x8_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V64;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 8 * 8;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc;
-    let u2 = 0xaaaa_aaaa_aaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f_0f0f_0f0f;
-    let u4 = 0x3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u64;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
-        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
-        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
-        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        t5 &= ((t5 & u0) >> 4) | ((t5 & u3) << 4);
-        t5 &= ((t5 & u1) >> 2) | ((t5 & u4) << 2);
-        t5 &= ((t5 & u2) >> 1) | ((t5 & u5) << 1);
-
-        t6 &= ((t6 & u0) >> 4) | ((t6 & u3) << 4);
-        t6 &= ((t6 & u1) >> 2) | ((t6 & u4) << 2);
-        t6 &= ((t6 & u2) >> 1) | ((t6 & u5) << 1);
-
-        t7 &= ((t7 & u0) >> 4) | ((t7 & u3) << 4);
-        t7 &= ((t7 & u1) >> 2) | ((t7 & u4) << 2);
-        t7 &= ((t7 & u2) >> 1) | ((t7 & u5) << 1);
-
-        t8 &= ((t8 & u0) >> 4) | ((t8 & u3) << 4);
-        t8 &= ((t8 & u1) >> 2) | ((t8 & u4) << 2);
-        t8 &= ((t8 & u2) >> 1) | ((t8 & u5) << 1);
-
-
-        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8) != 0
-        {
-            break;
-        }        
-
-        counter += 8 * 8;
-        p = unsafe { p.add(8) };
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u128x8_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V128;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 16 * 8;
-    
-    let mut counter = 0;
-
-    let u0 = 0xf0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0_f0f0;
-    let u1 = 0xcccc_cccc_cccc_cccc_cccc_cccc_cccc_cccc;
-    let u2 = 0xaaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa_aaaa;
-
-    let u3 = 0x0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f_0f0f;
-    let u4 = 0x3333_3333_3333_3333_3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555_5555_5555_5555_5555;
-
-
-    let mut p = ss.as_ptr() as *const u128;
-    while counter < len
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
-        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
-        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
-        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        t5 &= ((t5 & u0) >> 4) | ((t5 & u3) << 4);
-        t5 &= ((t5 & u1) >> 2) | ((t5 & u4) << 2);
-        t5 &= ((t5 & u2) >> 1) | ((t5 & u5) << 1);
-
-        t6 &= ((t6 & u0) >> 4) | ((t6 & u3) << 4);
-        t6 &= ((t6 & u1) >> 2) | ((t6 & u4) << 2);
-        t6 &= ((t6 & u2) >> 1) | ((t6 & u5) << 1);
-
-        t7 &= ((t7 & u0) >> 4) | ((t7 & u3) << 4);
-        t7 &= ((t7 & u1) >> 2) | ((t7 & u4) << 2);
-        t7 &= ((t7 & u2) >> 1) | ((t7 & u5) << 1);
-
-        t8 &= ((t8 & u0) >> 4) | ((t8 & u3) << 4);
-        t8 &= ((t8 & u1) >> 2) | ((t8 & u4) << 2);
-        t8 &= ((t8 & u2) >> 1) | ((t8 & u5) << 1);
-
-
-        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8) != 0
-        {
-            break;
-        }        
-
-        counter += 16 * 8;
-        p = unsafe { p.add(8) };
-    }
-
-    return find_ending(s, counter);
-}
-
-
-fn find_u32x16_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V32;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 4 * 16;
-
-    let u0 = 0xF0F0_F0F0u32;
-    let u1 = 0xCCCC_CCCCu32;
-    let u2 = 0xAAAA_AAAAu32;
-
-    let u3 = 0x0F0F_0F0Fu32;
-    let u4 = 0x3333_3333u32;
-    let u5 = 0x5555_5555u32;
-
-    let mut p = ss.as_ptr() as *const u32;
-    
-    let mut counter = 0;
-    while counter < len        
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
-        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
-        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
-        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
-
-        let mut r1 = (unsafe{ *p.offset(8) } ^ v);
-        let mut r2 = (unsafe{ *p.offset(9) } ^ v);
-        let mut r3 = (unsafe{ *p.offset(10) } ^ v);
-        let mut r4 = (unsafe{ *p.offset(11) } ^ v);
-
-        let mut r5 = (unsafe{ *p.offset(12) } ^ v);
-        let mut r6 = (unsafe{ *p.offset(13) } ^ v);
-        let mut r7 = (unsafe{ *p.offset(14) } ^ v);
-        let mut r8 = (unsafe{ *p.offset(15) } ^ v);
-
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        t5 &= ((t5 & u0) >> 4) | ((t5 & u3) << 4);
-        t5 &= ((t5 & u1) >> 2) | ((t5 & u4) << 2);
-        t5 &= ((t5 & u2) >> 1) | ((t5 & u5) << 1);
-
-        t6 &= ((t6 & u0) >> 4) | ((t6 & u3) << 4);
-        t6 &= ((t6 & u1) >> 2) | ((t6 & u4) << 2);
-        t6 &= ((t6 & u2) >> 1) | ((t6 & u5) << 1);
-
-        t7 &= ((t7 & u0) >> 4) | ((t7 & u3) << 4);
-        t7 &= ((t7 & u1) >> 2) | ((t7 & u4) << 2);
-        t7 &= ((t7 & u2) >> 1) | ((t7 & u5) << 1);
-
-        t8 &= ((t8 & u0) >> 4) | ((t8 & u3) << 4);
-        t8 &= ((t8 & u1) >> 2) | ((t8 & u4) << 2);
-        t8 &= ((t8 & u2) >> 1) | ((t8 & u5) << 1);
-
-
-        r1 &= ((r1 & u0) >> 4) | ((r1 & u3) << 4);
-        r1 &= ((r1 & u1) >> 2) | ((r1 & u4) << 2);
-        r1 &= ((r1 & u2) >> 1) | ((r1 & u5) << 1);
-
-        r2 &= ((r2 & u0) >> 4) | ((r2 & u3) << 4);
-        r2 &= ((r2 & u1) >> 2) | ((r2 & u4) << 2);
-        r2 &= ((r2 & u2) >> 1) | ((r2 & u5) << 1);
-
-        r3 &= ((r3 & u0) >> 4) | ((r3 & u3) << 4);
-        r3 &= ((r3 & u1) >> 2) | ((r3 & u4) << 2);
-        r3 &= ((r3 & u2) >> 1) | ((r3 & u5) << 1);
-
-        r4 &= ((r4 & u0) >> 4) | ((r4 & u3) << 4);
-        r4 &= ((r4 & u1) >> 2) | ((r4 & u4) << 2);
-        r4 &= ((r4 & u2) >> 1) | ((r4 & u5) << 1);
-
-        r5 &= ((r5 & u0) >> 4) | ((r5 & u3) << 4);
-        r5 &= ((r5 & u1) >> 2) | ((r5 & u4) << 2);
-        r5 &= ((r5 & u2) >> 1) | ((r5 & u5) << 1);
-
-        r6 &= ((r6 & u0) >> 4) | ((r6 & u3) << 4);
-        r6 &= ((r6 & u1) >> 2) | ((r6 & u4) << 2);
-        r6 &= ((r6 & u2) >> 1) | ((r6 & u5) << 1);
-
-        r7 &= ((r7 & u0) >> 4) | ((r7 & u3) << 4);
-        r7 &= ((r7 & u1) >> 2) | ((r7 & u4) << 2);
-        r7 &= ((r7 & u2) >> 1) | ((r7 & u5) << 1);
-
-        r8 &= ((r8 & u0) >> 4) | ((r8 & u3) << 4);
-        r8 &= ((r8 & u1) >> 2) | ((r8 & u4) << 2);
-        r8 &= ((r8 & u2) >> 1) | ((r8 & u5) << 1);
-
-        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8 |
-           r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8) != 0
-           {
-               break;
-           }
-
-        p = unsafe { p.add(16) };
-
-        counter += 4 * 16;
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u64x16_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V64;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 8 * 16;
-
-    let u0 = 0xF0F0_F0F0_F0F0_F0F0;
-    let u1 = 0xCCCC_CCCC_CCCC_CCCC;
-    let u2 = 0xAAAA_AAAA_AAAA_AAAA;
-
-    let u3 = 0x0F0F_0F0F_0F0F_0F0F;
-    let u4 = 0x3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555;
-
-    let mut p = ss.as_ptr() as *const u64;
-    
-    let mut counter = 0;
-    while counter < len        
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
-        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
-        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
-        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
-
-        let mut r1 = (unsafe{ *p.offset(8) } ^ v);
-        let mut r2 = (unsafe{ *p.offset(9) } ^ v);
-        let mut r3 = (unsafe{ *p.offset(10) } ^ v);
-        let mut r4 = (unsafe{ *p.offset(11) } ^ v);
-
-        let mut r5 = (unsafe{ *p.offset(12) } ^ v);
-        let mut r6 = (unsafe{ *p.offset(13) } ^ v);
-        let mut r7 = (unsafe{ *p.offset(14) } ^ v);
-        let mut r8 = (unsafe{ *p.offset(15) } ^ v);
-
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        t5 &= ((t5 & u0) >> 4) | ((t5 & u3) << 4);
-        t5 &= ((t5 & u1) >> 2) | ((t5 & u4) << 2);
-        t5 &= ((t5 & u2) >> 1) | ((t5 & u5) << 1);
-
-        t6 &= ((t6 & u0) >> 4) | ((t6 & u3) << 4);
-        t6 &= ((t6 & u1) >> 2) | ((t6 & u4) << 2);
-        t6 &= ((t6 & u2) >> 1) | ((t6 & u5) << 1);
-
-        t7 &= ((t7 & u0) >> 4) | ((t7 & u3) << 4);
-        t7 &= ((t7 & u1) >> 2) | ((t7 & u4) << 2);
-        t7 &= ((t7 & u2) >> 1) | ((t7 & u5) << 1);
-
-        t8 &= ((t8 & u0) >> 4) | ((t8 & u3) << 4);
-        t8 &= ((t8 & u1) >> 2) | ((t8 & u4) << 2);
-        t8 &= ((t8 & u2) >> 1) | ((t8 & u5) << 1);
-
-
-        r1 &= ((r1 & u0) >> 4) | ((r1 & u3) << 4);
-        r1 &= ((r1 & u1) >> 2) | ((r1 & u4) << 2);
-        r1 &= ((r1 & u2) >> 1) | ((r1 & u5) << 1);
-
-        r2 &= ((r2 & u0) >> 4) | ((r2 & u3) << 4);
-        r2 &= ((r2 & u1) >> 2) | ((r2 & u4) << 2);
-        r2 &= ((r2 & u2) >> 1) | ((r2 & u5) << 1);
-
-        r3 &= ((r3 & u0) >> 4) | ((r3 & u3) << 4);
-        r3 &= ((r3 & u1) >> 2) | ((r3 & u4) << 2);
-        r3 &= ((r3 & u2) >> 1) | ((r3 & u5) << 1);
-
-        r4 &= ((r4 & u0) >> 4) | ((r4 & u3) << 4);
-        r4 &= ((r4 & u1) >> 2) | ((r4 & u4) << 2);
-        r4 &= ((r4 & u2) >> 1) | ((r4 & u5) << 1);
-
-        r5 &= ((r5 & u0) >> 4) | ((r5 & u3) << 4);
-        r5 &= ((r5 & u1) >> 2) | ((r5 & u4) << 2);
-        r5 &= ((r5 & u2) >> 1) | ((r5 & u5) << 1);
-
-        r6 &= ((r6 & u0) >> 4) | ((r6 & u3) << 4);
-        r6 &= ((r6 & u1) >> 2) | ((r6 & u4) << 2);
-        r6 &= ((r6 & u2) >> 1) | ((r6 & u5) << 1);
-
-        r7 &= ((r7 & u0) >> 4) | ((r7 & u3) << 4);
-        r7 &= ((r7 & u1) >> 2) | ((r7 & u4) << 2);
-        r7 &= ((r7 & u2) >> 1) | ((r7 & u5) << 1);
-
-        r8 &= ((r8 & u0) >> 4) | ((r8 & u3) << 4);
-        r8 &= ((r8 & u1) >> 2) | ((r8 & u4) << 2);
-        r8 &= ((r8 & u2) >> 1) | ((r8 & u5) << 1);
-
-        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8 |
-           r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8) != 0
-           {
-               break;
-           }
-
-        p = unsafe { p.add(16) };
-
-        counter += 8 * 16;
-    }
-
-    return find_ending(s, counter);
-}
-
-fn find_u128x16_rotate_3(s: &Vec<Align64ByteMem>) -> usize
-{
-    let v = !V128;
-    let ss = &s[0].0;
-    let len = (s.len() * std::mem::size_of::<Align64ByteMem>()) - 16 * 16;
-
-    let u0 = 0xF0F0_F0F0_F0F0_F0F0_F0F0_F0F0_F0F0_F0F0;
-    let u1 = 0xCCCC_CCCC_CCCC_CCCC_CCCC_CCCC_CCCC_CCCC;
-    let u2 = 0xAAAA_AAAA_AAAA_AAAA_AAAA_AAAA_AAAA_AAAA;
-
-    let u3 = 0x0F0F_0F0F_0F0F_0F0F_0F0F_0F0F_0F0F_0F0F;
-    let u4 = 0x3333_3333_3333_3333_3333_3333_3333_3333;
-    let u5 = 0x5555_5555_5555_5555_5555_5555_5555_5555;
-
-    let mut p = ss.as_ptr() as *const u128;
-    
-    let mut counter = 0;
-    while counter < len        
-    {
-        let mut t1 = (unsafe{ *p.offset(0) } ^ v);
-        let mut t2 = (unsafe{ *p.offset(1) } ^ v);
-        let mut t3 = (unsafe{ *p.offset(2) } ^ v);
-        let mut t4 = (unsafe{ *p.offset(3) } ^ v);
-
-        let mut t5 = (unsafe{ *p.offset(4) } ^ v);
-        let mut t6 = (unsafe{ *p.offset(5) } ^ v);
-        let mut t7 = (unsafe{ *p.offset(6) } ^ v);
-        let mut t8 = (unsafe{ *p.offset(7) } ^ v);
-
-        let mut r1 = (unsafe{ *p.offset(8) } ^ v);
-        let mut r2 = (unsafe{ *p.offset(9) } ^ v);
-        let mut r3 = (unsafe{ *p.offset(10) } ^ v);
-        let mut r4 = (unsafe{ *p.offset(11) } ^ v);
-
-        let mut r5 = (unsafe{ *p.offset(12) } ^ v);
-        let mut r6 = (unsafe{ *p.offset(13) } ^ v);
-        let mut r7 = (unsafe{ *p.offset(14) } ^ v);
-        let mut r8 = (unsafe{ *p.offset(15) } ^ v);
-
-
-        t1 &= ((t1 & u0) >> 4) | ((t1 & u3) << 4);
-        t1 &= ((t1 & u1) >> 2) | ((t1 & u4) << 2);
-        t1 &= ((t1 & u2) >> 1) | ((t1 & u5) << 1);
-
-        t2 &= ((t2 & u0) >> 4) | ((t2 & u3) << 4);
-        t2 &= ((t2 & u1) >> 2) | ((t2 & u4) << 2);
-        t2 &= ((t2 & u2) >> 1) | ((t2 & u5) << 1);
-
-        t3 &= ((t3 & u0) >> 4) | ((t3 & u3) << 4);
-        t3 &= ((t3 & u1) >> 2) | ((t3 & u4) << 2);
-        t3 &= ((t3 & u2) >> 1) | ((t3 & u5) << 1);
-
-        t4 &= ((t4 & u0) >> 4) | ((t4 & u3) << 4);
-        t4 &= ((t4 & u1) >> 2) | ((t4 & u4) << 2);
-        t4 &= ((t4 & u2) >> 1) | ((t4 & u5) << 1);
-
-        t5 &= ((t5 & u0) >> 4) | ((t5 & u3) << 4);
-        t5 &= ((t5 & u1) >> 2) | ((t5 & u4) << 2);
-        t5 &= ((t5 & u2) >> 1) | ((t5 & u5) << 1);
-
-        t6 &= ((t6 & u0) >> 4) | ((t6 & u3) << 4);
-        t6 &= ((t6 & u1) >> 2) | ((t6 & u4) << 2);
-        t6 &= ((t6 & u2) >> 1) | ((t6 & u5) << 1);
-
-        t7 &= ((t7 & u0) >> 4) | ((t7 & u3) << 4);
-        t7 &= ((t7 & u1) >> 2) | ((t7 & u4) << 2);
-        t7 &= ((t7 & u2) >> 1) | ((t7 & u5) << 1);
-
-        t8 &= ((t8 & u0) >> 4) | ((t8 & u3) << 4);
-        t8 &= ((t8 & u1) >> 2) | ((t8 & u4) << 2);
-        t8 &= ((t8 & u2) >> 1) | ((t8 & u5) << 1);
-
-
-        r1 &= ((r1 & u0) >> 4) | ((r1 & u3) << 4);
-        r1 &= ((r1 & u1) >> 2) | ((r1 & u4) << 2);
-        r1 &= ((r1 & u2) >> 1) | ((r1 & u5) << 1);
-
-        r2 &= ((r2 & u0) >> 4) | ((r2 & u3) << 4);
-        r2 &= ((r2 & u1) >> 2) | ((r2 & u4) << 2);
-        r2 &= ((r2 & u2) >> 1) | ((r2 & u5) << 1);
-
-        r3 &= ((r3 & u0) >> 4) | ((r3 & u3) << 4);
-        r3 &= ((r3 & u1) >> 2) | ((r3 & u4) << 2);
-        r3 &= ((r3 & u2) >> 1) | ((r3 & u5) << 1);
-
-        r4 &= ((r4 & u0) >> 4) | ((r4 & u3) << 4);
-        r4 &= ((r4 & u1) >> 2) | ((r4 & u4) << 2);
-        r4 &= ((r4 & u2) >> 1) | ((r4 & u5) << 1);
-
-        r5 &= ((r5 & u0) >> 4) | ((r5 & u3) << 4);
-        r5 &= ((r5 & u1) >> 2) | ((r5 & u4) << 2);
-        r5 &= ((r5 & u2) >> 1) | ((r5 & u5) << 1);
-
-        r6 &= ((r6 & u0) >> 4) | ((r6 & u3) << 4);
-        r6 &= ((r6 & u1) >> 2) | ((r6 & u4) << 2);
-        r6 &= ((r6 & u2) >> 1) | ((r6 & u5) << 1);
-
-        r7 &= ((r7 & u0) >> 4) | ((r7 & u3) << 4);
-        r7 &= ((r7 & u1) >> 2) | ((r7 & u4) << 2);
-        r7 &= ((r7 & u2) >> 1) | ((r7 & u5) << 1);
-
-        r8 &= ((r8 & u0) >> 4) | ((r8 & u3) << 4);
-        r8 &= ((r8 & u1) >> 2) | ((r8 & u4) << 2);
-        r8 &= ((r8 & u2) >> 1) | ((r8 & u5) << 1);
-
-        if (t1 | t2 | t3 | t4 | t5 | t6 | t7 | t8 |
-           r1 | r2 | r3 | r4 | r5 | r6 | r7 | r8) != 0
-           {
-               break;
-           }
-
-        p = unsafe { p.add(16) };
-
-        counter += 16 * 16;
-    }
-
-    return find_ending(s, counter);
-}
-
-
-
 
 
 
@@ -1880,7 +1000,7 @@ fn find_u64x32_rotate_3(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 32;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 32;
 
     let u0 = 0xF0F0_F0F0_F0F0_F0F0;
     let u1 = 0xCCCC_CCCC_CCCC_CCCC;
@@ -2084,7 +1204,7 @@ fn find_u128x32_rotate_3(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 32;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 32;
 
     let u0 = 0xF0F0_F0F0_F0F0_F0F0_F0F0_F0F0_F0F0_F0F0;
     let u1 = 0xCCCC_CCCC_CCCC_CCCC_CCCC_CCCC_CCCC_CCCC;
@@ -2295,7 +1415,7 @@ fn find_u32_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
     // take invert so that xor with value will be all ones
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u32;
@@ -2305,9 +1425,9 @@ fn find_u32_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
         let t = unsafe{ *p } ^ v;
  
         u = t;
-        u &= (u & 0xf0f0_f0f0) >> 4;
-        u &= (u & 0xcccc_cccc) >> 2;
-        u &= (u & 0xaaaa_aaaa) >> 1;
+        u &= (u & 0x0f0f_0f0f) << 4;
+        u &= (u & 0x3030_3030) << 2;
+        u &= (u & 0x4040_4040) << 1;
 
         counter += 4;
         p = unsafe { p.add(1) };
@@ -2321,59 +1441,7 @@ fn find_u64_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
     // take invert
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8;
-    
-    let mut counter = 0;
-    let mut u = 0u64;
-    let mut p = ss.as_ptr() as *const u64;
-    while counter < len && u == 0
-    {
-        let t = unsafe{ *p } ^ v;
-
-        u = t;
-        u &= (u & 0xf0f0_f0f0_f0f0_f0f0) >> 4;
-        u &= (u & 0xcccc_cccc_cccc_cccc) >> 2;
-        u &= (u & 0xaaaa_aaaa_aaaa_aaaa) >> 1;
-
-        counter += 8;
-        p = unsafe { p.add(1) };
-    }
-    counter = counter - 8;
-    return find_ending(s, counter);
-}
-
-fn find_u64_rotate_3_half_2(s: &Vec<Align64ByteMem>) -> usize
-{
-    // take invert
-    let v = !V64;
-    let ss = &s[0].0;
-    let len = ss.len() - 8;
-    
-    let mut counter = 0;
-    let mut u = 0u64;
-    let mut p = ss.as_ptr() as *const u64;
-    while counter < len && u == 0
-    {
-        let t = unsafe{ *p } ^ v;
-
-        u = t;
-        u &= (u & 0xf0f0_f0f0_f0f0_f0f0) >> 4;
-        u &= (u & 0x0c0c_0c0c_0c0c_0c0c) >> 2;
-        u &= (u & 0x0202_0202_0202_0202) >> 1;
-
-        counter += 8;
-        p = unsafe { p.add(1) };
-    }
-    counter = counter - 8;
-    return find_ending(s, counter);
-}
-
-fn find_u64_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
-{
-    // take invert
-    let v = !V64;
-    let ss = &s[0].0;
-    let len = ss.len() - 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut u = 0u64;
@@ -2393,13 +1461,14 @@ fn find_u64_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
     counter = counter - 8;
     return find_ending(s, counter);
 }
- 
+
+
 fn find_u64_rotate_3_half_left_2(s: &Vec<Align64ByteMem>) -> usize
 {
     // take invert
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut p = ss.as_ptr() as *const u64;
@@ -2428,7 +1497,7 @@ fn find_u64_rotate_3_half_right_2(s: &Vec<Align64ByteMem>) -> usize
     // take invert
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
     
     let mut counter = 0;
     let mut p = ss.as_ptr() as *const u64;
@@ -2456,7 +1525,7 @@ fn find_u128_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16;
     
     let mut counter = 0;
     let mut u = 0u128;
@@ -2484,7 +1553,7 @@ fn find_u128_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16;
     
     let mut counter = 0;
     let mut u = 0u128;
@@ -2511,7 +1580,7 @@ fn find_u128_rotate_3_half_left_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16;
     
     let mut counter = 0;
     let mut p = ss.as_ptr() as *const u128;
@@ -2546,7 +1615,7 @@ fn find_u32x2_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 2;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 2;
     
     let mut counter = 0;
 
@@ -2583,7 +1652,7 @@ fn find_u64x2_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -2623,7 +1692,7 @@ fn find_u64x2_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -2662,7 +1731,7 @@ fn find_u64x2_rotate_3_half_left_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -2703,7 +1772,7 @@ fn find_u128x2_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 2;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 2;
     
     let mut counter = 0;
 
@@ -2742,7 +1811,7 @@ fn find_u128x2_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 2;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 2;
     
     let mut counter = 0;
 
@@ -2781,7 +1850,7 @@ fn find_u32x4_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 4;
     
     let mut counter = 0;
 
@@ -2827,7 +1896,7 @@ fn find_u64x4_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -2874,7 +1943,7 @@ fn find_u64x4_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -2924,7 +1993,7 @@ fn find_u64x4_rotate_3_half_left_over(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -2972,7 +2041,7 @@ fn find_u128x4_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 4;
     
     let mut counter = 0;
 
@@ -3021,7 +2090,7 @@ fn find_u32x8_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 8;
     
     let mut counter = 0;
 
@@ -3085,7 +2154,7 @@ fn find_u64x8_rotate_3_half_left(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -3151,7 +2220,7 @@ fn find_u64x8_rotate_3_half_left_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -3224,7 +2293,7 @@ fn find_u64x8_rotate_3_half_right_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -3297,7 +2366,7 @@ fn find_u64x8_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -3360,7 +2429,7 @@ fn find_u128x8_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 8;
     
     let mut counter = 0;
 
@@ -3424,7 +2493,7 @@ fn find_u32x16_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 16;
 
     let u0 = 0xF0F0_F0F0u32;
     let u1 = 0xCCCC_CCCCu32;
@@ -3523,7 +2592,7 @@ fn find_u64x16_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 16;
 
     let u0 = 0xF0F0_F0F0_F0F0_F0F0;
     let u1 = 0x0C0C_0C0C_0C0C_0C0C;
@@ -3622,7 +2691,7 @@ fn find_u128x16_rotate_3_half(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 16;
 
     let u0 = 0xF0F0_F0F0_F0F0_F0F0_F0F0_F0F0_F0F0_F0F0;
     let u1 = 0xCCCC_CCCC_CCCC_CCCC_CCCC_CCCC_CCCC_CCCC;
@@ -3727,7 +2796,7 @@ fn find_u32x8_rotate_3_parallel(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 8;
     
     let mut counter = 0;
 
@@ -3784,7 +2853,7 @@ fn find_u32x4_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 4;
     
     let mut counter = 0;
 
@@ -3838,7 +2907,7 @@ fn find_u64x2_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 2;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 2;
     
     let mut counter = 0;
 
@@ -3887,7 +2956,7 @@ fn find_u64x4_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 4;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 4;
     
     let mut counter = 0;
 
@@ -3942,7 +3011,7 @@ fn find_u32x8_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 8;
     
     let mut counter = 0;
 
@@ -4012,7 +3081,7 @@ fn find_u32x16_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V32;
     let ss = &s[0].0;
-    let len = ss.len() - 4 * 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 4 * 16;
     
     let mut counter = 0;
 
@@ -4114,7 +3183,7 @@ fn find_u64x16_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -4217,7 +3286,7 @@ fn find_u64x8_rotate_3_parallel(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -4271,7 +3340,7 @@ fn find_u64x8_rotate_3_parallel_2(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -4343,7 +3412,7 @@ fn find_u64x8_rotate_3_parallel_3(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -4415,7 +3484,7 @@ fn find_u64x8_rotate_3_parallel_3_left(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V64;
     let ss = &s[0].0;
-    let len = ss.len() - 8 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 8 * 8;
     
     let mut counter = 0;
 
@@ -4502,7 +3571,7 @@ fn find_u128x8_rotate_3_parallel(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 8;
     
     let mut counter = 0;
 
@@ -4557,7 +3626,7 @@ fn find_u128x8_rotate_3_parallel_3(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = !V128;
     let ss = &s[0].0;
-    let len = ss.len() - 16 * 8;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16 * 8;
     
     let mut counter = 0;
 
@@ -4628,7 +3697,7 @@ fn find_simd(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = unsafe { _mm_set1_epi8(0x61i8) };
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16;
     
     let mut counter = 0;
     let one_u = unsafe { _mm_set1_epi8(-1) } ;
@@ -4656,25 +3725,26 @@ fn find_simd(s: &Vec<Align64ByteMem>) -> usize
 
 fn final_form(s: &Vec<Align64ByteMem>) -> usize
 {
+    let sz = std::mem::size_of::<Align64ByteMem>();
     let v = 0x61u8;
     let ss = &s[0].0;
-    let len = s.len() * std::mem::size_of::<Align64ByteMem>();
+    let len = s.len() * sz;
     
     let mut counter = 0;
     let mut p = ss.as_ptr();
-    while counter + 64 < len
+    while counter < len
     {
         let mut r = 0i32;
-        for i in 0..64
+        for _ in 0..sz
         {
-            r |= if unsafe { *p.offset(i) } == v { -1 } else { 0 };
+            r |= if unsafe { *p } == v { -1 } else { 0 };
+            p = unsafe{ p.add(1) };
         }
         if r != 0
         {
             break;
         }
-        counter += 64;
-        p = unsafe{ p.add(64) };
+        counter += sz;
     }
 
     return find_ending(s, counter);
@@ -4707,7 +3777,7 @@ fn find_simd_rot3(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = unsafe { _mm_set1_epi8(!0x61i8) };
     let ss = &s[0].0;
-    let len = ss.len() - 16;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 16;
     
     let mut counter = 0;
     let one_u = unsafe { _mm_set1_epi8(-1) } ;
@@ -4738,7 +3808,7 @@ fn find_simd_256(s: &Vec<Align64ByteMem>) -> usize
 {
     let v = unsafe { _mm256_set1_epi8(0x61i8) };
     let ss = &s[0].0;
-    let len = ss.len() - 32;
+    let len = s.len() * std::mem::size_of::<Align64ByteMem>() - 32;
     
     let mut counter = 0;
     let one_u = unsafe { _mm256_set1_epi8(-1) } ;
@@ -4858,30 +3928,17 @@ fn main()
 
 
     
-    print_find(&s, s_len,"using u32x2_rotate_3_times", find_u32x2_rotate_3);
-    print_find(&s, s_len,"using u64x2_rotate_3_times", find_u64x2_rotate_3);
-    print_find(&s, s_len,"using u128x2_rotate_3_times", find_u128x2_rotate_3);
-    print_find(&s, s_len,"using u32x4_rotate_3_times", find_u32x4_rotate_3);
-    print_find(&s, s_len,"using u64x4_rotate_3_times", find_u64x4_rotate_3);
-    print_find(&s, s_len,"using u128x4_rotate_3_times", find_u128x4_rotate_3);
-    print_find(&s, s_len,"using u32x8_rotate_3_times", find_u32x8_rotate_3);
-    print_find(&s, s_len,"using u64x8_rotate_3_times", find_u64x8_rotate_3);
-    print_find(&s, s_len,"using u128x8_rotate_3_times", find_u128x8_rotate_3);
-    print_find(&s, s_len,"using u32x16_rotate_3_times", find_u32x16_rotate_3);
-    print_find(&s, s_len,"using u64x16_rotate_3_times", find_u64x16_rotate_3);
-    print_find(&s, s_len,"using u128x16_rotate_3_times", find_u128x16_rotate_3);
-
-
     print_find(&s, s_len,"using u32_rotate_3_times_half", find_u32_rotate_3_half);
     print_find(&s, s_len,"using u64_rotate_3_times_half", find_u64_rotate_3_half);
-    print_find(&s, s_len,"using u64_rotate_3_times_half_2", find_u64_rotate_3_half_2);
-    print_find(&s, s_len,"using u64_rotate_3_times_half_left", find_u64_rotate_3_half_left);
+    print_find(&s, s_len,"using u128_rotate_3_times_half", find_u128_rotate_3_half);
+
+
+    
     print_find(&s, s_len,"using u64_rotate_3_times_half_left_2", find_u64_rotate_3_half_left_2);
     print_find(&s, s_len,"using u64_rotate_3_times_half_right_2", find_u64_rotate_3_half_right_2);
     print_find(&s, s_len,"using u64_rotate_3_times_half_left_2", find_u64_rotate_3_half_left_2);
     print_find(&s, s_len,"using u64_rotate_3_times_half_right_2", find_u64_rotate_3_half_right_2);
     
-    print_find(&s, s_len,"using u128_rotate_3_times_half", find_u128_rotate_3_half);
     print_find(&s, s_len,"using u128_rotate_3_times_half_left", find_u128_rotate_3_half_left);
     print_find(&s, s_len,"using u128_rotate_3_times_half_left_2", find_u128_rotate_3_half_left_2);
 
