@@ -15,3 +15,5 @@ Cargo.lock
 
 *.exe
 *.pdb
+cargo-timing*.html
+main_*
