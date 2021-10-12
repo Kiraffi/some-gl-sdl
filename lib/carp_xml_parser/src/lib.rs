@@ -1,36 +1,32 @@
 
-pub struct XMLElement
+pub struct XMLElement<'a>
 {
-    pub elements: Vec<XMLElement>,
-    pub element_name: String,
-    pub element_text: String,
+    pub elements: Vec<XMLElement<'a>>,
+    pub element_name: &'a str,
+    pub element_text: &'a str,
 
-    pub attributes: Vec<(String, String)>,
+    pub attributes: Vec<(&'a str, &'a str)>,
     pub level: u32,
 }
-impl XMLElement
+impl<'a> XMLElement<'a>
 {
     fn new(level: u32) -> Self
     {
-        let s = XMLElement {element_name: String::new(), element_text: String::new(), elements: Vec::new(), attributes: Vec::new(), level };
+        let s = XMLElement {element_name: &"", element_text: &"", elements: Vec::new(), attributes: Vec::new(), level };
         return s;
     }
 }
 
 
-pub fn get_text_from_array(txt: &[u8], start: usize, end: usize) -> Result<String, &'static str>
+pub fn get_text_from_array<'a>(txt: &'a[u8], start: usize, end: usize) -> Result<&'a str, &'static str>
 {
-    if start >= end || end > txt.len()
+    if start > end || end > txt.len()
     {
-        return Ok( String::new() );
+        println!("start: {}, end: {}", start, end);
+        return Err( "Failed to get text from array. End is after start" );
     }
-
-    let s = match String::from_utf8(txt[start..end].to_vec())
-    {
-        Ok(r) => r,
-        Err(_) => return Err("Failed to convert u8 array to string")
-    };
-    return Ok(s);
+    
+    return Ok(&std::str::from_utf8(&txt[start..end]).unwrap());
 }
 
 
@@ -52,7 +48,7 @@ fn compare_text(txt: &[u8], current_letter_pos: usize, cmp_text: &str) -> bool
 }
 
 
-fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLElement, letter_pos: &mut usize) -> Result<(), &'static str>
+fn parse_element<'a, 'b>(txt: &'a[u8], txt_len: usize, current_element: &mut XMLElement<'a>, letter_pos: &mut usize) -> Result<(), &'static str>
 {
     let mut tag_text = (0usize, 0usize);
     let mut param_name = (0usize, 0usize);
@@ -287,7 +283,7 @@ fn parse_element(txt: &[u8], txt_len: usize, current_element: &mut XMLElement, l
 }
 
 
-pub fn parse(txt: &str) -> Result<XMLElement, &'static str>
+pub fn parse<'a>(txt: &'a str) -> Result<XMLElement, &'static str>
 {
     let mut root = XMLElement::new(0);
 

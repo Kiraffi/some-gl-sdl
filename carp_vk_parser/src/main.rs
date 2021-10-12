@@ -131,6 +131,9 @@ fn print_attributes(elem: &xmltree::Element)
     }
 }
 
+
+
+
 #[derive(Debug)]
 struct VulkanHandle
 {
@@ -276,17 +279,17 @@ fn check_attributes(elem: &XMLElement, attribute_list: &[(&str, &str)]) -> bool
     return true;
 }
 
-fn get_attribute(elem: &XMLElement, attr: &'static str) -> String
+fn get_attribute<'a>(elem: &XMLElement<'a>, attr: &'static str) -> &'a str
 {
     for attribute in &elem.attributes
     {
         if attribute.0.eq(attr)
         {
-            return attribute.1.clone();
+            return attribute.1;
         }
     }
 
-    return String::new();
+    return &"";
 }
 
 
@@ -313,9 +316,9 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                     let s: &str = &attr.0;
                     match s
                     {
-                        "alias" => alias.original_name = attr.1.clone(),
-                        "category" => alias.category = attr.1.clone(),
-                        "name" => alias.alias_name = attr.1.clone(),
+                        "alias" => alias.original_name = attr.1.to_string(),
+                        "category" => alias.category = attr.1.to_string(),
+                        "name" => alias.alias_name = attr.1.to_string(),
                         _ => ()
                     }
                 }
@@ -337,7 +340,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             match s
                             {
                                 "type" => defi.define_value.return_type = get_type_as_rust_type(&child2.elements[0].element_text).to_string(),
-                                "name" => defi.define_name = child2.elements[0].element_text.clone(),
+                                "name" => defi.define_name = child2.elements[0].element_text.to_string(),
                                 _ => ()
                             }
                             if child2.element_text.len() > 0
@@ -384,7 +387,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             else if child2.element_name == "name"
                             {
                                 founds += 1;
-                                bitmask.name = child2.elements[0].element_text.clone();
+                                bitmask.name = child2.elements[0].element_text.to_string();
                             }
                         }
                         if founds != 2
@@ -404,8 +407,8 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             let s: &str = &attr.0;
                             match s
                             {
-                                "parent" => { p = true; handle.parent = attr.1.clone(); },
-                                "objtypeenum" => { founds += 1; handle.obj_enum = attr.1.clone(); },
+                                "parent" => { p = true; handle.parent = attr.1.to_string(); },
+                                "objtypeenum" => { founds += 1; handle.obj_enum = attr.1.to_string(); },
                                 _ => ()
                             };
                         }
@@ -415,8 +418,8 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             let s: &str = &child2.element_name;
                             match s 
                             {
-                                "type" =>  { founds += 1; handle.handle_type = child2.elements[0].element_text.clone(); },
-                                "name" => { founds += 1; handle.handle_name = child2.elements[0].element_text.clone(); },
+                                "type" =>  { founds += 1; handle.handle_type = child2.elements[0].element_text.to_string(); },
+                                "name" => { founds += 1; handle.handle_name = child2.elements[0].element_text.to_string(); },
                                 _ => ()
                             }
                         }
@@ -437,7 +440,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             let s: &str = &attr.0;
                             match s
                             {
-                                "name" => { founds += 1; e.enum_name = attr.1.clone(); },
+                                "name" => { founds += 1; e.enum_name = attr.1.to_string(); },
                                 _ => ()
                             };
                         }
@@ -507,7 +510,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             }
                             else if child2.element_name == "name"
                             {
-                                f.name = child2.elements[0].element_text.clone();
+                                f.name = child2.elements[0].element_text.to_string();
                                 name_found = true;
                             }
                             else if name_found && return_found
@@ -526,7 +529,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                                         c -= 1;
                                     }
 
-                                    f.param_type_names.push(get_text_from_array(s, c, d).unwrap());
+                                    f.param_type_names.push(get_text_from_array(s, c, d).unwrap().to_string());
 
                                     for i in 0..d
                                     {
@@ -549,7 +552,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                                         c -= 1;
                                     }
 
-                                    f.param_type_names.push(get_text_from_array(s, c, d).unwrap());
+                                    f.param_type_names.push(get_text_from_array(s, c, d).unwrap().to_string());
                                     f.param_types.push(param_type);
 
                                     param_type = ReturnType::new(true);
@@ -579,12 +582,12 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                         {
                             if attr.0 == "name"
                             {
-                                s.struct_name = attr.1.clone();
+                                s.struct_name = attr.1.to_string();
                                 name_found = true;
                             }
                             else if attr.0 == "structextends"
                             {
-                                s.struct_extends = attr.1.clone();
+                                s.struct_extends = attr.1.to_string();
                             }
                         }
                         for child2 in &child.elements
@@ -607,7 +610,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                             {
                                 if attr.0 == "values"
                                 {
-                                    s.s_type_value = attr.1.clone();
+                                    s.s_type_value = attr.1.to_string();
                                 }
                             }
                             for child3 in &child2.elements
@@ -633,7 +636,7 @@ fn parse_types(type_elemnt: &XMLElement, parsed_arrays: &mut ParsedArrays) -> Re
                                 }
                                 else if child3.element_name == "name"
                                 {
-                                    return_name = child3.elements[0].element_text.clone();
+                                    return_name = child3.elements[0].element_text.to_string();
                                 }
                             }
                             s.param_names.push(return_name);
@@ -690,7 +693,7 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                     let s: &str = &attr.0;
                     match s
                     {
-                        "name" => enum_name = attr.1.clone(),
+                        "name" => enum_name = attr.1.to_string(),
                         "type" => enum_bitmask = if attr.1 == "bitmask" { 1 } else { 0 },
                         "bitwidth" => bit_width = attr.1.parse().unwrap(),
                         _ => ()
@@ -708,10 +711,10 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                             let s: &str = &attr.0;
                             match s 
                             {
-                                "type" => constant.constant_type = attr.1.clone(),
-                                "value" => constant.constant_value = attr.1.clone(),
-                                "name" => constant.name = attr.1.clone(),
-                                "alias" => alias = attr.1.clone(),
+                                "type" => constant.constant_type = attr.1.to_string(),
+                                "value" => constant.constant_value = attr.1.to_string(),
+                                "name" => constant.name = attr.1.to_string(),
+                                "alias" => alias = attr.1.to_string(),
                                 _ => ()
                             };
                         }
@@ -766,9 +769,9 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                         let s: &str = &attr.0;
                         match s
                         {
-                            "value" => bit_value = attr.1.clone(),
+                            "value" => bit_value = attr.1.to_string(),
                             "bitpos" => bit_value = (1i128 << attr.1.parse::<i128>().unwrap()).to_string(),
-                            "name" => enum_enum_name = attr.1.clone(),
+                            "name" => enum_enum_name = attr.1.to_string(),
                             "alias" => continue 'enum_loop,
                             _ => ()
                         }                        
@@ -1475,6 +1478,10 @@ fn get_enums_as_string(enum_types: &Vec<EnumType>) -> String
     return vk_enum_str;
 }
 
+
+
+
+
 fn main() 
 {
     let now = std::time::Instant::now();
@@ -1495,6 +1502,7 @@ fn main()
     println!("carp parse xml: {}", now.elapsed().as_micros());
 
 
+    
     let now = std::time::Instant::now();
     match parse_vk(&root)
     {
@@ -1502,6 +1510,7 @@ fn main()
         Err(e) => println!("Error: {}", &e)
     };
     println!("carp parse vk: {}", now.elapsed().as_micros());
+    
 /*
     let now = std::time::Instant::now();
     let _root = xmltree::Element::parse((&vk_xml).as_bytes()).unwrap();

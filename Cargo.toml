@@ -11,6 +11,7 @@ members = [
 	"carp_sdl_parser",
 	"carp_vk_parser",
 	"text_test",
+	"borrow_test",
 ]
 
 [profile.dev]
