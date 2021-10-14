@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::{clone, io::Read};
+use std::io::Read;
 use carp_xml_parser::{XMLElement, get_text_from_array};
 
 /*
@@ -237,6 +237,15 @@ struct ConstantValue
     name: String,
     constant_type: String,
     constant_value: String,    
+}
+
+
+struct CommandValue
+{
+    name: String,
+    return_type: ReturnType,
+
+    fns: Vec<(String, ReturnType)>,
 }
 
 struct ParsedArrays
@@ -684,7 +693,7 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
             {
                 let mut enum_name = String::new();
                 let mut enum_bitmask = -1;
-                let mut bit_width = 32;
+                //let mut bit_width = 32;
 
                 let mut enums: Vec<(String, String)> = Vec::new();
 
@@ -695,7 +704,7 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                     {
                         "name" => enum_name = attr.1.to_string(),
                         "type" => enum_bitmask = if attr.1 == "bitmask" { 1 } else { 0 },
-                        "bitwidth" => bit_width = attr.1.parse().unwrap(),
+                        //"bitwidth" => bit_width = attr.1.parse().unwrap(),
                         _ => ()
                     };
                     
@@ -766,15 +775,14 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                     let mut enum_enum_name = String::new();
                     for attr in &c.attributes
                     {
-                        let s: &str = &attr.0;
-                        match s
+                        match attr.0
                         {
                             "value" => bit_value = attr.1.to_string(),
                             "bitpos" => bit_value = (1i128 << attr.1.parse::<i128>().unwrap()).to_string(),
                             "name" => enum_enum_name = attr.1.to_string(),
                             "alias" => continue 'enum_loop,
                             _ => ()
-                        }                        
+                        }       
                     };
                     enums.push((enum_enum_name, bit_value));
 
@@ -806,12 +814,135 @@ fn parse_vk(elem: &XMLElement) -> Result<ParsedArrays, &'static str>
                     }
                 }
             }
+
+            else if child2.element_name == "commands"
+            {
+               
+
+                for elem in &child2.elements
+                {
+                    if elem.element_name != "command"
+                    {
+                        continue;
+                    }
+                    
+                    for elem_child in &*elem.elements
+                    {
+                        //let mut command_name = String::new();
+                        //let mut command_name_type = String::new();
+                        let mut command = CommandValue {name: String::new(), return_type: ReturnType::new(false), fns: Vec::new() };
+
+                        match elem_child.element_name
+                        {
+                            "proto" =>
+                            {
+                                let (command_name, return_type) = parse_type_name_(elem_child);
+                                command.name = command_name;
+                                command.return_type = return_type;
+                            },
+                            "param" => 
+                            {
+                                let (fn_name, fn_type) = parse_type_name_(elem_child);
+                                command.fns.push((fn_name, fn_type));
+                            },
+                            _ => ()
+                        }
+
+                    }
+                    
+                }
+            }
         }
     }
     //dbg!(&parsed_arrays.enums);
 
     return Ok(parsed_arrays);
 }
+
+
+
+
+fn parse_type_name_(elem: &XMLElement) -> (String, ReturnType)
+{
+    let mut name_str = String::new();
+    let mut type_str_other = String::new();
+    let mut return_type = ReturnType::new(true);
+
+    for elem_child_child in &*elem.elements
+    {
+        if elem_child_child.element_name == "name"
+        {
+            name_str = elem_child_child.elements[0].element_text.to_string();
+        }
+        else 
+        {
+            type_str_other.push_str(elem_child_child.element_text);
+            
+            for elem_child_child_child in &*elem_child_child.elements
+            {
+
+                return_type.return_type.push_str(get_type_as_rust_type(elem_child_child_child.element_text));
+            }
+        }
+        
+    }
+
+
+    // Counting consts and ptrs.
+    let consts = count_sub_strings_from_str(&type_str_other, "const");
+    let ptrs = count_sub_strings_from_str(&type_str_other, "*");
+
+    return_type.ptr_mutable = consts > 0;
+    return_type.ptrs = ptrs;
+
+
+    let mut const_mut_ptr_string = String::new();
+    let c = core::cmp::max(consts, ptrs);
+
+    let found = type_str_other.contains("[") && type_str_other.contains("]");
+    if ptrs > 0
+    {
+        for _ in 0..c
+        {
+            if consts > 0
+            {
+                const_mut_ptr_string.push_str("* const ");
+            }
+            else 
+            {
+                const_mut_ptr_string.push_str("* mut ");
+            }
+        }
+    }
+    else if consts > 0
+    {
+        const_mut_ptr_string.push_str("const ");
+
+    }
+    else
+    {
+        if found 
+        {
+            type_str_other = type_str_other.replace("[", "");
+            type_str_other = type_str_other.replace("]", "");
+            return_type.return_type = format!("[{}; {}]", &return_type.return_type, &type_str_other);
+        }
+    }    
+    const_mut_ptr_string.push_str(&return_type.return_type);
+    return_type.return_type = const_mut_ptr_string;
+
+    return (name_str, return_type);
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
