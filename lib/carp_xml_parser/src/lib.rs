@@ -48,7 +48,7 @@ fn compare_text(txt: &[u8], current_letter_pos: usize, cmp_text: &str) -> bool
 }
 
 
-fn parse_element<'a, 'b>(txt: &'a[u8], txt_len: usize, current_element: &mut XMLElement<'a>, letter_pos: &mut usize) -> Result<(), &'static str>
+fn parse_element<'a>(txt: &'a[u8], txt_len: usize, current_element: &mut XMLElement<'a>, letter_pos: &mut usize) -> Result<(), &'static str>
 {
     let mut tag_text = (0usize, 0usize);
     let mut param_name = (0usize, 0usize);

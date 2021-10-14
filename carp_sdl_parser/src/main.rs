@@ -160,7 +160,7 @@ fn main()
 
     std::fs::write("carp_sdl_parser/combined.rs", &all_types).expect("Unable to write file");
 
-    std::fs::write("carp_sdl_parser/stripped_funcs.rs", &write_str).expect("Unable to write file");
+    //std::fs::write("carp_sdl_parser/stripped_funcs.rs", &write_str).expect("Unable to write file");
 
 }
 
