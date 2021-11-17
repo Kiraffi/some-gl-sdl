@@ -12,6 +12,7 @@ members = [
 	"carp_vk_parser",
 	"text_test",
 	"borrow_test",
+	"carp_window",
 ]
 
 [profile.dev]
