@@ -3,30 +3,6 @@
 
 use std::os::raw::*;
 
-/*
-pub enum c_void {}
-pub type c_char = i8;
-pub type c_schar = i8;
-pub type c_uchar = u8;
-pub type c_short = i16;
-pub type c_ushort = u16;
-pub type c_int = i32;
-pub type c_uint = u32;
-pub type c_long = i32;
-pub type c_ulong = u32;
-pub type c_longlong = i64;
-pub type c_ulonglong = u64;
-pub type c_float = f32;
-pub type c_double = f64;
-pub type __int8 = i8;
-pub type __uint8 = u8;
-pub type __int16 = i16;
-pub type __uint16 = u16;
-pub type __int32 = i32;
-pub type __uint32 = u32;
-pub type __int64 = i64;
-pub type __uint64 = u64;
-*/
 pub type wchar_t = u16;
 
 pub type POINTER_64_INT = usize;
@@ -123,18 +99,9 @@ pub type LPCOLORREF = *mut DWORD;
 
 
 
-//pub type LPCSTR = *const c_char;
-//pub type LPVOID = *mut c_void;
 pub type HANDLE = *mut c_void;
 pub type CHARSTRING = *const c_char;
-//pub type BOOL = c_int;
 
-//pub type HWND = *mut c_void;
-//pub type UINT = u32;
-//pub type WPARAM = u32;
-//pub type LPARAM = u32;
-
-//pub type PWSTR = *const c_char;
 pub enum EMPTYTYPE {}
 pub type HINSTANCE = *mut EMPTYTYPE;
 pub type HWND = *mut EMPTYTYPE;
@@ -150,6 +117,7 @@ pub type HBITMAP = *mut EMPTYTYPE;
 
 pub type HDC = *mut EMPTYTYPE;
 pub type HRGN = *mut EMPTYTYPE;
+pub type HGLRC = *mut EMPTYTYPE;
 
 
 
@@ -172,96 +140,15 @@ pub type ATOM = WORD;
 pub const CW_USEDEFAULT: c_int = 0x80000000u32 as i32;
 pub const HWND_DESKTOP: HWND = 0 as HWND;
 
-//DECLARE_HANDLE!{HINSTANCE, HINSTANCE__}
-
 pub type WNDPROC = Option<unsafe extern "system" fn(HWND, UINT, WPARAM, LPARAM) -> LRESULT>;
 
 pub type PROPENUMPROCEXA = Option<unsafe extern "system" fn(HWND, LPSTR, HANDLE, ULONG_PTR) -> BOOL>;
 pub type PROPENUMPROCEXW = Option<unsafe extern "system" fn(HWND, LPWSTR, HANDLE, ULONG_PTR) -> BOOL>;
 pub type PROPENUMPROCA = Option<unsafe extern "system" fn(HWND, LPCSTR, HANDLE) -> BOOL>;
 pub type PROPENUMPROCW  = Option<unsafe extern "system" fn(HWND, LPCWSTR, HANDLE) -> BOOL>;
-/*
-FN!{stdcall WNDPROC(
-    HWND,
-    UINT,
-    WPARAM,
-    LPARAM,
-) -> LRESULT}
 
-macro_rules! FN {
-    (stdcall $func:ident($($t:ty,)*) -> $ret:ty) => (
-        pub type $func = Option<unsafe extern "system" fn($($t,)*) -> $ret>;
-    );
-    (stdcall $func:ident($($p:ident: $t:ty,)*) -> $ret:ty) => (
-        pub type $func = Option<unsafe extern "system" fn($($p: $t,)*) -> $ret>;
-    );
-    (cdecl $func:ident($($t:ty,)*) -> $ret:ty) => (
-        pub type $func = Option<unsafe extern "C" fn($($t,)*) -> $ret>;
-    );
-    (cdecl $func:ident($($p:ident: $t:ty,)*) -> $ret:ty) => (
-        pub type $func = Option<unsafe extern "C" fn($($p: $t,)*) -> $ret>;
-    );
-}
-*/
+static mut createContextAttribsARB: Option<extern "system" fn(_: HDC, _: HGLRC, _: *const INT) -> HGLRC> = None;
 
-
-
-/*
-use um::winnt::{LONG, SHORT};
-DECLARE_HANDLE!{HWND, HWND__}
-DECLARE_HANDLE!{HHOOK, HHOOK__}
-pub type HGDIOBJ = *mut c_void;
-DECLARE_HANDLE!{HACCEL, HACCEL__}
-DECLARE_HANDLE!{HBITMAP, HBITMAP__}
-DECLARE_HANDLE!{HBRUSH, HBRUSH__}
-DECLARE_HANDLE!{HCOLORSPACE, HCOLORSPACE__}
-DECLARE_HANDLE!{HDC, HDC__}
-DECLARE_HANDLE!{HGLRC, HGLRC__}
-DECLARE_HANDLE!{HDESK, HDESK__}
-DECLARE_HANDLE!{HENHMETAFILE, HENHMETAFILE__}
-DECLARE_HANDLE!{HFONT, HFONT__}
-DECLARE_HANDLE!{HICON, HICON__}
-DECLARE_HANDLE!{HMENU, HMENU__}
-DECLARE_HANDLE!{HPALETTE, HPALETTE__}
-DECLARE_HANDLE!{HPEN, HPEN__}
-DECLARE_HANDLE!{HWINEVENTHOOK, HWINEVENTHOOK__}
-DECLARE_HANDLE!{HMONITOR, HMONITOR__}
-DECLARE_HANDLE!{HUMPD, HUMPD__}
-
-
-
-
-
-
-
-pub type SPHANDLE = *mut HANDLE;
-pub type LPHANDLE = *mut HANDLE;
-pub type HGLOBAL = HANDLE;
-pub type HLOCAL = HANDLE;
-pub type GLOBALHANDLE = HANDLE;
-pub type LOCALHANDLE = HANDLE;
-pub enum __some_function {}
-/// Pointer to a function with unknown type signature.
-pub type FARPROC = *mut __some_function;
-/// Pointer to a function with unknown type signature.
-pub type NEARPROC = *mut __some_function;
-/// Pointer to a function with unknown type signature.
-pub type PROC = *mut __some_function;
-pub type ATOM = WORD;
-DECLARE_HANDLE!{HKEY, HKEY__}
-pub type PHKEY = *mut HKEY;
-DECLARE_HANDLE!{HMETAFILE, HMETAFILE__}
-DECLARE_HANDLE!{HINSTANCE, HINSTANCE__}
-pub type HMODULE = HINSTANCE;
-DECLARE_HANDLE!{HRGN, HRGN__}
-DECLARE_HANDLE!{HRSRC, HRSRC__}
-DECLARE_HANDLE!{HSPRITE, HSPRITE__}
-DECLARE_HANDLE!{HLSURF, HLSURF__}
-DECLARE_HANDLE!{HSTR, HSTR__}
-DECLARE_HANDLE!{HTASK, HTASK__}
-DECLARE_HANDLE!{HWINSTA, HWINSTA__}
-DECLARE_HANDLE!{HKL, HKL__}
-*/
 
 
 
@@ -352,6 +239,8 @@ pub type LPWNDCLASSW = *mut WNDCLASSW;
 
 
 #[link(name = "user32")]
+#[link(name = "gdi32")]
+#[link(name = "opengl32")]
 extern "system" {
     pub fn CreateWindowExA(
         dwExStyle: DWORD,
@@ -396,7 +285,7 @@ extern "system" {
 
 
 
-
+/*
     pub fn DisableThreadLibraryCalls(
         hLibModule: HMODULE,
     ) -> BOOL;
@@ -414,9 +303,7 @@ extern "system" {
         cchValue: c_int,
         bIgnoreCase: BOOL,
     ) -> c_int;
-    pub fn FreeLibrary(
-        hLibModule: HMODULE,
-    ) -> BOOL;
+   
     pub fn FreeLibraryAndExitThread(
         hLibModule: HMODULE,
         dwExitCode: DWORD,
@@ -434,6 +321,10 @@ extern "system" {
         lpFilename: LPWSTR,
         nSize: DWORD,
     ) -> DWORD;
+    */
+    pub fn FreeLibrary(
+        hLibModule: HMODULE,
+    ) -> BOOL;
     pub fn GetModuleHandleA(
         lpModuleName: LPCSTR,
     ) -> HMODULE;
@@ -464,6 +355,8 @@ extern "system" {
         hFile: HANDLE,
         dwFlags: DWORD,
     ) -> HMODULE;
+
+    /*
     pub fn LoadResource(
         hModule: HMODULE,
         hResInfo: HRSRC,
@@ -487,6 +380,7 @@ extern "system" {
         hModule: HMODULE,
         hResInfo: HRSRC,
     ) -> DWORD;
+*/
 
 
 
@@ -498,9 +392,22 @@ extern "system" {
 
 
 
-
-
-
+    pub fn PostQuitMessage(
+        nExitCode: c_int,
+    );
+    pub fn DefWindowProcA(
+        hWnd: HWND,
+        Msg: UINT,
+        wParam: WPARAM,
+        lParam: LPARAM,
+    ) -> LRESULT;
+    pub fn DefWindowProcW(
+        hWnd: HWND,
+        Msg: UINT,
+        wParam: WPARAM,
+        lParam: LPARAM,
+    ) -> LRESULT;
+/*
 
 
     pub fn AttachThreadInput(
@@ -516,21 +423,7 @@ extern "system" {
         hProcess: HANDLE,
         dwMilliseconds: DWORD,
     ) -> DWORD;
-    pub fn DefWindowProcA(
-        hWnd: HWND,
-        Msg: UINT,
-        wParam: WPARAM,
-        lParam: LPARAM,
-    ) -> LRESULT;
-    pub fn DefWindowProcW(
-        hWnd: HWND,
-        Msg: UINT,
-        wParam: WPARAM,
-        lParam: LPARAM,
-    ) -> LRESULT;
-    pub fn PostQuitMessage(
-        nExitCode: c_int,
-    );
+
     pub fn CallWindowProcA(
         lpPrevWndFunc: WNDPROC,
         hWnd: HWND,
@@ -551,7 +444,7 @@ extern "system" {
     ) -> DWORD;
 
 
-
+*/
 
 
 
@@ -719,7 +612,7 @@ extern "system" {
 
 
 
-
+/*
 
     pub fn SetPropA(
         hWnd: HWND,
@@ -765,6 +658,7 @@ extern "system" {
         hWnd: HWND,
         lpEnumFunc: PROPENUMPROCW,
     ) -> c_int;
+    */
     pub fn SetWindowTextA(
         hWnd: HWND,
         lpString: LPCSTR,
@@ -981,6 +875,48 @@ extern "system" {
         wParam: WPARAM,
         lParam: LPARAM,
     ) -> BOOL;
+
+
+
+    pub fn ChoosePixelFormat(
+        hdc: HDC,
+        ppfd: *const PIXELFORMATDESCRIPTOR,
+    ) -> c_int;
+
+    pub fn DescribePixelFormat(
+        hdc: HDC,
+        iPixelFormat: c_int,
+        nBytes: UINT,
+        ppfd: LPPIXELFORMATDESCRIPTOR,
+    ) -> c_int;
+
+    pub fn SetPixelFormat(
+        hdc: HDC,
+        iPixelFormat: c_int,
+        ppfd: *const PIXELFORMATDESCRIPTOR,
+    ) -> BOOL;
+
+    pub fn wglCreateContext(
+        hdc: HDC,
+    ) -> HGLRC;
+
+    pub fn wglDeleteContext(
+        hglrc: HGLRC,
+    ) -> BOOL;
+    pub fn wglGetCurrentContext() -> HGLRC;
+    pub fn wglGetCurrentDC() -> HDC;
+    pub fn wglGetProcAddress(
+        lpszProc: LPCSTR,
+    ) -> PROC;
+    pub fn wglMakeCurrent(
+        hdc: HDC,
+        hglrc: HGLRC,
+    ) -> BOOL;
+
+    pub fn SwapBuffers(
+        hdc: HDC,
+    ) -> BOOL;
+
 }
 
 
@@ -1738,18 +1674,65 @@ struct Win32Window
 {
     win32_hwnd : HWND,
     win32_dc : HDC,
+    hglrc : HGLRC,
     class_name: Vec<u16>,
     window_name: Vec<u16>,
+
+    width: i32,
+    height: i32,
+
+    ogl_extended: i32,
+
 }
 
 static mut win32_window : Win32Window = Win32Window {
     win32_hwnd : 0 as HWND,
     win32_dc : 0 as HDC,
+    hglrc : 0 as HGLRC,
     class_name : Vec::new(),
     window_name : Vec::new(),
+
+    width: 640,
+    height: 480,
+
+    ogl_extended: 0,
 };
 
-unsafe fn create_window() 
+#[repr(C)]
+
+pub struct PIXELFORMATDESCRIPTOR {
+    nSize: WORD,
+    nVersion: WORD,
+    dwFlags: DWORD,
+    iPixelType: BYTE,
+    cColorBits: BYTE,
+    cRedBits: BYTE,
+    cRedShift: BYTE,
+    cGreenBits: BYTE,
+    cGreenShift: BYTE,
+    cBlueBits: BYTE,
+    cBlueShift: BYTE,
+    cAlphaBits: BYTE,
+    cAlphaShift: BYTE,
+    cAccumBits: BYTE,
+    cAccumRedBits: BYTE,
+    cAccumGreenBits: BYTE,
+    cAccumBlueBits: BYTE,
+    cAccumAlphaBits: BYTE,
+    cDepthBits: BYTE,
+    cStencilBits: BYTE,
+    cAuxBuffers: BYTE,
+    iLayerType: BYTE,
+    bReserved: BYTE,
+    dwLayerMask: DWORD,
+    dwVisibleMask: DWORD,
+    dwDamageMask: DWORD,
+}
+pub type PPIXELFORMATDESCRIPTOR = *mut PIXELFORMATDESCRIPTOR;
+pub type LPPIXELFORMATDESCRIPTOR = *mut PIXELFORMATDESCRIPTOR;
+
+
+unsafe fn create_window() -> bool
 {
     let mut wndclassw: WNDCLASSW = std::mem::zeroed();
 
@@ -1795,8 +1778,8 @@ unsafe fn create_window()
         | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
         ;
 
-    rect.right = 800;
-    rect.bottom = 600;
+    rect.right = win32_window.width;
+    rect.bottom = win32_window.height;
 
     AdjustWindowRectEx(&rect as *const _ as _, win_style, false as _, win_ex_style);
     let win_width = rect.right - rect.left;
@@ -1820,11 +1803,35 @@ unsafe fn create_window()
         NULL as _,                   // lParam
     );
     assert!(win32_window.win32_hwnd.is_null() == false);
+
+    if win32_window.win32_hwnd.is_null()
+    {
+        return false;
+    }
+
     ShowWindow(win32_window.win32_hwnd, SW_SHOW);
     //_sapp_win32_in_create_window = false;
     let dc = GetDC(win32_window.win32_hwnd);
     assert!(dc.is_null() == false);
+
+
     win32_window.win32_dc = dc;
+
+    if win32_window.win32_dc.is_null()
+    {
+        return false;
+    }
+
+
+
+    return true;
+
+
+
+
+
+
+
     //update_dimensions();
     
 }
@@ -1832,98 +1839,141 @@ unsafe fn create_window()
 
 
 
+/* pixel types */
+pub const PFD_TYPE_RGBA: BYTE =        0;
+pub const PFD_TYPE_COLORINDEX: BYTE =  1;
+
+/* layer types */
+pub const PFD_MAIN_PLANE: BYTE =     0;
+pub const PFD_OVERLAY_PLANE: BYTE =  1;
+pub const PFD_UNDERLAY_PLANE: BYTE = -1i8 as BYTE;
+
+/* PIXELFORMATDESCRIPTOR flags */
+pub const PFD_DOUBLEBUFFER : DWORD =            0x00000001;
+pub const PFD_STEREO : DWORD =                  0x00000002;
+pub const PFD_DRAW_TO_WINDOW : DWORD =          0x00000004;
+pub const PFD_DRAW_TO_BITMAP : DWORD =          0x00000008;
+pub const PFD_SUPPORT_GDI : DWORD =             0x00000010;
+pub const PFD_SUPPORT_OPENGL : DWORD =          0x00000020;
+pub const PFD_GENERIC_FORMAT : DWORD =          0x00000040;
+pub const PFD_NEED_PALETTE : DWORD =            0x00000080;
+pub const PFD_NEED_SYSTEM_PALETTE : DWORD =     0x00000100;
+pub const PFD_SWAP_EXCHANGE : DWORD =           0x00000200;
+pub const PFD_SWAP_COPY : DWORD =               0x00000400;
+pub const PFD_SWAP_LAYER_BUFFERS : DWORD =      0x00000800;
+pub const PFD_GENERIC_ACCELERATED : DWORD =     0x00001000;
+pub const PFD_SUPPORT_DIRECTDRAW : DWORD =      0x00002000;
+pub const PFD_DIRECT3D_ACCELERATED : DWORD =    0x00004000;
+pub const PFD_SUPPORT_COMPOSITION : DWORD =     0x00008000;
+
+/* PIXELFORMATDESCRIPTOR flags for use in ChoosePixelFormat only */
+pub const PFD_DEPTH_DONTCARE: DWORD =          0x20000000;
+pub const PFD_DOUBLEBUFFER_DONTCARE: DWORD =   0x40000000;
+pub const PFD_STEREO_DONTCARE: DWORD =         0x80000000;
 
 
 
 
 
+pub const WGL_CONTEXT_DEBUG_BIT_ARB: u32 = 0x00000001;
+pub const WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: u32 = 0x00000002;
+pub const WGL_CONTEXT_PROFILE_MASK_ARB: u32 = 0x9126;
+pub const WGL_CONTEXT_CORE_PROFILE_BIT_ARB: u32 = 0x00000001;
+pub const WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB: u32 = 0x00000002;
+pub const WGL_CONTEXT_MAJOR_VERSION_ARB: u32 = 0x2091;
+pub const WGL_CONTEXT_MINOR_VERSION_ARB: u32 = 0x2092;
+pub const WGL_CONTEXT_FLAGS_ARB: u32 = 0x2094;
+pub const WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB: u32 = 0x00000004;
 
-
-
-
-/*
-
-
-
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+unsafe fn create_opengl() -> bool
 {
-    // Register the window class.
-    const wchar_t CLASS_NAME[]  = L"Sample Window Class";
+    let mut px_format_desired : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
+    px_format_desired.nSize = std::mem::size_of_val(&px_format_desired) as u16;
+    px_format_desired.nVersion = 1;
+    px_format_desired.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+    px_format_desired.iPixelType = PFD_TYPE_RGBA;
+    px_format_desired.cColorBits = 32;
+    px_format_desired.cAlphaBits = 8;
+    px_format_desired.iLayerType = PFD_MAIN_PLANE;
+
+    let suggested_pixel_format_index = ChoosePixelFormat(win32_window.win32_dc, &px_format_desired);
+    let mut suggested_px_format : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
+    let descriptor_success = DescribePixelFormat(win32_window.win32_dc, suggested_pixel_format_index, 
+        std::mem::size_of_val(&suggested_pixel_format_index) as _, &mut suggested_px_format);
+    if descriptor_success == 0 && false
+    {
+        println!("Failed to describe pixel format!");
+        return false;
+    }
+
+    if SetPixelFormat(win32_window.win32_dc, suggested_pixel_format_index, &suggested_px_format) == 0
+    {
+        println!("Failed to set pixel format!");
+        return false;
+    }
+
+    let rc = wglCreateContext(win32_window.win32_dc);
+    if rc.is_null()
+    {
+        println!("Failed to create opengl context.");
+        return false;
+    }
+
+    win32_window.hglrc = rc;
+
+    // Check thread?
+    if wglMakeCurrent(win32_window.win32_dc, rc) == 0
+    {
+        println!("Failed to make current opengl context.");
+        return false;
+    }
+
+    let proc = wglGetProcAddress(b"wglCreateContextAttribsARB\0".as_ptr() as *const i8);
+    if proc.is_null() 
+    {
+        return false;
+    }
     
-    WNDCLASS wc = { };
+    createContextAttribsARB = Some(std::mem::transmute_copy(&proc));
 
-    wc.lpfnWndProc   = WindowProc;
-    wc.hInstance     = hInstance;
-    wc.lpszClassName = CLASS_NAME;
 
-    RegisterClass(&wc);
+    let attrs = [
+        WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+        WGL_CONTEXT_MINOR_VERSION_ARB, 5,
+        WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+        //WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+        WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+        0, 0,
+    ];
 
-    // Create the window.
 
-    HWND hwnd = CreateWindowEx(
-        0,                              // Optional window styles.
-        CLASS_NAME,                     // Window class
-        L"Learn to Program Windows",    // Window text
-        WS_OVERLAPPEDWINDOW,            // Window style
-
-        // Size and position
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-
-        NULL,       // Parent window    
-        NULL,       // Menu
-        hInstance,  // Instance handle
-        NULL        // Additional application data
-        );
-
-    if (hwnd == NULL)
+    let share_context: HGLRC = 0 as HGLRC;
+    let modern_rc = createContextAttribsARB.unwrap()(win32_window.win32_dc, share_context,  attrs.as_ptr() as *const i32);
+    if !modern_rc.is_null()
     {
-        return 0;
-    }
-
-    ShowWindow(hwnd, nCmdShow);
-
-    // Run the message loop.
-
-    MSG msg = { };
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    return 0;
-}
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
-    {
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
-
-    case WM_PAINT:
+        if wglMakeCurrent(win32_window.win32_dc, modern_rc) != 0
         {
-            /*
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
+            wglDeleteContext(win32_window.hglrc);
+            win32_window.hglrc = modern_rc;
 
-
-
-            FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
-
-            EndPaint(hwnd, &ps);
-            */
+            win32_window.ogl_extended = 1;
         }
-        return 0;
-
     }
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    return true;
 }
-*/
+
+fn destroy_opengl()
+{
+    unsafe
+    {
+        if !win32_window.hglrc.is_null()
+        {
+            wglDeleteContext(win32_window.hglrc);
+            win32_window.hglrc = 0 as HGLRC;
+        }
+    }
+}
+
 pub const PM_NOREMOVE: UINT = 0x0000;
 pub const PM_REMOVE: UINT = 0x0001;
 pub const PM_NOYIELD: UINT = 0x0002;
@@ -1933,24 +1983,141 @@ fn destroy_window()
     unsafe 
     {
         DestroyWindow(win32_window.win32_hwnd);
-        win32_window.win32_hwnd = std::ptr::null_mut();
+        win32_window.win32_hwnd = 0 as HWND;
 
         UnregisterClassW(win32_window.class_name.as_mut_ptr() as _, GetModuleHandleW(NULL as _));
     }
 }
 
+
+pub type GLenum = c_uint;
+pub type GLboolean = c_uchar;
+pub type GLbitfield = c_uint;
+pub type GLvoid = c_void;
+pub type GLbyte = c_schar;
+pub type GLshort = c_short;
+pub type GLint = c_int;
+pub type GLubyte = c_uchar;
+pub type GLushort = c_ushort;
+pub type GLuint = c_uint;
+pub type GLuint64 = c_ulonglong;
+pub type GLsizei = c_int;
+pub type GLchar = c_char;
+
+pub type GLsizeiptr =c_long;
+pub type GLintptr = c_long;
+
+pub type GLfloat = f32;
+pub type GLclampf = f32;
+pub type GLdouble = f64;
+pub type GLclampd = f64;
+
+extern "C" {
+    pub fn glCheckFramebufferStatus(target: GLenum) -> GLenum;
+}
+extern "C" {
+    pub fn glClear(mask: GLbitfield);
+}
+extern "C" {
+    pub fn glClearColor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat);
+}
+extern "C" {
+    pub fn glClearDepthf(d: GLfloat);
+}
+extern "C" {
+    pub fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
+}
+extern "C" {
+    pub fn glGetString(name: GLenum) -> *const GLubyte;
+}
+
+pub const GL_DEPTH_BUFFER_BIT: u32 = 256;
+pub const GL_STENCIL_BUFFER_BIT: u32 = 1024;
+pub const GL_COLOR_BUFFER_BIT: u32 = 16384;
+
+pub const GL_VENDOR: u32 = 7936;
+pub const GL_RENDERER: u32 = 7937;
+pub const GL_VERSION: u32 = 7938;
+pub const GL_EXTENSIONS: u32 = 7939;
+pub const GL_SHADING_LANGUAGE_VERSION: u32 = 35724;
+
+unsafe fn get_gl_string(string_type: u32) -> (bool, String)
+{
+    let mut result: String = String::new();
+
+    let str = glGetString(string_type);
+    if str.is_null()
+    {
+        return (false, result);
+    }
+    let s8 = std::ffi::CStr::from_ptr(str as *const i8).to_bytes();
+    let data_str = String::from_utf8(s8.to_vec());
+    match data_str
+    {
+        Ok(v) => result = v,
+        Err(_) => return (false, result)
+    };
+
+    return (true, result);
+}
+
+
 fn main() 
 {
+    let mut done = false;
     unsafe 
     {
         win32_window.class_name = "APP_CLASS_NAME\0".encode_utf16().collect::<Vec<u16>>();
         win32_window.window_name = "TITLE!\0".encode_utf16().collect::<Vec<u16>>();
-        create_window(); 
+        win32_window.width = 800;
+        win32_window.height = 600;
+        if !create_window()
+        {
+            return;
+        }
+
+        if !create_opengl()
+        {
+            return;
+        }
+
+
+        /*
+        let (r1, vendor) = get_gl_string(GL_VENDOR);
+        let (r2, version) = get_gl_string(GL_VERSION);
+        let (r3, renderer) = get_gl_string(GL_RENDERER);
+        let (r4, extensions) = get_gl_string(GL_EXTENSIONS);
+        
+        if !r1 || !r2 || !r3 
+        {
+            done = true;
+        }
+        else
+        {
+            println!("OpenGL vendor {}", vendor);
+            println!("OpenGL version {}", version);
+            println!("OpenGL renderer {}", renderer);
+            if r4
+            {
+                println!("OpenGL extensions {}", extensions);
+            }
+            if win32_window.ogl_extended != 0
+            {
+                let (r5, shading_language) = get_gl_string(GL_SHADING_LANGUAGE_VERSION);
+                if r5
+                {
+                    println!("OpenGL shading language version {}", shading_language);
+                }
+            }
+
+        }
+        */
+
     }
     println!("Hello, world!");
 
 
-    let mut done = false;
+   
     while !(done) 
     {
         let mut msg: MSG = unsafe{ std::mem::zeroed() };
@@ -1975,7 +2142,16 @@ fn main()
                 PostMessageW(win32_window.win32_hwnd, WM_CLOSE, 0, 0);
             }
         }
+        unsafe
+        {
+            glViewport(0, 0, win32_window.width, win32_window.height);
+            glClearColor(1.0f32, 0.0f32, 1.0f32, 0.0f32);
+            glClear(GL_COLOR_BUFFER_BIT);
+            SwapBuffers(win32_window.win32_dc);
+        }
     }
+
+    destroy_opengl();
     destroy_window();
 
 }
