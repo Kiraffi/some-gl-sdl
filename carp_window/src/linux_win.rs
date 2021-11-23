@@ -82,6 +82,7 @@ extern "system"
     pub fn XDisplayWidthMM(display: *mut Display, screen_id: c_int) -> c_int;
 
 
+    pub fn XSync(display: *mut Display, sync: bool) -> c_int;
 
     pub fn XSetWindowColormap(display: *mut Display, window: Window, colormap: Colormap) -> c_int;
     pub fn XCreateColormap(display: *mut Display, window: Window, visual: Visual, alloc: c_int) -> Colormap;
@@ -522,7 +523,8 @@ unsafe fn create_window() -> bool
     let gl_context = attrbCreate( display, bestFbc,  0 as _, true as _, context_attribs.as_ptr() );
 
 
-
+    // sync
+    XSync(display, false);
 
     println!("make current: {}", glXMakeCurrent(display, window, gl_context));
 
