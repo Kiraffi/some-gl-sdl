@@ -13,28 +13,17 @@ pub type GLXDrawable = XID;
 
 
 pub enum EMPTYTYPE {}
-pub type XPrivate = *mut EMPTYTYPE;
 pub type XDisplay = *mut EMPTYTYPE;
-pub type XPointer = *mut c_char;
-pub type _XrmHashBucketRec = *mut EMPTYTYPE;
-pub type XExtData = *mut EMPTYTYPE;
-pub type ScreenFormat = *mut EMPTYTYPE;
 pub type Visual = *mut EMPTYTYPE;
-pub type Depth = *mut EMPTYTYPE;
 
 pub type GLXContext = *mut EMPTYTYPE;
+pub type GLXFBConfig = *mut EMPTYTYPE;
 
 
 pub enum Display {}
 pub enum Screen {}
 
-pub type GC = *mut EMPTYTYPE;
-pub type XComposeStatus = *mut EMPTYTYPE;
-//pub type XVisualInfo = *mut EMPTYTYPE;
-
 pub type VisualID = c_ulong;
-
-
 pub type GLint = c_int;
 
 
@@ -105,15 +94,15 @@ extern "system"
 
     pub fn glXMakeCurrent(display: *mut Display, drawable: GLXDrawable, context: GLXContext) -> bool;
     pub fn glXSwapBuffers(display: *mut Display, drawable: GLXDrawable);
+    pub fn glXChooseFBConfig(display: *mut Display, screen_id: c_int, attrib_list: *const GLint, items: &mut c_int) -> *const GLXFBConfig;
+    pub fn glXGetVisualFromFBConfig(display: *mut Display, glx_fb_config: GLXFBConfig) -> *const XVisualInfo;
 
-/*
-    pub fn glXCreateNewContext(display: *mut Display, visual_info: *const XVisualInfo, share_list: GLXContext, direct: bool) -> GLXContext;
-    GLXContext glXCreateNewContext(	Display * dpy,
-        GLXFBConfig config,
-        int render_type,
-        GLXContext share_list,
-        Bool direct);
-*/
+    pub fn glXGetFBConfigAttrib(display: *mut Display, glx_fb_config: GLXFBConfig, attr: c_int, value: &mut c_int) -> c_int;
+
+    pub fn glXCreateNewContext(display: *mut Display, glx_fb_config: GLXFBConfig,
+        render_type: c_int, share_list: GLXContext, direct: bool) -> GLXContext;
+
+    pub fn glXGetProcAddress(procname: *const GLubyte) -> *mut c_void;
 
 }
 
@@ -145,7 +134,8 @@ pub struct XEvent
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct XSetWindowAttributes {
+pub struct XSetWindowAttributes
+{
     pub background_pixmap: Pixmap,
     pub background_pixel: c_ulong,
     pub border_pixmap: Pixmap,
@@ -283,6 +273,19 @@ pub const GLX_ACCUM_GREEN_SIZE: GLint = 15;
 pub const GLX_ACCUM_BLUE_SIZE: GLint = 16;
 pub const GLX_ACCUM_ALPHA_SIZE: GLint = 17;
 
+
+
+pub const GLX_X_VISUAL_TYPE: GLint = 0x22;
+pub const GLX_DRAWABLE_TYPE: GLint = 0x8010;
+pub const GLX_RENDER_TYPE: GLint = 0x8011;
+pub const GLX_X_RENDERABLE: GLint = 0x8012;
+pub const GLX_FBCONFIG_ID: GLint = 0x8013;
+
+pub const GLX_RGBA_TYPE: GLint = 0x8014;
+pub const GLX_RGBA_BIT: GLint = 0x00000001;
+pub const GLX_WINDOW_BIT: GLint = 0x00000001;
+pub const GLX_TRUE_COLOR: GLint = 0x8002;
+
 // 1.4 glx
 pub const GLX_SAMPLE_BUFFERS: GLint = 0x186a0;
 pub const GLX_SAMPLES: GLint = 0x186a1;
@@ -337,10 +340,19 @@ extern "C" {
 extern "C" {
     pub fn glClear(mask: GLbitfield);
 }
+extern "C" {
+    pub fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
+}
 
 pub const GL_TRIANGLES: u32 = 4;
 pub const GL_COLOR_BUFFER_BIT: u32 = 16384;
 
+pub const GLX_CONTEXT_MAJOR_VERSION_ARB: c_int = 0x2091;
+pub const GLX_CONTEXT_MINOR_VERSION_ARB: c_int = 0x2092;
+pub const GLX_CONTEXT_PROFILE_MASK_ARB: c_int = 0x9126;
+pub const GLX_CONTEXT_CORE_PROFILE_BIT_ARB: c_int = 0x1;
+pub const GLX_CONTEXT_FLAGS_ARB: c_int = 0x2094;
+pub const GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: c_int = 0x2;
 
 unsafe fn create_window() -> bool
 {
@@ -372,6 +384,61 @@ unsafe fn create_window() -> bool
     }
     println!("Query glx result: {}, major: {}, minor: {}", query_glx, major_glx_version, minor_glx_version);
 
+    let attribs: [GLint; 24] = [
+        GLX_X_RENDERABLE    , 1,
+		GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
+		GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+		GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
+		GLX_RED_SIZE        , 8,
+		GLX_GREEN_SIZE      , 8,
+		GLX_BLUE_SIZE       , 8,
+		GLX_ALPHA_SIZE      , 8,
+		GLX_DEPTH_SIZE      , 24,
+		GLX_STENCIL_SIZE    , 8,
+		GLX_DOUBLEBUFFER    , 1,
+        0,0
+    ];
+
+    let mut fbcount = 0;
+    let fb_configs = glXChooseFBConfig(display, screen_id, attribs.as_ptr(), &mut fbcount);
+    if fb_configs.is_null()
+    {
+        println!("Failed to retrieve framebuffer.");
+        XCloseDisplay(display);
+        return false;
+    }
+    println!("Found {} matching framebuffers.", fbcount);
+
+    let mut best_fbc =  -1;
+    let mut best_num_samp = -1;
+
+    for i in 0..fbcount
+    {
+        let fb_conf = *fb_configs.offset(i as isize);
+        let visual_info_tmp = glXGetVisualFromFBConfig( display, fb_conf );
+
+        if !visual_info_tmp.is_null()
+        {
+            let mut samp_buf = 0;
+            let mut samples = 0;
+
+            glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLE_BUFFERS, &mut samp_buf );
+            glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLES       , &mut samples  );
+
+            if best_fbc < 0 || (samp_buf > 0 && samples > best_num_samp)
+            {
+                best_fbc = i;
+                best_num_samp = samples;
+            }
+		}
+		XFree( visual_info_tmp as _ );
+	}
+	println!("Best visual info index: {}", best_fbc);
+	let bestFbc = *fb_configs.offset(best_fbc as isize);
+	XFree( fb_configs as _ ); // Make sure to free this!
+
+/*
+    /* non modern opengl */
     let attribs: [GLint; 18] = [
         GLX_RGBA,
         GLX_DOUBLEBUFFER,
@@ -385,6 +452,8 @@ unsafe fn create_window() -> bool
         0,0
     ];
     let visual_info = glXChooseVisual(display, screen_id, attribs.as_ptr());
+*/
+    let visual_info = glXGetVisualFromFBConfig( display, bestFbc );
 
     if visual_info.is_null()
     {
@@ -401,21 +470,15 @@ unsafe fn create_window() -> bool
 
     }
 
-
-
-
-    let root = XRootWindow(display, screen_id);
-    if root == 0
+    if screen_id != (*visual_info).screen
     {
-        println!("Root is zero");
+        println!("screenId({}) does not match visual->screen({})", screen_id, (*visual_info).screen);
         XCloseDisplay(display);
         return false;
     }
 
+    let root = XRootWindow(display, screen_id);
     let colormap = XCreateColormap(display, root, (*visual_info).visual, AllocNone);
-    println!("Colormap: {}", colormap);
-    //println!("setcolormap: {}", XSetWindowColormap(display, root, colormap));
-
     let black_pixel = XBlackPixel(display, screen_id);
     let white_pixel = XWhitePixel(display, screen_id);
 
@@ -425,23 +488,40 @@ unsafe fn create_window() -> bool
     windowAttribs.background_pixel = white_pixel;
     windowAttribs.colormap = colormap;
     windowAttribs.event_mask = KeyPressMask | KeyReleaseMask | KeymapStateMask
-    | StructureNotifyMask | SubstructureNotifyMask | ExposureMask;
+        | StructureNotifyMask | SubstructureNotifyMask | ExposureMask;
 
     let window = XCreateWindow(display, root, 0, 0, 640, 480,
      0, (*visual_info).depth, InputOutput, (*visual_info).visual,
      CWBackPixel | CWColormap | CWBorderPixel | CWEventMask, &windowAttribs);
 
-
-
 /*
-    let window = XCreateSimpleWindow(display, root,
-         0, 0, 640, 480, 2, black_pixel, white_pixel);
-    // Register for events
-    XSelectInput(display, window, KeyPressMask | KeyReleaseMask | KeymapStateMask
-        | StructureNotifyMask | SubstructureNotifyMask | ExposureMask);
-*/
-    // Create GLX OpenGL context
+     // Create GLX OpenGL old context
     let gl_context = glXCreateContext(display, visual_info, 0 as _, true);
+*/
+
+    let context_attribs: [c_int; 10] = [
+        GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
+        GLX_CONTEXT_MINOR_VERSION_ARB, 5,
+        GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+        GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+        0, 0
+    ];
+    //let gl_context = glXCreateNewContext( display, bestFbc, GLX_RGBA_TYPE,
+     //    0 as _, true );
+    let temp_fn = glXGetProcAddress(b"glXCreateContextAttribsARB\x00".as_ptr());
+    if temp_fn.is_null()
+    {
+        print!("Couldnt fine create context attrib arb");
+        XCloseDisplay(display);
+        return false;
+    }
+    let attrbCreate : fn(_: *mut Display, _: GLXFBConfig, _: GLXContext, _: c_int, _: *const c_int) -> GLXContext =
+        std::mem::transmute(temp_fn);
+    let gl_context = attrbCreate( display, bestFbc,  0 as _, true as _, context_attribs.as_ptr() );
+
+
+
+
     println!("make current: {}", glXMakeCurrent(display, window, gl_context));
 
     // Set window title
@@ -457,15 +537,12 @@ unsafe fn create_window() -> bool
     println!("Clear: {}", XClearWindow(display, window));
     println!("xmap raised: {}", XMapRaised(display, window));
 
-
-
-
     let mut running = true;
     while running
     {
         let mut ev: XEvent = std::mem::zeroed();
-        let event_out = XNextEvent(display, &mut ev);
-        //println!("event: {}", event_out);
+        let _event_out = XNextEvent(display, &mut ev);
+        //println!("event: {}", _event_out);
         //println!("type: {}", ev.pad[0]);
         let event_type = (ev.pad[0] & 0xffff) as c_int;
         match event_type
@@ -504,6 +581,7 @@ unsafe fn create_window() -> bool
                 let height = ((width_height >> 32) & 0xffff_ffff) as i32;
 
                 println!("width: {}, height {}", width, height);
+                glViewport(0, 0, width, height);
 
             },
 
