@@ -285,7 +285,7 @@ pub const GLX_RGBA_TYPE: GLint = 0x8014;
 pub const GLX_RGBA_BIT: GLint = 0x00000001;
 pub const GLX_WINDOW_BIT: GLint = 0x00000001;
 pub const GLX_TRUE_COLOR: GLint = 0x8002;
-
+pub const GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB: GLint = 0x20B2;
 // 1.4 glx
 pub const GLX_SAMPLE_BUFFERS: GLint = 0x186a0;
 pub const GLX_SAMPLES: GLint = 0x186a1;
@@ -421,11 +421,13 @@ unsafe fn create_window() -> bool
         {
             let mut samp_buf = 0;
             let mut samples = 0;
+            let mut srgb = 0;
 
             glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLE_BUFFERS, &mut samp_buf );
-            glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLES       , &mut samples  );
+            glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLES, &mut samples  );
+            glXGetFBConfigAttrib( display, fb_conf, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &mut srgb);
 
-            if best_fbc < 0 || (samp_buf > 0 && samples > best_num_samp)
+            if best_fbc < 0 || (samp_buf > 0 && samples > best_num_samp && srgb > 0)
             {
                 best_fbc = i;
                 best_num_samp = samples;
