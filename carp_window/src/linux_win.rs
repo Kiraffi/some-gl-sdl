@@ -1,4 +1,5 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
+#![allow(dead_code)]
 
 use std::{os::raw::*, ptr::null};
 
@@ -31,85 +32,84 @@ pub type GLint = c_int;
 #[link(name = "GL")]
 extern "system"
 {
-    pub fn XInitThreads() -> c_int;
-    pub fn XrmInitialize();
+    fn XInitThreads() -> c_int;
+    fn XrmInitialize();
 
-    pub fn XOpenDisplay(_: *const c_char) -> *mut Display;
-    pub fn XResourceManagerString(_ :Display) -> *mut c_char;
-    pub fn XInternAtom(_: *mut Display, _: *const c_char, _: c_int) -> Atom;
+    fn XOpenDisplay(_: *const c_char) -> *mut Display;
+    fn XResourceManagerString(_ :Display) -> *mut c_char;
+    fn XInternAtom(_: *mut Display, _: *const c_char, _: c_int) -> Atom;
 
-    pub fn XScreenOfDisplay(display: *mut Display, display_index: c_int) -> *mut Screen;
-    pub fn XCreateSimpleWindow(display: *mut Display, window: Window, x: c_int, y: c_int,
+    fn XScreenOfDisplay(display: *mut Display, display_index: c_int) -> *mut Screen;
+    fn XCreateSimpleWindow(display: *mut Display, window: Window, x: c_int, y: c_int,
         width: c_uint, height: c_uint, border_width: c_uint, bord: c_ulong, bg: c_ulong) -> Window;
-    pub fn XCreateWindow(display: *mut Display, window: Window, x: c_int, y: c_int,
+    fn XCreateWindow(display: *mut Display, window: Window, x: c_int, y: c_int,
         width: c_uint, height: c_uint, border_width: c_uint, depth: c_int,
         cls: c_uint, visual: Visual, value_mask: c_ulong, win_attr: *const XSetWindowAttributes) -> Window;
 
 
-    pub fn XRootWindow(display: *mut Display, screen_id: c_int) -> Window;
-    pub fn XBlackPixel(display: *mut Display, screen_id: c_int) -> c_ulong;
-    pub fn XWhitePixel(display: *mut Display, screen_id: c_int) -> c_ulong;
+    fn XRootWindow(display: *mut Display, screen_id: c_int) -> Window;
+    fn XBlackPixel(display: *mut Display, screen_id: c_int) -> c_ulong;
+    fn XWhitePixel(display: *mut Display, screen_id: c_int) -> c_ulong;
 
-    pub fn XClearWindow(display: *mut Display, window: Window) -> c_int;
-    pub fn XMapRaised(display: *mut Display, window: Window) -> c_int;
-    pub fn XDestroyWindow(display: *mut Display, window: Window) -> c_int;
+    fn XClearWindow(display: *mut Display, window: Window) -> c_int;
+    fn XMapRaised(display: *mut Display, window: Window) -> c_int;
+    fn XDestroyWindow(display: *mut Display, window: Window) -> c_int;
 
-    pub fn XFree(data: *mut c_void) -> c_int;
-    pub fn XCloseDisplay(display: *mut Display) -> c_int;
-    pub fn XNextEvent(display: *mut Display, xevent: *mut XEvent) -> c_int;
+    fn XFree(data: *mut c_void) -> c_int;
+    fn XCloseDisplay(display: *mut Display) -> c_int;
+    fn XNextEvent(display: *mut Display, xevent: *mut XEvent) -> c_int;
 
-    pub fn XDefaultScreen(display: *mut Display) -> c_int;
-    pub fn XStoreName(display: *mut Display, window: Window, name: *const c_char) -> c_int;
+    fn XDefaultScreen(display: *mut Display) -> c_int;
+    fn XStoreName(display: *mut Display, window: Window, name: *const c_char) -> c_int;
 
-    pub fn XSelectInput(display: *mut Display, window: Window, event_mask: c_long) -> c_int;
+    fn XSelectInput(display: *mut Display, window: Window, event_mask: c_long) -> c_int;
 
 
-    pub fn XFreeColormap(display: *mut Display, colormap: Colormap) -> c_int;
+    fn XFreeColormap(display: *mut Display, colormap: Colormap) -> c_int;
 
-    pub fn XLookupString(key_event: *mut XEvent, buffer: *mut c_char, bytes: c_int,
+    fn XLookupString(key_event: *mut XEvent, buffer: *mut c_char, bytes: c_int,
         keysym: *mut KeySym, comp: *const c_void /* *mut XComposeStatus*/) -> c_int;
 
 
-    pub fn XSetWMProtocols(display: *mut Display, window: Window, protocols: *mut Atom, count: c_int) -> c_int;
+    fn XSetWMProtocols(display: *mut Display, window: Window, protocols: *mut Atom, count: c_int) -> c_int;
 
 
 
 
-    pub fn XDisplayHeight(display: *mut Display, screen_id: c_int) -> c_int;
-    pub fn XDisplayHeightMM(display: *mut Display, screen_id: c_int) -> c_int;
-    pub fn XDisplayPlanes(display: *mut Display, screen_id: c_int) -> c_int;
-    pub fn XDisplayWidth(display: *mut Display, screen_id: c_int) -> c_int;
-    pub fn XDisplayWidthMM(display: *mut Display, screen_id: c_int) -> c_int;
+    fn XDisplayHeight(display: *mut Display, screen_id: c_int) -> c_int;
+    fn XDisplayHeightMM(display: *mut Display, screen_id: c_int) -> c_int;
+    fn XDisplayPlanes(display: *mut Display, screen_id: c_int) -> c_int;
+    fn XDisplayWidth(display: *mut Display, screen_id: c_int) -> c_int;
+    fn XDisplayWidthMM(display: *mut Display, screen_id: c_int) -> c_int;
 
 
-    pub fn XSync(display: *mut Display, sync: bool) -> c_int;
+    fn XSync(display: *mut Display, sync: bool) -> c_int;
 
-    pub fn XSetWindowColormap(display: *mut Display, window: Window, colormap: Colormap) -> c_int;
-    pub fn XCreateColormap(display: *mut Display, window: Window, visual: Visual, alloc: c_int) -> Colormap;
+    fn XSetWindowColormap(display: *mut Display, window: Window, colormap: Colormap) -> c_int;
+    fn XCreateColormap(display: *mut Display, window: Window, visual: Visual, alloc: c_int) -> Colormap;
 
     // GL lib
-    pub fn glXQueryVersion(display: *mut Display, major_version: &mut GLint, minor_version: &mut GLint) -> GLint;
-    pub fn glXChooseVisual(display: *mut Display, screen_id: c_int, attrib_list: *const GLint) -> *mut XVisualInfo;
-    pub fn glXCreateContext(display: *mut Display, visual_info: *const XVisualInfo, share_list: GLXContext, direct: bool) -> GLXContext;
-    pub fn glXDestroyContext(display: *mut Display, context: GLXContext);
+    fn glXQueryVersion(display: *mut Display, major_version: &mut GLint, minor_version: &mut GLint) -> GLint;
+    fn glXChooseVisual(display: *mut Display, screen_id: c_int, attrib_list: *const GLint) -> *mut XVisualInfo;
+    fn glXCreateContext(display: *mut Display, visual_info: *const XVisualInfo, share_list: GLXContext, direct: bool) -> GLXContext;
+    fn glXDestroyContext(display: *mut Display, context: GLXContext);
 
-    pub fn glXMakeCurrent(display: *mut Display, drawable: GLXDrawable, context: GLXContext) -> bool;
-    pub fn glXSwapBuffers(display: *mut Display, drawable: GLXDrawable);
-    pub fn glXChooseFBConfig(display: *mut Display, screen_id: c_int, attrib_list: *const GLint, items: &mut c_int) -> *const GLXFBConfig;
-    pub fn glXGetVisualFromFBConfig(display: *mut Display, glx_fb_config: GLXFBConfig) -> *const XVisualInfo;
+    fn glXMakeCurrent(display: *mut Display, drawable: GLXDrawable, context: GLXContext) -> bool;
+    fn glXSwapBuffers(display: *mut Display, drawable: GLXDrawable);
+    fn glXChooseFBConfig(display: *mut Display, screen_id: c_int, attrib_list: *const GLint, items: &mut c_int) -> *const GLXFBConfig;
+    fn glXGetVisualFromFBConfig(display: *mut Display, glx_fb_config: GLXFBConfig) -> *const XVisualInfo;
 
-    pub fn glXGetFBConfigAttrib(display: *mut Display, glx_fb_config: GLXFBConfig, attr: c_int, value: &mut c_int) -> c_int;
+    fn glXGetFBConfigAttrib(display: *mut Display, glx_fb_config: GLXFBConfig, attr: c_int, value: &mut c_int) -> c_int;
 
-    pub fn glXCreateNewContext(display: *mut Display, glx_fb_config: GLXFBConfig,
+    fn glXCreateNewContext(display: *mut Display, glx_fb_config: GLXFBConfig,
         render_type: c_int, share_list: GLXContext, direct: bool) -> GLXContext;
 
-    pub fn glXGetProcAddress(procname: *const GLubyte) -> *mut c_void;
+    fn glXGetProcAddress(procname: *const GLubyte) -> *mut c_void;
 
 }
 
-#[derive(Copy, Clone)]
 #[repr(C)]
-pub struct XVisualInfo
+struct XVisualInfo
 {
     pub visual: Visual,
     pub visualid: VisualID,
@@ -124,18 +124,16 @@ pub struct XVisualInfo
 }
 
 
-#[derive(Copy, Clone)]
 #[repr(C)]
-pub struct XEvent
+struct XEvent
 {
     pub pad: [c_long; 24],
 }
 
 
 
-#[derive(Copy, Clone)]
 #[repr(C)]
-pub struct XSetWindowAttributes
+struct XSetWindowAttributes
 {
     pub background_pixmap: Pixmap,
     pub background_pixel: c_ulong,
@@ -156,204 +154,198 @@ pub struct XSetWindowAttributes
 
 
 
-pub const CWBackPixmap: c_ulong = 1 << 0;
-pub const CWBackPixel: c_ulong = 1 << 1;
-pub const CWBorderPixmap: c_ulong = 1 << 2;
-pub const CWBorderPixel: c_ulong = 1 << 3;
-pub const CWBitGravity: c_ulong = 1 << 4;
-pub const CWWinGravity: c_ulong = 1<< 5;
-pub const CWBackingStore: c_ulong = 1<< 6;
-pub const CWBackingPlanes: c_ulong = 1 << 7;
-pub const CWBackingPixel: c_ulong = 1 << 8;
-pub const CWOverrideRedirect: c_ulong = 1 <<9;
-pub const CWSaveUnder: c_ulong = 1 << 10;
-pub const CWEventMask: c_ulong = 1 << 11;
-pub const CWDontPropagate: c_ulong = 1 <<12;
-pub const CWColormap: c_ulong = 1 << 13;
-pub const CWCursor: c_ulong = 1 << 14;
+const CWBackPixmap: c_ulong = 1 << 0;
+const CWBackPixel: c_ulong = 1 << 1;
+const CWBorderPixmap: c_ulong = 1 << 2;
+const CWBorderPixel: c_ulong = 1 << 3;
+const CWBitGravity: c_ulong = 1 << 4;
+const CWWinGravity: c_ulong = 1<< 5;
+const CWBackingStore: c_ulong = 1<< 6;
+const CWBackingPlanes: c_ulong = 1 << 7;
+const CWBackingPixel: c_ulong = 1 << 8;
+const CWOverrideRedirect: c_ulong = 1 <<9;
+const CWSaveUnder: c_ulong = 1 << 10;
+const CWEventMask: c_ulong = 1 << 11;
+const CWDontPropagate: c_ulong = 1 <<12;
+const CWColormap: c_ulong = 1 << 13;
+const CWCursor: c_ulong = 1 << 14;
 
 
-pub const CWX: c_ulong = 1 << 0;
-pub const CWY: c_ulong = 1 << 1;
-pub const CWWidth: c_ulong = 1 << 2;
-pub const CWHeight: c_ulong = 1 << 3;
-pub const CWBorderWidth: c_ulong = 1 << 4;
-pub const CWSibling: c_ulong = 1 << 5;
-pub const CWStackMode: c_ulong = 1 << 6;
+const CWX: c_ulong = 1 << 0;
+const CWY: c_ulong = 1 << 1;
+const CWWidth: c_ulong = 1 << 2;
+const CWHeight: c_ulong = 1 << 3;
+const CWBorderWidth: c_ulong = 1 << 4;
+const CWSibling: c_ulong = 1 << 5;
+const CWStackMode: c_ulong = 1 << 6;
 
-pub const InputOutput: c_uint = 1;
+const InputOutput: c_uint = 1;
 
 
 
-pub const NoEventMask: c_long = 0x0;
-pub const KeyPressMask: c_long = 0x1;
-pub const KeyReleaseMask: c_long = 0x2;
-pub const ButtonPressMask: c_long = 0x4;
-pub const ButtonReleaseMask: c_long = 0x8;
-pub const EnterWindowMask: c_long = 0x10;
-pub const LeaveWindowMask: c_long = 0x20;
-pub const PointerMotionMask: c_long = 0x40;
-pub const PointerMotionHintMask: c_long = 0x80;
-pub const Button1MotionMask: c_long = 0x100;
-pub const Button2MotionMask: c_long = 0x200;
-pub const Button3MotionMask: c_long = 0x400;
-pub const Button4MotionMask: c_long = 0x800;
-pub const Button5MotionMask: c_long = 0x1000;
-pub const ButtonMotionMask: c_long =  0x2000;
-pub const KeymapStateMask: c_long = 0x4000;
-pub const ExposureMask: c_long = 0x8000;
-pub const VisibilityChangeMask: c_long = 0x1_0000;
-pub const StructureNotifyMask: c_long = 0x2_0000;
-pub const ResizeRedirectMask: c_long = 0x4_0000;
-pub const SubstructureNotifyMask: c_long = 0x8_0000;
-pub const SubstructureRedirectMask: c_long = 0x10_0000;
-pub const FocusChangeMask: c_long = 0x20_0000;
-pub const PropertyChangeMask: c_long = 0x40_0000;
-pub const ColormapChangeMask: c_long = 0x80_0000;
-pub const OwnerGrabButtonMask: c_long = 0x100_0000;
+const NoEventMask: c_long = 0x0;
+const KeyPressMask: c_long = 0x1;
+const KeyReleaseMask: c_long = 0x2;
+const ButtonPressMask: c_long = 0x4;
+const ButtonReleaseMask: c_long = 0x8;
+const EnterWindowMask: c_long = 0x10;
+const LeaveWindowMask: c_long = 0x20;
+const PointerMotionMask: c_long = 0x40;
+const PointerMotionHintMask: c_long = 0x80;
+const Button1MotionMask: c_long = 0x100;
+const Button2MotionMask: c_long = 0x200;
+const Button3MotionMask: c_long = 0x400;
+const Button4MotionMask: c_long = 0x800;
+const Button5MotionMask: c_long = 0x1000;
+const ButtonMotionMask: c_long =  0x2000;
+const KeymapStateMask: c_long = 0x4000;
+const ExposureMask: c_long = 0x8000;
+const VisibilityChangeMask: c_long = 0x1_0000;
+const StructureNotifyMask: c_long = 0x2_0000;
+const ResizeRedirectMask: c_long = 0x4_0000;
+const SubstructureNotifyMask: c_long = 0x8_0000;
+const SubstructureRedirectMask: c_long = 0x10_0000;
+const FocusChangeMask: c_long = 0x20_0000;
+const PropertyChangeMask: c_long = 0x40_0000;
+const ColormapChangeMask: c_long = 0x80_0000;
+const OwnerGrabButtonMask: c_long = 0x100_0000;
 
 // Events
-pub const KeyPress: c_int = 2;
-pub const KeyRelease: c_int = 3;
-pub const ButtonPress: c_int = 4;
-pub const ButtonRelease: c_int = 5;
-pub const MotionNotify: c_int = 6;
-pub const EnterNotify: c_int = 7;
-pub const LeaveNotify: c_int = 8;
-pub const FocusIn: c_int = 9;
-pub const FocusOut: c_int = 10;
-pub const KeymapNotify: c_int = 11;
-pub const Expose: c_int = 12;
-pub const GraphicsExpose: c_int = 13;
-pub const NoExpose: c_int = 14;
-pub const VisibilityNotify: c_int = 15;
-pub const CreateNotify: c_int = 16;
-pub const DestroyNotify: c_int = 17;
-pub const UnmapNotify: c_int = 18;
-pub const MapNotify: c_int = 19;
-pub const MapRequest: c_int = 20;
-pub const ReparentNotify: c_int = 21;
-pub const ConfigureNotify: c_int = 22;
-pub const ConfigureRequest: c_int = 23;
-pub const GravityNotify: c_int = 24;
-pub const ResizeRequest: c_int = 25;
-pub const CirculateNotify: c_int = 26;
-pub const CirculateRequest: c_int = 27;
-pub const PropertyNotify: c_int = 28;
-pub const SelectionClear: c_int = 29;
-pub const SelectionRequest: c_int = 30;
-pub const SelectionNotify: c_int = 31;
-pub const ColormapNotify: c_int = 32;
-pub const ClientMessage: c_int = 33;
-pub const MappingNotify: c_int = 34;
-pub const GenericEvent: c_int = 35;
-pub const LASTEvent: c_int = 36;	/* must be bigger than any event # */
+const KeyPress: c_int = 2;
+const KeyRelease: c_int = 3;
+const ButtonPress: c_int = 4;
+const ButtonRelease: c_int = 5;
+const MotionNotify: c_int = 6;
+const EnterNotify: c_int = 7;
+const LeaveNotify: c_int = 8;
+const FocusIn: c_int = 9;
+const FocusOut: c_int = 10;
+const KeymapNotify: c_int = 11;
+const Expose: c_int = 12;
+const GraphicsExpose: c_int = 13;
+const NoExpose: c_int = 14;
+const VisibilityNotify: c_int = 15;
+const CreateNotify: c_int = 16;
+const DestroyNotify: c_int = 17;
+const UnmapNotify: c_int = 18;
+const MapNotify: c_int = 19;
+const MapRequest: c_int = 20;
+const ReparentNotify: c_int = 21;
+const ConfigureNotify: c_int = 22;
+const ConfigureRequest: c_int = 23;
+const GravityNotify: c_int = 24;
+const ResizeRequest: c_int = 25;
+const CirculateNotify: c_int = 26;
+const CirculateRequest: c_int = 27;
+const PropertyNotify: c_int = 28;
+const SelectionClear: c_int = 29;
+const SelectionRequest: c_int = 30;
+const SelectionNotify: c_int = 31;
+const ColormapNotify: c_int = 32;
+const ClientMessage: c_int = 33;
+const MappingNotify: c_int = 34;
+const GenericEvent: c_int = 35;
+const LASTEvent: c_int = 36;    /* must be bigger than any event # */
 
 
 
-pub const XK_Escape: KeySym = 0xff1b;
+const XK_Escape: KeySym = 0xff1b;
 
 
-pub const AllocNone: c_int = 0;
+const AllocNone: c_int = 0;
 
 
-pub const GLX_RGBA: GLint = 4;
-pub const GLX_DOUBLEBUFFER: GLint = 5;
-
-
-
-pub const GLX_AUX_BUFFERS: GLint = 7;
-pub const GLX_RED_SIZE: GLint = 8;
-pub const GLX_GREEN_SIZE: GLint = 9;
-pub const GLX_BLUE_SIZE: GLint = 10;
-pub const GLX_ALPHA_SIZE: GLint = 11;
-pub const GLX_DEPTH_SIZE: GLint = 12;
-pub const GLX_STENCIL_SIZE: GLint = 13;
-pub const GLX_ACCUM_RED_SIZE: GLint = 14;
-pub const GLX_ACCUM_GREEN_SIZE: GLint = 15;
-pub const GLX_ACCUM_BLUE_SIZE: GLint = 16;
-pub const GLX_ACCUM_ALPHA_SIZE: GLint = 17;
+const GLX_RGBA: GLint = 4;
+const GLX_DOUBLEBUFFER: GLint = 5;
 
 
 
-pub const GLX_X_VISUAL_TYPE: GLint = 0x22;
-pub const GLX_DRAWABLE_TYPE: GLint = 0x8010;
-pub const GLX_RENDER_TYPE: GLint = 0x8011;
-pub const GLX_X_RENDERABLE: GLint = 0x8012;
-pub const GLX_FBCONFIG_ID: GLint = 0x8013;
+const GLX_AUX_BUFFERS: GLint = 7;
+const GLX_RED_SIZE: GLint = 8;
+const GLX_GREEN_SIZE: GLint = 9;
+const GLX_BLUE_SIZE: GLint = 10;
+const GLX_ALPHA_SIZE: GLint = 11;
+const GLX_DEPTH_SIZE: GLint = 12;
+const GLX_STENCIL_SIZE: GLint = 13;
+const GLX_ACCUM_RED_SIZE: GLint = 14;
+const GLX_ACCUM_GREEN_SIZE: GLint = 15;
+const GLX_ACCUM_BLUE_SIZE: GLint = 16;
+const GLX_ACCUM_ALPHA_SIZE: GLint = 17;
 
-pub const GLX_RGBA_TYPE: GLint = 0x8014;
-pub const GLX_RGBA_BIT: GLint = 0x00000001;
-pub const GLX_WINDOW_BIT: GLint = 0x00000001;
-pub const GLX_TRUE_COLOR: GLint = 0x8002;
-pub const GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB: GLint = 0x20B2;
+
+
+const GLX_X_VISUAL_TYPE: GLint = 0x22;
+const GLX_DRAWABLE_TYPE: GLint = 0x8010;
+const GLX_RENDER_TYPE: GLint = 0x8011;
+const GLX_X_RENDERABLE: GLint = 0x8012;
+const GLX_FBCONFIG_ID: GLint = 0x8013;
+
+const GLX_RGBA_TYPE: GLint = 0x8014;
+const GLX_RGBA_BIT: GLint = 0x00000001;
+const GLX_WINDOW_BIT: GLint = 0x00000001;
+const GLX_TRUE_COLOR: GLint = 0x8002;
+const GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB: GLint = 0x20B2;
 // 1.4 glx
-pub const GLX_SAMPLE_BUFFERS: GLint = 0x186a0;
-pub const GLX_SAMPLES: GLint = 0x186a1;
+const GLX_SAMPLE_BUFFERS: GLint = 0x186a0;
+const GLX_SAMPLES: GLint = 0x186a1;
 
 
-pub type GLenum = c_uint;
-pub type GLboolean = c_uchar;
-pub type GLbitfield = c_uint;
-pub type GLvoid = c_void;
-pub type GLbyte = c_schar;
-pub type GLshort = c_short;
-pub type GLubyte = c_uchar;
-pub type GLushort = c_ushort;
-pub type GLuint = c_uint;
-pub type GLsizei = c_int;
-pub type GLfloat = f32;
-pub type GLclampf = f32;
-pub type GLdouble = f64;
-pub type GLclampd = f64;
+type GLenum = c_uint;
+type GLboolean = c_uchar;
+type GLbitfield = c_uint;
+type GLvoid = c_void;
+type GLbyte = c_schar;
+type GLshort = c_short;
+type GLubyte = c_uchar;
+type GLushort = c_ushort;
+type GLuint = c_uint;
+type GLsizei = c_int;
+type GLfloat = f32;
+type GLclampf = f32;
+type GLdouble = f64;
+type GLclampd = f64;
 
 
-extern "C" {
-    pub fn glClearColor(red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf);
-}
-extern "C" {
-    pub fn glBegin(mode: GLenum);
-}
-extern "C" {
-    pub fn glEnd();
-}
-extern "C" {
-    pub fn glVertex2d(x: GLdouble, y: GLdouble);
-}
-extern "C" {
-    pub fn glVertex2f(x: GLfloat, y: GLfloat);
-}
-extern "C" {
-    pub fn glVertex2i(x: GLint, y: GLint);
-}
-extern "C" {
-    pub fn glVertex2s(x: GLshort, y: GLshort);
-}
-extern "C" {
-    pub fn glVertex3d(x: GLdouble, y: GLdouble, z: GLdouble);
-}
-extern "C" {
-    pub fn glVertex3f(x: GLfloat, y: GLfloat, z: GLfloat);
-}
-extern "C" {
-    pub fn glColor3f(red: GLfloat, green: GLfloat, blue: GLfloat);
-}
-extern "C" {
-    pub fn glClear(mask: GLbitfield);
-}
-extern "C" {
-    pub fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
+extern "C"
+{
+    fn glClearColor(red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf);
+    fn glBegin(mode: GLenum);
+    fn glEnd();
+    fn glVertex2d(x: GLdouble, y: GLdouble);
+    fn glVertex2f(x: GLfloat, y: GLfloat);
+    fn glVertex2i(x: GLint, y: GLint);
+    fn glVertex2s(x: GLshort, y: GLshort);
+    fn glVertex3d(x: GLdouble, y: GLdouble, z: GLdouble);
+    fn glVertex3f(x: GLfloat, y: GLfloat, z: GLfloat);
+    fn glColor3f(red: GLfloat, green: GLfloat, blue: GLfloat);
+    fn glClear(mask: GLbitfield);
+    fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
 }
 
-pub const GL_TRIANGLES: u32 = 4;
-pub const GL_COLOR_BUFFER_BIT: u32 = 16384;
+const GL_TRIANGLES: u32 = 4;
+const GL_COLOR_BUFFER_BIT: u32 = 16384;
 
-pub const GLX_CONTEXT_MAJOR_VERSION_ARB: c_int = 0x2091;
-pub const GLX_CONTEXT_MINOR_VERSION_ARB: c_int = 0x2092;
-pub const GLX_CONTEXT_PROFILE_MASK_ARB: c_int = 0x9126;
-pub const GLX_CONTEXT_CORE_PROFILE_BIT_ARB: c_int = 0x1;
-pub const GLX_CONTEXT_FLAGS_ARB: c_int = 0x2094;
-pub const GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: c_int = 0x2;
+const GLX_CONTEXT_MAJOR_VERSION_ARB: c_int = 0x2091;
+const GLX_CONTEXT_MINOR_VERSION_ARB: c_int = 0x2092;
+const GLX_CONTEXT_PROFILE_MASK_ARB: c_int = 0x9126;
+const GLX_CONTEXT_CORE_PROFILE_BIT_ARB: c_int = 0x1;
+const GLX_CONTEXT_FLAGS_ARB: c_int = 0x2094;
+const GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: c_int = 0x2;
+
+pub struct CarpWindow
+{
+    display: *mut Display,
+    window: Window,
+    colormap: Colormap,
+
+    atom_delete_window: Atom
+
+}
+pub impl CarpWindow
+{
+    drop
+}
+
 
 unsafe fn create_window() -> bool
 {
@@ -361,8 +353,8 @@ unsafe fn create_window() -> bool
     let display = XOpenDisplay(null());
     if display.is_null()
     {
-    	println!("Couldnt open display!");
-    	return false;
+        println!("Couldnt open display!");
+        return false;
     }
     let screen_id = XDefaultScreen(display);
     let screen = XScreenOfDisplay(display, screen_id);
@@ -387,16 +379,16 @@ unsafe fn create_window() -> bool
 
     let attribs: [GLint; 24] = [
         GLX_X_RENDERABLE    , 1,
-		GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
-		GLX_RENDER_TYPE     , GLX_RGBA_BIT,
-		GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
-		GLX_RED_SIZE        , 8,
-		GLX_GREEN_SIZE      , 8,
-		GLX_BLUE_SIZE       , 8,
-		GLX_ALPHA_SIZE      , 8,
-		GLX_DEPTH_SIZE      , 24,
-		GLX_STENCIL_SIZE    , 8,
-		GLX_DOUBLEBUFFER    , 1,
+        GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
+        GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+        GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
+        GLX_RED_SIZE        , 8,
+        GLX_GREEN_SIZE      , 8,
+        GLX_BLUE_SIZE       , 8,
+        GLX_ALPHA_SIZE      , 8,
+        GLX_DEPTH_SIZE      , 24,
+        GLX_STENCIL_SIZE    , 8,
+        GLX_DOUBLEBUFFER    , 1,
         0,0
     ];
 
@@ -433,12 +425,12 @@ unsafe fn create_window() -> bool
                 best_fbc = i;
                 best_num_samp = samples;
             }
-		}
-		XFree( visual_info_tmp as _ );
-	}
-	println!("Best visual info index: {}", best_fbc);
-	let bestFbc = *fb_configs.offset(best_fbc as isize);
-	XFree( fb_configs as _ ); // Make sure to free this!
+        }
+        XFree( visual_info_tmp as _ );
+    }
+    println!("Best visual info index: {}", best_fbc);
+    let bestFbc = *fb_configs.offset(best_fbc as isize);
+    XFree( fb_configs as _ ); // Make sure to free this!
 
 /*
     /* non modern opengl */
@@ -469,14 +461,15 @@ unsafe fn create_window() -> bool
     {
         println!("Could not create correct visual_info, visual window.");
         XCloseDisplay(display);
+        XFree(visual_info as _);
         return false;
-
     }
 
     if screen_id != (*visual_info).screen
     {
         println!("screenId({}) does not match visual->screen({})", screen_id, (*visual_info).screen);
         XCloseDisplay(display);
+        XFree(visual_info as _);
         return false;
     }
 
@@ -485,8 +478,8 @@ unsafe fn create_window() -> bool
     let black_pixel = XBlackPixel(display, screen_id);
     let white_pixel = XWhitePixel(display, screen_id);
 
-	// Open the window
-	let mut windowAttribs:XSetWindowAttributes = std::mem::zeroed();
+    // Open the window
+    let mut windowAttribs:XSetWindowAttributes = std::mem::zeroed();
     windowAttribs.border_pixel = black_pixel;
     windowAttribs.background_pixel = white_pixel;
     windowAttribs.colormap = colormap;
@@ -501,6 +494,9 @@ unsafe fn create_window() -> bool
      // Create GLX OpenGL old context
     let gl_context = glXCreateContext(display, visual_info, 0 as _, true);
 */
+    // does this need to be saved to release?
+    XFree(visual_info as _);
+
 
     let context_attribs: [c_int; 10] = [
         GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -534,7 +530,6 @@ unsafe fn create_window() -> bool
     // Needed for handling pressing the cross button for exit
     let mut atom_delete_window: Atom  = XInternAtom(display, b"WM_DELETE_WINDOW\0".as_ptr() as _, false as _);
     XSetWMProtocols(display, window, &mut atom_delete_window, 1);
-
 
 
     //Show window
@@ -592,31 +587,29 @@ unsafe fn create_window() -> bool
             DestroyNotify =>
             {
                 running = false;
-
             },
             _ => {}
         };
 
         // Present frame
         glClearColor(0.3f32, 0.7f32, 0.3f32, 1.0f32);
-        		// OpenGL Rendering
-		glClear(GL_COLOR_BUFFER_BIT);
+                // OpenGL Rendering
+        glClear(GL_COLOR_BUFFER_BIT);
 
-		glBegin(GL_TRIANGLES);
-			glColor3f(  1.0f32,  0.0f32, 0.0f32);
-			glVertex3f( 0.0f32, -1.0f32, 0.0f32);
-			glColor3f(  0.0f32,  1.0f32, 0.0f32);
-			glVertex3f(-1.0f32,  1.0f32, 0.0f32);
-			glColor3f(  0.0f32,  0.0f32, 1.0f32);
-			glVertex3f( 1.0f32,  1.0f32, 0.0f32);
-		glEnd();
+        glBegin(GL_TRIANGLES);
+            glColor3f(  1.0f32,  0.0f32, 0.0f32);
+            glVertex3f( 0.0f32, -1.0f32, 0.0f32);
+            glColor3f(  0.0f32,  1.0f32, 0.0f32);
+            glVertex3f(-1.0f32,  1.0f32, 0.0f32);
+            glColor3f(  0.0f32,  0.0f32, 1.0f32);
+            glVertex3f( 1.0f32,  1.0f32, 0.0f32);
+        glEnd();
 
         glXSwapBuffers(display, window);
     }
 
     glXDestroyContext(display, gl_context);
 
-    XFree(visual_info as _);
     XFreeColormap(display, colormap);
     println!("destroy window: {}", XDestroyWindow(display, window));
     //println!("xfree: {}", XFree(screen as _));
