@@ -337,11 +337,11 @@ pub const GL_SHADER_IMAGE_ACCESS_BARRIER_BIT: u32 = 0x00000020;
 pub const GL_TIMESTAMP: u32 = 0x8E28;
 
 
-macro_rules! gl_macro_func_generator 
+macro_rules! gl_macro_func_generator
 {
-    ( $( $fn:ident ( $($arg:ident : $t:ty),* ) -> $res:ty ),* ) => 
+    ( $( $fn:ident ( $($arg:ident : $t:ty),* ) -> $res:ty ),* ) =>
     {
-        mod __temp_funcs 
+        mod __temp_funcs
         {
             use super::*;
 
@@ -351,7 +351,7 @@ macro_rules! gl_macro_func_generator
         }
 
         $(
-            pub unsafe fn $fn($($arg: $t),*) -> $res 
+            pub unsafe fn $fn($($arg: $t),*) -> $res
             {
                 __temp_funcs::$fn.unwrap()( $($arg),* )
             }
@@ -359,9 +359,9 @@ macro_rules! gl_macro_func_generator
 
         pub fn load_with<F>(mut loadfn: F) -> bool  where F: FnMut(&'static str) -> *const std::os::raw::c_void
         {
-            $(
-                unsafe 
-                {
+            unsafe
+            {
+                $(
                     let fn_name = stringify!($fn);
                     let proc_ptr = loadfn(fn_name);
                     if proc_ptr.is_null()
@@ -369,9 +369,10 @@ macro_rules! gl_macro_func_generator
                         println!("Load GL func {:?} failed.", fn_name);
                         return false;
                     }
+
                     __temp_funcs::$fn = Some(std::mem::transmute(proc_ptr));
-                }
-            )*
+                )*
+            }
             return true;
         }
     };
@@ -514,10 +515,10 @@ gl_macro_func_generator!
     glGenVertexArrays(n: GLsizei, arrays: *mut GLuint) -> (),
     glFrontFace(mode: GLenum) -> (),
     glCullFace(mode: GLenum) -> (),
-    
-    
-    
-    
+
+
+
+
     glGenTextures(n: GLsizei, textures: *mut GLuint) -> (),
     glReadPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type_: GLenum, pixels: *mut GLvoid) -> (),
     glBeginQuery(target: GLenum, id: GLuint) -> (),
@@ -552,5 +553,5 @@ gl_macro_func_generator!
     glGetQueryObjecti64v(id: GLuint, pname: GLenum, params: *mut GLint64) -> (),
     glGetQueryObjectuiv(id: GLuint, pname: GLenum, params: *mut GLuint) -> (),
     glGetQueryiv(target: GLenum, pname: GLenum, params: *mut GLint) -> ()
-    
+
 );

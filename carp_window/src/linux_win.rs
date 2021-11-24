@@ -1,7 +1,7 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 #![allow(dead_code)]
 
-use std::{os::raw::*, ptr::null};
+use std::{ffi::CString, os::raw::*, ptr::null};
 
 
 #[repr(C)]
@@ -34,8 +34,14 @@ impl Drop for CarpWindow
             if self.window != 0 as Window
             {
                 println!("destroy window: {}", XDestroyWindow(self.display, self.window));
+                self.window = 0 as Window;
             }
-            glXDestroyContext(self.display, self.gl_context);
+            if self.gl_context != 0 as GLXContext
+            {
+                println!("destroying context");
+                glXDestroyContext(self.display, self.gl_context);
+                self.gl_context = 0 as GLXContext;
+            }
             println!("xclose display: {}", XCloseDisplay(self.display));
         }
     }
@@ -48,6 +54,17 @@ impl CarpWindow
         let carp_window = unsafe { std::mem::zeroed() };
         return carp_window;
     }
+
+    pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
+    {
+        let proc_cstr = CString::new(proc).unwrap();
+        let proc_ptr = proc_cstr.as_ptr();
+
+        let proc = glXGetProcAddress(proc_ptr as _);
+        return proc;
+    }
+
+
     pub unsafe fn swap_buffers(&mut self)
     {
         glXSwapBuffers(self.display, self.window);
@@ -61,60 +78,62 @@ impl CarpWindow
 
     pub unsafe fn update(&mut self)
     {
-        let mut ev: XEvent = std::mem::zeroed();
-        let _event_out = XNextEvent(self.display, &mut ev);
-        //println!("event: {}", _event_out);
-        //println!("type: {}", ev.pad[0]);
-        let event_type = (ev.pad[0] & 0xffff) as c_int;
-        match event_type
+        while XPending(self.display) > 0 && self.running
         {
-            KeyPress =>
+            let mut ev: XEvent = std::mem::zeroed();
+            let _event_out = XNextEvent(self.display, &mut ev);
+            //println!("event: {}", _event_out);
+            //println!("type: {}", ev.pad[0]);
+            let event_type = (ev.pad[0] & 0xffff) as c_int;
+            match event_type
             {
-                println!("key press");
-                let mut keysym = 0 as KeySym;
-                let mut buffer: [c_char; 25] = [0 as c_char; 25];
-                let len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
-                if len > 0
+                KeyPress =>
                 {
-                    println!("button pressed: {}", keysym);
-                    XStoreName(self.display, self.window, b"Named Window2\0".as_ptr() as _);
-                }
-                if keysym == XK_Escape
+                    println!("key press");
+                    let mut keysym = 0 as KeySym;
+                    let mut buffer: [c_char; 25] = [0 as c_char; 25];
+                    let len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
+                    if len > 0
+                    {
+                        println!("button pressed: {}", keysym);
+                        XStoreName(self.display, self.window, b"Named Window2\0".as_ptr() as _);
+                    }
+                    if keysym == XK_Escape
+                    {
+                        println!("esc pressed: {}", keysym);
+                        self.running = false;
+                    }
+                },
+                ClientMessage =>
                 {
-                    println!("esc pressed: {}", keysym);
+                    // 64 bit
+                    if ev.pad[7] == self.atom_delete_window as i64
+                    {
+                        println!("Atom delete window!");
+                        self.running = false;
+                    }
+                },
+                Expose=>
+                {
+                    // 64 bit
+                    let width_height = ev.pad[6];
+                    let width = (width_height & 0xffff_ffff) as i32;
+                    let height = ((width_height >> 32) & 0xffff_ffff) as i32;
+
+                    println!("width: {}, height {}", width, height);
+                    glViewport(0, 0, width, height);
+
+                },
+
+                DestroyNotify =>
+                {
                     self.running = false;
-                }
-            },
-            ClientMessage =>
-            {
-                // 64 bit
-                if ev.pad[7] == self.atom_delete_window as i64
-                {
-                    println!("Atom delete window!");
-                    self.running = false;
-                }
-            },
-            Expose=>
-            {
-                // 64 bit
-                let width_height = ev.pad[6];
-                let width = (width_height & 0xffff_ffff) as i32;
-                let height = ((width_height >> 32) & 0xffff_ffff) as i32;
-
-                println!("width: {}, height {}", width, height);
-                glViewport(0, 0, width, height);
-
-            },
-
-            DestroyNotify =>
-            {
-                self.running = false;
-            },
-            _ => {}
-        };
+                },
+                _ => {}
+            };
 
 
-
+        }
     }
 
 
@@ -282,13 +301,13 @@ impl CarpWindow
         }
         let attrbCreate : fn(_: *mut Display, _: GLXFBConfig, _: GLXContext, _: c_int, _: *const c_int) -> GLXContext =
             std::mem::transmute(temp_fn);
-        let gl_context = attrbCreate( self.display, bestFbc,  0 as _, true as _, context_attribs.as_ptr() );
+        self.gl_context = attrbCreate( self.display, bestFbc,  0 as _, true as _, context_attribs.as_ptr() );
 
 
         // sync
         XSync(self.display, false);
 
-        println!("make current: {}", glXMakeCurrent(self.display, self.window, gl_context));
+        println!("make current: {}", glXMakeCurrent(self.display, self.window, self.gl_context));
 
         self.set_window_title(b"Named Window\0".as_ptr() as _);
 
@@ -341,6 +360,8 @@ pub type GLint = c_int;
 #[link(name = "GL")]
 extern "system"
 {
+    pub fn dlsym(lib_module_handle: *const EMPTYTYPE, proc_name: *const i8) -> *const EMPTYTYPE;
+
     fn XInitThreads() -> c_int;
     fn XrmInitialize();
 
@@ -355,6 +376,7 @@ extern "system"
         width: c_uint, height: c_uint, border_width: c_uint, depth: c_int,
         cls: c_uint, visual: Visual, value_mask: c_ulong, win_attr: *const XSetWindowAttributes) -> Window;
 
+    fn XPending(display: *mut Display) -> c_int;
 
     fn XRootWindow(display: *mut Display, screen_id: c_int) -> Window;
     fn XBlackPixel(display: *mut Display, screen_id: c_int) -> c_ulong;
@@ -413,7 +435,7 @@ extern "system"
     fn glXCreateNewContext(display: *mut Display, glx_fb_config: GLXFBConfig,
         render_type: c_int, share_list: GLXContext, direct: bool) -> GLXContext;
 
-    fn glXGetProcAddress(procname: *const GLubyte) -> *mut c_void;
+    fn glXGetProcAddress(procname: *const GLubyte) -> *const c_void;
 
 }
 
