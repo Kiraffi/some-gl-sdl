@@ -3,6 +3,315 @@
 
 use std::{os::raw::*, ptr::null};
 
+
+#[repr(C)]
+pub struct CarpWindow
+{
+    display: *mut Display,
+    window: Window,
+    colormap: Colormap,
+    gl_context: GLXContext,
+    atom_delete_window: Atom,
+    pub running: bool,
+}
+
+
+impl Drop for CarpWindow
+{
+    fn drop(&mut self)
+    {
+        if self.display.is_null()
+        {
+            return;
+        }
+        unsafe
+        {
+            if self.colormap != 0 as Colormap
+            {
+                XFreeColormap(self.display, self.colormap);
+                self.colormap = 0 as Colormap;
+            }
+            if self.window != 0 as Window
+            {
+                println!("destroy window: {}", XDestroyWindow(self.display, self.window));
+            }
+            glXDestroyContext(self.display, self.gl_context);
+            println!("xclose display: {}", XCloseDisplay(self.display));
+        }
+    }
+}
+
+impl CarpWindow
+{
+    pub fn new() -> CarpWindow
+    {
+        let carp_window = unsafe { std::mem::zeroed() };
+        return carp_window;
+    }
+    pub unsafe fn swap_buffers(&mut self)
+    {
+        glXSwapBuffers(self.display, self.window);
+    }
+    pub unsafe fn set_window_title(&mut self, title: *const c_char)
+    {
+        // Set window title
+        XStoreName(self.display, self.window, title);
+
+    }
+
+    pub unsafe fn update(&mut self)
+    {
+        let mut ev: XEvent = std::mem::zeroed();
+        let _event_out = XNextEvent(self.display, &mut ev);
+        //println!("event: {}", _event_out);
+        //println!("type: {}", ev.pad[0]);
+        let event_type = (ev.pad[0] & 0xffff) as c_int;
+        match event_type
+        {
+            KeyPress =>
+            {
+                println!("key press");
+                let mut keysym = 0 as KeySym;
+                let mut buffer: [c_char; 25] = [0 as c_char; 25];
+                let len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
+                if len > 0
+                {
+                    println!("button pressed: {}", keysym);
+                    XStoreName(self.display, self.window, b"Named Window2\0".as_ptr() as _);
+                }
+                if keysym == XK_Escape
+                {
+                    println!("esc pressed: {}", keysym);
+                    self.running = false;
+                }
+            },
+            ClientMessage =>
+            {
+                // 64 bit
+                if ev.pad[7] == self.atom_delete_window as i64
+                {
+                    println!("Atom delete window!");
+                    self.running = false;
+                }
+            },
+            Expose=>
+            {
+                // 64 bit
+                let width_height = ev.pad[6];
+                let width = (width_height & 0xffff_ffff) as i32;
+                let height = ((width_height >> 32) & 0xffff_ffff) as i32;
+
+                println!("width: {}, height {}", width, height);
+                glViewport(0, 0, width, height);
+
+            },
+
+            DestroyNotify =>
+            {
+                self.running = false;
+            },
+            _ => {}
+        };
+
+
+
+    }
+
+
+    pub unsafe fn create_window(&mut self) -> bool
+    {
+        // Open the display
+        self.display = XOpenDisplay(null());
+
+        if self.display.is_null()
+        {
+            println!("Couldnt open display!");
+            return false;
+        }
+        let screen_id = XDefaultScreen(self.display);
+        let screen = XScreenOfDisplay(self.display, screen_id);
+        if screen.is_null()
+        {
+            println!("Failed to get screen of display");
+            return false;
+        }
+
+
+        let mut major_glx_version: GLint = 0;
+        let mut minor_glx_version: GLint = 0;
+
+        let query_glx  = glXQueryVersion(self.display, &mut major_glx_version, &mut minor_glx_version);
+        if query_glx == 0 || major_glx_version < 1 || (major_glx_version == 1 && minor_glx_version < 4)
+        {
+            print!("Need to have glx 1.4 at least.");
+            return false;
+        }
+        println!("Query glx result: {}, major: {}, minor: {}", query_glx, major_glx_version, minor_glx_version);
+
+        let attribs: [GLint; 24] = [
+            GLX_X_RENDERABLE    , 1,
+            GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
+            GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+            GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
+            GLX_RED_SIZE        , 8,
+            GLX_GREEN_SIZE      , 8,
+            GLX_BLUE_SIZE       , 8,
+            GLX_ALPHA_SIZE      , 8,
+            GLX_DEPTH_SIZE      , 24,
+            GLX_STENCIL_SIZE    , 8,
+            GLX_DOUBLEBUFFER    , 1,
+            0,0
+        ];
+
+        let mut fbcount = 0;
+        let fb_configs = glXChooseFBConfig(self.display, screen_id, attribs.as_ptr(), &mut fbcount);
+        if fb_configs.is_null()
+        {
+            println!("Failed to retrieve framebuffer.");
+            return false;
+        }
+        println!("Found {} matching framebuffers.", fbcount);
+
+        let mut best_fbc =  -1;
+        let mut best_num_samp = -1;
+
+        for i in 0..fbcount
+        {
+            let fb_conf = *fb_configs.offset(i as isize);
+            let visual_info_tmp = glXGetVisualFromFBConfig( self.display, fb_conf );
+
+            if !visual_info_tmp.is_null()
+            {
+                let mut samp_buf = 0;
+                let mut samples = 0;
+                let mut srgb = 0;
+
+                glXGetFBConfigAttrib( self.display, fb_conf, GLX_SAMPLE_BUFFERS, &mut samp_buf );
+                glXGetFBConfigAttrib( self.display, fb_conf, GLX_SAMPLES, &mut samples  );
+                glXGetFBConfigAttrib( self.display, fb_conf, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &mut srgb);
+
+                if best_fbc < 0 || (samp_buf > 0 && samples > best_num_samp && srgb > 0)
+                {
+                    best_fbc = i;
+                    best_num_samp = samples;
+                }
+            }
+            XFree( visual_info_tmp as _ );
+        }
+        println!("Best visual info index: {}", best_fbc);
+        let bestFbc = *fb_configs.offset(best_fbc as isize);
+        XFree( fb_configs as _ ); // Make sure to free this!
+
+    /*
+        /* non modern opengl */
+        let attribs: [GLint; 18] = [
+            GLX_RGBA,
+            GLX_DOUBLEBUFFER,
+            GLX_DEPTH_SIZE,     24,
+            GLX_STENCIL_SIZE,   8,
+            GLX_RED_SIZE,       8,
+            GLX_GREEN_SIZE,     8,
+            GLX_BLUE_SIZE,      8,
+            GLX_SAMPLE_BUFFERS, 0,
+            GLX_SAMPLES,        0,
+            0,0
+        ];
+        let visual_info = glXChooseVisual(display, screen_id, attribs.as_ptr());
+    */
+        let visual_info = glXGetVisualFromFBConfig( self.display, bestFbc );
+
+        if visual_info.is_null()
+        {
+            println!("Could not create correct visual_info window.");
+            return false;
+        }
+
+        if (*visual_info).visual.is_null()
+        {
+            println!("Could not create correct visual_info, visual window.");
+            XFree(visual_info as _);
+            return false;
+        }
+
+        if screen_id != (*visual_info).screen
+        {
+            println!("screenId({}) does not match visual->screen({})", screen_id, (*visual_info).screen);
+            XFree(visual_info as _);
+            return false;
+        }
+
+        let root = XRootWindow(self.display, screen_id);
+        self.colormap = XCreateColormap(self.display, root, (*visual_info).visual, AllocNone);
+        let black_pixel = XBlackPixel(self.display, screen_id);
+        let white_pixel = XWhitePixel(self.display, screen_id);
+
+        // Open the window
+        let mut windowAttribs:XSetWindowAttributes = std::mem::zeroed();
+        windowAttribs.border_pixel = black_pixel;
+        windowAttribs.background_pixel = white_pixel;
+        windowAttribs.colormap = self.colormap;
+        windowAttribs.event_mask = KeyPressMask | KeyReleaseMask | KeymapStateMask
+            | StructureNotifyMask | SubstructureNotifyMask | ExposureMask;
+
+        self.window = XCreateWindow(self.display, root, 0, 0, 640, 480,
+         0, (*visual_info).depth, InputOutput, (*visual_info).visual,
+         CWBackPixel | CWColormap | CWBorderPixel | CWEventMask, &windowAttribs);
+
+    /*
+         // Create GLX OpenGL old context
+        let gl_context = glXCreateContext(self.display, visual_info, 0 as _, true);
+    */
+        // does this need to be saved to release?
+        XFree(visual_info as _);
+
+
+        let context_attribs: [c_int; 10] = [
+            GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
+            GLX_CONTEXT_MINOR_VERSION_ARB, 5,
+            GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+            GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+            0, 0
+        ];
+        //let gl_context = glXCreateNewContext( self.display, bestFbc, GLX_RGBA_TYPE,
+         //    0 as _, true );
+        let temp_fn = glXGetProcAddress(b"glXCreateContextAttribsARB\x00".as_ptr());
+        if temp_fn.is_null()
+        {
+            print!("Couldnt fine create context attrib arb");
+            return false;
+        }
+        let attrbCreate : fn(_: *mut Display, _: GLXFBConfig, _: GLXContext, _: c_int, _: *const c_int) -> GLXContext =
+            std::mem::transmute(temp_fn);
+        let gl_context = attrbCreate( self.display, bestFbc,  0 as _, true as _, context_attribs.as_ptr() );
+
+
+        // sync
+        XSync(self.display, false);
+
+        println!("make current: {}", glXMakeCurrent(self.display, self.window, gl_context));
+
+        self.set_window_title(b"Named Window\0".as_ptr() as _);
+
+        // Needed for handling pressing the cross button for exit
+        self.atom_delete_window  = XInternAtom(self.display, b"WM_DELETE_WINDOW\0".as_ptr() as _, false as _);
+        XSetWMProtocols(self.display, self.window, &mut self.atom_delete_window, 1);
+
+
+        //Show window
+        println!("Clear: {}", XClearWindow(self.display, self.window));
+        println!("xmap raised: {}", XMapRaised(self.display, self.window));
+
+        self.running = true;
+
+        return true;
+    }
+}
+
+
+
+
+
+
 pub type Atom = c_ulong;
 pub type XID = c_ulong;
 pub type Window = XID;
@@ -332,298 +641,9 @@ const GLX_CONTEXT_CORE_PROFILE_BIT_ARB: c_int = 0x1;
 const GLX_CONTEXT_FLAGS_ARB: c_int = 0x2094;
 const GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: c_int = 0x2;
 
-pub struct CarpWindow
-{
-    display: *mut Display,
-    window: Window,
-    colormap: Colormap,
 
-    atom_delete_window: Atom
-
-}
-pub impl CarpWindow
-{
-    drop
-}
-
-
-unsafe fn create_window() -> bool
-{
-    // Open the display
-    let display = XOpenDisplay(null());
-    if display.is_null()
-    {
-        println!("Couldnt open display!");
-        return false;
-    }
-    let screen_id = XDefaultScreen(display);
-    let screen = XScreenOfDisplay(display, screen_id);
-    if screen.is_null()
-    {
-        println!("Failed to get screen of display");
-        return false;
-    }
-
-
-    let mut major_glx_version: GLint = 0;
-    let mut minor_glx_version: GLint = 0;
-
-    let query_glx  = glXQueryVersion(display, &mut major_glx_version, &mut minor_glx_version);
-    if query_glx == 0 || major_glx_version < 1 || (major_glx_version == 1 && minor_glx_version < 4)
-    {
-        print!("Need to have glx 1.4 at least.");
-        XCloseDisplay(display);
-        return false;
-    }
-    println!("Query glx result: {}, major: {}, minor: {}", query_glx, major_glx_version, minor_glx_version);
-
-    let attribs: [GLint; 24] = [
-        GLX_X_RENDERABLE    , 1,
-        GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
-        GLX_RENDER_TYPE     , GLX_RGBA_BIT,
-        GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
-        GLX_RED_SIZE        , 8,
-        GLX_GREEN_SIZE      , 8,
-        GLX_BLUE_SIZE       , 8,
-        GLX_ALPHA_SIZE      , 8,
-        GLX_DEPTH_SIZE      , 24,
-        GLX_STENCIL_SIZE    , 8,
-        GLX_DOUBLEBUFFER    , 1,
-        0,0
-    ];
-
-    let mut fbcount = 0;
-    let fb_configs = glXChooseFBConfig(display, screen_id, attribs.as_ptr(), &mut fbcount);
-    if fb_configs.is_null()
-    {
-        println!("Failed to retrieve framebuffer.");
-        XCloseDisplay(display);
-        return false;
-    }
-    println!("Found {} matching framebuffers.", fbcount);
-
-    let mut best_fbc =  -1;
-    let mut best_num_samp = -1;
-
-    for i in 0..fbcount
-    {
-        let fb_conf = *fb_configs.offset(i as isize);
-        let visual_info_tmp = glXGetVisualFromFBConfig( display, fb_conf );
-
-        if !visual_info_tmp.is_null()
-        {
-            let mut samp_buf = 0;
-            let mut samples = 0;
-            let mut srgb = 0;
-
-            glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLE_BUFFERS, &mut samp_buf );
-            glXGetFBConfigAttrib( display, fb_conf, GLX_SAMPLES, &mut samples  );
-            glXGetFBConfigAttrib( display, fb_conf, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &mut srgb);
-
-            if best_fbc < 0 || (samp_buf > 0 && samples > best_num_samp && srgb > 0)
-            {
-                best_fbc = i;
-                best_num_samp = samples;
-            }
-        }
-        XFree( visual_info_tmp as _ );
-    }
-    println!("Best visual info index: {}", best_fbc);
-    let bestFbc = *fb_configs.offset(best_fbc as isize);
-    XFree( fb_configs as _ ); // Make sure to free this!
-
-/*
-    /* non modern opengl */
-    let attribs: [GLint; 18] = [
-        GLX_RGBA,
-        GLX_DOUBLEBUFFER,
-        GLX_DEPTH_SIZE,     24,
-        GLX_STENCIL_SIZE,   8,
-        GLX_RED_SIZE,       8,
-        GLX_GREEN_SIZE,     8,
-        GLX_BLUE_SIZE,      8,
-        GLX_SAMPLE_BUFFERS, 0,
-        GLX_SAMPLES,        0,
-        0,0
-    ];
-    let visual_info = glXChooseVisual(display, screen_id, attribs.as_ptr());
-*/
-    let visual_info = glXGetVisualFromFBConfig( display, bestFbc );
-
-    if visual_info.is_null()
-    {
-        println!("Could not create correct visual_info window.");
-        XCloseDisplay(display);
-        return false;
-    }
-
-    if (*visual_info).visual.is_null()
-    {
-        println!("Could not create correct visual_info, visual window.");
-        XCloseDisplay(display);
-        XFree(visual_info as _);
-        return false;
-    }
-
-    if screen_id != (*visual_info).screen
-    {
-        println!("screenId({}) does not match visual->screen({})", screen_id, (*visual_info).screen);
-        XCloseDisplay(display);
-        XFree(visual_info as _);
-        return false;
-    }
-
-    let root = XRootWindow(display, screen_id);
-    let colormap = XCreateColormap(display, root, (*visual_info).visual, AllocNone);
-    let black_pixel = XBlackPixel(display, screen_id);
-    let white_pixel = XWhitePixel(display, screen_id);
-
-    // Open the window
-    let mut windowAttribs:XSetWindowAttributes = std::mem::zeroed();
-    windowAttribs.border_pixel = black_pixel;
-    windowAttribs.background_pixel = white_pixel;
-    windowAttribs.colormap = colormap;
-    windowAttribs.event_mask = KeyPressMask | KeyReleaseMask | KeymapStateMask
-        | StructureNotifyMask | SubstructureNotifyMask | ExposureMask;
-
-    let window = XCreateWindow(display, root, 0, 0, 640, 480,
-     0, (*visual_info).depth, InputOutput, (*visual_info).visual,
-     CWBackPixel | CWColormap | CWBorderPixel | CWEventMask, &windowAttribs);
-
-/*
-     // Create GLX OpenGL old context
-    let gl_context = glXCreateContext(display, visual_info, 0 as _, true);
-*/
-    // does this need to be saved to release?
-    XFree(visual_info as _);
-
-
-    let context_attribs: [c_int; 10] = [
-        GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
-        GLX_CONTEXT_MINOR_VERSION_ARB, 5,
-        GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
-        GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-        0, 0
-    ];
-    //let gl_context = glXCreateNewContext( display, bestFbc, GLX_RGBA_TYPE,
-     //    0 as _, true );
-    let temp_fn = glXGetProcAddress(b"glXCreateContextAttribsARB\x00".as_ptr());
-    if temp_fn.is_null()
-    {
-        print!("Couldnt fine create context attrib arb");
-        XCloseDisplay(display);
-        return false;
-    }
-    let attrbCreate : fn(_: *mut Display, _: GLXFBConfig, _: GLXContext, _: c_int, _: *const c_int) -> GLXContext =
-        std::mem::transmute(temp_fn);
-    let gl_context = attrbCreate( display, bestFbc,  0 as _, true as _, context_attribs.as_ptr() );
-
-
-    // sync
-    XSync(display, false);
-
-    println!("make current: {}", glXMakeCurrent(display, window, gl_context));
-
-    // Set window title
-    XStoreName(display, window, b"Named Window\0".as_ptr() as _);
-
-    // Needed for handling pressing the cross button for exit
-    let mut atom_delete_window: Atom  = XInternAtom(display, b"WM_DELETE_WINDOW\0".as_ptr() as _, false as _);
-    XSetWMProtocols(display, window, &mut atom_delete_window, 1);
-
-
-    //Show window
-    println!("Clear: {}", XClearWindow(display, window));
-    println!("xmap raised: {}", XMapRaised(display, window));
-
-    let mut running = true;
-    while running
-    {
-        let mut ev: XEvent = std::mem::zeroed();
-        let _event_out = XNextEvent(display, &mut ev);
-        //println!("event: {}", _event_out);
-        //println!("type: {}", ev.pad[0]);
-        let event_type = (ev.pad[0] & 0xffff) as c_int;
-        match event_type
-        {
-            KeyPress =>
-            {
-                println!("key press");
-                let mut keysym = 0 as KeySym;
-                let mut buffer: [c_char; 25] = [0 as c_char; 25];
-                let len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
-                if len > 0
-                {
-                    println!("button pressed: {}", keysym);
-                    XStoreName(display, window, b"Named Window2\0".as_ptr() as _);
-                }
-                if keysym == XK_Escape
-                {
-                    println!("esc pressed: {}", keysym);
-                    running = false;
-                }
-            },
-            ClientMessage =>
-            {
-                // 64 bit
-                if ev.pad[7] == atom_delete_window as i64
-                {
-                    println!("Atom delete window!");
-                    running = false;
-                }
-            },
-            Expose=>
-            {
-                // 64 bit
-                let width_height = ev.pad[6];
-                let width = (width_height & 0xffff_ffff) as i32;
-                let height = ((width_height >> 32) & 0xffff_ffff) as i32;
-
-                println!("width: {}, height {}", width, height);
-                glViewport(0, 0, width, height);
-
-            },
-
-            DestroyNotify =>
-            {
-                running = false;
-            },
-            _ => {}
-        };
-
-        // Present frame
-        glClearColor(0.3f32, 0.7f32, 0.3f32, 1.0f32);
-                // OpenGL Rendering
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glBegin(GL_TRIANGLES);
-            glColor3f(  1.0f32,  0.0f32, 0.0f32);
-            glVertex3f( 0.0f32, -1.0f32, 0.0f32);
-            glColor3f(  0.0f32,  1.0f32, 0.0f32);
-            glVertex3f(-1.0f32,  1.0f32, 0.0f32);
-            glColor3f(  0.0f32,  0.0f32, 1.0f32);
-            glVertex3f( 1.0f32,  1.0f32, 0.0f32);
-        glEnd();
-
-        glXSwapBuffers(display, window);
-    }
-
-    glXDestroyContext(display, gl_context);
-
-    XFreeColormap(display, colormap);
-    println!("destroy window: {}", XDestroyWindow(display, window));
-    //println!("xfree: {}", XFree(screen as _));
-    println!("xclose display: {}", XCloseDisplay(display));
-
-    return true;
-}
 
 pub fn linux_main()
 {
     println!("linux main window!");
-
-    unsafe
-    {
-        println!("Create window success: {}", create_window());
-    }
 }
