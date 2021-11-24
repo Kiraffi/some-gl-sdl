@@ -1,27 +1,27 @@
 pub struct SdlWindowState
 {
-	pub window_width: i32,
-	pub window_height: i32,
-	pub vsync: bool,
+    pub window_width: i32,
+    pub window_height: i32,
+    pub vsync: bool,
 
-	pub timer: my_core::MyTimer,
+    pub timer: my_core::MyTimer,
 
-	pub key_downs: [u8; 512],
-	pub key_downs_previous: [u8; 512],
-	pub key_half_count: [u8; 512],
+    pub key_downs: [u8; 512],
+    pub key_downs_previous: [u8; 512],
+    pub key_half_count: [u8; 512],
 
-	pub mouse_x: i32,
-	pub mouse_y: i32,
-	pub mouse_b: i32,
+    pub mouse_x: i32,
+    pub mouse_y: i32,
+    pub mouse_b: i32,
 
-	pub quit: bool,
-	pub resized: bool,
+    pub quit: bool,
+    pub resized: bool,
 }
 
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 #[repr(i32)]
-pub enum MyKey 
+pub enum MyKey
 {
     Backspace = 8i32,
     Tab = 9i32,
@@ -162,17 +162,17 @@ pub enum MyKey
     Cut = 1073741947i32,
     Copy = 1073741948i32,
     Paste = 1073741949i32,
-    
-	//Find = Keycode::Find as i32,
-    
-	Mute = 1073741950i32,
+
+    //Find = Keycode::Find as i32,
+
+    Mute = 1073741950i32,
     VolumeUp = 1073741951i32,
     VolumeDown = 1073741952i32,
-    
-	KpComma = 1073741957i32,
-	KpEqualsAS400 = 1073741958i32,
-    
-	//AltErase = 1073741977i32,
+
+    KpComma = 1073741957i32,
+    KpEqualsAS400 = 1073741958i32,
+
+    //AltErase = 1073741977i32,
     //Sysreq = 1073741978i32,
     //Cancel = 1073741979i32,
     //Clear = 1073741980i32,
@@ -242,16 +242,16 @@ pub enum MyKey
     RShift = 1073742053i32,
     RAlt = 1073742054i32,
     RGui = 1073742055i32,
-    
-	Mode = 1073742081i32,
+
+    Mode = 1073742081i32,
     AudioNext = 1073742082i32,
     AudioPrev = 1073742083i32,
     AudioStop = 1073742084i32,
     AudioPlay = 1073742085i32,
     AudioMute = 1073742086i32,
     MediaSelect = 1073742087i32,
-    
-	//Www =  i32,
+
+    //Www =  i32,
     //Mail =  i32,
     //Calculator =  i32,
     //Computer =  i32,

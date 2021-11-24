@@ -5,7 +5,7 @@ pub type CHARSTRING = *const c_char;
 pub type BOOL = c_int;
 
 #[cfg(windows)]
-extern "system" 
+extern "system"
 {
     pub fn GetProcAddress(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE;
     pub fn LoadLibraryA(file_name: CHARSTRING) -> HANDLE;
@@ -13,7 +13,7 @@ extern "system"
 }
 
 #[cfg(target_os = "linux")]
-extern "system" 
+extern "system"
 {
     pub fn dlsym(lib_module_handle: HANDLE, proc_name: CHARSTRING) -> HANDLE;
     pub fn dlopen(file_name: CHARSTRING, flags: c_int) -> HANDLE;
@@ -52,9 +52,9 @@ impl CarpLibLoader
     }
     pub fn load_lib(&mut self, lib_name: &'static str) -> Result<HANDLE, String>
     {
-        let module = match std::ffi::CString::new(lib_name) 
+        let module = match std::ffi::CString::new(lib_name)
         {
-            Ok(lib_name) => unsafe 
+            Ok(lib_name) => unsafe
             {
                 load_library(lib_name.as_ptr())
             },
@@ -68,21 +68,21 @@ impl CarpLibLoader
 
         self.loaded_libs.push((module, lib_name));
         return Ok(module)
-    }   
+    }
 }
 
 
 impl Drop for CarpLibLoader
 {
-	fn drop(&mut self)
-	{
-		unsafe
-		{
-			for lib in &self.loaded_libs
+    fn drop(&mut self)
+    {
+        unsafe
+        {
+            for lib in &self.loaded_libs
             {
                 free_library(lib.0);
             }
             self.loaded_libs.clear();
-		}
-	}
+        }
+    }
 }

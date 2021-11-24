@@ -333,7 +333,7 @@ pub unsafe fn load_gl_func<T>(name: &str)  -> Option<T>
             let fn_name = v.as_ptr();
             //let fn_name = name.as_ptr() as *const std::os::raw::c_char;
             let mut proc_ptr = _sapp_wglGetProcAddress.unwrap()(fn_name);
-            if proc_ptr.is_null() 
+            if proc_ptr.is_null()
             {
                 proc_ptr = get_proc_address(_sapp_opengl32, fn_name);
             }
@@ -350,7 +350,7 @@ pub unsafe fn load_gl_func<T>(name: &str)  -> Option<T>
 
 
 
-mod funcs 
+mod funcs
 {
     pub static mut glGetString: Option< extern "system" fn(_: super::GLenum) -> *const super::GLubyte > = None;
 }
@@ -364,7 +364,7 @@ pub unsafe fn glGetString(name: GLenum) -> *const GLubyte {  funcs::glGetString.
 fn test_fn() -> Result<(), String>
 {
 
-	let sdl: sdl2::Sdl  = sdl2::init().unwrap();
+    let sdl: sdl2::Sdl  = sdl2::init().unwrap();
     let video: sdl2::VideoSubsystem = sdl.video().unwrap();
     let window;
     match video.window("window_name", 800 as u32, 600 as u32)
@@ -395,7 +395,7 @@ fn test_fn() -> Result<(), String>
 
 
     let mut carp_loader = CarpLibLoader::new();
-    
+
 
     #[cfg(windows)]
     let ogl_lib_name = "opengl32.dll";
@@ -403,15 +403,15 @@ fn test_fn() -> Result<(), String>
     let ogl_lib_name = "libopengl.so";
 
 
-    unsafe 
+    unsafe
     {
         _sapp_opengl32 = carp_loader.load_lib(ogl_lib_name)?;
-        if _sapp_opengl32.is_null() 
+        if _sapp_opengl32.is_null()
         {
             return Err(format!("Failed to load {}", ogl_lib_name));
         }
         _sapp_wglGetProcAddress = get_proc_ad(_sapp_opengl32, b"wglGetProcAddress\0");
-        if _sapp_wglGetProcAddress.is_none() 
+        if _sapp_wglGetProcAddress.is_none()
         {
             panic!("Failed to load wglGetProcAddress");
         }
@@ -420,36 +420,36 @@ fn test_fn() -> Result<(), String>
         if funcs::glGetString.is_none()
         {
             return Err("failed to load glGetString".to_string());
-        } 
+        }
     }
 
 
     let version;
-	match unsafe
-	{
-		let data = std::ffi::CStr::from_ptr( glGetString(GL_VERSION) as *const _)
-			.to_bytes()
-			.to_vec();
-		String::from_utf8(data)
-	}
-	{
-		Ok(v) =>
-		{
-			version = v;
-		}
-		Err(e) =>
-		{
-			println!("Error: {}", e);
-			return Err("Failed to read version data from gl!".to_string());
-		}
-	}
+    match unsafe
+    {
+        let data = std::ffi::CStr::from_ptr( glGetString(GL_VERSION) as *const _)
+            .to_bytes()
+            .to_vec();
+        String::from_utf8(data)
+    }
+    {
+        Ok(v) =>
+        {
+            version = v;
+        }
+        Err(e) =>
+        {
+            println!("Error: {}", e);
+            return Err("Failed to read version data from gl!".to_string());
+        }
+    }
 
-	println!("OpenGL version {}", version);
+    println!("OpenGL version {}", version);
 
     Ok(())
 }
 
-macro_rules! gl_loader 
+macro_rules! gl_loader
 {
     (
         $(
@@ -482,7 +482,7 @@ fn main() {
 
     //glGetStringi(2, 3);
     poo(1);
-     
+
 
     match test_fn()
     {

@@ -7,27 +7,27 @@ const MAX_LETTERS: usize = 65536usize;
 
 pub struct LetterData
 {
-	_pos_x: f32,
-	_pos_y: f32,
-	_size_x: f32,
-	_size_y: f32,
+    _pos_x: f32,
+    _pos_y: f32,
+    _size_x: f32,
+    _size_y: f32,
 
-	_uv_x: f32,
-	_uv_y: f32,
+    _uv_x: f32,
+    _uv_y: f32,
 
     _col: u32,
 
     _tmp: f32,
 }
 
-pub struct FontSystem 
+pub struct FontSystem
 {
     letter_buffer: render_gl::ShaderBuffer,
 
 
     letter_datas: Vec<LetterData>,
     font_texture: render_gl::Texture,
-	shader_textured_program: render_gl::Program,
+    shader_textured_program: render_gl::Program,
     vao: gl::GLuint,
     canvas_width: f32,
     canvas_height: f32
@@ -36,33 +36,33 @@ pub struct FontSystem
 
 impl FontSystem
 {
-    
+
     pub fn init() -> Result<FontSystem, &'static str>
     {
         let shader_textured_program;
         {
-            let textured_vert_shader = 
+            let textured_vert_shader =
                 match render_gl::Shader::from_vert_source(
                 &CString::new(include_str!("textured_triangle.vert")).unwrap(), &"textured_triangle.vert".to_string())
                 {
                     Ok(v) => v,
                     Err(_) => { println!("Failed to load vert shader!"); return Err("Failed to load vert shader!"); }
                 };
-                
-    
+
+
             let textured_frag_shader = match render_gl::Shader::from_frag_source(
                 &CString::new(include_str!("textured_triangle.frag")).unwrap(), &"textured_triangle.frag".to_string())
             {
                 Ok(v) => v,
                 Err(_) => { println!("Failed to load frag shader!"); return Err("Failed to load frag shader!"); }
             };
-    
+
             shader_textured_program = render_gl::Program::from_shaders(
                 &[textured_vert_shader, textured_frag_shader]
             ).unwrap();
         }
-    
-    
+
+
         let tex: Vec<u8> = include_bytes!("../../../new_font.dat").to_vec();
 
         let font_texture: render_gl::Texture;
@@ -92,13 +92,13 @@ impl FontSystem
 
 
                 font_texture = render_gl::Texture::new_texture(texture_width, texture_height, gl::GL_TEXTURE_2D, gl::GL_RGBA8);
-                gl::glTextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::GL_BGRA, 
+                gl::glTextureSubImage2D(font_texture.handle, 0, 0, 0, texture_width, texture_height, gl::GL_BGRA,
                     gl::GL_UNSIGNED_BYTE, font_tex_data.as_ptr() as *const gl::GLvoid);
             }
         }
-        
 
-        
+
+
         // Fill board for shader
         let mut letter_datas: Vec<LetterData> = Vec::new();
         for _x in 0..MAX_LETTERS
@@ -114,7 +114,7 @@ impl FontSystem
             letter_datas.as_ptr() as *const gl::GLvoid
         );
         letter_datas.clear();
-    
+
         let mut vao: gl::GLuint = 0;
         unsafe
         {
@@ -133,7 +133,7 @@ impl FontSystem
         {
             let l: u8 = s.as_bytes()[x] - 32u8;
             let tmp_pos_x: f32 = l as f32;
-            
+
             if self.letter_datas.len() < MAX_LETTERS
             {
                 self.letter_datas.push(LetterData{_pos_x: px, _pos_y: py,  _size_x: letter_size_x, _size_y: letter_size_y,
@@ -142,13 +142,13 @@ impl FontSystem
             px += letter_size_x + 1.0f32;
         }
     }
-    
+
 
     pub fn update(&mut self, canvas_width: f32, canvas_height: f32)
     {
         self.canvas_width = canvas_width;
         self.canvas_height = canvas_height;
-        
+
         if self.letter_datas.len() > 0
         {
             self.letter_buffer.write_data(0, self.letter_datas.len() * std::mem::size_of::<LetterData>(),
@@ -161,12 +161,12 @@ impl FontSystem
         if self.letter_datas.len() > 0
         {
             unsafe
-    		{
+            {
                 gl::glBindVertexArray(self.vao);
 
                 self.shader_textured_program.set_used();
                 self.letter_buffer.bind(1);
-                
+
                 gl::glBindTexture(gl::GL_TEXTURE_2D, self.font_texture.handle);
                 gl::glEnable(gl::GL_BLEND);
                 gl::glBlendFunc(gl::GL_SRC_ALPHA, gl::GL_ONE_MINUS_SRC_ALPHA);

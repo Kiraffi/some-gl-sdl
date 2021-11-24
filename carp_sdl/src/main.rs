@@ -6,13 +6,13 @@ use fn_test::*;
 
 fn get_usize_from_keycode(keycode: u32) -> usize
 {
-	let mut val:u32 = keycode; 
-	if (val & 0x40000000) == 0x40000000 
-	{
-		val =  (val & 0xffffu32) + 128u32;
-	}
-	
-	return val as usize;
+    let mut val:u32 = keycode;
+    if (val & 0x40000000) == 0x40000000
+    {
+        val =  (val & 0xffffu32) + 128u32;
+    }
+
+    return val as usize;
 }
 
 
@@ -23,7 +23,7 @@ pub type HMODULE = HINSTANCE;
 pub type LPCSTR = *const std::os::raw::c_char;
 pub type BOOL = std::os::raw::c_int;
 
-extern "system" 
+extern "system"
 {
     pub fn GetProcAddress(hModule: HMODULE, lpProcName: LPCSTR) -> FARPROC;
     pub fn LoadLibraryA(lpFileName: LPCSTR) -> HMODULE;
@@ -31,17 +31,17 @@ extern "system"
 }
 
 
-pub fn sdl_proc_address(procname: &str) -> *const () 
+pub fn sdl_proc_address(procname: &str) -> *const ()
 {
-	match std::ffi::CString::new(procname) 
+    match std::ffi::CString::new(procname)
     {
-		Ok(procname) => unsafe 
+        Ok(procname) => unsafe
         {
-			SDL_GL_GetProcAddress(procname.as_ptr()) as *const ()
-		},
-		// string contains a nul byte - it won't match anything.
-		Err(_) => std::ptr::null(),
-	}
+            SDL_GL_GetProcAddress(procname.as_ptr()) as *const ()
+        },
+        // string contains a nul byte - it won't match anything.
+        Err(_) => std::ptr::null(),
+    }
 }
 
 fn test_sdl() -> Result<(), &'static str>
@@ -55,13 +55,13 @@ fn test_sdl() -> Result<(), &'static str>
 
         let width = 640i32;
         let height  = 480i32;
-       
+
        SDL_GL_SetAttribute( SDL_GLattr::SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
        SDL_GL_SetAttribute( SDL_GLattr::SDL_GL_CONTEXT_MINOR_VERSION, 6 );
         // 0x1FFF0000 windowpos undefined
        //Create window
        let window_flags: i32 = (SDL_WindowFlags::SDL_WINDOW_OPENGL as i32) | (SDL_WindowFlags::SDL_WINDOW_SHOWN as i32);
-       let gWindow = SDL_CreateWindow( b"SDL Tutorial\0".as_ptr() as *const i8, 
+       let gWindow = SDL_CreateWindow( b"SDL Tutorial\0".as_ptr() as *const i8,
        0x1FFF0000, 0x1FFF0000, width, height, window_flags as u32 );
        if gWindow == core::ptr::null_mut()
        {
@@ -91,14 +91,14 @@ fn test_sdl() -> Result<(), &'static str>
         {
             return Err("failed to load opengl functions!");
         }
-		//gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
-		//gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
-		//gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
-		//gl::glDebugMessageCallback(Some(gl_callback), std::ptr::null());
-		//gl::glDebugMessageControl(gl::GL_DONT_CARE, gl::GL_DONT_CARE, gl::GL_DONT_CARE, 0,
-		//							std::ptr::null(), gl::GL_TRUE as u8);
-		gl::glEnable(gl::GL_DEBUG_OUTPUT);
-	
+        //gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
+        //gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
+        //gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
+        //gl::glDebugMessageCallback(Some(gl_callback), std::ptr::null());
+        //gl::glDebugMessageControl(gl::GL_DONT_CARE, gl::GL_DONT_CARE, gl::GL_DONT_CARE, 0,
+        //                            std::ptr::null(), gl::GL_TRUE as u8);
+        gl::glEnable(gl::GL_DEBUG_OUTPUT);
+
 
         let version;
         match
@@ -121,13 +121,13 @@ fn test_sdl() -> Result<(), &'static str>
         }
 
         println!("OpenGL version {}", version);
-            
+
         let mut font_system: render_systems::fontsystem::FontSystem = render_systems::fontsystem::FontSystem::init()?;
         let frame_data_buffer: render_gl::ShaderBuffer = render_gl::ShaderBuffer::new(
             gl::GL_UNIFORM_BUFFER,
             65536
         );
-    
+
         let mut vao: gl::GLuint = 0;
         {
             gl::glGenVertexArrays(1, &mut vao);
@@ -141,11 +141,11 @@ fn test_sdl() -> Result<(), &'static str>
         }
 
 
-        */  
+        */
         let letter_size = 16f32;
 
         let mut quit = false;
-       
+
         let colors = my_core::get_u32_agbr_color(1.0, 1.0, 1.0, 1.0);
 
         //While application is running
@@ -154,21 +154,21 @@ fn test_sdl() -> Result<(), &'static str>
 
             quit = !update();
             let s: String = "High Score: ".to_string();
-    		font_system.draw_string(&s, (width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors);
-		
+            font_system.draw_string(&s, (width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors);
+
             let tmp = render_gl::CommonShaderFrameDate::new(width, height);
-			frame_data_buffer.write_data(0, std::mem::size_of::<render_gl::CommonShaderFrameDate>(), &tmp as *const _ as *const gl::GLvoid);
+            frame_data_buffer.write_data(0, std::mem::size_of::<render_gl::CommonShaderFrameDate>(), &tmp as *const _ as *const gl::GLvoid);
 
             gl::glBindVertexArray(vao);
-			frame_data_buffer.bind(0);
+            frame_data_buffer.bind(0);
 
-			font_system.update(width as f32, height as f32);
-			font_system.draw();
+            font_system.update(width as f32, height as f32);
+            font_system.draw();
             //println!("Events done");
-            
+
             //Render quad
             //render();
-            
+
             //Update screen
             SDL_GL_SwapWindow( gWindow );
             let one_milli = std::time::Duration::from_millis(1);
@@ -181,7 +181,7 @@ fn test_sdl() -> Result<(), &'static str>
     }
 
     Ok(())
-} 
+}
 
 
 fn update() -> bool
@@ -202,9 +202,9 @@ fn update() -> bool
                     match sdl_event.sdl_type as SDL_EventType
                     {
                         SDL_EventType::SDL_QUIT => {println!("quitting"); return false},
-                        SDL_EventType::SDL_KEYDOWN => 
+                        SDL_EventType::SDL_KEYDOWN =>
                         {
-                            unsafe 
+                            unsafe
                             {
                                 let kb_event : SDL_KeyboardEvent = transmute_copy(&sdl_event);
                                 match kb_event.keysym.scancode
@@ -260,7 +260,7 @@ fn update() -> bool
                                 _ => {}
                             }
                         },
-        
+
                         Event::Window {win_event, ..  } =>
                         {
                             match win_event
@@ -271,12 +271,12 @@ fn update() -> bool
                                     self.window_state.window_width = width;
                                     self.window_state.window_height = height;
                                 },
-        
+
                                 _ => {}
                             }
                         },
-        
-        
+
+
                         Event::MouseButtonDown { mouse_btn, x, y, .. } =>
                         {
                             self.window_state.mouse_x = x;
@@ -308,7 +308,7 @@ fn update() -> bool
                             self.window_state.mouse_x = x;
                             self.window_state.mouse_y = self.window_state.window_height - y;
                         },
-        
+
                         _ => {}
                     }
 
