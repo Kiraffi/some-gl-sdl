@@ -1,5 +1,5 @@
 [package]
-name = "carp_window"
+name = "carp_window_test"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 gl = { path = "../lib/gl" }
+carp_window = { path = "../lib/carp_window" }

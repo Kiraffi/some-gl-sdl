@@ -1,20 +1,10 @@
 
-#[cfg(windows)]
-pub mod win32_win;
-#[cfg(windows)]
-use win32_win::*;
-
-#[cfg(target_os = "linux")]
-pub mod linux_win;
-#[cfg(target_os = "linux")]
-use linux_win::*;
-
 
 
 
 fn main()
 {
-    let mut carp_window = CarpWindow::new();
+    let mut carp_window = carp_window::CarpWindow::new();
     unsafe
     {
         if carp_window.create_window(640, 480, b"New Title!\0".as_ptr() as _)
@@ -46,7 +36,7 @@ fn main()
                 let vertex_shader_id = gl::glCreateShader(gl::GL_VERTEX_SHADER);
                 let  fragment_shader_id = gl::glCreateShader(gl::GL_FRAGMENT_SHADER);
 
-                let vert_shader = 
+                let vert_shader =
                     b"#version 330 core
                     layout(location = 0) in vec3 vertexPosition_modelspace;
                     void main()
@@ -54,17 +44,17 @@ fn main()
                         gl_Position.xyz = vertexPosition_modelspace;
                         gl_Position.w = 1.0;
                     }\0".as_ptr() as *const i8;
-    
-                let frag_shader = 
+
+                let frag_shader =
                     b"#version 330 core
                     out vec3 color;
-    
+
                     void main()
                     {
                         color = vec3(1,0,0);
                     }\0".as_ptr() as *const i8;
-    
-    
+
+
                 gl::glShaderSource(vertex_shader_id, 1, &vert_shader, std::ptr::null());
                 gl::glCompileShader(vertex_shader_id);
                 let mut success = 0;
@@ -144,7 +134,7 @@ fn main()
                     gl::glEnableVertexAttribArray(0);
                     gl::glBindBuffer(gl::GL_ARRAY_BUFFER, vertexbuffer);
                     gl::glVertexAttribPointer(0, 3, gl::GL_FLOAT, gl::GL_FALSE, 0, 0 as _);
-                    
+
                     gl::glDrawArrays(gl::GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
                     gl::glDisableVertexAttribArray(0);
 
