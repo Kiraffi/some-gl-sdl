@@ -163,8 +163,8 @@ impl CarpWindow
             let mut rect: RECT = std::mem::zeroed();
             if GetClientRect(self.win32_hwnd, &mut rect) != 0
             {
-                let width = rect.right - rect.left + 1;
-                let height = rect.bottom - rect.top + 1;
+                let width = rect.right - rect.left;
+                let height = rect.bottom - rect.top;
 
                 if self.width != width || self.height != height
                 {
