@@ -452,7 +452,7 @@ extern "system"
     fn glXCreateNewContext(display: *mut Display, glx_fb_config: GLXFBConfig,
         render_type: c_int, share_list: GLXContext, direct: bool) -> GLXContext;
 
-    fn glXGetProcAddress(procname: *const GLubyte) -> *const c_void;
+    fn glXGetProcAddress(procname: *const c_uchar) -> *const c_void;
 
 }
 
@@ -638,40 +638,7 @@ const GLX_SAMPLE_BUFFERS: GLint = 0x186a0;
 const GLX_SAMPLES: GLint = 0x186a1;
 
 
-type GLenum = c_uint;
-type GLboolean = c_uchar;
-type GLbitfield = c_uint;
-type GLvoid = c_void;
-type GLbyte = c_schar;
-type GLshort = c_short;
-type GLubyte = c_uchar;
-type GLushort = c_ushort;
-type GLuint = c_uint;
-type GLsizei = c_int;
-type GLfloat = f32;
-type GLclampf = f32;
-type GLdouble = f64;
-type GLclampd = f64;
 
-
-extern "C"
-{
-    fn glClearColor(red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf);
-    fn glBegin(mode: GLenum);
-    fn glEnd();
-    fn glVertex2d(x: GLdouble, y: GLdouble);
-    fn glVertex2f(x: GLfloat, y: GLfloat);
-    fn glVertex2i(x: GLint, y: GLint);
-    fn glVertex2s(x: GLshort, y: GLshort);
-    fn glVertex3d(x: GLdouble, y: GLdouble, z: GLdouble);
-    fn glVertex3f(x: GLfloat, y: GLfloat, z: GLfloat);
-    fn glColor3f(red: GLfloat, green: GLfloat, blue: GLfloat);
-    fn glClear(mask: GLbitfield);
-    fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
-}
-
-const GL_TRIANGLES: u32 = 4;
-const GL_COLOR_BUFFER_BIT: u32 = 16384;
 
 const GLX_CONTEXT_MAJOR_VERSION_ARB: c_int = 0x2091;
 const GLX_CONTEXT_MINOR_VERSION_ARB: c_int = 0x2092;
@@ -681,9 +648,3 @@ const GLX_CONTEXT_FLAGS_ARB: c_int = 0x2094;
 const GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: c_int = 0x2;
 
 
-/*
-pub fn linux_main()
-{
-    println!("linux main window!");
-}
-*/
