@@ -359,6 +359,7 @@ macro_rules! gl_macro_func_generator
 
         pub fn load_with<F>(mut loadfn: F) -> bool  where F: FnMut(&'static str) -> *const std::os::raw::c_void
         {
+            let mut success = true;
             unsafe
             {
                 $(
@@ -367,45 +368,65 @@ macro_rules! gl_macro_func_generator
                     if proc_ptr.is_null()
                     {
                         println!("Load GL func {:?} failed.", fn_name);
-                        return false;
+                        success = false;
                     }
-
-                    __temp_funcs::$fn = Some(std::mem::transmute(proc_ptr));
+                    else
+                    {
+                        __temp_funcs::$fn = Some(std::mem::transmute(proc_ptr));
+                    }
                 )*
             }
-            return true;
+            return success;
         }
     };
 }
 
-pub type GLDEBUGPROC = Option<extern "system" fn(source: GLenum,
-    gltype: GLenum,
-    id: GLuint,
-    severity: GLenum,
-    length: GLsizei,
-    message: *const GLchar,
-    userParam: *mut GLvoid)>;
-pub type GLDEBUGPROCARB = Option<extern "system" fn(source: GLenum,
-       gltype: GLenum,
-       id: GLuint,
-       severity: GLenum,
-       length: GLsizei,
-       message: *const GLchar,
-       userParam: *mut GLvoid)>;
-pub type GLDEBUGPROCKHR = Option<extern "system" fn(source: GLenum,
-       gltype: GLenum,
-       id: GLuint,
-       severity: GLenum,
-       length: GLsizei,
-       message: *const GLchar,
-       userParam: *mut GLvoid)>;
+pub type GLDEBUGPROC = Option<extern "system" fn(source: GLenum, gltype: GLenum, id: GLuint, severity: GLenum,
+    length: GLsizei, message: *const GLchar, userParam: *mut GLvoid)>;
+pub type GLDEBUGPROCARB = Option<extern "system" fn(source: GLenum, gltype: GLenum, id: GLuint, severity: GLenum,
+    length: GLsizei, message: *const GLchar, userParam: *mut GLvoid)>;
+pub type GLDEBUGPROCKHR = Option<extern "system" fn(source: GLenum, gltype: GLenum, id: GLuint, severity: GLenum,
+    length: GLsizei, message: *const GLchar, userParam: *mut GLvoid)>;
 
+//#[cfg(windows)]
+#[link(name = "opengl32")]  
+//#[cfg(target_os = "linux")]
+//#[link(name = "GL")]
+extern "system" 
+{
+    pub fn glGetString(name: GLenum) -> *const GLubyte;
+    pub fn glPixelStorei(pname: GLenum, param: GLint);
+    pub fn glClearDepth(depth: GLclampd);
+    pub fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
+    pub fn glEnable(cap: GLenum);
+    pub fn glDisable(cap: GLenum);
+    pub fn glColorMask(red: GLboolean, green: GLboolean, blue: GLboolean, alpha: GLboolean);
+    pub fn glDepthMask(flag: GLboolean);
+    pub fn glClearStencil(s: GLint);
+    pub fn glScissor(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
+    pub fn glTexParameteri(target: GLenum, pname: GLenum, param: GLint);
+    pub fn glGetIntegerv(pname: GLenum, params: *mut GLint);
+    pub fn glStencilMask(mask: GLuint);
+    pub fn glGetError() -> GLenum;
+    pub fn glClearColor(red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf);
+    pub fn glTexParameterf(target: GLenum, pname: GLenum, param: GLfloat);
+    pub fn glTexParameterfv(target: GLenum, pname: GLenum, params: *const GLfloat);
+    pub fn glDepthFunc(func: GLenum);
+    pub fn glStencilOp(fail: GLenum, zfail: GLenum, zpass: GLenum);
+    pub fn glStencilFunc(func: GLenum, ref_: GLint, mask: GLuint);
+    pub fn glBlendFunc(sfactor: GLenum, dfactor: GLenum);
+    pub fn glReadBuffer(mode: GLenum);
+    pub fn glClear(mask: GLbitfield);
+    pub fn glTexImage2D(target: GLenum, level: GLint, internalFormat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type_: GLenum, pixels: *const GLvoid);
+    pub fn glFrontFace(mode: GLenum);
+    pub fn glCullFace(mode: GLenum);
+    pub fn glReadPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type_: GLenum, pixels: *mut GLvoid);
+}
 
 
 gl_macro_func_generator!
 (
     glGetStringi(name: GLenum, index: GLuint) -> *const GLubyte,
-    glGetString(name: GLenum) -> *const GLubyte,
     glFramebufferTextureLayer(target: GLenum, attachment: GLenum, texture: GLuint, level: GLint, layer: GLint) -> (),
     glGenFramebuffers(n: GLsizei, framebuffers: *mut GLuint) -> (),
     glBindFramebuffer(target: GLenum, framebuffer: GLuint) -> (),
@@ -433,7 +454,7 @@ gl_macro_func_generator!
     glUseProgram(program: GLuint) -> (),
     glShaderSource(shader: GLuint, count: GLsizei, string: *const *const GLchar, length: *const GLint) -> (),
     glLinkProgram(program: GLuint) -> (),
-    glPixelStorei(pname: GLenum, param: GLint) -> (),
+    
     glGetUniformLocation(program: GLuint, name: *const GLchar) -> GLint,
     glGetShaderiv(shader: GLuint, pname: GLenum, params: *mut GLint) -> (),
     glGetProgramInfoLog(program: GLuint, bufSize: GLsizei, length: *mut GLsizei, infoLog: *mut GLchar) -> (),
@@ -471,56 +492,35 @@ gl_macro_func_generator!
     glTexSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, type_: GLenum, pixels: *const GLvoid) -> (),
     glCopyTexImage2D(target: GLenum, level: GLint, internalformat: GLenum, x: GLint, y: GLint, width: GLsizei, height: GLsizei, border: GLint) -> (),
     glClearDepthf(d: GLfloat) -> (),
-    glClearDepth(depth: GLclampd) -> (),
     glFramebufferTexture2D(target: GLenum, attachment: GLenum, textarget: GLenum, texture: GLuint, level: GLint) -> (),
     glCreateProgram() -> GLuint,
-    glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei) -> (),
     glDeleteBuffers(n: GLsizei, buffers: *const GLuint) -> (),
     glDrawArrays(mode: GLenum, first: GLint, count: GLsizei) -> (),
     glDrawElementsInstanced(mode: GLenum, count: GLsizei, type_: GLenum, indices: *const ::std::os::raw::c_void, instancecount: GLsizei) -> (),
     glVertexAttribPointer(index: GLuint, size: GLint, type_: GLenum, normalized: GLboolean, stride: GLsizei, pointer: *const ::std::os::raw::c_void) -> (),
-    glDisable(cap: GLenum) -> (),
-    glColorMask(red: GLboolean, green: GLboolean, blue: GLboolean, alpha: GLboolean) -> (),
     glBindBuffer(target: GLenum, buffer: GLuint) -> (),
     glBindVertexArray(array: GLuint) -> (),
     glDeleteVertexArrays(n: GLsizei, arrays: *const GLuint) -> (),
-    glDepthMask(flag: GLboolean) -> (),
     glDrawArraysInstanced(mode: GLenum, first: GLint, count: GLsizei, instancecount: GLsizei) -> (),
-    glClearStencil(s: GLint) -> (),
-    glScissor(x: GLint, y: GLint, width: GLsizei, height: GLsizei) -> (),
+
     glGenRenderbuffers(n: GLsizei, renderbuffers: *mut GLuint) -> (),
     glBufferData(target: GLenum, size: GLsizeiptr, data: *const ::std::os::raw::c_void, usage: GLenum) -> (),
     glBlendFuncSeparate(sfactorRGB: GLenum, dfactorRGB: GLenum, sfactorAlpha: GLenum, dfactorAlpha: GLenum) -> (),
-    glTexParameteri(target: GLenum, pname: GLenum, param: GLint) -> (),
-    glGetIntegerv(pname: GLenum, params: *mut GLint) -> (),
-    glEnable(cap: GLenum) -> (),
     glBlitFramebuffer(srcX0: GLint, srcY0: GLint, srcX1: GLint, srcY1: GLint, dstX0: GLint, dstY0: GLint, dstX1: GLint, dstY1: GLint, mask: GLbitfield, filter: GLenum) -> (),
-    glStencilMask(mask: GLuint) -> (),
     glStencilMaskSeparate(face: GLenum, mask: GLuint) -> (),
     glAttachShader(program: GLuint, shader: GLuint) -> (),
-    glGetError() -> GLenum,
-    glClearColor(red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf) -> (),
     glBlendColor(red: GLclampf, green: GLclampf, blue: GLclampf, alpha: GLclampf) -> (),
-    glTexParameterf(target: GLenum, pname: GLenum, param: GLfloat) -> (),
-    glTexParameterfv(target: GLenum, pname: GLenum, params: *const GLfloat) -> (),
     glGetShaderInfoLog(shader: GLuint, bufSize: GLsizei, length: *mut GLsizei, infoLog: *mut GLchar) -> (),
-    glDepthFunc(func: GLenum) -> (),
-    glStencilOp(fail: GLenum, zfail: GLenum, zpass: GLenum) -> (),
-    glStencilFunc(func: GLenum, ref_: GLint, mask: GLuint) -> (),
+
     glEnableVertexAttribArray(index: GLuint) -> (),
-    glBlendFunc(sfactor: GLenum, dfactor: GLenum) -> (),
-    glReadBuffer(mode: GLenum) -> (),
-    glClear(mask: GLbitfield) -> (),
-    glTexImage2D(target: GLenum, level: GLint, internalFormat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type_: GLenum, pixels: *const GLvoid) -> (),
+    
     glGenVertexArrays(n: GLsizei, arrays: *mut GLuint) -> (),
-    glFrontFace(mode: GLenum) -> (),
-    glCullFace(mode: GLenum) -> (),
+
 
 
 
 
     glGenTextures(n: GLsizei, textures: *mut GLuint) -> (),
-    glReadPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type_: GLenum, pixels: *mut GLvoid) -> (),
     glBeginQuery(target: GLenum, id: GLuint) -> (),
     glDeleteQueries(n: GLsizei, ids: *const GLuint) -> (),
     glEndQuery(target: GLenum) -> (),

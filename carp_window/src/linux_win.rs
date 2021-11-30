@@ -12,7 +12,11 @@ pub struct CarpWindow
     colormap: Colormap,
     gl_context: GLXContext,
     atom_delete_window: Atom,
+
+    pub width: i32,
+    pub height: i32,
     pub running: bool,
+    pub resized: bool,
 }
 
 
@@ -51,8 +55,19 @@ impl CarpWindow
 {
     pub fn new() -> CarpWindow
     {
-        let carp_window = unsafe { std::mem::zeroed() };
-        return carp_window;
+        
+        return  CarpWindow {
+            display: 0 as *mut Display,
+            window: 0 as Window,
+            colormap: 0 as Colormap,
+            gl_context: 0 as GLXContext,
+            atom_delete_window: 0 as Atom,
+
+            width: 0,
+            height: 0,
+            running: true,
+            resized: false,
+        } 
     }
 
     pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
@@ -121,8 +136,9 @@ impl CarpWindow
                     let height = ((width_height >> 32) & 0xffff_ffff) as i32;
 
                     println!("width: {}, height {}", width, height);
-                    glViewport(0, 0, width, height);
-
+                    self.width = width;
+                    self.height = height;
+                    self.resized = true;
                 },
 
                 DestroyNotify =>
@@ -137,8 +153,11 @@ impl CarpWindow
     }
 
 
-    pub unsafe fn create_window(&mut self) -> bool
+    pub unsafe fn create_window(&mut self, width: i32, height: i32, title: *const c_char) -> bool
     {
+        self.width = width;
+        self.height = height;
+
         // Open the display
         self.display = XOpenDisplay(null());
 
@@ -272,7 +291,7 @@ impl CarpWindow
         windowAttribs.event_mask = KeyPressMask | KeyReleaseMask | KeymapStateMask
             | StructureNotifyMask | SubstructureNotifyMask | ExposureMask;
 
-        self.window = XCreateWindow(self.display, root, 0, 0, 640, 480,
+        self.window = XCreateWindow(self.display, root, 0, 0, width, height,
          0, (*visual_info).depth, InputOutput, (*visual_info).visual,
          CWBackPixel | CWColormap | CWBorderPixel | CWEventMask, &windowAttribs);
 
@@ -309,7 +328,7 @@ impl CarpWindow
 
         println!("make current: {}", glXMakeCurrent(self.display, self.window, self.gl_context));
 
-        self.set_window_title(b"Named Window\0".as_ptr() as _);
+        self.set_window_title(title);
 
         // Needed for handling pressing the cross button for exit
         self.atom_delete_window  = XInternAtom(self.display, b"WM_DELETE_WINDOW\0".as_ptr() as _, false as _);
@@ -319,8 +338,6 @@ impl CarpWindow
         //Show window
         println!("Clear: {}", XClearWindow(self.display, self.window));
         println!("xmap raised: {}", XMapRaised(self.display, self.window));
-
-        self.running = true;
 
         return true;
     }
@@ -664,8 +681,9 @@ const GLX_CONTEXT_FLAGS_ARB: c_int = 0x2094;
 const GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB: c_int = 0x2;
 
 
-
+/*
 pub fn linux_main()
 {
     println!("linux main window!");
 }
+*/
