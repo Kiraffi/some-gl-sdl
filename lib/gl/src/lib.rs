@@ -1,21 +1,23 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-pub type GLenum = ::std::os::raw::c_uint;
-pub type GLboolean = ::std::os::raw::c_uchar;
-pub type GLbitfield = ::std::os::raw::c_uint;
-pub type GLvoid = ::std::os::raw::c_void;
-pub type GLbyte = ::std::os::raw::c_schar;
-pub type GLshort = ::std::os::raw::c_short;
-pub type GLint = ::std::os::raw::c_int;
-pub type GLubyte = ::std::os::raw::c_uchar;
-pub type GLushort = ::std::os::raw::c_ushort;
-pub type GLuint = ::std::os::raw::c_uint;
-pub type GLuint64 = ::std::os::raw::c_ulonglong;
-pub type GLsizei = ::std::os::raw::c_int;
-pub type GLchar = ::std::os::raw::c_char;
+use std::os::raw::*;
 
-pub type GLsizeiptr =::std::os::raw::c_long;
-pub type GLintptr = ::std::os::raw::c_long;
+pub type GLenum = c_uint;
+pub type GLboolean = c_uchar;
+pub type GLbitfield = c_uint;
+pub type GLvoid = c_void;
+pub type GLbyte = c_schar;
+pub type GLshort = c_short;
+pub type GLint = c_int;
+pub type GLubyte = c_uchar;
+pub type GLushort = c_ushort;
+pub type GLuint = c_uint;
+pub type GLuint64 = c_ulonglong;
+pub type GLsizei = c_int;
+pub type GLchar = c_char;
+
+pub type GLsizeiptr =c_long;
+pub type GLintptr = c_long;
 
 pub type GLfloat = f32;
 pub type GLclampf = f32;
@@ -388,11 +390,21 @@ pub type GLDEBUGPROCARB = Option<extern "system" fn(source: GLenum, gltype: GLen
 pub type GLDEBUGPROCKHR = Option<extern "system" fn(source: GLenum, gltype: GLenum, id: GLuint, severity: GLenum,
     length: GLsizei, message: *const GLchar, userParam: *mut GLvoid)>;
 
-//#[cfg(windows)]
-#[link(name = "opengl32")]  
-//#[cfg(target_os = "linux")]
-//#[link(name = "GL")]
-extern "system" 
+
+
+#[cfg(windows)]
+#[link(name = "opengl32")]
+extern "system"
+{
+}
+
+#[cfg(target_os = "linux")]
+#[link(name = "GL")]
+extern "system"
+{
+}
+
+extern "system"
 {
     pub fn glGetString(name: GLenum) -> *const GLubyte;
     pub fn glPixelStorei(pname: GLenum, param: GLint);
@@ -454,7 +466,7 @@ gl_macro_func_generator!
     glUseProgram(program: GLuint) -> (),
     glShaderSource(shader: GLuint, count: GLsizei, string: *const *const GLchar, length: *const GLint) -> (),
     glLinkProgram(program: GLuint) -> (),
-    
+
     glGetUniformLocation(program: GLuint, name: *const GLchar) -> GLint,
     glGetShaderiv(shader: GLuint, pname: GLenum, params: *mut GLint) -> (),
     glGetProgramInfoLog(program: GLuint, bufSize: GLsizei, length: *mut GLsizei, infoLog: *mut GLchar) -> (),
@@ -468,7 +480,7 @@ gl_macro_func_generator!
     glRenderbufferStorageMultisample(target: GLenum, samples: GLsizei, internalformat: GLenum, width: GLsizei, height: GLsizei ) -> (),
     glDrawBuffers(n: GLsizei, bufs: *const GLenum) -> (),
     glVertexAttribDivisor(index: GLuint, divisor: GLuint) -> (),
-    glBufferSubData(target: GLenum, offset: GLintptr, size: GLsizeiptr, data: *const ::std::os::raw::c_void) -> (),
+    glBufferSubData(target: GLenum, offset: GLintptr, size: GLsizeiptr, data: *const c_void) -> (),
     glGenBuffers(n: GLsizei, buffers: *mut GLuint) -> (),
     glCheckFramebufferStatus(target: GLenum) -> GLenum,
     glFramebufferRenderbuffer( target: GLenum, attachment: GLenum, renderbuffertarget: GLenum, renderbuffer: GLuint) -> (),
@@ -496,15 +508,15 @@ gl_macro_func_generator!
     glCreateProgram() -> GLuint,
     glDeleteBuffers(n: GLsizei, buffers: *const GLuint) -> (),
     glDrawArrays(mode: GLenum, first: GLint, count: GLsizei) -> (),
-    glDrawElementsInstanced(mode: GLenum, count: GLsizei, type_: GLenum, indices: *const ::std::os::raw::c_void, instancecount: GLsizei) -> (),
-    glVertexAttribPointer(index: GLuint, size: GLint, type_: GLenum, normalized: GLboolean, stride: GLsizei, pointer: *const ::std::os::raw::c_void) -> (),
+    glDrawElementsInstanced(mode: GLenum, count: GLsizei, type_: GLenum, indices: *const c_void, instancecount: GLsizei) -> (),
+    glVertexAttribPointer(index: GLuint, size: GLint, type_: GLenum, normalized: GLboolean, stride: GLsizei, pointer: *const c_void) -> (),
     glBindBuffer(target: GLenum, buffer: GLuint) -> (),
     glBindVertexArray(array: GLuint) -> (),
     glDeleteVertexArrays(n: GLsizei, arrays: *const GLuint) -> (),
     glDrawArraysInstanced(mode: GLenum, first: GLint, count: GLsizei, instancecount: GLsizei) -> (),
 
     glGenRenderbuffers(n: GLsizei, renderbuffers: *mut GLuint) -> (),
-    glBufferData(target: GLenum, size: GLsizeiptr, data: *const ::std::os::raw::c_void, usage: GLenum) -> (),
+    glBufferData(target: GLenum, size: GLsizeiptr, data: *const c_void, usage: GLenum) -> (),
     glBlendFuncSeparate(sfactorRGB: GLenum, dfactorRGB: GLenum, sfactorAlpha: GLenum, dfactorAlpha: GLenum) -> (),
     glBlitFramebuffer(srcX0: GLint, srcY0: GLint, srcX1: GLint, srcY1: GLint, dstX0: GLint, dstY0: GLint, dstX1: GLint, dstY1: GLint, mask: GLbitfield, filter: GLenum) -> (),
     glStencilMaskSeparate(face: GLenum, mask: GLuint) -> (),
@@ -513,7 +525,7 @@ gl_macro_func_generator!
     glGetShaderInfoLog(shader: GLuint, bufSize: GLsizei, length: *mut GLsizei, infoLog: *mut GLchar) -> (),
 
     glEnableVertexAttribArray(index: GLuint) -> (),
-    
+
     glGenVertexArrays(n: GLsizei, arrays: *mut GLuint) -> (),
 
 

@@ -55,7 +55,7 @@ impl CarpWindow
 {
     pub fn new() -> CarpWindow
     {
-        
+
         return  CarpWindow {
             display: 0 as *mut Display,
             window: 0 as Window,
@@ -67,7 +67,7 @@ impl CarpWindow
             height: 0,
             running: true,
             resized: false,
-        } 
+        }
     }
 
     pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
@@ -291,7 +291,7 @@ impl CarpWindow
         windowAttribs.event_mask = KeyPressMask | KeyReleaseMask | KeymapStateMask
             | StructureNotifyMask | SubstructureNotifyMask | ExposureMask;
 
-        self.window = XCreateWindow(self.display, root, 0, 0, width, height,
+        self.window = XCreateWindow(self.display, root, 0, 0, width as u32, height as u32,
          0, (*visual_info).depth, InputOutput, (*visual_info).visual,
          CWBackPixel | CWColormap | CWBorderPixel | CWEventMask, &windowAttribs);
 
