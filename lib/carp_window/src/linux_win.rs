@@ -17,6 +17,7 @@ pub struct App
     pub height: i32,
     pub running: bool,
     pub resized: bool,
+    pub vsync: bool,
 }
 
 
@@ -67,9 +68,20 @@ impl App
             height: 0,
             running: true,
             resized: false,
+            vsync: true,
         }
     }
-
+    pub unsafe fn set_vsync(&mut self, vsync: bool)
+    {
+    }
+    pub unsafe fn set_timer_resolution(&self, res: u32) -> u32
+    {
+        return 0u32;
+    }
+    pub unsafe fn unset_timer_resolution(&self, res: u32) -> u32
+    {
+        return 0u32;
+    }
     pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
     {
         let proc_cstr = CString::new(proc).unwrap();

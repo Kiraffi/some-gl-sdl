@@ -117,7 +117,9 @@ fn main()
 
                 carp_window.set_window_title(b"New title2!\0".as_ptr() as _);
                 let mut now = std::time::Instant::now();
-
+                
+                carp_window.set_vsync(false);
+                
                 while carp_window.running
                 {
                     carp_window.update();
@@ -141,10 +143,32 @@ fn main()
                     gl::glDisableVertexAttribArray(0);
 
                     carp_window.swap_buffers();
+
+
+                 
                     let now2 = std::time::Instant::now();
-                    println!("Duration: {:?}", now2.duration_since(now));
+                    let nanos1 = now2.duration_since(now).as_nanos();
+                    //println!("Duration {:?}ms", nanos1 as f32 / 1000_000.0f32);
                     now = now2;
-                    std::thread::sleep(std::time::Duration::from_millis(1));
+                    let set_timer = carp_window.set_timer_resolution(1);
+
+                    if set_timer == 0
+                    {
+                        std::thread::sleep(std::time::Duration::from_millis(5));
+                        let end_timer = carp_window.unset_timer_resolution(1);
+                        if end_timer != 0
+                        {
+                            println!("unset failed: {}", end_timer);
+                        }
+                    }
+                    else
+                    {
+                        println!("Set timer failed: {}", set_timer);
+                    }
+
+                    let now3 = std::time::Instant::now();
+                    let nanos = now3.duration_since(now).as_nanos();
+                    //println!("Duration sleep: {:?}ms", nanos as f32 / 1000_000.0f32);
                 }
                 println!("running over");
 

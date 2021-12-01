@@ -21,6 +21,7 @@ pub struct App
 
     pub running: bool,
     pub resized: bool,
+    pub vsync: bool,
 }
 
 
@@ -70,9 +71,25 @@ impl App
             ogl_extended: 0,
             running: true,
             resized: true,
+            vsync: true,
         };
     }
-
+    pub unsafe fn set_vsync(&mut self, vsync: bool)
+    {
+        let vsync_value = if vsync {1} else {0};
+        if swapIntervalEXT.is_some()
+        {            
+            swapIntervalEXT.unwrap()(vsync_value);
+        }
+    }
+    pub unsafe fn set_timer_resolution(&self, res: u32) -> u32
+    {
+        return timeBeginPeriod(res);
+    }
+    pub unsafe fn unset_timer_resolution(&self, res: u32) -> u32
+    {
+        return timeEndPeriod(res);
+    }
     pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
     {
         let proc_cstr = std::ffi::CString::new(proc).unwrap();
@@ -285,7 +302,8 @@ impl App
             println!("Failed to make current opengl context.");
             return false;
         }
-    
+        // should check extensions support
+
         let proc = wglGetProcAddress(b"wglCreateContextAttribsARB\0".as_ptr() as *const i8);
         if proc.is_null() 
         {
@@ -293,7 +311,12 @@ impl App
         }
         
         createContextAttribsARB = Some(std::mem::transmute_copy(&proc));
-    
+        
+        let proc = wglGetProcAddress(b"wglSwapIntervalEXT\0".as_ptr() as *const i8);
+        if !proc.is_null()
+        {
+            swapIntervalEXT = Some(std::mem::transmute_copy(&proc));
+        }
     
         let attrs = [
             WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -380,7 +403,7 @@ type ATOM = WORD;
 type WNDPROC = Option<unsafe extern "system" fn(HWND, UINT, WPARAM, LPARAM) -> LRESULT>;
 
 static mut createContextAttribsARB: Option<extern "system" fn(_: HDC, _: HGLRC, _: *const INT) -> HGLRC> = None;
-
+static mut swapIntervalEXT: Option<extern "system" fn(_: i32) -> bool> = None;
 
 
 
@@ -424,8 +447,12 @@ pub struct WNDCLASSEXA
 
 #[link(name = "user32")]
 #[link(name = "gdi32")]
+#[link(name = "winmm")]
 extern "system" 
 {
+    fn timeBeginPeriod(uPeriod: UINT) -> u32;
+    fn timeEndPeriod(uPeriod: UINT) -> u32;
+
     fn CreateWindowExA(dwExStyle: DWORD, lpClassName: LPCSTR, lpWindowName: LPCSTR, dwStyle: DWORD,
         x: c_int, y: c_int, nWidth: c_int, nHeight: c_int, hWndParent: HWND, hMenu: HMENU, hInstance: HINSTANCE, lpParam: LPVOID) -> HWND;
 
