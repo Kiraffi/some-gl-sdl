@@ -64,14 +64,9 @@ fn run() -> Result<(), String>
     while !carp_window.window_state.quit
     {
         carp_window.update();
+        render_gl::update(&mut carp_window.window_state);
         unsafe 
         {
-            if carp_window.window_state.resized
-            {
-                carp_window.window_state.resized = false;
-                gl::glViewport(0, 0, carp_window.window_state.window_width, carp_window.window_state.window_height);
-            }
-
             gl::glClearColor(0.2f32, 1.0f32, 1.0f32, 1.0f32);
             gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT);
 
