@@ -23,13 +23,6 @@ impl RandomPCG
     }
 }
 
-pub struct MyTimer
-{
-    pub now_stamp: u64,
-    pub last_stamp: u64,
-    pub perf_freq: f64,
-    pub dt: f64,
-}
 
 
 pub fn clamp(value: f32, min: f32, max: f32) ->f32

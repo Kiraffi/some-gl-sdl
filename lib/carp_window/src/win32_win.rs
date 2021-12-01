@@ -3,32 +3,26 @@
 
 use std::os::raw::*;
 
+use window_state::WindowState;
+
 
 #[repr(C)]
 
-pub struct App
+pub struct CarpWindow
 {
+    pub window_state: WindowState,
+
     win32_hwnd : HWND,
     win32_dc : HDC,
     hglrc : HGLRC,
     class_name: *const c_char,
-    window_name: *const c_char,
-
-    ogl_extended: i32,
-
-    pub width: i32,
-    pub height: i32,
-
-    pub running: bool,
-    pub resized: bool,
-    pub vsync: bool,
 }
 
 
 
 
 
-impl Drop for App
+impl Drop for CarpWindow
 {
     fn drop(&mut self)
     {
@@ -57,33 +51,26 @@ impl Drop for App
     }
 }
 
-impl App
+impl CarpWindow
 {
-    pub fn new() -> App
+    
+
+    pub fn enable_vsync(&mut self, enable_vsync: bool) -> Result<(), String>
     {
-        return App {
-            win32_hwnd : 0 as HWND, win32_dc : 0 as HDC, hglrc : 0 as HGLRC,
-            class_name : b"my_very_own_carp_window\0x0".as_ptr() as _,
-            window_name : b"\0x0".as_ptr() as _,
-        
-            width: 640, height: 480,
-        
-            ogl_extended: 0,
-            running: true,
-            resized: true,
-            vsync: true,
-        };
-    }
-    pub fn set_vsync(&mut self, vsync: bool)
-    {
-        let vsync_value = if vsync {1} else {0};
+        let vsync_value = if enable_vsync {1} else {0};
         unsafe
         {
             if swapIntervalEXT.is_some()
-            {            
-                swapIntervalEXT.unwrap()(vsync_value);
+            {
+                if swapIntervalEXT.unwrap()(vsync_value)
+                {
+                    self.window_state.vsync = enable_vsync;
+                    return Ok(());
+                }
             }
         }
+        self.window_state.vsync = true;
+        return Ok(());
     }
 
     pub fn set_timer_resolution(&self, res: u32) -> u32
@@ -139,13 +126,14 @@ impl App
         unsafe 
         {
             let mut msg: MSG = std::mem::zeroed();
-            while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0 && self.running
+            while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0 
+                && !self.window_state.quit
             {
                 match msg.message
                 {
                     WM_QUIT =>
                     {
-                        self.running = false;
+                        self.window_state.quit = true;
                         continue;    
                     },
 
@@ -165,12 +153,12 @@ impl App
                     let width = rect.right - rect.left;
                     let height = rect.bottom - rect.top;
 
-                    if self.width != width || self.height != height
+                    if self.window_state.window_width != width || self.window_state.window_height != height
                     {
-                        self.resized = true;
+                        self.window_state.resized = true;
                     }
-                    self.width = width;
-                    self.height = height;
+                    self.window_state.window_width = width;
+                    self.window_state.window_height = height;
                     
 
                     resized = false;
@@ -183,16 +171,23 @@ impl App
         }
     }
 
-    pub fn create_window(&mut self, width: i32, height: i32, title: &str) -> bool
+    pub fn init(width: i32, height: i32, title: &str) -> Result<Self, String>
     {
-        let v = match std::ffi::CString::new(title)
+
+        let mut carp_wind = CarpWindow {
+            window_state: unsafe { std::mem::zeroed() },
+            win32_hwnd : 0 as HWND, win32_dc : 0 as HDC, hglrc : 0 as HGLRC,
+            class_name : b"my_very_own_carp_window\0x0".as_ptr() as _,
+        };
+
+
+        let window_name = match std::ffi::CString::new(title)
         {
             Ok(str) => str,
-            Err(_) => return false
+            Err(e) => return Err(e.to_string())
         };
         unsafe
         {
-            self.window_name = v.as_ptr() as _;
             let mut wndclass: WNDCLASSA = std::mem::zeroed();
 
             wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -200,7 +195,7 @@ impl App
             wndclass.hInstance = GetModuleHandleA(NULL as _);
             wndclass.hCursor = LoadCursorA(NULL as _, IDC_ARROW);
             wndclass.hIcon = LoadIconA(NULL as _, IDI_WINLOGO);
-            wndclass.lpszClassName = self.class_name;
+            wndclass.lpszClassName = carp_wind.class_name;
             RegisterClassA(&wndclass);
         
             let win_style: DWORD;
@@ -209,16 +204,16 @@ impl App
         
             win_style = WS_OVERLAPPED | WS_CAPTION  | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
         
-            self.width = width;
-            self.height = height;
-            rect.right = self.width;
-            rect.bottom = self.height;
+            carp_wind.window_state.window_width = width;
+            carp_wind.window_state.window_height = height;
+            rect.right = width;
+            rect.bottom = height;
         
             AdjustWindowRectEx(&rect as *const _ as _, win_style, false as _, win_ex_style);
             let win_width = rect.right - rect.left;
             let win_height = rect.bottom - rect.top;
             
-            self.win32_hwnd = CreateWindowExA(win_ex_style, self.class_name, self.window_name,
+            carp_wind.win32_hwnd = CreateWindowExA(win_ex_style, carp_wind.class_name, window_name.as_ptr() as _,
                 win_style, CW_USEDEFAULT, CW_USEDEFAULT, win_width, win_height,
                 NULL as _, // hWndParent
                 NULL as _, // hMenu
@@ -226,23 +221,23 @@ impl App
                 NULL as _ // lParam
             );
 
-            assert!(self.win32_hwnd.is_null() == false);
+            assert!(carp_wind.win32_hwnd.is_null() == false);
         
-            if self.win32_hwnd.is_null()
+            if carp_wind.win32_hwnd.is_null()
             {
-                return false;
+                return Err("Window handle is null!".to_string());
             }
         
-            ShowWindow(self.win32_hwnd, SW_SHOW);
-            let dc = GetDC(self.win32_hwnd);
+            ShowWindow(carp_wind.win32_hwnd, SW_SHOW);
+            let dc = GetDC(carp_wind.win32_hwnd);
             assert!(dc.is_null() == false);
         
         
-            self.win32_dc = dc;
+            carp_wind.win32_dc = dc;
         
-            if self.win32_dc.is_null()
+            if carp_wind.win32_dc.is_null()
             {
-                return false;
+                return Err("Window dc is null!".to_string());
             }
         
         
@@ -259,43 +254,39 @@ impl App
             px_format_desired.cAlphaBits = 8;
             px_format_desired.iLayerType = PFD_MAIN_PLANE;
         
-            let suggested_pixel_format_index = ChoosePixelFormat(self.win32_dc, &px_format_desired);
+            let suggested_pixel_format_index = ChoosePixelFormat(carp_wind.win32_dc, &px_format_desired);
             let mut suggested_px_format : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
-            let descriptor_success = DescribePixelFormat(self.win32_dc, suggested_pixel_format_index, 
+            let descriptor_success = DescribePixelFormat(carp_wind.win32_dc, suggested_pixel_format_index, 
                 std::mem::size_of_val(&suggested_pixel_format_index) as _, &mut suggested_px_format);
             if descriptor_success == 0 && false
             {
-                println!("Failed to describe pixel format!");
-                return false;
+                return Err("Failed to describe pixel format!".to_string());
             }
         
-            if SetPixelFormat(self.win32_dc, suggested_pixel_format_index, &suggested_px_format) == 0
+            if SetPixelFormat(carp_wind.win32_dc, suggested_pixel_format_index, &suggested_px_format) == 0
             {
-                println!("Failed to set pixel format!");
-                return false;
+                return Err("Failed to set pixel format!".to_string());
             }
         
-            let rc = wglCreateContext(self.win32_dc);
+            let rc = wglCreateContext(carp_wind.win32_dc);
             if rc.is_null()
             {
-                println!("Failed to create opengl context.");
-                return false;
+                return Err("Failed to create opengl context.".to_string());
             }
         
-            self.hglrc = rc;
+            carp_wind.hglrc = rc;
         
             // Check thread?
-            if wglMakeCurrent(self.win32_dc, rc) == 0
+            if wglMakeCurrent(carp_wind.win32_dc, rc) == 0
             {
-                println!("Failed to make current opengl context.");
-                return false;
+                return Err("Failed to make current opengl context.".to_string());
             }
             // should check extensions support
 
             let proc = wglGetProcAddress(b"wglCreateContextAttribsARB\0".as_ptr() as *const i8);
             if proc.is_null() 
             {
-                return false;
+                return Err("wglCreateContextAttribsARB not found!".to_string());
             }
             
             createContextAttribsARB = Some(std::mem::transmute_copy(&proc));
@@ -317,21 +308,19 @@ impl App
         
         
             let share_context: HGLRC = 0 as HGLRC;
-            let modern_rc = createContextAttribsARB.unwrap()(self.win32_dc, share_context,  attrs.as_ptr() as *const i32);
+            let modern_rc = createContextAttribsARB.unwrap()(carp_wind.win32_dc, share_context,  attrs.as_ptr() as *const i32);
             if !modern_rc.is_null()
             {
-                if wglMakeCurrent(self.win32_dc, modern_rc) != 0
+                if wglMakeCurrent(carp_wind.win32_dc, modern_rc) != 0
                 {
-                    wglDeleteContext(self.hglrc);
-                    self.hglrc = modern_rc;
-        
-                    self.ogl_extended = 1;
+                    wglDeleteContext(carp_wind.hglrc);
+                    carp_wind.hglrc = modern_rc;
                 }
             }
         }
-        self.resized = true;
+        carp_wind.window_state.resized = true;
 
-        return true;
+        return Ok(carp_wind);
     
     }
 }
@@ -398,7 +387,7 @@ static mut swapIntervalEXT: Option<extern "system" fn(_: i32) -> bool> = None;
 
 #[repr(C)]
 
-pub struct WNDCLASSA 
+struct WNDCLASSA 
 {
     style: UINT,
     lpfnWndProc: WNDPROC,
@@ -415,7 +404,7 @@ pub struct WNDCLASSA
 
 
 #[repr(C)]
-pub struct WNDCLASSEXA 
+struct WNDCLASSEXA 
 {
     cbSize: UINT,
     style: UINT,
@@ -1136,7 +1125,7 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
 
 #[repr(C)]
 
-pub struct PIXELFORMATDESCRIPTOR 
+struct PIXELFORMATDESCRIPTOR 
 {
     nSize: WORD,
     nVersion: WORD,

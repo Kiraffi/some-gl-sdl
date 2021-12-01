@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 gl = { path = "../lib/gl" }
 carp_window = { path = "../lib/carp_window" }
+render_gl = { path = "../lib/render_gl" }
