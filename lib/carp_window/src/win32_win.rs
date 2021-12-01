@@ -6,7 +6,7 @@ use std::os::raw::*;
 
 #[repr(C)]
 
-pub struct CarpWindow
+pub struct App
 {
     win32_hwnd : HWND,
     win32_dc : HDC,
@@ -27,7 +27,7 @@ pub struct CarpWindow
 
 
 
-impl Drop for CarpWindow
+impl Drop for App
 {
     fn drop(&mut self)
     {
@@ -56,11 +56,11 @@ impl Drop for CarpWindow
     }
 }
 
-impl CarpWindow
+impl App
 {
-    pub fn new() -> CarpWindow
+    pub fn new() -> App
     {
-        return CarpWindow {
+        return App {
             win32_hwnd : 0 as HWND, win32_dc : 0 as HDC, hglrc : 0 as HGLRC,
             class_name : b"my_very_own_carp_window\0x0".as_ptr() as _,
             window_name : b"\0x0".as_ptr() as _,

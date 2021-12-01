@@ -4,7 +4,7 @@
 
 fn main()
 {
-    let mut carp_window = carp_window::CarpWindow::new();
+    let mut carp_window = carp_window::App::new();
     unsafe
     {
         if carp_window.create_window(640, 480, b"New Title!\0".as_ptr() as _)
@@ -116,6 +116,8 @@ fn main()
                 println!("vertex_b: {}", vertexbuffer);
 
                 carp_window.set_window_title(b"New title2!\0".as_ptr() as _);
+                let mut now = std::time::Instant::now();
+
                 while carp_window.running
                 {
                     carp_window.update();
@@ -139,6 +141,9 @@ fn main()
                     gl::glDisableVertexAttribArray(0);
 
                     carp_window.swap_buffers();
+                    let now2 = std::time::Instant::now();
+                    println!("Duration: {:?}", now2.duration_since(now));
+                    now = now2;
                     std::thread::sleep(std::time::Duration::from_millis(1));
                 }
                 println!("running over");

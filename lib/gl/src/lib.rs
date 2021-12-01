@@ -1,5 +1,17 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
+#[cfg(windows)]
+#[link(name = "opengl32")]
+extern "system"
+{
+}
+
+#[cfg(target_os = "linux")]
+#[link(name = "GL")]
+extern "system"
+{
+}
+
 use std::os::raw::*;
 
 pub type GLenum = c_uint;
@@ -392,17 +404,6 @@ pub type GLDEBUGPROCKHR = Option<extern "system" fn(source: GLenum, gltype: GLen
 
 
 
-#[cfg(windows)]
-#[link(name = "opengl32")]
-extern "system"
-{
-}
-
-#[cfg(target_os = "linux")]
-#[link(name = "GL")]
-extern "system"
-{
-}
 
 extern "system"
 {

@@ -5,7 +5,7 @@ use std::{ffi::CString, os::raw::*, ptr::null};
 
 
 #[repr(C)]
-pub struct CarpWindow
+pub struct App
 {
     display: *mut Display,
     window: Window,
@@ -20,7 +20,7 @@ pub struct CarpWindow
 }
 
 
-impl Drop for CarpWindow
+impl Drop for App
 {
     fn drop(&mut self)
     {
@@ -51,12 +51,12 @@ impl Drop for CarpWindow
     }
 }
 
-impl CarpWindow
+impl App
 {
-    pub fn new() -> CarpWindow
+    pub fn new() -> App
     {
 
-        return  CarpWindow {
+        return  App {
             display: 0 as *mut Display,
             window: 0 as Window,
             colormap: 0 as Colormap,

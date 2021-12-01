@@ -1,10 +1,18 @@
+pub struct MyTimer
+{
+    pub now_stamp: u64,
+    pub last_stamp: u64,
+    pub perf_freq: f64,
+    pub dt: f64,
+}
+
 pub struct SdlWindowState
 {
     pub window_width: i32,
     pub window_height: i32,
     pub vsync: bool,
 
-    pub timer: my_core::MyTimer,
+    pub timer: MyTimer,
 
     pub key_downs: [u8; 512],
     pub key_downs_previous: [u8; 512],
