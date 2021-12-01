@@ -1,5 +1,5 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
-//#![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
+#![allow(dead_code, non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
 use std::os::raw::*;
 
@@ -169,7 +169,6 @@ impl CarpWindow
                 if self.width != width || self.height != height
                 {
                     self.resized = true;
-                    println!("Resized: {}, {}", width, height);
                 }
                 self.width = width;
                 self.height = height;

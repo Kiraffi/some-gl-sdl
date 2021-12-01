@@ -125,13 +125,14 @@ impl FontSystem
     }
 
 
-    pub fn draw_string(&mut self, s: &String, pos_x: f32, pos_y: f32, letter_size_x: f32, letter_size_y: f32, col: u32)
+    pub fn draw_string(&mut self, s: &str, pos_x: f32, pos_y: f32, letter_size_x: f32, letter_size_y: f32, col: u32)
     {
         let mut px = pos_x + letter_size_x * 0.5f32;
         let py = pos_y + letter_size_y * 0.5f32;
-        for x in 0..s.len()
+        let s_bytes = s.as_bytes();
+        for l in s_bytes
         {
-            let l: u8 = s.as_bytes()[x] - 32u8;
+            let l: u8 = l - 32u8;
             let tmp_pos_x: f32 = l as f32;
 
             if self.letter_datas.len() < MAX_LETTERS

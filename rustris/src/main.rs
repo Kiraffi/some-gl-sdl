@@ -570,8 +570,9 @@ fn run() -> Result<(), String>
         {
             for x in 0..board.size_x
             {
-                let index = (y * board.size_x + x) as usize;
-                shader_data[index]._col = colors[board.board[index] as usize];
+                let index = ((board.size_y - y - 1) * board.size_x + x) as usize;
+                let index2 = (y * board.size_x + x) as usize;
+                shader_data[index]._col = colors[board.board[index2] as usize];
             }
         }
 
@@ -591,7 +592,7 @@ fn run() -> Result<(), String>
                     let (pos_x, pos_y) = get_rotated(x, y, state.player.rotation);
                     if pos_x + state.player.pos_x < board.size_x && pos_y + state.player.pos_y < board.size_y
                     {
-                        shader_data[(state.player.pos_x + pos_x + (state.player.pos_y + pos_y) * board.size_x) as usize]._col
+                        shader_data[(state.player.pos_x + pos_x + (board.size_y - (state.player.pos_y + pos_y) - 1) * board.size_x) as usize]._col
                             = colors[(state.player.block_type + 1) as usize];
                     }
                 }

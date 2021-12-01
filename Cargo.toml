@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    #"rustris",
+    "rustris",
     #"paint",
     #"compute",
     #"dyn_func_test",
@@ -32,7 +32,7 @@ codegen-units = 32
 incremental = true
 overflow-checks = true
 debug-assertions = true
-lto = true
+lto = false
 debug = true
 opt-level = 3
 panic = "abort"

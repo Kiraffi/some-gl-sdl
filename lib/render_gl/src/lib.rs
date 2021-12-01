@@ -364,12 +364,10 @@ fn shader_from_source(source: &CStr, kind: gl::GLenum )
 fn create_whitespace_cstring_with_len(len: usize)
     -> CString
 {
-    // allocate buffer of correct size
-    let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
-    // fill it with len spaces
-    buffer.extend([b' '].iter().cycle().take(len));
-    // convert buffer to CString
-    unsafe { CString::from_vec_unchecked(buffer) }
+    let mut buffer: Vec<u8> = Vec::new();
+    buffer.resize(len + 1, b' ');
+    buffer[len] = b'\0';
+    unsafe { CString::from_raw(buffer.as_ptr() as _) }
 }
 
 
