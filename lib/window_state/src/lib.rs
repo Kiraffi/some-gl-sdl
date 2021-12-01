@@ -6,6 +6,7 @@ pub struct MyTimer
     pub dt: f64,
 }
 
+#[repr(C)]
 pub struct WindowState
 {
     pub window_width: i32,
@@ -25,12 +26,20 @@ pub struct WindowState
     pub quit: bool,
     pub resized: bool,
 }
+impl WindowState
+{
+    pub fn new() -> Self
+    {
+        unsafe{ std::mem::zeroed() }
+    }
+}
 
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 #[repr(i32)]
 pub enum MyKey
 {
+    InvalidKey = -1i32,
     Backspace = 8i32,
     Tab = 9i32,
     Return = 13i32,

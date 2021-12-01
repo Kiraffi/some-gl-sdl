@@ -3,8 +3,7 @@
 
 use std::os::raw::*;
 
-use window_state::WindowState;
-
+use window_state::*;
 
 #[repr(C)]
 
@@ -15,9 +14,9 @@ pub struct CarpWindow
     win32_hwnd : HWND,
     win32_dc : HDC,
     hglrc : HGLRC,
-    class_name: *const c_char,
 }
 
+const class_name: *const i8 = b"my_very_own_carp_window\0x0".as_ptr() as *const i8;
 
 
 
@@ -46,7 +45,7 @@ impl Drop for CarpWindow
             DestroyWindow(self.win32_hwnd);
             self.win32_hwnd = 0 as HWND;
     
-            UnregisterClassA(self.class_name, GetModuleHandleA(NULL as _));
+            UnregisterClassA(class_name, GetModuleHandleA(NULL as _));
         }
     }
 }
@@ -126,9 +125,15 @@ impl CarpWindow
         unsafe 
         {
             let mut msg: MSG = std::mem::zeroed();
+
+            global_key_downs = std::mem::zeroed();
+            global_key_half_count = std::mem::zeroed();
+
             while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0 
                 && !self.window_state.quit
             {
+                let mut dispatch = false;
+
                 match msg.message
                 {
                     WM_QUIT =>
@@ -136,15 +141,51 @@ impl CarpWindow
                         self.window_state.quit = true;
                         continue;    
                     },
-
+                    WM_KEYDOWN | WM_SYSKEYDOWN => 
+                    { 
+                        let button: u32 = HIWORD(msg.lParam as u32) as u32 & 0x1ff; //0x1ff;
+                        let translated = get_key(button);
+                        let mut transusize = translated as usize;
+                        if transusize & 0x40000000 == 0x40000000
+                        {
+                            transusize = transusize & 0xfff + 128;
+                        }
+                        if translated != MyKey::InvalidKey && transusize < 512
+                        {
+                            global_key_downs[transusize] = 1;
+                            global_key_half_count[transusize] += 1;
+                        }
+                        else
+                        {
+                            dispatch = true;
+                        }
+            
+                        if translated as i32 == VK_ESCAPE
+                        {
+                            quit_requested = true;
+                        }
+                        println!("button down: {}, b2: {}, transl: {}",  button, msg.wParam, transusize);
+                    },
                     _ => 
                     {
-                        TranslateMessage(&msg as _);
-                        DispatchMessageA(&mut msg as *mut _ as _);
+                        dispatch = true;
                     }
+                }
+                if dispatch
+                {
+                    TranslateMessage(&mut msg);
+                    DispatchMessageA(&mut msg);
                 }
             }
             
+            for i in 0..512
+            {
+                if global_key_half_count[i] > 0
+                {
+                    println!("button: {} was pressed/released: {} times", i, global_key_half_count[i]);
+                }
+            }
+
             if resized
             {
                 let mut rect: RECT = std::mem::zeroed();
@@ -177,7 +218,6 @@ impl CarpWindow
         let mut carp_wind = CarpWindow {
             window_state: unsafe { std::mem::zeroed() },
             win32_hwnd : 0 as HWND, win32_dc : 0 as HDC, hglrc : 0 as HGLRC,
-            class_name : b"my_very_own_carp_window\0x0".as_ptr() as _,
         };
 
 
@@ -195,7 +235,7 @@ impl CarpWindow
             wndclass.hInstance = GetModuleHandleA(NULL as _);
             wndclass.hCursor = LoadCursorA(NULL as _, IDC_ARROW);
             wndclass.hIcon = LoadIconA(NULL as _, IDI_WINLOGO);
-            wndclass.lpszClassName = carp_wind.class_name;
+            wndclass.lpszClassName = class_name;
             RegisterClassA(&wndclass);
         
             let win_style: DWORD;
@@ -210,10 +250,11 @@ impl CarpWindow
             rect.bottom = height;
         
             AdjustWindowRectEx(&rect as *const _ as _, win_style, false as _, win_ex_style);
+            //AdjustWindowRect(&rect as *const _ as _, win_style, false as _);
             let win_width = rect.right - rect.left;
             let win_height = rect.bottom - rect.top;
             
-            carp_wind.win32_hwnd = CreateWindowExA(win_ex_style, carp_wind.class_name, window_name.as_ptr() as _,
+            carp_wind.win32_hwnd = CreateWindowExA(win_ex_style, class_name, window_name.as_ptr() as _,
                 win_style, CW_USEDEFAULT, CW_USEDEFAULT, win_width, win_height,
                 NULL as _, // hWndParent
                 NULL as _, // hMenu
@@ -319,7 +360,7 @@ impl CarpWindow
             }
         }
         carp_wind.window_state.resized = true;
-
+        
         return Ok(carp_wind);
     
     }
@@ -384,7 +425,6 @@ static mut swapIntervalEXT: Option<extern "system" fn(_: i32) -> bool> = None;
 
 
 
-
 #[repr(C)]
 
 struct WNDCLASSA 
@@ -427,6 +467,9 @@ struct WNDCLASSEXA
 #[link(name = "winmm")]
 extern "system" 
 {
+    fn MapVirtualKeyA(uCode: UINT, uMapType: UINT) -> UINT;
+
+
     fn timeBeginPeriod(uPeriod: UINT) -> u32;
     fn timeEndPeriod(uPeriod: UINT) -> u32;
 
@@ -478,11 +521,11 @@ extern "system"
     //fn GetWindowTextLengthW(hWnd: HWND) -> c_int;
     
     
-    fn AdjustWindowRect(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL) -> BOOL;
     */
     fn GetClientRect(hWnd: HWND, lpRect: LPRECT) -> BOOL;
     fn GetWindowRect(hWnd: HWND, lpRect: LPRECT) -> BOOL;
     fn AdjustWindowRectEx(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL, dwExStyle: DWORD) -> BOOL;
+    fn AdjustWindowRect(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL) -> BOOL;
     
     /*
     fn AdjustWindowRectExForDpi(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL, dwExStyle: DWORD, dpi: UINT) -> BOOL;
@@ -502,8 +545,8 @@ extern "system"
     //fn GetDCEx(hWnd: HWND, hrgnClip: HRGN, flags: DWORD) -> HDC;
 
     //fn GetMessageA(lpMsg: LPMSG, hWnd: HWND, wMsgFilterMin: UINT, wMsgFilterMax: UINT) -> BOOL;
-    fn TranslateMessage(lpmsg: *const MSG) -> BOOL;
-    fn DispatchMessageA(lpmsg: *const MSG) -> LRESULT;
+    fn TranslateMessage(lpmsg: *mut MSG) -> BOOL;
+    fn DispatchMessageA(lpmsg: *mut MSG) -> LRESULT;
     //fn SetMessageQueue(cMessagesMax: c_int) -> BOOL;
     fn PeekMessageA(lpMsg: LPMSG, hWnd: HWND, wMsgFilterMin: UINT, wMsgFilterMax: UINT, wRemoveMsg: UINT) -> BOOL;
 
@@ -732,7 +775,7 @@ const CS_DROPSHADOW: UINT = 0x00020000;
 
 
 const SW_SHOW: c_int = 5;
-/*
+
 const VK_LBUTTON: c_int = 0x01;
 const VK_RBUTTON: c_int = 0x02;
 const VK_CANCEL: c_int = 0x03;
@@ -963,7 +1006,7 @@ const HCBT_KEYSKIPPED: c_int = 7;
 const HCBT_SYSCOMMAND: c_int = 8;
 const HCBT_SETFOCUS: c_int = 9;
 
-*/
+
 
 
 
@@ -1039,8 +1082,12 @@ const WM_NCHITTEST: UINT = 0x0084;
 const WM_ENTERSIZEMOVE: UINT = 0x0231;
 const WM_EXITSIZEMOVE: UINT = 0x0232;
 
+static mut global_key_downs: [u8; 512] = [0; 512];
+static mut global_key_half_count: [u8; 512] = [0; 512];
+
 unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM) -> LRESULT 
 {
+
     match uMsg 
     {
         WM_CLOSE => 
@@ -1075,12 +1122,28 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
         */
         WM_KEYDOWN | WM_SYSKEYDOWN => 
         { 
-            let button: u32 = HIWORD(lParam as u32) as u32 & 0x1ff;
-            if button == 1u32
+            let button: u32 = HIWORD(lParam as u32) as u32 & 0x1ff; //0x1ff;
+            let b2 = wParam as u32;
+            
+            let translated = get_key(button);
+            let mut transusize = translated as usize;
+            if transusize & 0x40000000 == 0x40000000
+            {
+                transusize = transusize & 0xfff + 128;
+            }
+            if translated != MyKey::InvalidKey && transusize < 512
+            {
+                global_key_downs[transusize] = 1;
+                global_key_half_count[transusize] += 1;
+            }
+            
+
+            if b2 == VK_ESCAPE as _
             {
                 quit_requested = true;
             }
-            println!("button down: {}, modifier: {}",  button, (lParam & 0x40000000) != 0);
+            println!("button down: {}, modifier1: {}, modifier2: {}, b2: {}, transl: {}",  button, (wParam & 0x40000000) != 0,
+                (lParam & 0x40000000) != 0, wParam, transusize);
         },
 
         WM_ENTERSIZEMOVE =>
@@ -1101,6 +1164,7 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
 
             println!("WM pos sizemove end: {}:{}, lparam: {}, wparam: {}", width, height, lParam, wParam);
             */
+            
             resized = true;
         },
 
@@ -1212,15 +1276,49 @@ const WGL_CONTEXT_FLAGS_ARB: u32 = 0x2094;
 const PM_REMOVE: UINT = 0x0001;
 //const PM_NOYIELD: UINT = 0x0002;
 
+const MAPVK_VK_TO_VSC: UINT = 0;
+const MAPVK_VSC_TO_VK: UINT = 1;
+const MAPVK_VK_TO_CHAR: UINT = 2;
+const MAPVK_VSC_TO_VK_EX: UINT = 3;
+const MAPVK_VK_TO_VSC_EX: UINT = 4;
 
-/*
 
-type GLint = c_int;
-type GLsizei = c_int;
 
-extern "C" 
+fn get_key(key: u32) -> MyKey
 {
-    fn glViewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei);
-}
+    let key_code = unsafe { MapVirtualKeyA(key, MAPVK_VSC_TO_VK) as i32 };
+    println!("key: {}, mapped: {}", key, key_code);
+    let result = match key_code
+    {
+        VK_LEFT => MyKey::Left,
+        VK_UP => MyKey::Up,
+        VK_RIGHT => MyKey::Right,
+        VK_DOWN => MyKey::Down,
+        VK_ESCAPE => MyKey::Escape,
+        VK_F1 => MyKey::F1,
+        VK_F2 => MyKey::F2,
+        VK_F3 => MyKey::F3,
+        VK_F4 => MyKey::F4,
+        VK_F5 => MyKey::F5,
+        VK_F6 => MyKey::F6,
+        VK_F7 => MyKey::F7,
+        VK_F8 => MyKey::F8,
+        VK_F9 => MyKey::F9,
+        VK_F10 => MyKey::F10,
+        VK_F11 => MyKey::F11,
+        VK_F12 => MyKey::F12,
+        _=> 
+        {
+            if key >= 32 && key <= 128
+            {
+                unsafe{ std::mem::transmute_copy(&key) }
+            }
+            else
+            {
+                MyKey::InvalidKey
+            }
+        }
+    };
 
-*/
+    return result;
+}
