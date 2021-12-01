@@ -17,7 +17,7 @@ pub struct ShaderData
 
 fn run(app: &mut sdl_window::App) -> Result<(), String>
 {
-    render_gl::init_gl(&app.window_state)?;
+    render_gl::init_gl(&app.window_state, &|s| app.load_fn(s))?;
 
     let vert_shader = render_gl::Shader::from_vert_source(
         &CString::new(include_str!("fullscreen_quad.vert")).unwrap(), &"fullscreen_quad.vert".to_string()

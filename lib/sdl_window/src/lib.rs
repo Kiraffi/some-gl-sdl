@@ -2,7 +2,7 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::mouse::MouseButton;
 
-use sdl_window_state::MyKey;
+use window_state::MyKey;
 
 fn get_usize_from_mykey(keycode: MyKey) -> usize
 {
@@ -35,7 +35,7 @@ fn get_usize_from_keycode(keycode: Keycode) -> usize
 
 pub struct App
 {
-    pub window_state: sdl_window_state::SdlWindowState,
+    pub window_state: window_state::WindowState,
 
     _sdl: sdl2::Sdl,
     video: sdl2::VideoSubsystem,
@@ -51,6 +51,12 @@ pub struct App
 
 impl App
 {
+    pub fn load_fn(&self, proc: &'static str) -> *const std::os::raw::c_void
+    {
+        return self.video.gl_get_proc_address(proc) as _;
+    }
+
+
     pub fn init(window_width: i32, window_height: i32, window_name: &str, vsync: bool) -> Result<Self, String>
     {
 
@@ -138,8 +144,8 @@ impl App
         }
 */
         let event_pump = sdl.event_pump()?;
-        let mut t = Self{ window_state: sdl_window_state::SdlWindowState { window_width, window_height, vsync: vsync,
-            timer: sdl_window_state::MyTimer{ now_stamp: sdl_timer.performance_counter(),
+        let mut t = Self{ window_state: window_state::WindowState { window_width, window_height, vsync: vsync,
+            timer: window_state::MyTimer{ now_stamp: sdl_timer.performance_counter(),
                  last_stamp: sdl_timer.performance_counter(),
                  perf_freq: sdl_timer.performance_frequency() as f64,
                  dt: 0.0f64

@@ -5,7 +5,7 @@ extern crate render_gl;
 extern crate core;
 extern crate sdl_window;
 
-use sdl_window_state::MyKey;
+use window_state::MyKey;
 
 use std::ffi::CString;
 
@@ -78,8 +78,7 @@ fn save_file(name: &String, letters: &Vec<u8>) -> Result<(), String>
 fn run(app: &mut sdl_window::App, file_name: &String) -> Result<(), String>
 {
     //gl::load_with(app.video.gl_get_proc_address());
-
-    render_gl::init_gl(&app.window_state)?;
+    render_gl::init_gl(&app.window_state, &|s| app.load_fn(s))?;
 
     let box_size = 30;
 

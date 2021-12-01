@@ -5,7 +5,7 @@ extern crate core;
 extern crate render_systems;
 //extern crate sdl_window;
 
-use sdl_window_state::MyKey;
+use window_state::MyKey;
 
 use std::ffi::CString;
 use render_systems::fontsystem::FontSystem;
@@ -382,7 +382,7 @@ fn run() -> Result<(), String>
     let mut app = sdl_window::App::init(800, 900, "Rustris", false)?;
 
     //let _gl = gl::load_with(&|s| app.video.gl_get_proc_address(s) as *const std::os::raw::c_void);
-    render_gl::init_gl(&app.window_state)?;
+    render_gl::init_gl(&app.window_state, &|s| app.load_fn(s))?;
 
     let mut font_system: FontSystem = FontSystem::init()?;
 //    let frag_shader = render_gl::Shader::from_frag_source(

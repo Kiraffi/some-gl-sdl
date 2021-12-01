@@ -74,273 +74,261 @@ impl App
             vsync: true,
         };
     }
-    pub unsafe fn set_vsync(&mut self, vsync: bool)
+    pub fn set_vsync(&mut self, vsync: bool)
     {
         let vsync_value = if vsync {1} else {0};
-        if swapIntervalEXT.is_some()
-        {            
-            swapIntervalEXT.unwrap()(vsync_value);
+        unsafe
+        {
+            if swapIntervalEXT.is_some()
+            {            
+                swapIntervalEXT.unwrap()(vsync_value);
+            }
         }
     }
-    pub unsafe fn set_timer_resolution(&self, res: u32) -> u32
+
+    pub fn set_timer_resolution(&self, res: u32) -> u32
     {
-        return timeBeginPeriod(res);
+        unsafe 
+        {
+            return timeBeginPeriod(res);
+        }
     }
-    pub unsafe fn unset_timer_resolution(&self, res: u32) -> u32
+    pub fn unset_timer_resolution(&self, res: u32) -> u32
     {
-        return timeEndPeriod(res);
+        unsafe 
+        {
+            return timeEndPeriod(res);
+        }
     }
-    pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
+
+    pub fn load_fn(&self, proc: &'static str) -> *const c_void
     {
+
         let proc_cstr = std::ffi::CString::new(proc).unwrap();
         let proc_ptr = proc_cstr.as_ptr();
 
-        let proc = wglGetProcAddress(proc_ptr as _);
-        if proc.is_null()
+        let proc = unsafe
         {
-            //proc = procadd
-        }
+            wglGetProcAddress(proc_ptr as _)
+        };
+
         return proc as _;
     }
 
 
-    pub unsafe fn swap_buffers(&mut self)
+    pub fn swap_buffers(&mut self)
     {
-        SwapBuffers(self.win32_dc);
-    }
-    pub unsafe fn set_window_title(&mut self, title: *const c_char)
-    {
-        // Set window title
-        SetWindowTextA(self.win32_hwnd, title);
-
-    }
-
-    pub unsafe fn update(&mut self)
-    {
-        let mut msg: MSG = std::mem::zeroed();
-        while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0 && self.running
+        unsafe
         {
-            match msg.message
+            SwapBuffers(self.win32_dc);
+        }
+    }
+    pub fn set_window_title(&mut self, title: &str)
+    {
+        let title_cstr = std::ffi::CString::new(title).unwrap();
+        unsafe
+        {
+            // Set window title
+            SetWindowTextA(self.win32_hwnd, title_cstr.as_ptr() as _);
+        }
+
+    }
+
+    pub fn update(&mut self)
+    {
+        unsafe 
+        {
+            let mut msg: MSG = std::mem::zeroed();
+            while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0 && self.running
             {
-                WM_QUIT =>
+                match msg.message
                 {
-                    self.running = false;
-                    continue;    
-                },
-                /*
-                WM_TIMER =>
-                {
-                    println!("timer");
-                    TranslateMessage(&mut msg as *mut _ as _);
-                    DispatchMessageA(&mut msg as *mut _ as _);
-                },
-                */
-                /*
-                WM_SIZE =>
-                {
-                    let width = LOWORD(msg.lParam as u32);
-                    let height = HIWORD(msg.lParam as u32);
-        
-                    self.width = width as i32;
-                    self.height = height as i32;
-                    self.resized = true;
-                    println!("Resized: {}, {}", width, height);
-                },
-        
-                WM_WINDOWPOSCHANGED =>
-                {
-                    let width = LOWORD(msg.lParam as u32);
-                    let height = HIWORD(msg.lParam as u32);
-        
-                    println!("WM pos changed update: {}:{}", width, height);
-                }
-        */
-                _ => 
-                {
-                    /*
-                    if !((msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST) || 
-                        ( msg.message >= WM_NCMOUSEMOVE && msg.message <= WM_NCMBUTTONDBLCLK) ||
-                        ( msg.message == SPI_SETSNAPTODEFBUTTON || msg.message == WM_DWMNCRENDERINGCHANGED || msg.message == WM_PAINT
-                        || msg.message == WM_NCMOUSELEAVE)
-                    )
+                    WM_QUIT =>
                     {
-                        println!("message: {}, lparam: {}, wparam: {}", msg.message, msg.lParam, msg.wParam);
+                        self.running = false;
+                        continue;    
+                    },
+
+                    _ => 
+                    {
+                        TranslateMessage(&msg as _);
+                        DispatchMessageA(&mut msg as *mut _ as _);
                     }
-                    */
-                    TranslateMessage(&msg as _);
-                    DispatchMessageA(&mut msg as *mut _ as _);
-
-
-
                 }
             }
-        }
-        if resized
-        {
-            let mut rect: RECT = std::mem::zeroed();
-            if GetClientRect(self.win32_hwnd, &mut rect) != 0
+            
+            if resized
             {
-                let width = rect.right - rect.left;
-                let height = rect.bottom - rect.top;
-
-                if self.width != width || self.height != height
+                let mut rect: RECT = std::mem::zeroed();
+                if GetClientRect(self.win32_hwnd, &mut rect) != 0
                 {
-                    self.resized = true;
-                }
-                self.width = width;
-                self.height = height;
-                
+                    let width = rect.right - rect.left;
+                    let height = rect.bottom - rect.top;
 
-                resized = false;
+                    if self.width != width || self.height != height
+                    {
+                        self.resized = true;
+                    }
+                    self.width = width;
+                    self.height = height;
+                    
+
+                    resized = false;
+                }
             }
-        }
-        if quit_requested
-        {
-            PostMessageA(self.win32_hwnd, WM_CLOSE, 0, 0);
+            if quit_requested
+            {
+                PostMessageA(self.win32_hwnd, WM_CLOSE, 0, 0);
+            }
         }
     }
 
-    pub unsafe fn create_window(&mut self, width: i32, height: i32, title: *const c_char) -> bool
+    pub fn create_window(&mut self, width: i32, height: i32, title: &str) -> bool
     {
-        self.window_name = title as _;
-        let mut wndclass: WNDCLASSA = std::mem::zeroed();
+        let v = match std::ffi::CString::new(title)
+        {
+            Ok(str) => str,
+            Err(_) => return false
+        };
+        unsafe
+        {
+            self.window_name = v.as_ptr() as _;
+            let mut wndclass: WNDCLASSA = std::mem::zeroed();
 
-        wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-        wndclass.lpfnWndProc = Some(win32_wndproc);
-        wndclass.hInstance = GetModuleHandleA(NULL as _);
-        wndclass.hCursor = LoadCursorA(NULL as _, IDC_ARROW);
-        wndclass.hIcon = LoadIconA(NULL as _, IDI_WINLOGO);
-        wndclass.lpszClassName = self.class_name;
-        RegisterClassA(&wndclass);
-    
-        let win_style: DWORD;
-        let win_ex_style: DWORD = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
-        let mut rect = RECT { left: 0, top: 0, right: 0, bottom: 0 };
-    
-        win_style = WS_OVERLAPPED | WS_CAPTION  | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-    
-        self.width = width;
-        self.height = height;
-        rect.right = self.width;
-        rect.bottom = self.height;
-    
-        AdjustWindowRectEx(&rect as *const _ as _, win_style, false as _, win_ex_style);
-        let win_width = rect.right - rect.left;
-        let win_height = rect.bottom - rect.top;
+            wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+            wndclass.lpfnWndProc = Some(win32_wndproc);
+            wndclass.hInstance = GetModuleHandleA(NULL as _);
+            wndclass.hCursor = LoadCursorA(NULL as _, IDC_ARROW);
+            wndclass.hIcon = LoadIconA(NULL as _, IDI_WINLOGO);
+            wndclass.lpszClassName = self.class_name;
+            RegisterClassA(&wndclass);
         
-        self.win32_hwnd = CreateWindowExA(win_ex_style, self.class_name, self.window_name,
-            win_style, CW_USEDEFAULT, CW_USEDEFAULT, win_width, win_height,
-            NULL as _, // hWndParent
-            NULL as _, // hMenu
-            GetModuleHandleA(NULL as _), // hInstance
-            NULL as _ // lParam
-        );
-
-        assert!(self.win32_hwnd.is_null() == false);
-    
-        if self.win32_hwnd.is_null()
-        {
-            return false;
-        }
-    
-        ShowWindow(self.win32_hwnd, SW_SHOW);
-        let dc = GetDC(self.win32_hwnd);
-        assert!(dc.is_null() == false);
-    
-    
-        self.win32_dc = dc;
-    
-        if self.win32_dc.is_null()
-        {
-            return false;
-        }
-    
-    
-    
-
-        // Create opengl
-
-
-
-        let mut px_format_desired : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
-        px_format_desired.nSize = std::mem::size_of_val(&px_format_desired) as u16;
-        px_format_desired.nVersion = 1;
-        px_format_desired.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-        px_format_desired.iPixelType = PFD_TYPE_RGBA;
-        px_format_desired.cColorBits = 32;
-        px_format_desired.cAlphaBits = 8;
-        px_format_desired.iLayerType = PFD_MAIN_PLANE;
-    
-        let suggested_pixel_format_index = ChoosePixelFormat(self.win32_dc, &px_format_desired);
-        let mut suggested_px_format : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
-        let descriptor_success = DescribePixelFormat(self.win32_dc, suggested_pixel_format_index, 
-            std::mem::size_of_val(&suggested_pixel_format_index) as _, &mut suggested_px_format);
-        if descriptor_success == 0 && false
-        {
-            println!("Failed to describe pixel format!");
-            return false;
-        }
-    
-        if SetPixelFormat(self.win32_dc, suggested_pixel_format_index, &suggested_px_format) == 0
-        {
-            println!("Failed to set pixel format!");
-            return false;
-        }
-    
-        let rc = wglCreateContext(self.win32_dc);
-        if rc.is_null()
-        {
-            println!("Failed to create opengl context.");
-            return false;
-        }
-    
-        self.hglrc = rc;
-    
-        // Check thread?
-        if wglMakeCurrent(self.win32_dc, rc) == 0
-        {
-            println!("Failed to make current opengl context.");
-            return false;
-        }
-        // should check extensions support
-
-        let proc = wglGetProcAddress(b"wglCreateContextAttribsARB\0".as_ptr() as *const i8);
-        if proc.is_null() 
-        {
-            return false;
-        }
+            let win_style: DWORD;
+            let win_ex_style: DWORD = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+            let mut rect = RECT { left: 0, top: 0, right: 0, bottom: 0 };
         
-        createContextAttribsARB = Some(std::mem::transmute_copy(&proc));
+            win_style = WS_OVERLAPPED | WS_CAPTION  | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
         
-        let proc = wglGetProcAddress(b"wglSwapIntervalEXT\0".as_ptr() as *const i8);
-        if !proc.is_null()
-        {
-            swapIntervalEXT = Some(std::mem::transmute_copy(&proc));
-        }
-    
-        let attrs = [
-            WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-            WGL_CONTEXT_MINOR_VERSION_ARB, 5,
-            WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-            //WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
-            WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-            0, 0,
-        ];
-    
-    
-        let share_context: HGLRC = 0 as HGLRC;
-        let modern_rc = createContextAttribsARB.unwrap()(self.win32_dc, share_context,  attrs.as_ptr() as *const i32);
-        if !modern_rc.is_null()
-        {
-            if wglMakeCurrent(self.win32_dc, modern_rc) != 0
+            self.width = width;
+            self.height = height;
+            rect.right = self.width;
+            rect.bottom = self.height;
+        
+            AdjustWindowRectEx(&rect as *const _ as _, win_style, false as _, win_ex_style);
+            let win_width = rect.right - rect.left;
+            let win_height = rect.bottom - rect.top;
+            
+            self.win32_hwnd = CreateWindowExA(win_ex_style, self.class_name, self.window_name,
+                win_style, CW_USEDEFAULT, CW_USEDEFAULT, win_width, win_height,
+                NULL as _, // hWndParent
+                NULL as _, // hMenu
+                GetModuleHandleA(NULL as _), // hInstance
+                NULL as _ // lParam
+            );
+
+            assert!(self.win32_hwnd.is_null() == false);
+        
+            if self.win32_hwnd.is_null()
             {
-                wglDeleteContext(self.hglrc);
-                self.hglrc = modern_rc;
-    
-                self.ogl_extended = 1;
+                return false;
+            }
+        
+            ShowWindow(self.win32_hwnd, SW_SHOW);
+            let dc = GetDC(self.win32_hwnd);
+            assert!(dc.is_null() == false);
+        
+        
+            self.win32_dc = dc;
+        
+            if self.win32_dc.is_null()
+            {
+                return false;
+            }
+        
+        
+        
+
+            // Create opengl
+
+            let mut px_format_desired : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
+            px_format_desired.nSize = std::mem::size_of_val(&px_format_desired) as u16;
+            px_format_desired.nVersion = 1;
+            px_format_desired.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+            px_format_desired.iPixelType = PFD_TYPE_RGBA;
+            px_format_desired.cColorBits = 32;
+            px_format_desired.cAlphaBits = 8;
+            px_format_desired.iLayerType = PFD_MAIN_PLANE;
+        
+            let suggested_pixel_format_index = ChoosePixelFormat(self.win32_dc, &px_format_desired);
+            let mut suggested_px_format : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
+            let descriptor_success = DescribePixelFormat(self.win32_dc, suggested_pixel_format_index, 
+                std::mem::size_of_val(&suggested_pixel_format_index) as _, &mut suggested_px_format);
+            if descriptor_success == 0 && false
+            {
+                println!("Failed to describe pixel format!");
+                return false;
+            }
+        
+            if SetPixelFormat(self.win32_dc, suggested_pixel_format_index, &suggested_px_format) == 0
+            {
+                println!("Failed to set pixel format!");
+                return false;
+            }
+        
+            let rc = wglCreateContext(self.win32_dc);
+            if rc.is_null()
+            {
+                println!("Failed to create opengl context.");
+                return false;
+            }
+        
+            self.hglrc = rc;
+        
+            // Check thread?
+            if wglMakeCurrent(self.win32_dc, rc) == 0
+            {
+                println!("Failed to make current opengl context.");
+                return false;
+            }
+            // should check extensions support
+
+            let proc = wglGetProcAddress(b"wglCreateContextAttribsARB\0".as_ptr() as *const i8);
+            if proc.is_null() 
+            {
+                return false;
+            }
+            
+            createContextAttribsARB = Some(std::mem::transmute_copy(&proc));
+            
+            let proc = wglGetProcAddress(b"wglSwapIntervalEXT\0".as_ptr() as *const i8);
+            if !proc.is_null()
+            {
+                swapIntervalEXT = Some(std::mem::transmute_copy(&proc));
+            }
+        
+            let attrs = [
+                WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+                WGL_CONTEXT_MINOR_VERSION_ARB, 5,
+                WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                //WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB,
+                WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+                0, 0,
+            ];
+        
+        
+            let share_context: HGLRC = 0 as HGLRC;
+            let modern_rc = createContextAttribsARB.unwrap()(self.win32_dc, share_context,  attrs.as_ptr() as *const i32);
+            if !modern_rc.is_null()
+            {
+                if wglMakeCurrent(self.win32_dc, modern_rc) != 0
+                {
+                    wglDeleteContext(self.hglrc);
+                    self.hglrc = modern_rc;
+        
+                    self.ogl_extended = 1;
+                }
             }
         }
-
         self.resized = true;
 
         return true;
@@ -685,7 +673,7 @@ const WS_ICONIC: DWORD = WS_MINIMIZE;
 const WS_SIZEBOX: DWORD = WS_THICKFRAME;
 const WS_TILEDWINDOW: DWORD = WS_OVERLAPPEDWINDOW;
 const WS_OVERLAPPEDWINDOW: DWORD = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-    | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+                | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 const WS_POPUPWINDOW: DWORD = WS_POPUP | WS_BORDER | WS_SYSMENU;
 const WS_CHILDWINDOW: DWORD = WS_CHILD;
 const WS_EX_DLGMODALFRAME: DWORD = 0x00000001;

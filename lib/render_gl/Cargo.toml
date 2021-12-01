@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 gl = { path = "../gl" } 
-sdl_window_state = {path = "../sdl_window_state" }
+window_state = {path = "../window_state" }

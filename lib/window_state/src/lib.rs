@@ -6,7 +6,7 @@ pub struct MyTimer
     pub dt: f64,
 }
 
-pub struct SdlWindowState
+pub struct WindowState
 {
     pub window_width: i32,
     pub window_height: i32,

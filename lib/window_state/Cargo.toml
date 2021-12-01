@@ -1,5 +1,5 @@
 [package]
-name = "sdl_window_state"
+name = "window_state"
 version = "0.1.0"
 authors = ["Kiraffi <10407365+Kiraffi@users.noreply.github.com>"]
 edition = "2018"

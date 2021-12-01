@@ -57,28 +57,11 @@ extern "system" fn gl_callback(msg_source: gl::GLenum, msg_type: gl::GLenum,
 
 }
 
-extern "C" {
-    #[doc = "  \\brief Get the address of an OpenGL function."]
-    fn SDL_GL_GetProcAddress(proc_: *const std::os::raw::c_char) -> *mut std::os::raw::c_void;
-}
-
-#[doc(alias = "SDL_GL_GetProcAddress")]
-pub fn gl_get_proc_address2(procname: &str) -> *const () {
-    match CString::new(procname) {
-        Ok(procname) => unsafe {
-            SDL_GL_GetProcAddress(procname.as_ptr() as *const std::os::raw::c_char) as *const ()
-        },
-        // string contains a nul byte - it won't match anything.
-        Err(_) => std::ptr::null(),
-    }
-}
-pub fn init_gl(window_state: &sdl_window_state::SdlWindowState) -> Result<(), String>
+pub fn init_gl<F>(window_state: &window_state::WindowState, loadfn: F) -> Result<(), String> where F: Fn(&'static str) -> *const std::os::raw::c_void
 {
     unsafe
     {
-
-
-        let _gl = gl::load_with(&|s| gl_get_proc_address2(s) as *const _);
+        let _gl = gl::load_with(&|s| loadfn(s));
         //gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
         //gl::load_gl_funcs(_opengl32, _wglGetProcAddress.unwrap());
         //gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
@@ -131,7 +114,7 @@ pub fn resize(window_width : i32, window_height: i32)
     }
 }
 
-pub fn update(window_state: &mut sdl_window_state::SdlWindowState)
+pub fn update(window_state: &mut window_state::WindowState)
 {
     if window_state.resized
     {

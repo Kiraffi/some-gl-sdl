@@ -6,4 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sdl_window_state = { path = "../sdl_window_state" }
+window_state = { path = "../window_state" }

@@ -1,9 +1,9 @@
 [workspace]
 members = [
-    #"rustris",
-    #"paint",
-    #"compute",
-    #"dyn_func_test",
+    "rustris",
+    "paint",
+    "compute",
+    "dyn_func_test",
 
     #"vulkan",
     #"macrotest",
