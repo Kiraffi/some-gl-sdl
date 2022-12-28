@@ -1,27 +1,163 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 #![allow(dead_code)]
 
-use std::{ffi::CString, os::raw::*, ptr::null};
+use std::{ffi::CString, os::raw::*, ptr::null, ops::Sub};
+use window_state::*;
+
+fn get_x11_key(key: MyKey) -> u32
+{
+    return match key
+    {
+        MyKey::Space => 0x20u32,
+        MyKey::Num0 => 0x30u32,
+        MyKey::Num1 => 0x31u32,
+        MyKey::Num2 => 0x32u32,
+        MyKey::Num3 => 0x33u32,
+        MyKey::Num4 => 0x34u32,
+        MyKey::Num5 => 0x35u32,
+        MyKey::Num6 => 0x36u32,
+        MyKey::Num7 => 0x37u32,
+        MyKey::Num8 => 0x38u32,
+        MyKey::Num9 => 0x39u32,
+
+        MyKey::Backspace => 0xFF08u32,
+        MyKey::Tab => 0xFF09u32,
+        MyKey::Return => 0xFF0Du32,
+        MyKey::Escape => 0xFF1Bu32,
+        MyKey::Delete => 0xFFFFu32,
+
+        MyKey::A => 0x41u32,
+        MyKey::B => 0x42u32,
+        MyKey::C => 0x43u32,
+        MyKey::D => 0x44u32,
+        MyKey::E => 0x45u32,
+        MyKey::F => 0x46u32,
+        MyKey::G => 0x47u32,
+        MyKey::H => 0x48u32,
+        MyKey::I => 0x49u32,
+        MyKey::J => 0x4Au32,
+        MyKey::K => 0x4Bu32,
+        MyKey::L => 0x4Cu32,
+        MyKey::M => 0x4Du32,
+        MyKey::N => 0x4Eu32,
+        MyKey::O => 0x4Fu32,
+        MyKey::P => 0x50u32,
+        MyKey::Q => 0x51u32,
+        MyKey::R => 0x52u32,
+        MyKey::S => 0x53u32,
+        MyKey::T => 0x54u32,
+        MyKey::U => 0x55u32,
+        MyKey::V => 0x56u32,
+        MyKey::W => 0x57u32,
+        MyKey::X => 0x58u32,
+        MyKey::Y => 0x59u32,
+        MyKey::Z => 0x5Au32,
+
+        MyKey::Left  => 0x8FBu32,
+        MyKey::Up    => 0x8FCu32,
+        MyKey::Right => 0x8FDu32,
+        MyKey::Down  => 0x8FEu32,
+
+        MyKey::LShift => 0xFFE1u32,
+        MyKey::RShift => 0xFFE2u32,
+        MyKey::LCtrl => 0xFFE3u32,
+        MyKey::RCtrl => 0xFFE4u32,
+        MyKey::CapsLock => 0xFFE5u32,
+        MyKey::LAlt => 0xFFE9u32,
+        MyKey::RAlt => 0xFFEAu32,
+
+        _ => !0x0
+    }
+}
+
+fn get_key_from_x11(key: u32) -> MyKey
+{
+    return match key
+    {
+        0x20u32 => MyKey::Space,
+        0x30u32 => MyKey::Num0,
+        0x31u32 => MyKey::Num1,
+        0x32u32 => MyKey::Num2,
+        0x33u32 => MyKey::Num3,
+        0x34u32 => MyKey::Num4,
+        0x35u32 => MyKey::Num5,
+        0x36u32 => MyKey::Num6,
+        0x37u32 => MyKey::Num7,
+        0x38u32 => MyKey::Num8,
+        0x39u32 => MyKey::Num9,
+
+        0xFF08u32 => MyKey::Backspace,
+        0xFF09u32 => MyKey::Tab,
+        0xFF0Du32 => MyKey::Return,
+        0xFF1Bu32 => MyKey::Escape,
+        0xFFFFu32 => MyKey::Delete,
+
+        0x61u32 => MyKey::A,
+        0x62u32 => MyKey::B,
+        0x63u32 => MyKey::C,
+        0x64u32 => MyKey::D,
+        0x65u32 => MyKey::E,
+        0x66u32 => MyKey::F,
+        0x67u32 => MyKey::G,
+        0x68u32 => MyKey::H,
+        0x69u32 => MyKey::I,
+        0x6Au32 => MyKey::J,
+        0x6Bu32 => MyKey::K,
+        0x6Cu32 => MyKey::L,
+        0x6Du32 => MyKey::M,
+        0x6Eu32 => MyKey::N,
+        0x6Fu32 => MyKey::O,
+        0x70u32 => MyKey::P,
+        0x71u32 => MyKey::Q,
+        0x72u32 => MyKey::R,
+        0x73u32 => MyKey::S,
+        0x74u32 => MyKey::T,
+        0x75u32 => MyKey::U,
+        0x76u32 => MyKey::V,
+        0x77u32 => MyKey::W,
+        0x78u32 => MyKey::X,
+        0x79u32 => MyKey::Y,
+        0x7Au32 => MyKey::Z,
+
+        0x8FBu32 => MyKey::Left,
+        0x8FCu32 => MyKey::Up,
+        0x8FDu32 => MyKey::Right,
+        0x8FEu32 => MyKey::Down,
+
+        0xFFE1u32 => MyKey::LShift,
+        0xFFE2u32 => MyKey::RShift,
+        0xFFE3u32 => MyKey::LCtrl,
+        0xFFE4u32 => MyKey::RCtrl,
+        0xFFE5u32 => MyKey::CapsLock,
+        0xFFE9u32 => MyKey::LAlt,
+        0xFFEAu32 => MyKey::RAlt,
+
+        _ => MyKey::InvalidKey
+    }
+}
+
+enum X11Key
+{
+    A
+}
+
+
 
 
 #[repr(C)]
-pub struct App
+pub struct CarpWindow
 {
+    pub window_state: WindowState,
+
     display: *mut Display,
     window: Window,
     colormap: Colormap,
     gl_context: GLXContext,
     atom_delete_window: Atom,
-
-    pub width: i32,
-    pub height: i32,
-    pub running: bool,
-    pub resized: bool,
-    pub vsync: bool,
 }
 
 
-impl Drop for App
+impl Drop for CarpWindow
 {
     fn drop(&mut self)
     {
@@ -52,124 +188,199 @@ impl Drop for App
     }
 }
 
-impl App
+impl CarpWindow
 {
-    pub fn new() -> App
+    pub fn new() -> CarpWindow
     {
 
-        return  App {
+        return  CarpWindow {
+            window_state: WindowState::new(),
             display: 0 as *mut Display,
             window: 0 as Window,
             colormap: 0 as Colormap,
             gl_context: 0 as GLXContext,
             atom_delete_window: 0 as Atom,
-
-            width: 0,
-            height: 0,
-            running: true,
-            resized: false,
-            vsync: true,
         }
     }
     pub unsafe fn set_vsync(&mut self, vsync: bool)
     {
     }
-    pub unsafe fn set_timer_resolution(&self, res: u32) -> u32
+    pub fn set_timer_resolution(&self, _: u32) -> u32
     {
         return 0u32;
     }
-    pub unsafe fn unset_timer_resolution(&self, res: u32) -> u32
+    pub fn unset_timer_resolution(&self, _: u32) -> u32
     {
         return 0u32;
     }
-    pub unsafe fn load_fn(&self, proc: &'static str) -> *const c_void
+    pub fn load_fn(&self, proc: &'static str) -> *const c_void
     {
-        let proc_cstr = CString::new(proc).unwrap();
+
+        let proc_cstr = std::ffi::CString::new(proc).unwrap();
         let proc_ptr = proc_cstr.as_ptr();
 
-        let proc = glXGetProcAddress(proc_ptr as _);
+        let proc = unsafe
+        {
+            glXGetProcAddress(proc_ptr as _)
+        };
         return proc;
     }
 
-
-    pub unsafe fn swap_buffers(&mut self)
+    pub fn was_pressed(&mut self, key: MyKey) -> bool
     {
-        glXSwapBuffers(self.display, self.window);
+        return self.window_state.was_pressed(key);
     }
-    pub unsafe fn set_window_title(&mut self, title: *const c_char)
+    pub fn was_released(&mut self, key: MyKey) -> bool
     {
-        // Set window title
-        XStoreName(self.display, self.window, title);
-
+        return self.window_state.was_released(key);
+    }
+    pub fn is_down(&mut self, key: MyKey) -> bool
+    {
+        return self.window_state.is_down(key);
     }
 
-    pub unsafe fn update(&mut self)
+    pub fn swap_buffer(&mut self)
     {
-        while XPending(self.display) > 0 && self.running
+        unsafe { glXSwapBuffers(self.display, self.window); }
+    }
+    pub fn set_window_title(&mut self, title: &str)
+    {
+        let title_cstr = std::ffi::CString::new(title).unwrap();
+        unsafe
         {
-            let mut ev: XEvent = std::mem::zeroed();
-            let _event_out = XNextEvent(self.display, &mut ev);
-            //println!("event: {}", _event_out);
-            //println!("type: {}", ev.pad[0]);
-            let event_type = (ev.pad[0] & 0xffff) as c_int;
-            match event_type
-            {
-                KeyPress =>
-                {
-                    println!("key press");
-                    let mut keysym = 0 as KeySym;
-                    let mut buffer: [c_char; 25] = [0 as c_char; 25];
-                    let len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
-                    if len > 0
-                    {
-                        println!("button pressed: {}", keysym);
-                        XStoreName(self.display, self.window, b"Named Window2\0".as_ptr() as _);
-                    }
-                    if keysym == XK_Escape
-                    {
-                        println!("esc pressed: {}", keysym);
-                        self.running = false;
-                    }
-                },
-                ClientMessage =>
-                {
-                    // 64 bit
-                    if ev.pad[7] == self.atom_delete_window as i64
-                    {
-                        println!("Atom delete window!");
-                        self.running = false;
-                    }
-                },
-                Expose=>
-                {
-                    // 64 bit
-                    let width_height = ev.pad[6];
-                    let width = (width_height & 0xffff_ffff) as i32;
-                    let height = ((width_height >> 32) & 0xffff_ffff) as i32;
 
-                    println!("width: {}, height {}", width, height);
-                    self.width = width;
-                    self.height = height;
-                    self.resized = true;
-                },
-
-                DestroyNotify =>
-                {
-                    self.running = false;
-                },
-                _ => {}
-            };
-
-
+            // Set window title
+            XStoreName(self.display, self.window, title_cstr.as_ptr() as _);
         }
     }
 
-
-    pub unsafe fn create_window(&mut self, width: i32, height: i32, title: *const c_char) -> bool
+    pub fn update(&mut self)
     {
-        self.width = width;
-        self.height = height;
+        self.window_state.timer.last_stamp = self.window_state.timer.now_stamp;
+        self.window_state.timer.now_stamp = std::time::Instant::now().elapsed().as_nanos();
+        let secs = (self.window_state.timer.last_stamp / 1_000_000_000) as u64;
+        let nanos = (self.window_state.timer.last_stamp % 1_000_000_000) as u32;
+        let now = std::time::Instant::now().sub(std::time::Duration::new(secs, nanos));
+        self.window_state.timer.dt = now.elapsed().as_secs_f64();
 
+        self.window_state.reset();
+        unsafe
+        {
+            while XPending(self.display) > 0 && !self.window_state.quit
+            {
+                let mut ev: XEvent = std::mem::zeroed();
+                let _event_out = XNextEvent(self.display, &mut ev);
+                //println!("event: {}", _event_out);
+                //println!("type: {}", ev.pad[0]);
+                let event_type = (ev.pad[0] & 0xffff) as c_int;
+                match event_type
+                {
+                    KeyPress =>
+                    {
+                        //println!("key press: {}", 0x41u32);
+                        let mut keysym = 0 as KeySym;
+                        let mut buffer: [c_char; 25] = [0 as c_char; 25];
+                        let _len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
+
+                        let key_code = get_key_from_x11(keysym as u32);
+                        if key_code != MyKey::InvalidKey
+                        {
+
+                            let index = key_code as usize;
+                            if index < 512
+                            {
+                                self.window_state.key_half_count[ index ] += 1u8;
+                                self.window_state.key_downs[ index ] = 1u8;
+                            }
+                        }
+
+                        println!("button pressed: {}", keysym);
+                        //if _len > 0
+                        //{
+                        //    println!("button pressed: {}", keysym);
+                        //    //XStoreName(self.display, self.window, b"Named Window2\0".as_ptr() as _);
+                        //}
+                        if keysym == XK_Escape
+                        {
+                            println!("esc pressed: {}", keysym);
+                            self.window_state.quit = true;
+                        }
+                    },
+                    KeyRelease =>
+                    {
+                        let mut keysym = 0 as KeySym;
+                        let mut buffer: [c_char; 25] = [0 as c_char; 25];
+                        let _len = XLookupString(&mut ev, buffer.as_mut_ptr(), 25, &mut keysym, null());
+
+                        let key_code = get_key_from_x11(keysym as u32);
+                        if key_code != MyKey::InvalidKey
+                        {
+
+                            let index = key_code as usize;
+                            if index < 512
+                            {
+                                self.window_state.key_half_count[ index ] += 1u8;
+                                self.window_state.key_downs[ index ] = 0u8;
+                            }
+                        }
+                        println!("button released: {}", keysym);
+
+                    },
+                    ClientMessage =>
+                    {
+                        // 64 bit
+                        if ev.pad[7] == self.atom_delete_window as i64
+                        {
+                            println!("Atom delete window!");
+                            self.window_state.quit = true;
+                        }
+                    },
+                    Expose=>
+                    {
+                        // 64 bit
+                        let width_height = ev.pad[6];
+                        let width = (width_height & 0xffff_ffff) as i32;
+                        let height = ((width_height >> 32) & 0xffff_ffff) as i32;
+
+                        println!("width: {}, height {}", width, height);
+                        self.window_state.window_width = width;
+                        self.window_state.window_height = height;
+                        self.window_state.resized = true;
+                    },
+
+                    DestroyNotify =>
+                    {
+                        self.window_state.quit = true;
+                    },
+                    _ => {}
+                };
+
+
+            }
+        }
+    }
+    pub fn enable_vsync(&mut self, _: bool) -> Result<bool, String>
+    {
+        return Ok(true);
+    }
+    pub fn init(width: i32, height: i32, title: &str) -> Result<Self, String>
+    {
+        let mut app = CarpWindow::new();
+        unsafe
+        {
+            if !app.create_window(width, height, title)
+            {
+                return Err("Failed to create window!".to_string());
+            }
+
+            app.window_state.window_width = width;
+            app.window_state.window_height = height;
+            app.window_state.vsync = false;
+        }
+        return Ok(app);
+    }
+    pub unsafe fn create_window(&mut self, width: i32, height: i32, title: &str) -> bool
+    {
         // Open the display
         self.display = XOpenDisplay(null());
 

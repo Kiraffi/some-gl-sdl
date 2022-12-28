@@ -1,7 +1,7 @@
 pub struct MyTimer
 {
-    pub now_stamp: u64,
-    pub last_stamp: u64,
+    pub now_stamp: u128,
+    pub last_stamp: u128,
     pub perf_freq: f64,
     pub dt: f64,
 }
@@ -32,6 +32,33 @@ impl WindowState
     {
         unsafe{ std::mem::zeroed() }
     }
+
+    pub fn reset(&mut self)
+    {
+        self.key_half_count = [0; 512];
+        self.key_downs_previous = self.key_downs;
+    }
+
+    pub fn was_pressed(&self, key_code: MyKey) -> bool
+    {
+        let index = key_code as usize;
+        return index < 512 && ((self.key_downs[index] == 1u8 && self.key_downs_previous[index] == 0u8 ) ||
+            self.key_half_count[index] >= 2u8);
+    }
+
+    pub fn was_released(&self, key_code: MyKey) -> bool
+    {
+        let index = key_code as usize;
+        return index < 512 && ((self.key_downs[index] == 0u8 && self.key_downs_previous[index] == 1u8 ) ||
+            self.key_half_count[index] >= 2u8);
+    }
+
+    pub fn is_down(&self, key_code: MyKey)  -> bool
+    {
+        let index = key_code as usize;
+        return index < 512 && self.key_downs[index] == 1u8;
+    }
+
 }
 
 
@@ -51,7 +78,7 @@ pub enum MyKey
     Dollar = 36i32,
     Percent = 37i32,
     Ampersand = 38i32,
-    Quote =39i32,
+    Quote = 39i32,
     LeftParen = 40i32,
     RightParen = 41i32,
     Asterisk = 42i32,
@@ -110,51 +137,55 @@ pub enum MyKey
     Y = 121i32,
     Z = 122i32,
     Delete = 127i32,
-    CapsLock = 1073741881i32,
-    F1 = 1073741882i32,
-    F2 = 1073741883i32,
-    F3 = 1073741884i32,
-    F4 = 1073741885i32,
-    F5 = 1073741886i32,
-    F6 = 1073741887i32,
-    F7 = 1073741888i32,
-    F8 = 1073741889i32,
-    F9 = 1073741890i32,
-    F10 = 1073741891i32,
-    F11 = 1073741892i32,
-    F12 = 1073741893i32,
-    PrintScreen = 1073741894i32,
-    ScrollLock = 1073741895i32,
-    Pause = 1073741896i32,
-    Insert = 1073741897i32,
-    Home = 1073741898i32,
-    PageUp = 1073741899i32,
-    End = 1073741901i32,
-    PageDown = 1073741902i32,
-    Right = 1073741903i32,
-    Left = 1073741904i32,
-    Down = 1073741905i32,
-    Up = 1073741906i32,
-    NumLockClear = 1073741907i32,
-    KpDivide = 1073741908i32,
-    KpMultiply = 1073741909i32,
-    KpMinus = 1073741910i32,
-    KpPlus = 1073741911i32,
-    KpEnter = 1073741912i32,
-    Kp1 = 1073741913i32,
-    Kp2 = 1073741914i32,
-    Kp3 = 1073741915i32,
-    Kp4 = 1073741916i32,
-    Kp5 = 1073741917i32,
-    Kp6 = 1073741918i32,
-    Kp7 = 1073741919i32,
-    Kp8 = 1073741920i32,
-    Kp9 = 1073741921i32,
-    Kp0 = 1073741922i32,
-    KpPeriod = 1073741923i32,
+    CapsLock = 128i32,
+    F1 = 129i32,
+    F2 = 130i32,
+    F3 = 131i32,
+    F4 = 132i32,
+    F5 = 133i32,
+    F6 = 134i32,
+    F7 = 135i32,
+    F8 = 136i32,
+    F9 = 137i32,
+    F10 = 138i32,
+    F11 = 139i32,
+    F12 = 140i32,
+
+    PrintScreen = 160i32,
+    ScrollLock = 161i32,
+    Pause = 162i32,
+    Insert = 163i32,
+    Home = 164i32,
+    PageUp = 165i32,
+    End = 166i32,
+    PageDown = 167i32,
+
+
+    Right = 192i32,
+    Left = 193i32,
+    Down = 194i32,
+    Up = 195i32,
+    NumLockClear = 200i32,
+    KpDivide = 201i32,
+    KpMultiply = 202i32,
+    KpMinus = 203i32,
+    KpPlus = 204i32,
+    KpEnter = 205i32,
+    KpPeriod = 206i32,
+    KpEquals = 207i32,
+    KpComma = 208i32,
+    Kp1 = 210i32,
+    Kp2 = 211i32,
+    Kp3 = 212i32,
+    Kp4 = 213i32,
+    Kp5 = 214i32,
+    Kp6 = 215i32,
+    Kp7 = 216i32,
+    Kp8 = 217i32,
+    Kp9 = 218i32,
+    Kp0 = 219i32,
     //Application = 1073741925i32,
     //Power = 1073741926i32,
-    KpEquals = 1073741927i32,
     //F13 = 1073741928i32,
     //F14 = 1073741929i32,
     //F15 = 1073741930i32,
@@ -175,19 +206,18 @@ pub enum MyKey
     //Stop = 1073741944i32,
     //Again = 1073741945i32,
 
-    Undo = 1073741946i32,
-    Cut = 1073741947i32,
-    Copy = 1073741948i32,
-    Paste = 1073741949i32,
+    Undo = 256i32,
+    Cut = 257i32,
+    Copy = 258i32,
+    Paste = 259i32,
 
     //Find = Keycode::Find as i32,
 
-    Mute = 1073741950i32,
-    VolumeUp = 1073741951i32,
-    VolumeDown = 1073741952i32,
+    Mute = 300i32,
+    VolumeUp = 301i32,
+    VolumeDown = 302i32,
 
-    KpComma = 1073741957i32,
-    KpEqualsAS400 = 1073741958i32,
+    KpEqualsAS400 = 310i32,
 
     //AltErase = 1073741977i32,
     //Sysreq = 1073741978i32,
@@ -251,22 +281,22 @@ pub enum MyKey
 
 
 
-    LCtrl = 1073742048i32,
-    LShift = 1073742049i32,
-    LAlt = 1073742050i32,
-    LGui = 1073742051i32,
-    RCtrl = 1073742052i32,
-    RShift = 1073742053i32,
-    RAlt = 1073742054i32,
-    RGui = 1073742055i32,
+    LCtrl = 400i32,
+    LShift = 401i32,
+    LAlt = 402i32,
+    LGui = 403i32,
+    RCtrl = 404i32,
+    RShift = 405i32,
+    RAlt = 406i32,
+    RGui = 407i32,
 
-    Mode = 1073742081i32,
-    AudioNext = 1073742082i32,
-    AudioPrev = 1073742083i32,
-    AudioStop = 1073742084i32,
-    AudioPlay = 1073742085i32,
-    AudioMute = 1073742086i32,
-    MediaSelect = 1073742087i32,
+    Mode = 320i32,
+    AudioNext = 321i32,
+    AudioPrev = 322i32,
+    AudioStop = 323i32,
+    AudioPlay = 324i32,
+    AudioMute = 325i32,
+    MediaSelect = 326i32,
 
     //Www =  i32,
     //Mail =  i32,

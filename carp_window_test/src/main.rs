@@ -34,7 +34,7 @@ fn run() -> Result<(), String>
 
 
     let mut vertex_array_id: gl::GLuint = 0;
-    unsafe 
+    unsafe
     {
         gl::glGenVertexArrays(1, &mut vertex_array_id);
         gl::glBindVertexArray(vertex_array_id);
@@ -46,9 +46,9 @@ fn run() -> Result<(), String>
         0.0f32,  1.0f32, 0.0f32,
     ];
 
-    
+
     let mut vertexbuffer: gl::GLuint  = 0;
-    unsafe 
+    unsafe
     {
         gl::glGenBuffers(1, &mut vertexbuffer);
         gl::glBindBuffer(gl::GL_ARRAY_BUFFER, vertexbuffer);
@@ -58,14 +58,14 @@ fn run() -> Result<(), String>
 
     carp_window.set_window_title("New title2!");
     let mut now = std::time::Instant::now();
-    
+
     carp_window.enable_vsync(false)?;
-    
+
     while !carp_window.window_state.quit
     {
         carp_window.update();
         render_gl::update(&mut carp_window.window_state);
-        unsafe 
+        unsafe
         {
             gl::glClearColor(0.2f32, 1.0f32, 1.0f32, 1.0f32);
             gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT);
@@ -77,10 +77,10 @@ fn run() -> Result<(), String>
             gl::glDrawArrays(gl::GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
             gl::glDisableVertexAttribArray(0);
         }
-        carp_window.swap_buffers();
+        carp_window.swap_buffer();
 
 
-        
+
         let now2 = std::time::Instant::now();
         let _nanos1 = now2.duration_since(now).as_nanos();
         //println!("Duration {:?}ms", _nanos1 as f32 / 1000_000.0f32);
@@ -105,7 +105,7 @@ fn run() -> Result<(), String>
         let _nanos = now3.duration_since(now).as_nanos();
         //println!("Duration sleep: {:?}ms", _nanos as f32 / 1000_000.0f32);
     }
-    println!("running over");    
+    println!("running over");
 
     return Ok(());
 }

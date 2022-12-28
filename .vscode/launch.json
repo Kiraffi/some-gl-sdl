@@ -22,11 +22,11 @@
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=vulkan",
-                    "--package=vulkan"
+                    "--bin=paint",
+                    "--package=paint"
                 ],
                 "filter": {
-                    "name": "vulkan",
+                    "name": "paint",
                     "kind": "bin"
                 }
             },

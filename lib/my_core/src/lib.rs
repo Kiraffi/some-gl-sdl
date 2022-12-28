@@ -47,3 +47,15 @@ pub fn get_u32_agbr_color(r: f32, g: f32, b: f32, a: f32) -> u32
 
     return v;
 }
+
+
+pub const fn get_u32_agbr_color_const(r: u8, g: u8, b: u8, a: u8) -> u32
+{
+    let mut v = 0u32;
+    v += r as u32;
+    v += (g as u32) << 8u32;
+    v += (b as u32) << 16u32;
+    v += (a as u32) << 24u32;
+
+    return v;
+}

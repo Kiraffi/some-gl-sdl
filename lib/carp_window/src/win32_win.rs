@@ -40,11 +40,11 @@ impl Drop for CarpWindow
             return;
         }
 
-        unsafe 
+        unsafe
         {
             DestroyWindow(self.win32_hwnd);
             self.win32_hwnd = 0 as HWND;
-    
+
             UnregisterClassA(class_name, GetModuleHandleA(NULL as _));
         }
     }
@@ -52,7 +52,7 @@ impl Drop for CarpWindow
 
 impl CarpWindow
 {
-    
+
 
     pub fn enable_vsync(&mut self, enable_vsync: bool) -> Result<(), String>
     {
@@ -74,14 +74,14 @@ impl CarpWindow
 
     pub fn set_timer_resolution(&self, res: u32) -> u32
     {
-        unsafe 
+        unsafe
         {
             return timeBeginPeriod(res);
         }
     }
     pub fn unset_timer_resolution(&self, res: u32) -> u32
     {
-        unsafe 
+        unsafe
         {
             return timeEndPeriod(res);
         }
@@ -102,7 +102,7 @@ impl CarpWindow
     }
 
 
-    pub fn swap_buffers(&mut self)
+    pub fn swap_buffer(&mut self)
     {
         unsafe
         {
@@ -122,14 +122,14 @@ impl CarpWindow
 
     pub fn update(&mut self)
     {
-        unsafe 
+        unsafe
         {
             let mut msg: MSG = std::mem::zeroed();
 
             global_key_downs = std::mem::zeroed();
             global_key_half_count = std::mem::zeroed();
 
-            while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0 
+            while PeekMessageA(&mut msg as *mut _ as _, NULL as _, 0, 0, PM_REMOVE) != 0
                 && !self.window_state.quit
             {
                 let mut dispatch = false;
@@ -139,10 +139,10 @@ impl CarpWindow
                     WM_QUIT =>
                     {
                         self.window_state.quit = true;
-                        continue;    
+                        continue;
                     },
-                    WM_KEYDOWN | WM_SYSKEYDOWN => 
-                    { 
+                    WM_KEYDOWN | WM_SYSKEYDOWN =>
+                    {
                         let button: u32 = HIWORD(msg.lParam as u32) as u32 & 0x1ff; //0x1ff;
                         let translated = get_key(button);
                         let mut transusize = translated as usize;
@@ -159,14 +159,14 @@ impl CarpWindow
                         {
                             dispatch = true;
                         }
-            
+
                         if translated as i32 == VK_ESCAPE
                         {
                             quit_requested = true;
                         }
                         println!("button down: {}, b2: {}, transl: {}",  button, msg.wParam, transusize);
                     },
-                    _ => 
+                    _ =>
                     {
                         dispatch = true;
                     }
@@ -177,7 +177,7 @@ impl CarpWindow
                     DispatchMessageA(&mut msg);
                 }
             }
-            
+
             for i in 0..512
             {
                 if global_key_half_count[i] > 0
@@ -200,7 +200,7 @@ impl CarpWindow
                     }
                     self.window_state.window_width = width;
                     self.window_state.window_height = height;
-                    
+
 
                     resized = false;
                 }
@@ -237,23 +237,23 @@ impl CarpWindow
             wndclass.hIcon = LoadIconA(NULL as _, IDI_WINLOGO);
             wndclass.lpszClassName = class_name;
             RegisterClassA(&wndclass);
-        
+
             let win_style: DWORD;
             let win_ex_style: DWORD = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
             let mut rect = RECT { left: 0, top: 0, right: 0, bottom: 0 };
-        
+
             win_style = WS_OVERLAPPED | WS_CAPTION  | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-        
+
             carp_wind.window_state.window_width = width;
             carp_wind.window_state.window_height = height;
             rect.right = width;
             rect.bottom = height;
-        
+
             AdjustWindowRectEx(&rect as *const _ as _, win_style, false as _, win_ex_style);
             //AdjustWindowRect(&rect as *const _ as _, win_style, false as _);
             let win_width = rect.right - rect.left;
             let win_height = rect.bottom - rect.top;
-            
+
             carp_wind.win32_hwnd = CreateWindowExA(win_ex_style, class_name, window_name.as_ptr() as _,
                 win_style, CW_USEDEFAULT, CW_USEDEFAULT, win_width, win_height,
                 NULL as _, // hWndParent
@@ -263,26 +263,26 @@ impl CarpWindow
             );
 
             assert!(carp_wind.win32_hwnd.is_null() == false);
-        
+
             if carp_wind.win32_hwnd.is_null()
             {
                 return Err("Window handle is null!".to_string());
             }
-        
+
             ShowWindow(carp_wind.win32_hwnd, SW_SHOW);
             let dc = GetDC(carp_wind.win32_hwnd);
             assert!(dc.is_null() == false);
-        
-        
+
+
             carp_wind.win32_dc = dc;
-        
+
             if carp_wind.win32_dc.is_null()
             {
                 return Err("Window dc is null!".to_string());
             }
-        
-        
-        
+
+
+
 
             // Create opengl
 
@@ -294,29 +294,29 @@ impl CarpWindow
             px_format_desired.cColorBits = 32;
             px_format_desired.cAlphaBits = 8;
             px_format_desired.iLayerType = PFD_MAIN_PLANE;
-        
+
             let suggested_pixel_format_index = ChoosePixelFormat(carp_wind.win32_dc, &px_format_desired);
             let mut suggested_px_format : PIXELFORMATDESCRIPTOR = std::mem::zeroed();
-            let descriptor_success = DescribePixelFormat(carp_wind.win32_dc, suggested_pixel_format_index, 
+            let descriptor_success = DescribePixelFormat(carp_wind.win32_dc, suggested_pixel_format_index,
                 std::mem::size_of_val(&suggested_pixel_format_index) as _, &mut suggested_px_format);
             if descriptor_success == 0 && false
             {
                 return Err("Failed to describe pixel format!".to_string());
             }
-        
+
             if SetPixelFormat(carp_wind.win32_dc, suggested_pixel_format_index, &suggested_px_format) == 0
             {
                 return Err("Failed to set pixel format!".to_string());
             }
-        
+
             let rc = wglCreateContext(carp_wind.win32_dc);
             if rc.is_null()
             {
                 return Err("Failed to create opengl context.".to_string());
             }
-        
+
             carp_wind.hglrc = rc;
-        
+
             // Check thread?
             if wglMakeCurrent(carp_wind.win32_dc, rc) == 0
             {
@@ -325,19 +325,19 @@ impl CarpWindow
             // should check extensions support
 
             let proc = wglGetProcAddress(b"wglCreateContextAttribsARB\0".as_ptr() as *const i8);
-            if proc.is_null() 
+            if proc.is_null()
             {
                 return Err("wglCreateContextAttribsARB not found!".to_string());
             }
-            
+
             createContextAttribsARB = Some(std::mem::transmute_copy(&proc));
-            
+
             let proc = wglGetProcAddress(b"wglSwapIntervalEXT\0".as_ptr() as *const i8);
             if !proc.is_null()
             {
                 swapIntervalEXT = Some(std::mem::transmute_copy(&proc));
             }
-        
+
             let attrs = [
                 WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
                 WGL_CONTEXT_MINOR_VERSION_ARB, 5,
@@ -346,8 +346,8 @@ impl CarpWindow
                 WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
                 0, 0,
             ];
-        
-        
+
+
             let share_context: HGLRC = 0 as HGLRC;
             let modern_rc = createContextAttribsARB.unwrap()(carp_wind.win32_dc, share_context,  attrs.as_ptr() as *const i32);
             if !modern_rc.is_null()
@@ -360,9 +360,9 @@ impl CarpWindow
             }
         }
         carp_wind.window_state.resized = true;
-        
+
         return Ok(carp_wind);
-    
+
     }
 }
 
@@ -427,7 +427,7 @@ static mut swapIntervalEXT: Option<extern "system" fn(_: i32) -> bool> = None;
 
 #[repr(C)]
 
-struct WNDCLASSA 
+struct WNDCLASSA
 {
     style: UINT,
     lpfnWndProc: WNDPROC,
@@ -444,7 +444,7 @@ struct WNDCLASSA
 
 
 #[repr(C)]
-struct WNDCLASSEXA 
+struct WNDCLASSEXA
 {
     cbSize: UINT,
     style: UINT,
@@ -465,7 +465,7 @@ struct WNDCLASSEXA
 #[link(name = "user32")]
 #[link(name = "gdi32")]
 #[link(name = "winmm")]
-extern "system" 
+extern "system"
 {
     fn MapVirtualKeyA(uCode: UINT, uMapType: UINT) -> UINT;
 
@@ -506,7 +506,7 @@ extern "system"
     */
     fn RegisterClassA(lpWndClass: *const WNDCLASSA) -> ATOM;
     fn UnregisterClassA(lpClassName: LPCSTR,hInstance: HINSTANCE) -> BOOL;
-  
+
 
 
 
@@ -516,17 +516,17 @@ extern "system"
     fn GetWindowTextA(hWnd: HWND, lpString: LPSTR, nMaxCount: c_int) -> c_int;
     */
     // fn GetWindowTextLengthA(hWnd: HWND) -> c_int;
-    
+
     /*
     //fn GetWindowTextLengthW(hWnd: HWND) -> c_int;
-    
-    
+
+
     */
     fn GetClientRect(hWnd: HWND, lpRect: LPRECT) -> BOOL;
     fn GetWindowRect(hWnd: HWND, lpRect: LPRECT) -> BOOL;
     fn AdjustWindowRectEx(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL, dwExStyle: DWORD) -> BOOL;
     fn AdjustWindowRect(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL) -> BOOL;
-    
+
     /*
     fn AdjustWindowRectExForDpi(lpRect: LPRECT, dwStyle: DWORD, bMenu: BOOL, dwExStyle: DWORD, dpi: UINT) -> BOOL;
     */
@@ -578,7 +578,7 @@ const IDI_WINLOGO: LPCSTR = 32517 as LPCSTR;
 type LONG = c_long;
 
 #[repr(C)]
-struct POINT 
+struct POINT
 {
     x: LONG,
     y: LONG,
@@ -586,7 +586,7 @@ struct POINT
 
 #[repr(C)]
 
-struct RECT 
+struct RECT
 {
     left: LONG,
     top: LONG,
@@ -597,7 +597,7 @@ struct RECT
 type LPRECT = *mut RECT;
 
 #[repr(C)]
-struct MSG 
+struct MSG
 {
     hwnd: HWND,
     message: UINT,
@@ -1070,7 +1070,7 @@ fn LOWORD(l: DWORD) -> WORD
 {
     return (l & 0xffff) as WORD;
 }
-fn HIWORD(l: DWORD) -> WORD 
+fn HIWORD(l: DWORD) -> WORD
 {
     return ((l >> 16) & 0xffff) as WORD;
 }
@@ -1085,18 +1085,18 @@ const WM_EXITSIZEMOVE: UINT = 0x0232;
 static mut global_key_downs: [u8; 512] = [0; 512];
 static mut global_key_half_count: [u8; 512] = [0; 512];
 
-unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM) -> LRESULT 
+unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM) -> LRESULT
 {
 
-    match uMsg 
+    match uMsg
     {
-        WM_CLOSE => 
+        WM_CLOSE =>
         {
             quit_requested = true;
             PostQuitMessage(0);
-            
+
         },
-        
+
         /*
         WM_SIZE =>
         {
@@ -1120,11 +1120,11 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
             println!("WM pos changed: {}:{}", width, height);
         }
         */
-        WM_KEYDOWN | WM_SYSKEYDOWN => 
-        { 
+        WM_KEYDOWN | WM_SYSKEYDOWN =>
+        {
             let button: u32 = HIWORD(lParam as u32) as u32 & 0x1ff; //0x1ff;
             let b2 = wParam as u32;
-            
+
             let translated = get_key(button);
             let mut transusize = translated as usize;
             if transusize & 0x40000000 == 0x40000000
@@ -1136,7 +1136,7 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
                 global_key_downs[transusize] = 1;
                 global_key_half_count[transusize] += 1;
             }
-            
+
 
             if b2 == VK_ESCAPE as _
             {
@@ -1164,11 +1164,11 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
 
             println!("WM pos sizemove end: {}:{}, lparam: {}, wparam: {}", width, height, lParam, wParam);
             */
-            
+
             resized = true;
         },
 
-        _ => 
+        _ =>
         {
             if !(
                 (uMsg == WM_SIZE || uMsg == WM_MOVE || uMsg == WM_WINDOWPOSCHANGED) ||
@@ -1189,7 +1189,7 @@ unsafe extern "system" fn win32_wndproc(hWnd: HWND, uMsg: UINT, wParam: WPARAM, 
 
 #[repr(C)]
 
-struct PIXELFORMATDESCRIPTOR 
+struct PIXELFORMATDESCRIPTOR
 {
     nSize: WORD,
     nVersion: WORD,
@@ -1307,7 +1307,7 @@ fn get_key(key: u32) -> MyKey
         VK_F10 => MyKey::F10,
         VK_F11 => MyKey::F11,
         VK_F12 => MyKey::F12,
-        _=> 
+        _=>
         {
             if key >= 32 && key <= 128
             {

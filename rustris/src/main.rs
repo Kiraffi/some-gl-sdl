@@ -12,6 +12,23 @@ use render_systems::fontsystem::FontSystem;
 use render_gl::CommonShaderFrameDate;
 use my_core::RandomPCG;
 
+const COLORS: [u32; 9] = [
+    // Background color
+    my_core::get_u32_agbr_color_const(0, 0, 0, 255),
+
+    // Block colors
+    my_core::get_u32_agbr_color_const(255, 0, 0, 255),
+    my_core::get_u32_agbr_color_const(0, 255, 0, 255),
+    my_core::get_u32_agbr_color_const(0, 0, 255, 255),
+    my_core::get_u32_agbr_color_const(255, 0, 255, 255),
+    my_core::get_u32_agbr_color_const(0, 255, 255, 255),
+    my_core::get_u32_agbr_color_const(255, 255, 0, 255),
+    my_core::get_u32_agbr_color_const(255, 140, 255, 255),
+
+    // Font color
+    my_core::get_u32_agbr_color_const(255, 255, 255, 255),
+];
+
 pub struct Block
 {
     blocks: [u8; 8],
@@ -32,7 +49,7 @@ pub struct GameState
     score: u32,
     high_score: u32,
     lines: u32,
-    last_row_down: u64,
+    last_row_down: std::time::Instant,
     rng: RandomPCG
 }
 pub struct Board
@@ -40,7 +57,8 @@ pub struct Board
     size_x: i32,
     size_y: i32,
     extra_top: i32,
-    board: Vec<u8>
+    board: Vec<u8>,
+    render_board: Vec<u8>
 }
 
 
@@ -76,7 +94,7 @@ impl Board
             b.push(0);
         }
 
-        Self { size_x, size_y, extra_top: extra, board: b }
+        Self { size_x, size_y, extra_top: extra, board: b.clone(), render_board: b.clone() }
     }
 
     pub fn check_hit(&self, piece: &BlockPiece) -> bool
@@ -104,7 +122,7 @@ impl Board
         return false;
     }
 
-    pub fn add_piece(&mut self, piece: &BlockPiece) -> bool
+    pub fn add_piece(&mut self, write_to_board: bool, piece: &BlockPiece) -> bool
     {
         let mut game_over = false;
         for y in 0..2i32
@@ -118,7 +136,15 @@ impl Board
                     y_pos += piece.pos_y;
                     if x_pos < self.size_x && y_pos < self.size_y + self.extra_top && x_pos >= 0 && y_pos >= 0
                     {
-                        self.board[(x_pos + y_pos * self.size_x) as usize] = piece.block_type + 1;
+                        let index = (x_pos + y_pos * self.size_x) as usize;
+                        if write_to_board
+                        {
+                            self.board[index] = piece.block_type + 1;
+                        }
+                        else
+                        {
+                            self.render_board[index] = piece.block_type + 1;
+                        }
                     }
                     if y_pos >= self.size_y
                     {
@@ -304,7 +330,7 @@ fn get_rotated(x: i32, y: i32, rotation: u8) -> (i32, i32)
 }
 
 
-fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
+fn row_down(state: &mut GameState, board: &mut Board, now_stamp : std::time::Instant) -> bool
 {
     let mut tmp = state.player.clone();
     tmp.pos_y -= 1;
@@ -312,7 +338,7 @@ fn row_down(state: &mut GameState, board: &mut Board, now_stamp : u64) -> bool
 
     if board.check_hit(&tmp)
     {
-        let game_over = board.add_piece(&state.player);
+        let game_over = board.add_piece(true, &state.player);
 
         state.player.pos_x = 3;
         state.player.pos_y = 20;
@@ -377,9 +403,39 @@ fn include_file(s: &'static str, name: &'static str) -> Result<CString, String>
     return Ok(res);
 }
 
+fn set_board(shader_data: &mut Vec<ShaderData>, window_state: &window_state::WindowState, board: &Board)
+{
+    let box_size = std::cmp::min(window_state.window_width, window_state.window_height)  / 20;
+    let mut start_x: f32 =  (window_state.window_width - (board.size_x * box_size) ) as f32 / 2.0f32;
+    let mut start_y: f32 =  (window_state.window_height - (board.size_y * box_size) ) as f32 / 2.0f32;
+
+    start_x = start_x + box_size as f32 / 2.0f32;
+    start_y = start_y + box_size as f32 / 2.0f32;
+
+    if ((start_x * 2.0f32) as i32) % 2i32 == 0i32 { start_x += 0.5f32; }
+    if ((start_y * 2.0f32) as i32) % 2i32 == 0i32 { start_y += 0.5f32; }
+
+    for y in 0..board.size_y
+    {
+        for x in 0..board.size_x
+        {
+            let pos_x = start_x + (x * box_size) as f32;
+            let pos_y = start_y + (y * box_size) as f32;
+            let pos_y =  window_state.window_height as f32 - pos_y;
+            //let board_index = ((board.size_y - y - 1) * board.size_x + x) as usize;
+            let index = (y * board.size_x + x) as usize;
+            let col = COLORS[board.render_board[index] as usize];
+
+            shader_data[index] = ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32};
+        }
+    }
+}
+
 fn run() -> Result<(), String>
 {
-    let mut app = sdl_window::App::init(800, 900, "Rustris", false)?;
+    //let mut app = sdl_window::App::init(800, 900, "Rustris", false)?;
+    let mut app = carp_window::CarpWindow::init(640, 480, "New Title!")?;
+    //render_gl::init_gl(&app.window_state, &|s | app.load_fn(s))?;
 
     //let _gl = gl::load_with(&|s| app.video.gl_get_proc_address(s) as *const std::os::raw::c_void);
     render_gl::init_gl(&app.window_state, &|s| app.load_fn(s))?;
@@ -389,7 +445,6 @@ fn run() -> Result<(), String>
 //        &CString::new(include_str!("triangle.frag")).unwrap(), &"triangle.frag".to_string()
 
     // use paired number
-    let box_size = 40;
     let shader_program;
     {
         let vert_shader = render_gl::Shader::from_vert_source(
@@ -416,24 +471,6 @@ fn run() -> Result<(), String>
         gl::glGenQueries(4, &mut queries3[0]);
     }
 
-
-    let colors: [u32; 9] = [
-        // Background color
-        my_core::get_u32_agbr_color(0.0, 0.0, 0.0, 1.0),
-
-        // Block colors
-        my_core::get_u32_agbr_color(1.0, 0.0, 0.0, 1.0),
-        my_core::get_u32_agbr_color(0.0, 1.0, 0.0, 1.0),
-        my_core::get_u32_agbr_color(0.0, 0.0, 1.0, 1.0),
-        my_core::get_u32_agbr_color(1.0, 0.0, 1.0, 1.0),
-        my_core::get_u32_agbr_color(0.0, 1.0, 1.0, 1.0),
-        my_core::get_u32_agbr_color(1.0, 1.0, 0.0, 1.0),
-        my_core::get_u32_agbr_color(1.0, 0.6, 1.0, 1.0),
-
-        // Font color
-        my_core::get_u32_agbr_color(1.0, 1.6, 1.0, 1.0),
-    ];
-
     let mut board: Board = Board::new(10, 20, 4);
 
     // Fill board for shader
@@ -443,31 +480,7 @@ fn run() -> Result<(), String>
         {
             shader_data.push(ShaderData{_pos_x: 0.0f32, _pos_y: 0.0f32, _col: 0u32, _size: 0.0f32});
         }
-
-
-        let col = colors[0];
-
-        let mut start_x: f32 =  (app.window_state.window_width - (board.size_x * box_size) ) as f32 / 2.0f32;
-        let mut start_y: f32 =  (app.window_state.window_height - (board.size_y * box_size) ) as f32 / 2.0f32;
-
-        start_x = start_x + box_size as f32 / 2.0f32;
-        start_y = start_y + box_size as f32 / 2.0f32;
-
-        if ((start_x * 2.0f32) as i32) % 2i32 == 0i32 { start_x += 0.5f32; }
-        if ((start_y * 2.0f32) as i32) % 2i32 == 0i32 { start_y += 0.5f32; }
-        let mut index = 0usize;
-
-        for y in 0..board.size_y
-        {
-            for x in 0..board.size_x
-            {
-                let pos_x = start_x + (x * box_size) as f32;
-                let pos_y = start_y + (y * box_size) as f32;
-
-                shader_data[index] = ShaderData{_pos_x: pos_x, _pos_y: pos_y, _col: col, _size: box_size as f32};
-                index += 1usize;
-            }
-        }
+        set_board(&mut shader_data, &app.window_state, &board);
     }
 
 
@@ -490,10 +503,10 @@ fn run() -> Result<(), String>
         gl::glGenVertexArrays(1, &mut vao);
     }
 
-    let mut rng_: RandomPCG = RandomPCG::new(app.window_state.timer.now_stamp);
+    let mut rng_: RandomPCG = RandomPCG::new(app.window_state.timer.now_stamp as u64);
     let mut state = GameState{ player: BlockPiece
             { pos_x: 3, pos_y: 20, block_type: (rng_.get_next() % 7) as u8, rotation: 0},
-            score: 0, high_score: 0, lines: 0, last_row_down: app.window_state.timer.now_stamp, rng: rng_ };
+            score: 0, high_score: 0, lines: 0, last_row_down: std::time::Instant::now(), rng: rng_ };
 
     let mut frame_count :u64 = 0u64;
     let letter_size = 16;
@@ -508,15 +521,15 @@ fn run() -> Result<(), String>
 
         let mut s: String = "Score: ".to_string();
         s += &state.score.to_string();
-        font_system.draw_string(&s, 5.0f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
+        font_system.draw_string(&s, 5.0f32, 5.0f32, letter_size as f32, letter_size as f32, COLORS[8]);
 
         let mut s: String = "Lines: ".to_string();
         s += &state.lines.to_string();
-        font_system.draw_string(&s, 5.0f32, (5 + letter_size) as f32, letter_size as f32, letter_size as f32, colors[8]);
+        font_system.draw_string(&s, 5.0f32, (5 + letter_size) as f32, letter_size as f32, letter_size as f32, COLORS[8]);
 
         let mut s: String = "High Score: ".to_string();
         s += &state.high_score.to_string();
-        font_system.draw_string(&s, (app.window_state.window_width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, colors[8]);
+        font_system.draw_string(&s, (app.window_state.window_width - 300) as f32, 5.0f32, letter_size as f32, letter_size as f32, COLORS[8]);
 
         app.update();
         render_gl::update(&mut app.window_state);
@@ -561,43 +574,21 @@ fn run() -> Result<(), String>
 
         if app.was_pressed(MyKey::S) || app.was_pressed(MyKey::Down)
         {
-            while row_down(&mut state, &mut board, app.window_state.timer.now_stamp) {}
+            while row_down(&mut state, &mut board, std::time::Instant::now()) {}
         }
 
-
-        // Write all the tiles into color from background.
-        for y in 0..board.size_y
+        let now = std::time::Instant::now();
+        if now.duration_since(state.last_row_down).as_secs_f64() >= 1.0
         {
-            for x in 0..board.size_x
-            {
-                let index = ((board.size_y - y - 1) * board.size_x + x) as usize;
-                let index2 = (y * board.size_x + x) as usize;
-                shader_data[index]._col = colors[board.board[index2] as usize];
-            }
+            row_down(&mut state, &mut board, now);
         }
-
-        if (app.window_state.timer.now_stamp - state.last_row_down) as f64 * 1000.0f64 / app.window_state.timer.perf_freq > 100.0f64
-        {
-            row_down(&mut state, &mut board, app.window_state.timer.now_stamp);
-        }
-
 
         // Draw moving piece.
-        for y in 0i32..2i32
-        {
-            for x in 0i32..4i32
-            {
-                if BLOCKS[state.player.block_type as usize].blocks[(x + y * 4) as usize] == 1
-                {
-                    let (pos_x, pos_y) = get_rotated(x, y, state.player.rotation);
-                    if pos_x + state.player.pos_x < board.size_x && pos_y + state.player.pos_y < board.size_y
-                    {
-                        shader_data[(state.player.pos_x + pos_x + (board.size_y - (state.player.pos_y + pos_y) - 1) * board.size_x) as usize]._col
-                            = colors[(state.player.block_type + 1) as usize];
-                    }
-                }
-            }
-        }
+        board.render_board = board.board.clone();
+        board.add_piece(false, &state.player);
+
+        // Write all the tiles into color from background.
+        set_board(&mut shader_data, &app.window_state, &board);
 
 
         unsafe
