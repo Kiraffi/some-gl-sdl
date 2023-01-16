@@ -22,13 +22,13 @@
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=paint",
-                    "--package=paint"
+                    //"--bin=paint",
+                    //"--package=paint"
                 ],
-                "filter": {
-                    "name": "paint",
-                    "kind": "bin"
-                }
+                //"filter": {
+                //    "name": "paint",
+                //    "kind": "bin"
+                //}
             },
             "args": [],
             "cwd": "${workspaceFolder}"

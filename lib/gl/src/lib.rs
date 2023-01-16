@@ -12,7 +12,7 @@ extern "system"
 {
 }
 
-use std::os::raw::*;
+use core::ffi::*;
 
 pub type GLenum = c_uint;
 pub type GLboolean = c_uchar;
@@ -371,7 +371,7 @@ macro_rules! gl_macro_func_generator
             }
         )*
 
-        pub fn load_with<F>(mut loadfn: F) -> bool  where F: FnMut(&'static str) -> *const std::os::raw::c_void
+        pub fn load_with<F>(mut loadfn: F) -> bool  where F: FnMut(&'static str) -> *const c_void
         {
             let mut success = true;
             unsafe

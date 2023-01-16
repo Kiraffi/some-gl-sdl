@@ -1,7 +1,8 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 #![allow(dead_code)]
 
-use std::{ffi::CString, os::raw::*, ptr::null, ops::Sub};
+use core::ffi::*;
+use std::{ptr::null, ops::Sub};
 use window_state::*;
 
 fn get_x11_key(key: MyKey) -> u32
@@ -202,7 +203,7 @@ impl CarpWindow
             atom_delete_window: 0 as Atom,
         }
     }
-    pub unsafe fn set_vsync(&mut self, vsync: bool)
+    pub unsafe fn set_vsync(&mut self, _vsync: bool)
     {
     }
     pub fn set_timer_resolution(&self, _: u32) -> u32
