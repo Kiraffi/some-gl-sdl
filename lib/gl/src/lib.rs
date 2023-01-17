@@ -360,7 +360,8 @@ macro_rules! gl_macro_func_generator
             use super::*;
 
             $(
-                pub static mut $fn: Option<extern "C" fn ($($arg: $t),*) -> $res> = None;
+                //pub static mut $fn: extern "system" fn ($($arg: $t),*) -> $res = &$fn($($arg: $t),*);
+                pub static mut $fn: Option<extern "system" fn ($($arg: $t),*) -> $res> = None;
             )*
         }
 
@@ -368,6 +369,7 @@ macro_rules! gl_macro_func_generator
             pub unsafe fn $fn($($arg: $t),*) -> $res
             {
                 __temp_funcs::$fn.unwrap()( $($arg),* )
+                //__temp_funcs::$fn( $($arg),* )
             }
         )*
 
@@ -381,7 +383,7 @@ macro_rules! gl_macro_func_generator
                     let proc_ptr = loadfn(fn_name);
                     if proc_ptr.is_null()
                     {
-                        println!("Load GL func {:?} failed.", fn_name);
+                        //println!("Load GL func {:?} failed.", fn_name);
                         success = false;
                     }
                     else

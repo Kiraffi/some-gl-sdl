@@ -137,12 +137,6 @@ fn get_key_from_x11(key: u32) -> MyKey
     }
 }
 
-enum X11Key
-{
-    A
-}
-
-
 
 
 #[repr(C)]

@@ -28,11 +28,12 @@ panic = "abort"
 
 
 [profile.release]
-codegen-units = 32
-incremental = true
-overflow-checks = true
-debug-assertions = true
-lto = false
-debug = true
-opt-level = 3
-panic = "abort"
+codegen-units = 1
+#codegen-units = 32
+#incremental = true
+#overflow-checks = true
+#debug-assertions = true
+lto = true
+#debug = true
+opt-level = 's'
+#panic = "abort"
